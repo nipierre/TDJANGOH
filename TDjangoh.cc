@@ -365,6 +365,8 @@ void TDjangoh::Initialize(const char *frame, const char *beam, const char *targe
 
   Djinit();
 
+  Clean_File();
+
   char atitle[32];
   snprintf(atitle,32," %s-%s at %g GeV",cbeam,ctarget,win);
   SetTitle(atitle);
@@ -374,6 +376,7 @@ void TDjangoh::Initialize(const char *frame, const char *beam, const char *targe
 void TDjangoh::Djinit()
 {
   popen("$(DJANGOH)/djangoh < TDjangoh.in");
+  pclose();
 }
 
 
@@ -381,31 +384,55 @@ void TDjangoh::Initialize_File(const char *beam, const char *target, float win, 
 {
   ofstream ofs("TDjangoh.in",);
 
-  ofs << "\nOUTFILENAM\n" << outfilename
+  ofs
+  << "\nOUTFILENAM\n" << outfilename
   << "\nTITEL\nDJANGOH 4.6.10 for COMPASS for " << beam << " on " << target
-  << " , NLO at " << win << " , pol at " << pol << " , Wmin = " << kinem_cut[6]
+      << " , NLO at " << win << " , pol at " << pol << " , Wmin = " << kinem_cut[6]
   << "\nEL-BEAM\n" << win << " 0.0D0 " << beam
   << "\nIOUNITS\n" << iounits[0] << " " << iounits[1] << " " << iounits[2]
   << "\nPR-BEAM\n" << pr-beam[0] << " " << pr-beam[1]
   << "\nGSW-PARA\n" <<  gsw-param[0] << " " <<  gsw-param[1] << " " <<  gsw-param[2]  << " "
-  <<  gsw-param[3] << " " <<  gsw-param[4] << " " <<  gsw-param[5] << " " <<  gsw-param[6] << " "
-  <<  gsw-param[7] << " " <<  gsw-param[8] << " " <<  gsw-param[9] << " " <<  gsw-param[10]
+      <<  gsw-param[3] << " " <<  gsw-param[4] << " " <<  gsw-param[5] << " " <<  gsw-param[6] << " "
+      <<  gsw-param[7] << " " <<  gsw-param[8] << " " <<  gsw-param[9] << " " <<  gsw-param[10]
   << "\nKINECT-CUT\n" << kinem_cut_var << " " << kinem_cut[0] << " "  << kinem_cut[1] << " "
-  << kinem_cut[2] << " " << kinem_cut[3] << " " << kinem_cut[4] << " "
-  << kinem_cut[5] << " " << kinem_cut[6]
+      << kinem_cut[2] << " " << kinem_cut[3] << " " << kinem_cut[4] << " "
+      << kinem_cut[5] << " " << kinem_cut[6]
   << "\nEGAM-MIN\n" << egam_min
   << "\nINT-OPT-NC\n" << int_opt_nc[0] << " " << int_opt_nc[1] << " " << int_opt_nc[2] << " "
-  << int_opt_nc[3] << " " << int_opt_nc[4] << " " << int_opt_nc[5] << " "
-  << int_opt_nc[6] << " " << int_opt_nc[7] << " " << int_opt_nc[8]
+      << int_opt_nc[3] << " " << int_opt_nc[4] << " " << int_opt_nc[5] << " "
+      << int_opt_nc[6] << " " << int_opt_nc[7] << " " << int_opt_nc[8]
   << "\nINT-OPT-CC\n" << int_opt_cc[0] << " " << int_opt_cc[1] << " "
-  << int_opt_cc[2] << " " << int_opt_cc[3]
+      << int_opt_cc[2] << " " << int_opt_cc[3]
   << "\nINT-ONLY\n" << int_only
   << "\nINT-POINT\n" << int_point
   << "\nSAM-OPT-NC\n" << sam_opt_nc[0] << " " << sam_opt_nc[1] << " " << sam_opt_nc[2] << " "
-  << sam_opt_nc[3] << " " << sam_opt_nc[4] << " " << sam_opt_nc[5] << " "
-  << sam_opt_nc[6] << " " << sam_opt_nc[7] << " " << sam_opt_nc[8]
-  << "\nSAM-OPT-CC\n" << sam_opt_cc[0] << " " <<
+      << sam_opt_nc[3] << " " << sam_opt_nc[4] << " " << sam_opt_nc[5] << " "
+      << sam_opt_nc[6] << " " << sam_opt_nc[7] << " " << sam_opt_nc[8]
+  << "\nSAM-OPT-CC\n" << sam_opt_cc[0] << " " << sam_opt_cc[1] << " " <<
+      << sam_opt_cc[2] << " " << sam_opt_cc[3]
+  << "\nNUCLEUS\n" << nucl_e << " " << A << " " << Z
+  << "\nSTRUCTFUNC\n" << structfunc[0] << " " << structfunc[1] << " " << structfunc[2]
+  << "\nLHAPTH\n" << getenv("LHAPATH")
+  << "\nFLONG\n" << flong[0] << " " << flong[1] << " " << flong[2]
+  << "\nALFAS\n" << alfas[0] << " " << alfas[1] << " " << alfas[2] << " " << alfas[3]
+  << "\nNFLAVORS\n" << nflavors[0] << " " << nflavors[1]
+  << "\nRNDM-SEEDS\n" << rndm_seeds[0] << " " << rndm_seeds[1]
+  << "\nSOPHIA\n" << sophia
+  << "\nOUT-LEP\n" << out_lep
+  << "\nFRAG\n" << frag
+  << "\nCASCADES\n" << cascades
+  << "\nMAX-VIRT\n" << max_virt
+  << "\nCONTINUE";
 
+}
+
+void TDjangoh::Clean_File()
+{
+  remove(TDjangoh_evt.dat);
+  remove(TDjangoh_his.paw);
+  remove(TDjangoh_out.dat);
+  remove(TDjangoh_rnd.dat);
+  remove(TDjangoh_smp.dat);
 }
 
 // see how well the F interface go
@@ -446,9 +473,9 @@ void TPythia6::Pyhepc(int mconv) {
   pyhepc(&mconv);
 }
 
-void TPythia6::Pylist(int flag) {
-  //interface with fortran routine pylist
-  pylist(&flag);
+void TDjangoh::Lulist(int flag) {
+  //interface with fortran routine lulist
+  lulist(&flag);
 }
 
 void TPythia6::Pyname(int kf, char* name) {
