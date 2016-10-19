@@ -18,10 +18,14 @@ For the details about the generator look at djangoh manual:
 \endverbatim
 */
 
+#include <iostream>
+#include <fstream>
+
 #include "TDjangoh.h"
 #include "TClonesArray.h"
 #include "TMCParticle.h"
 #include "TParticle.h"
+#include "TDjangoh_inputfile.h"
 
 TDjangoh*  TDjangoh::fgInstance = 0;
 
@@ -99,27 +103,26 @@ TDjangoh::TDjangoh() : TGenerator("TDjangoh","TDjangoh") {
   fParticles = new TClonesArray("TMCParticle",50);
 
   // initialize common-blocks
-  // the functions/subroutines referenced by TPythia6 can be found
-  // FIND SUROUTINES IN DJANGOH
+  // the functions/subroutines referenced by DJANGOH can be found
 
-  fLujets = (Lujets_t*) pythia6_common_address("LUJETS");
-  fLudat1 = (Ludat1_t*) pythia6_common_address("LUDAT1");
-  fLudat2 = (Ludat2_t*) pythia6_common_address("LUDAT2");
-  fLudat3 = (Ludat3_t*) pythia6_common_address("LUDAT3");
-  fLudat4 = (Ludat4_t*) pythia6_common_address("LUDAT4");
-  fLudatr = (Ludatr_t*) pythia6_common_address("LUDATR");
+  fLujets = (Lujets_t*) djangoh_common_address("LUJETS");
+  fLudat1 = (Ludat1_t*) djangoh_common_address("LUDAT1");
+  fLudat2 = (Ludat2_t*) djangoh_common_address("LUDAT2");
+  fLudat3 = (Ludat3_t*) djangoh_common_address("LUDAT3");
+  fLudat4 = (Ludat4_t*) djangoh_common_address("LUDAT4");
+  fLudatr = (Ludatr_t*) djangoh_common_address("LUDATR");
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
 TDjangoh::TDjangoh(const TDjangoh& dj) :
  TGenerator(dj),
- fLujets(p6.fLujets),
- fLudat1(p6.fLudat1),
- fLudat2(p6.fLudat2),
- fLudat3(p6.fLudat3),
- fLudat4(p6.fLudat4),
- fLudatr(p6.fLudatr)
+ fLujets(dj.fLujets),
+ fLudat1(dj.fLudat1),
+ fLudat2(dj.fLudat2),
+ fLudat3(dj.fLudat3),
+ fLudat4(dj.fLudat4),
+ fLudatr(dj.fLudatr)
 { }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -152,10 +155,10 @@ TDjangoh* TDjangoh::Instance() {
 ///  generate event and copy the information from /HEPEVT/ to fPrimaries
 
 void TDjangoh::GenerateEvent() {
-  pyevnt();
+  Djrun();
   ImportParticles();
 }
-
+/*
 ////////////////////////////////////////////////////////////////////////////////
 ///interface with fortran i/o
 
@@ -169,7 +172,7 @@ void TDjangoh::OpenFortranFile(int lun, char* name) {
 void TDjangoh::CloseFortranFile(int lun) {
   tdjangoh_close_fortran_file(&lun);
 }
-
+*/
 
 ////////////////////////////////////////////////////////////////////////////////
 /// Fills TObjArray fParticles list with particles from common LUJETS
@@ -279,121 +282,65 @@ Int_t TDjangoh::ImportParticles(TClonesArray *particles, Option_t *option)
 /// sets correct title. This method should preferably be called instead of DjInit.
 /// PURPOSE: to initialize the generation procedure.
 /// ARGUMENTS: See documentation for details.
-/// -  frame:  - specifies the frame of the experiment:
-///                "CMS","FIXT","USER","FOUR","FIVE","NONE"
 /// -  beam,
-/// -  target: - beam and target particles (with additionaly charges, tildes or "bar":
-///              e,nu_e,mu,nu_mu,tau,nu_tau,gamma,pi,n,p,Lambda,Sigma,Xi,Omega,
-///              pomeron,reggeon
-/// -  win:    - related to energy system:
-///              - for frame=="CMS" - total energy of system
-///              - for frame=="FIXT" - momentum of beam particle
-///              - for frame=="USER" - dummy - see documentation.
+/// -  nuc_A,
+/// -  nuc_Z:   - Beam particle and nucleus
+///               Specify the lepton for beam and the (A,Z) pair for the nucleus
+/// -  beam_e:  - Energy of the beam
+/// -  nuc_e:   - Energy of the nucleus (0 for FIXT)
 
-void TDjangoh::Initialize(const char *frame, const char *beam, const char *target, float win, float pol=0)
+void TDjangoh::Initialize(const char *beam, int nuc_A, int nuc_Z, float beam_e, float nuc_e, float pol)
 {
-  char  cframe[4];
-  strlcpy(cframe,frame,4);
-  char  cbeam[10];
-  strlcpy(cbeam,beam,10);
-  char  ctarget[10];
-  strlcpy(ctarget,target,10);
+  int PID;
 
-  // For frames "3MOM", "4MOM" and "5MOM" see p. 181-182 of the version 6 manual,
-  // http://home.thep.lu.se/~torbjorn/pythia/lutp0613man2.pdf
-  // Maybe not useful in djangoh
-  if ( (!strncmp(frame, "CMS"  ,3)) &&
-       (!strncmp(frame, "FIXT" ,4)) &&
-       (!strncmp(frame, "USER" ,4)) &&
-       (!strncmp(frame, "FOUR" ,4)) &&
-       (!strncmp(frame, "FIVE" ,4)) &&
-       (!strncmp(frame, "3MOM" ,4)) &&
-       (!strncmp(frame, "4MOM" ,4)) &&
-       (!strncmp(frame, "5MOM" ,4)) &&
-       (!strncmp(frame, "NONE" ,4)) ) {
-     printf("WARNING! In TDjangoh:Initialize():\n");
-     printf(" specified frame=%s is neither of CMS,FIXT,USER,FOUR,FIVE,NONE,3MOM,4MOM,5MOM\n",frame);
-     printf(" resetting to \"CMS\" .");
-     snprintf(cframe,4,"CMS");
-  }
   // Djangoh accept only e and mu
-  if ( (!strncmp(beam, "e"       ,1)) &&
-       (!strncmp(beam, "nu_e"    ,4)) &&
-       (!strncmp(beam, "mu"      ,2)) &&
-       (!strncmp(beam, "nu_mu"   ,5)) &&
-       (!strncmp(beam, "tau"     ,3)) &&
-       (!strncmp(beam, "nu_tau"  ,6)) &&
-       (!strncmp(beam, "gamma"   ,5)) &&
-       (!strncmp(beam, "pi"      ,2)) &&
-       (!strncmp(beam, "n"       ,1)) &&
-       (!strncmp(beam, "p"       ,1)) &&
-       (!strncmp(beam, "Lambda"  ,6)) &&
-       (!strncmp(beam, "Sigma"   ,5)) &&
-       (!strncmp(beam, "Xi"      ,2)) &&
-       (!strncmp(beam, "Omega"   ,5)) &&
-       (!strncmp(beam, "pomeron" ,7)) &&
-       (!strncmp(beam, "reggeon" ,7)) ) {
+  if      (strncmp(beam, "e-"      ,2)) PID = 11;
+  else if (strncmp(beam, "e+"      ,2)) PID = -11;
+  else if (strncmp(beam, "mu-"     ,3)) PID = 13;
+  else if (strncmp(beam, "mu+"     ,3)) PID = -13;
+  else
+  {
      printf("WARNING! In TDjangoh:Initialize():\n");
      printf(" specified beam=%s is unrecognized .\n",beam);
-     printf(" resetting to \"p+\" .");
-     snprintf(cbeam,8,"p+");
-  }
-  // change it w/ A+Z like in djangoh
-  if ( (!strncmp(target, "e"       ,1)) &&
-       (!strncmp(target, "nu_e"    ,4)) &&
-       (!strncmp(target, "mu"      ,2)) &&
-       (!strncmp(target, "nu_mu"   ,5)) &&
-       (!strncmp(target, "tau"     ,3)) &&
-       (!strncmp(target, "nu_tau"  ,6)) &&
-       (!strncmp(target, "gamma"   ,5)) &&
-       (!strncmp(target, "pi"      ,2)) &&
-       (!strncmp(target, "n"       ,1)) &&
-       (!strncmp(target, "p"       ,1)) &&
-       (!strncmp(target, "Lambda"  ,6)) &&
-       (!strncmp(target, "Sigma"   ,5)) &&
-       (!strncmp(target, "Xi"      ,2)) &&
-       (!strncmp(target, "Omega"   ,5)) &&
-       (!strncmp(target, "pomeron" ,7)) &&
-       (!strncmp(target, "reggeon" ,7)) ){
-     printf("WARNING! In TDjangoh:Initialize():\n");
-     printf(" specified target=%s is unrecognized.\n",target);
-     printf(" resetting to \"p+\" .");
-     snprintf(ctarget,8,"p+");
+     printf(" resetting to \"e+\" .");
+     PID = 11;
   }
 
-  Initialize_File(cbeam,ctarget,win,pol);
-
-  Djinit();
-
-  Clean_File();
+  Initialize_File(PID,nuc_A,nuc_Z,beam_e,nuc_e,pol);
 
   char atitle[32];
-  snprintf(atitle,32," %s-%s at %g GeV",cbeam,ctarget,win);
+  snprintf(atitle,32," %s-N(%d,%d) at %g GeV",cbeam,nuc_A,nuc_Z,sqrt(pow(beam_e,2)+pow(nuc_e,2)));
   SetTitle(atitle);
 }
 
 
-void TDjangoh::Djinit()
+void TDjangoh::Djrun()
 {
-  popen("$(DJANGOH)/djangoh < TDjangoh.in");
-  pclose();
+  FILE *in;
+
+  if(!(in=popen("$(DJANGOH)/djangoh < TDjangoh.in","w")))
+  {
+    printf("WARNING! In TDjangoh::Djinit :\n");
+    printf("POSIX popen() couldn't launch/find Djangoh !\n");
+  }
+  pclose(in);
 }
 
 
-void TDjangoh::Initialize_File(const char *beam, const char *target, float win, float pol)
+void TDjangoh::Initialize_File(int PID, int nuc_A, int nuc_Z, float beam_e, float nuc_e, float pol)
 {
-  ofstream ofs("TDjangoh.in",);
+  ofstream ofs("TDjangoh.in", std::ofstream::out);
 
   ofs
   << "\nOUTFILENAM\n" << outfilename
-  << "\nTITEL\nDJANGOH 4.6.10 for COMPASS for " << beam << " on " << target
-      << " , NLO at " << win << " , pol at " << pol << " , Wmin = " << kinem_cut[6]
-  << "\nEL-BEAM\n" << win << " 0.0D0 " << beam
+  << "\nTITEL\nDJANGOH 4.6.10 for COMPASS for " << beam << " on N(" << A << "," << Z
+      << ") , NLO at " << beam_e << " , pol at " << pol << " , Wmin = " << kinem_cut[6]
+  << "\nEL-BEAM\n" << beam_e << " 0.0D0 " << PID
   << "\nIOUNITS\n" << iounits[0] << " " << iounits[1] << " " << iounits[2]
-  << "\nPR-BEAM\n" << pr-beam[0] << " " << pr-beam[1]
-  << "\nGSW-PARA\n" <<  gsw-param[0] << " " <<  gsw-param[1] << " " <<  gsw-param[2]  << " "
-      <<  gsw-param[3] << " " <<  gsw-param[4] << " " <<  gsw-param[5] << " " <<  gsw-param[6] << " "
-      <<  gsw-param[7] << " " <<  gsw-param[8] << " " <<  gsw-param[9] << " " <<  gsw-param[10]
+  << "\nPR-BEAM\n" << pr_beam[0] << " " << pr_beam[1]
+  << "\nGSW-PARA\n" <<  gsw_param[0] << " " <<  gsw_param[1] << " " <<  gsw_param[2]  << " "
+      <<  gsw_param[3] << " " <<  gsw_param[4] << " " <<  gsw_param[5] << " " <<  gsw_param[6] << " "
+      <<  gsw_param[7] << " " <<  gsw_param[8] << " " <<  gsw_param[9] << " " <<  gsw_param[10]
   << "\nKINECT-CUT\n" << kinem_cut_var << " " << kinem_cut[0] << " "  << kinem_cut[1] << " "
       << kinem_cut[2] << " " << kinem_cut[3] << " " << kinem_cut[4] << " "
       << kinem_cut[5] << " " << kinem_cut[6]
@@ -408,9 +355,9 @@ void TDjangoh::Initialize_File(const char *beam, const char *target, float win, 
   << "\nSAM-OPT-NC\n" << sam_opt_nc[0] << " " << sam_opt_nc[1] << " " << sam_opt_nc[2] << " "
       << sam_opt_nc[3] << " " << sam_opt_nc[4] << " " << sam_opt_nc[5] << " "
       << sam_opt_nc[6] << " " << sam_opt_nc[7] << " " << sam_opt_nc[8]
-  << "\nSAM-OPT-CC\n" << sam_opt_cc[0] << " " << sam_opt_cc[1] << " " <<
+  << "\nSAM-OPT-CC\n" << sam_opt_cc[0] << " " << sam_opt_cc[1] << " "
       << sam_opt_cc[2] << " " << sam_opt_cc[3]
-  << "\nNUCLEUS\n" << nucl_e << " " << A << " " << Z
+  << "\nNUCLEUS\n" << nuc_e << " " << nuc_A << " " << nuc_Z
   << "\nSTRUCTFUNC\n" << structfunc[0] << " " << structfunc[1] << " " << structfunc[2]
   << "\nLHAPTH\n" << getenv("LHAPATH")
   << "\nFLONG\n" << flong[0] << " " << flong[1] << " " << flong[2]
@@ -428,14 +375,14 @@ void TDjangoh::Initialize_File(const char *beam, const char *target, float win, 
 
 void TDjangoh::Clean_File()
 {
-  remove(TDjangoh_evt.dat);
-  remove(TDjangoh_his.paw);
-  remove(TDjangoh_out.dat);
-  remove(TDjangoh_rnd.dat);
-  remove(TDjangoh_smp.dat);
+  remove("TDjangoh_evt.dat");
+  remove("TDjangoh_his.paw");
+  remove("TDjangoh_out.dat");
+  remove("TDjangoh_rnd.dat");
+  remove("TDjangoh_smp.dat");
 }
 
-// see how well the F interface go
+/*// see how well the F interface go
 int TPythia6::Pycomp(int kf) {
   //interface with fortran routine pycomp
   return pycomp(&kf);
@@ -557,31 +504,4 @@ void TPythia6::Py1ent(Int_t ip, Int_t kf, Double_t pe, Double_t theta, Double_t 
 {
   py1ent(ip, kf, pe, theta, phi);
 }
-
-
-////////////////////////////////////////////////////////////////////////////////
-/// Exemplary setup of Pythia parameters:
-/// Switches on processes 102,123,124 (Higgs generation) and switches off
-/// interactions, fragmentation, ISR, FSR...
-
-void TPythia6::SetupTest()
-{
-  SetMSEL(0);            // full user controll;
-
-  SetMSUB(102,1);        // g + g -> H0
-  SetMSUB(123,1);        // f + f' -> f + f' + H0
-  SetMSUB(124,1);        // f + f' -> f" + f"' + H0
-
-
-  SetPMAS(6,1,175.0);   // mass of TOP
-  SetPMAS(25,1,300);    // mass of Higgs
-
-
-  SetCKIN(1,290.0);     // range of allowed mass
-  SetCKIN(2,310.0);
-
-  SetMSTP(61,  0);      // switch off ISR
-  SetMSTP(71,  0);      // switch off FSR
-  SetMSTP(81,  0);      // switch off multiple interactions
-  SetMSTP(111, 0);      // switch off fragmentation/decay
-}
+*/

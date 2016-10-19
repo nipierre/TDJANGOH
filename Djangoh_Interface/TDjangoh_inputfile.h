@@ -1,7 +1,18 @@
+
+#include <string>
+
+using namespace std;
+
+/*
+
+  All variables quasi-static for the Djangoh input file
+
+*/
+
 string outfilename = "TDjangoh";
 int iounits[3] = {1,1,1};
-string pr-beam[2] = {"0D0","0D0"};
-int gsw-param[11] = {2,1,3,1,0,0,2,1,1,1,1};
+string pr_beam[2] = {"0D0","0D0"};
+int gsw_param[11] = {2,1,3,1,0,0,2,1,1,1,1};
 int kinem_cut_var = 3;
 string kinem_cut[7] = {"0.0001D0","1.00D0","0.01D0","0.95D0","1.0D0","1D5","1.4D0"};
 string egam_min = "0D0";

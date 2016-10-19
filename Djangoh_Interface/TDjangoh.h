@@ -21,9 +21,8 @@ For the details about the generator look at djangoh manual:
 //#pragma interface
 //#endif
 
-// ????
-#ifndef ROOT_TPythia6Calls
-#include "TPythia6Calls.h"
+#ifndef ROOT_TDjangohCalls
+#include "TDjangohCalls.h"
 #endif
 
 #ifndef ROOT_TGenerator
@@ -71,7 +70,7 @@ public:
 
   // ****** /LUJETS/
 
-  Pyjets_t*   GetLujets        ()           { return fLujets; }
+  Lujets_t*   GetLujets        ()           { return fLujets; }
   int         GetN             ()           { return fLujets->N; }
   int         GetNPAD          ()           { return fLujets->NPAD; }
   int         GetK(int ip, int i)           { return fLujets->K[i-1][ip-1]; }
@@ -139,15 +138,17 @@ public:
   // ****** TDJANGOH routines
 
   void             GenerateEvent();
+  void             Djrun();
 
-  void             Initialize(const char *frame, const char *beam, const char *target, float win, float pol=0);
-  void             Initialize_File(const char *beam, const char *target, float win, float pol);
+  void             Initialize(const char *beam, int nuc_A, int nuc_Z, float beam_e, float nuc_e, float pol=0);
+  void             Initialize_File(int PID, int nuc_A, int nuc_Z, float beam_e, float nuc_e, float pol);
 
   Int_t            ImportParticles(TClonesArray *particles, Option_t *option="");
   TObjArray       *ImportParticles(Option_t *option="");
 
-  void             OpenFortranFile(int lun, char* name);
-  void             CloseFortranFile(int lun);
+  //void             OpenFortranFile(int lun, char* name);
+  //void             CloseFortranFile(int lun);
+  void             Clean_File();
 
   void             Lulist(int flag);
 
