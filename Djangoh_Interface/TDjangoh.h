@@ -37,13 +37,14 @@ class TDjangoh : public TGenerator {
 
 protected:
   static  TDjangoh* fgInstance;
+  // Fortran common blocks
+  int lujets[2+5*4000+2*2*5*4000];
+  int ludat1[200+2*200+200+2*200];
+  int ludat2[4*500+2*4*500+2*2000+2*4*4];
   // Djangoh common-blocks
   Lujets_t*  fLujets;
   Ludat1_t*  fLudat1;
   Ludat2_t*  fLudat2;
-  Ludat3_t*  fLudat3;
-  Ludat4_t*  fLudat4;
-  Ludatr_t*  fLudatr;
   // Cleanup
   class  TDjangohCleaner {
   public:
@@ -54,6 +55,15 @@ protected:
 
   TDjangoh(const TDjangoh&);            // Cannot be copied
   TDjangoh& operator=(const TDjangoh&); // Cannot be copied
+
+void *djangoh_common_address(const char* name)
+{
+   if      (!strcmp(name,"LUJETS")) return lujets;
+   else if (!strcmp(name,"LUDAT1")) return ludat1;
+   else if (!strcmp(name,"LUDAT2")) return ludat2;
+   return 0;
+}
+
 
 public:
   // ****** constructors and destructor
@@ -109,39 +119,13 @@ public:
   void        SetPARF        (int i, double p) { fLudat2->PARF[i-1]       = p; }
   void        SetVCKM (int i, int j, double v) { fLudat2->VCKM[j-1][i-1]  = v; }
 
-  // ****** /LUDAT3/
-
-  Ludat3_t*   GetLudat3() { return fLudat3; }
-  int         GetMDCY(int i, int j) { return fLudat3->MDCY[j-1][i-1]; }
-  int         GetMDME(int i, int j) { return fLudat3->MDME[j-1][i-1]; }
-  double      GetBRAT       (int i) { return fLudat3->BRAT[i-1]; }
-  int         GetKFDP(int i, int j) { return fLudat3->KFDP[j-1][i-1]; }
-
-  void        SetMDCY(int i, int j, int m) { fLudat3->MDCY[j-1][i-1] = m; }
-  void        SetMDME(int i, int j, int m) { fLudat3->MDME[j-1][i-1] = m; }
-  void        SetBRAT(int i, double b)     { fLudat3->BRAT[i-1]      = b; }
-  void        SetKFDP(int i, int j, int k) { fLudat3->KFDP[j-1][i-1] = k; }
-
-  // ****** /LUDAT4/
-
-  Ludat4_t*   GetLudat4() { return fLudat4; }
-
-  // ****** /LUDATR/ - random number generator info
-
-  Ludatr_t*   GetLudatr   () { return fLudatr; }
-  int         GetMRLU(int i) { return fLudatr->MRLU[i-1]; }
-  double      GetRRLU(int i) { return fLudatr->RRLU[i-1]; }
-
-  void        SetMRLU(int i, int m)    { fLudatr->MRLU[i-1] = m; }
-  void        SetRRLU(int i, double r) { fLudatr->RRLU[i-1] = r; }
-
   // ****** TDJANGOH routines
 
   void             GenerateEvent();
   void             Djrun();
 
   void             Initialize(const char *beam, int nuc_A, int nuc_Z, float beam_e, float nuc_e, float pol=0);
-  void             Initialize_File(int PID, int nuc_A, int nuc_Z, float beam_e, float nuc_e, float pol);
+  void             Initialize_File(const char *beam, int PID, int nuc_A, int nuc_Z, float beam_e, float nuc_e, float pol);
 
   Int_t            ImportParticles(TClonesArray *particles, Option_t *option="");
   TObjArray       *ImportParticles(Option_t *option="");
@@ -151,8 +135,6 @@ public:
   void             Clean_File();
 
   void             Lulist(int flag);
-
-  ClassDef(TDjangoh,0)  //Interface to Djangoh Event Generator
 };
 
 #endif

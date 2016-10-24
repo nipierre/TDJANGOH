@@ -29,41 +29,12 @@ For the details about the generator look at djangoh manual:
 
 TDjangoh*  TDjangoh::fgInstance = 0;
 
-
-#ifndef WIN32
-# define lulist lulist_
-# ifdef DJANGOH_DOUBLE_UNDERSCORE
-#  define tdjangoh_open_fortran_file tdjangoh_open_fortran_file__
-#  define tdjangoh_close_fortran_file tdjangoh_close_fortran_file__
-#  define djangoh_common_address djangoh_common_address__
-# elif DJANGOH_SINGLE_UNDERSCORE
-#  define tdjangoh_open_fortran_file tdjangoh_open_fortran_file_
-#  define tdjangoh_close_fortran_file tdjangoh_close_fortran_file_
-#  define djangoh_common_address djangoh_common_address
-# else
-#  define djangoh_common_address djangoh_common_address
-#  define tdjangoh_open_fortran_file tdjangoh_open_fortran_file_
-#  define tdjangoh_close_fortran_file tdjangoh_close_fortran_file_
-# endif
-# define type_of_call
-#else
-# define lulist LULIST
-# define tdjangoh_open_fortran_file TDJANGOH_OPEN_FORTRAN_FILE
-# define tdjangoh_close_fortran_file TDJANGOH_CLOSE_FORTRAN_FILE
+# define lujets LUJETS
+# define ludat1 LUDAT1
+# define ludat2 LUDAT2
 # define type_of_call _stdcall
-#endif
 
 using namespace std;
-
-extern "C" void type_of_call lulist(int *key);
-
-extern "C" {
-void*  djangoh_common_address(const char*);
-void   type_of_call tdjangoh_open_fortran_file(int* lun, char* name, int);
-void   type_of_call tdjangoh_close_fortran_file(int* lun);
-}
-
-ClassImp(TDjangoh)
 
 /** \class TDjangoh::TDjangohCleaner
    \ingroup djangoh
@@ -108,9 +79,6 @@ TDjangoh::TDjangoh() : TGenerator("TDjangoh","TDjangoh") {
   fLujets = (Lujets_t*) djangoh_common_address("LUJETS");
   fLudat1 = (Ludat1_t*) djangoh_common_address("LUDAT1");
   fLudat2 = (Ludat2_t*) djangoh_common_address("LUDAT2");
-  fLudat3 = (Ludat3_t*) djangoh_common_address("LUDAT3");
-  fLudat4 = (Ludat4_t*) djangoh_common_address("LUDAT4");
-  fLudatr = (Ludatr_t*) djangoh_common_address("LUDATR");
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -119,10 +87,7 @@ TDjangoh::TDjangoh(const TDjangoh& dj) :
  TGenerator(dj),
  fLujets(dj.fLujets),
  fLudat1(dj.fLudat1),
- fLudat2(dj.fLudat2),
- fLudat3(dj.fLudat3),
- fLudat4(dj.fLudat4),
- fLudatr(dj.fLudatr)
+ fLudat2(dj.fLudat2)
 { }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -306,10 +271,10 @@ void TDjangoh::Initialize(const char *beam, int nuc_A, int nuc_Z, float beam_e, 
      PID = 11;
   }
 
-  Initialize_File(PID,nuc_A,nuc_Z,beam_e,nuc_e,pol);
+  Initialize_File(beam,PID,nuc_A,nuc_Z,beam_e,nuc_e,pol);
 
   char atitle[32];
-  snprintf(atitle,32," %s-N(%d,%d) at %g GeV",cbeam,nuc_A,nuc_Z,sqrt(pow(beam_e,2)+pow(nuc_e,2)));
+  snprintf(atitle,32," %s-N(%d,%d) at %g GeV",beam,nuc_A,nuc_Z,sqrt(pow(beam_e,2)+pow(nuc_e,2)));
   SetTitle(atitle);
 }
 
@@ -327,7 +292,7 @@ void TDjangoh::Djrun()
 }
 
 
-void TDjangoh::Initialize_File(int PID, int nuc_A, int nuc_Z, float beam_e, float nuc_e, float pol)
+void TDjangoh::Initialize_File(const char *beam, int PID, int nuc_A, int nuc_Z, float beam_e, float nuc_e, float pol)
 {
   ofstream ofs("TDjangoh.in", std::ofstream::out);
 
@@ -381,127 +346,3 @@ void TDjangoh::Clean_File()
   remove("TDjangoh_rnd.dat");
   remove("TDjangoh_smp.dat");
 }
-
-/*// see how well the F interface go
-int TPythia6::Pycomp(int kf) {
-  //interface with fortran routine pycomp
-  return pycomp(&kf);
-}
-
-void TPythia6::Pyedit(int medit) {
-  //interface with fortran routine pyedit
-  pyedit(&medit);
-  ImportParticles();
-}
-
-void TPythia6::Pydiff() {
-  //interface with fortran routine pydiff
-  pydiff();
-}
-
-void TPythia6::Pyevnt() {
-  //interface with fortran routine pyevnt
-  pyevnt();
-}
-
-void TPythia6::Pyexec() {
-  //interface with fortran routine pyexec
-  pyexec();
-}
-
-void TPythia6::Pygive(const char *param) {
-  //interface with fortran routine pygive
-  Long_t lparam = strlen(param);
-  pygive(param,lparam);
-}
-
-void TPythia6::Pyhepc(int mconv) {
-  //interface with fortran routine pyhepc
-  pyhepc(&mconv);
-}
-
-void TDjangoh::Lulist(int flag) {
-  //interface with fortran routine lulist
-  lulist(&flag);
-}
-
-void TPythia6::Pyname(int kf, char* name) {
-  //Note that the array name must be dimensioned in the calling program
-  //to at least name[16]
-
-  pyname(&kf,name,15);
-  // cut trailing blanks to get C string
-  name[15] = 0;
-  //for (int i=15; (i>=0) && (name[i] == ' '); i--) {
-  //  name[i] = 0;
-  // }
-}
-
-double TPythia6::Pyr(int idummy) {
-  //interface with fortran routine pyr
-  return pyr(&idummy);
-}
-
-void TPythia6::Pyrget(int lun, int move) {
-  //interface with fortran routine pyrget
-  pyrget(&lun,&move);
-}
-
-void TPythia6::Pyrset(int lun, int move) {
-  //interface with fortran routine pyrset
-  pyrset(&lun,&move);
-}
-
-void TPythia6::Pystat(int flag) {
-  //interface with fortran routine pystat
-  pystat(&flag);
-}
-
-void TPythia6::Pytest(int flag) {
-  //interface with fortran routine pytest
-  pytest(&flag);
-}
-
-void TPythia6::Pytune(int itune) {
-  //interface with fortran routine pytune
-  pytune(&itune);
-}
-
-void TPythia6::Pyupda(int mupda, int lun) {
-  //interface with fortran routine pyupda
-  pyupda(&mupda,&lun);
-}
-
-double TPythia6::Pymass(int kf) {
-  //interface with fortran routine pymass
-  return pymass(&kf);
-}
-
-int TPythia6::Pychge(int kf) {
-  //interface with fortran routine pychge
-  return pychge(&kf);
-}
-
-////////////////////////////////////////////////////////////////////////////////
-/// Add one entry to the event record, i.e. either a parton or a
-/// particle.
-///
-/// - IP:   normally line number for the parton/particle. There are two
-///         exceptions:
-///         - If IP = 0: line number 1 is used and PYEXEC is called.
-///         - If IP < 0: line -IP is used, with status code K(-IP,2)=2
-///                   rather than 1; thus a parton system may be built
-///                   up by filling all but the last parton of the
-///                   system with IP < 0.
-///  - KF:   parton/particle flavour code (PDG code)
-///  - PE:   parton/particle energy. If PE is smaller than the mass,
-///          the parton/particle is taken to be at rest.
-///  - THETA:
-///  - PHI:  polar and azimuthal angle for the momentum vector of the
-///          parton/particle.
-
-void TPythia6::Py1ent(Int_t ip, Int_t kf, Double_t pe, Double_t theta, Double_t phi)
-{
-  py1ent(ip, kf, pe, theta, phi);
-}
-*/

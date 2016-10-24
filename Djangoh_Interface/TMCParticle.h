@@ -93,7 +93,6 @@ public:
   Float_t     GetVz() const {return fVz;}
   Float_t     GetTime() const {return fTime;}
   Float_t     GetLifetime() const {return fLifetime;}
-  virtual const char     *GetName() const;
 
   virtual void        SetKS(Int_t kS) {fKS=kS;}
   virtual void        SetKF(Int_t kF) {fKF=kF;}
@@ -115,8 +114,6 @@ public:
 
 
   virtual void        ls(Option_t* option) const;
-
-  ClassDef(TMCParticle,1)  // LUJETS particles data record.
 };
 
 #endif
