@@ -1,18 +1,21 @@
-Objs            = TDjangoh.o TMCParticle.o
+OBJS		= TDjangoh.o TMCParticle.o
 CC              = gcc
 CXX             = g++
 CCFlags         = -g -O1 -Wall -fPIC
-ROOTFLAGS 			= `root-config --cflags`
-LIBFLAGS				= -L/usr/local/lib/root/
-#DevFlags		=
+ROOTFLAGS 	= `root-config --cflags`
+INCDIR		= -I`root-config --incdir`
+LDFLAGS		= `root-config --libs --evelibs --glibs`
+#DevFlags	=
 
-%.o: %.cc %.h
-	$(CXX) $(CCFlags) $(ROOTFLAGS) -c -o $@ $<
+all: $(OBJS)
+	$(CC) -shared $(CCFlags) $(ROOTFLAGS) $(INCDIR) -o libTDjangoh.so $(OBJS) $(LDFLAGS)
+	mv libTDjangoh.so ../lib
 
+TDjangoh.o: TDjangoh.h TDjangohCalls.h TMCParticle.h TDjangoh_inputfile.h 
+	$(CC) $(CCFlags) $(ROOTFLAGS) $(INCDIR) -o TDjangoh.o -c TDjangoh.cc $(LDFLAGS)
 
-all: $(Objs) TDjangohCalls.h TDjangoh_inputfile.h
-	$(CC) -shared -fPIC -o libDjangoh.so $(Objs) $(LIBFLAGS)
-	mv libDjangoh.so ../lib
+TMCParticle.o: TMCParticle.h
+	$(CC) $(CCFlags) $(ROOTFLAGS) $(INCDIR) -o TMCParticle.o -c TMCParticle.cc $(LDFLAGS)
 
 clean:
 	rm -f *.o

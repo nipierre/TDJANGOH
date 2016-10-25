@@ -9,8 +9,8 @@ int main()
 {
   TDjangoh* tDjangoh;
 
-  if (tDjangoh != NULL)
-    delete tDjangoh;
+//  if (tDjangoh != NULL)
+//    delete tDjangoh;
 
   tDjangoh = new TDjangoh();
 

@@ -26,6 +26,7 @@ For the details about the generator look at djangoh manual:
 #include "TMCParticle.h"
 #include "TParticle.h"
 #include "TDjangoh_inputfile.h"
+#include "TString.h"
 
 TDjangoh*  TDjangoh::fgInstance = 0;
 
@@ -259,10 +260,10 @@ void TDjangoh::Initialize(const char *beam, int nuc_A, int nuc_Z, float beam_e, 
   int PID;
 
   // Djangoh accept only e and mu
-  if      (strncmp(beam, "e-"      ,2)) PID = 11;
-  else if (strncmp(beam, "e+"      ,2)) PID = -11;
-  else if (strncmp(beam, "mu-"     ,3)) PID = 13;
-  else if (strncmp(beam, "mu+"     ,3)) PID = -13;
+  if      (!strcmp(beam, "e-" )) PID = -1;
+  else if (!strcmp(beam, "e+" )) PID = 1;
+  else if (!strcmp(beam, "mu-")) PID = -3;
+  else if (!strcmp(beam, "mu+")) PID = 3;
   else
   {
      printf("WARNING! In TDjangoh:Initialize():\n");
@@ -283,7 +284,7 @@ void TDjangoh::Djrun()
 {
   FILE *in;
 
-  if(!(in=popen("$(DJANGOH)/djangoh < TDjangoh.in","w")))
+  if(!(in=popen(Form("%s/djangoh < TDjangoh.in",getenv("DJANGOH")),"w")))
   {
     printf("WARNING! In TDjangoh::Djinit :\n");
     printf("POSIX popen() couldn't launch/find Djangoh !\n");
@@ -297,16 +298,16 @@ void TDjangoh::Initialize_File(const char *beam, int PID, int nuc_A, int nuc_Z, 
   ofstream ofs("TDjangoh.in", std::ofstream::out);
 
   ofs
-  << "\nOUTFILENAM\n" << outfilename
-  << "\nTITEL\nDJANGOH 4.6.10 for COMPASS for " << beam << " on N(" << A << "," << Z
+  << "OUTFILENAM\n" << outfilename
+  << "\nTITLE\nDJANGOH 4.6.10 for COMPASS for " << beam << " on N(" << A << "," << Z
       << ") , NLO at " << beam_e << " , pol at " << pol << " , Wmin = " << kinem_cut[6]
-  << "\nEL-BEAM\n" << beam_e << " 0.0D0 " << PID
+  << "\nEL-BEAM\n\t" << beam_e << ".0D0 0.0D0 " << PID
   << "\nIOUNITS\n" << iounits[0] << " " << iounits[1] << " " << iounits[2]
   << "\nPR-BEAM\n" << pr_beam[0] << " " << pr_beam[1]
-  << "\nGSW-PARA\n" <<  gsw_param[0] << " " <<  gsw_param[1] << " " <<  gsw_param[2]  << " "
+  << "\nGSW-PARAM\n" <<  gsw_param[0] << " " <<  gsw_param[1] << " " <<  gsw_param[2]  << " "
       <<  gsw_param[3] << " " <<  gsw_param[4] << " " <<  gsw_param[5] << " " <<  gsw_param[6] << " "
       <<  gsw_param[7] << " " <<  gsw_param[8] << " " <<  gsw_param[9] << " " <<  gsw_param[10]
-  << "\nKINECT-CUT\n" << kinem_cut_var << " " << kinem_cut[0] << " "  << kinem_cut[1] << " "
+  << "\nKINEM-CUTS\n" << kinem_cut_var << " " << kinem_cut[0] << " "  << kinem_cut[1] << " "
       << kinem_cut[2] << " " << kinem_cut[3] << " " << kinem_cut[4] << " "
       << kinem_cut[5] << " " << kinem_cut[6]
   << "\nEGAM-MIN\n" << egam_min
@@ -316,7 +317,7 @@ void TDjangoh::Initialize_File(const char *beam, int PID, int nuc_A, int nuc_Z, 
   << "\nINT-OPT-CC\n" << int_opt_cc[0] << " " << int_opt_cc[1] << " "
       << int_opt_cc[2] << " " << int_opt_cc[3]
   << "\nINT-ONLY\n" << int_only
-  << "\nINT-POINT\n" << int_point
+  << "\nINT-POINTS\n" << int_point
   << "\nSAM-OPT-NC\n" << sam_opt_nc[0] << " " << sam_opt_nc[1] << " " << sam_opt_nc[2] << " "
       << sam_opt_nc[3] << " " << sam_opt_nc[4] << " " << sam_opt_nc[5] << " "
       << sam_opt_nc[6] << " " << sam_opt_nc[7] << " " << sam_opt_nc[8]
@@ -324,11 +325,12 @@ void TDjangoh::Initialize_File(const char *beam, int PID, int nuc_A, int nuc_Z, 
       << sam_opt_cc[2] << " " << sam_opt_cc[3]
   << "\nNUCLEUS\n" << nuc_e << " " << nuc_A << " " << nuc_Z
   << "\nSTRUCTFUNC\n" << structfunc[0] << " " << structfunc[1] << " " << structfunc[2]
-  << "\nLHAPTH\n" << getenv("LHAPATH")
+  << "\nLHAPATH\n" << getenv("LHAPATH")
   << "\nFLONG\n" << flong[0] << " " << flong[1] << " " << flong[2]
   << "\nALFAS\n" << alfas[0] << " " << alfas[1] << " " << alfas[2] << " " << alfas[3]
   << "\nNFLAVORS\n" << nflavors[0] << " " << nflavors[1]
   << "\nRNDM-SEEDS\n" << rndm_seeds[0] << " " << rndm_seeds[1]
+  << "\nSTART\n" << start
   << "\nSOPHIA\n" << sophia
   << "\nOUT-LEP\n" << out_lep
   << "\nFRAG\n" << frag

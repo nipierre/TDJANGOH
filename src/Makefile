@@ -2,17 +2,18 @@ Objs            = test.o
 CC              = gcc
 CXX             = g++
 CCFlags         = -g -O1 -Wall -fPIC
-ROOTFLAGS 			= `root-config --cflags`
-INCFLAGS				= -I../Djangoh_Interface/
-LIBFLAGS				= -L../lib/
-#DevFlags		=
+ROOTFLAGS 	= `root-config --cflags`
+INCFLAGS	= -I../Djangoh_Interface/
+LDFLAGS		= `root-config --libs` -L/afs/cern.ch/user/n/nipierre/workspace/TGEANT_DJANGOH/lib -lTDjangoh
+#DevFlags	=
 
-%.o: %.cc %.h
-	$(CXX) $(INCFLAGS) $(CCFlags) $(ROOTFLAGS) -c -o $@ $<
+%.o: %.cc
+	$(CXX) $(CCFlags) $(ROOTFLAGS) $(INCFLAGS) -c -o $@ $< $(LDFLAGS)
 
 
 test: $(Objs)
-	$(CXX) $(INCFLAGS) $(CCFlags) $(ROOTFLAGS) -o $@ $<
+	$(CXX) $(CCFlags) $(ROOTFLAGS) $(INCFLAGS) -o $@ $< $(LDFLAGS)
+	mv test ../bin
 
 clean:
 	rm -f *.o

@@ -7,4 +7,8 @@ src::
 
 clean:
 	(cd Djangoh_Interface; make clean)
+	(cd src; make clean)
 	(rm -f lib/* bin/*)
+
+clfile:
+	rm luevents.dat fort.6 TDjangoh_*.dat tdjangoh_his.paw
