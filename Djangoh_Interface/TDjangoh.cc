@@ -299,7 +299,7 @@ void TDjangoh::Initialize_File(const char *beam, int PID, int nuc_A, int nuc_Z, 
 
   ofs
   << "OUTFILENAM\n" << outfilename
-  << "\nTITLE\nDJANGOH 4.6.10 for COMPASS for " << beam << " on N(" << A << "," << Z
+  << "\nTITLE\nDJANGOH 4.6.10 for COMPASS for " << beam << " on N(" << nuc_A << "," << nuc_Z
       << ") , NLO at " << beam_e << " , pol at " << pol << " , Wmin = " << kinem_cut[6]
   << "\nEL-BEAM\n\t" << beam_e << ".0D0 0.0D0 " << PID
   << "\nIOUNITS\n" << iounits[0] << " " << iounits[1] << " " << iounits[2]
