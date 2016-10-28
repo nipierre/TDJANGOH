@@ -34,23 +34,4 @@ struct Ludat2_t {
  double VCKM[4][4];
 };
 
-/// Djangoh common block Ludat3
-struct Ludat3_t {
- int    MDCY[3][500];
- int    MDME[2][KNDCAY];
- double BRAT[KNDCAY];
- int    KFDP[5][KNDCAY];
-};
-
-/// Djangoh common block Ludat4
-struct Ludat4_t {
- char  CHAF[2][500][16]; // here I needed manual intervention
-};
-
-/// Djangoh common block Ludatr
-struct Ludatr_t {
- int    MRLU[6];
- double RRLU[100];
-};
-
 #endif

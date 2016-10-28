@@ -30,10 +30,13 @@ For the details about the generator look at djangoh manual:
 
 TDjangoh*  TDjangoh::fgInstance = 0;
 
-# define lujets LUJETS
-# define ludat1 LUDAT1
-# define ludat2 LUDAT2
 # define type_of_call _stdcall
+
+Lujets_t lujets_;
+
+extern "C" {
+void hsmain_(char* inputfile, int* len);
+}
 
 using namespace std;
 
@@ -74,12 +77,9 @@ TDjangoh::TDjangoh() : TGenerator("TDjangoh","TDjangoh") {
 
   fParticles = new TClonesArray("TMCParticle",50);
 
-  // initialize common-blocks
-  // the functions/subroutines referenced by DJANGOH can be found
-
-  fLujets = (Lujets_t*) djangoh_common_address("LUJETS");
-  fLudat1 = (Ludat1_t*) djangoh_common_address("LUDAT1");
-  fLudat2 = (Ludat2_t*) djangoh_common_address("LUDAT2");
+  // fLujets = (Lujets_t*) djangoh_common_address("LUJETS");
+  // fLudat1 = (Ludat1_t*) djangoh_common_address("LUDAT1");
+  // fLudat2 = (Ludat2_t*) djangoh_common_address("LUDAT2");
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -121,7 +121,15 @@ TDjangoh* TDjangoh::Instance() {
 ///  generate event and copy the information from /HEPEVT/ to fPrimaries
 
 void TDjangoh::GenerateEvent() {
-  Djrun();
+  char* cfile = "TDjangoh.in";
+  int len_cfile = strlen(cfile);
+  //Ludat1_t* ludat1_;
+  //Ludat2_t* ludat2_;
+  hsmain_(cfile,&len_cfile);
+  cout << lujets_.N << endl;
+  fLujets = &lujets_;
+  //fLudat1 = ludat1_;
+  //fLudat2 = ludat2_;
   ImportParticles();
 }
 /*
@@ -343,7 +351,6 @@ void TDjangoh::Initialize_File(const char *beam, int PID, int nuc_A, int nuc_Z, 
 void TDjangoh::Clean_File()
 {
   remove("TDjangoh_evt.dat");
-  remove("TDjangoh_his.paw");
   remove("TDjangoh_out.dat");
   remove("TDjangoh_rnd.dat");
   remove("TDjangoh_smp.dat");

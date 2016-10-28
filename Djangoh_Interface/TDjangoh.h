@@ -38,9 +38,9 @@ class TDjangoh : public TGenerator {
 protected:
   static  TDjangoh* fgInstance;
   // Fortran common blocks
-  int lujets[2+5*4000+2*2*5*4000];
-  int ludat1[200+2*200+200+2*200];
-  int ludat2[4*500+2*4*500+2*2000+2*4*4];
+  // int lujets_[2+5*4000+2*2*5*4000];
+  // int ludat1_[200+2*200+200+2*200];
+  // int ludat2_[4*500+2*4*500+2*2000+2*4*4];
   // Djangoh common-blocks
   Lujets_t*  fLujets;
   Ludat1_t*  fLudat1;
@@ -56,13 +56,13 @@ protected:
   TDjangoh(const TDjangoh&);            // Cannot be copied
   TDjangoh& operator=(const TDjangoh&); // Cannot be copied
 
-void *djangoh_common_address(const char* name)
-{
-   if      (!strcmp(name,"LUJETS")) return lujets;
-   else if (!strcmp(name,"LUDAT1")) return ludat1;
-   else if (!strcmp(name,"LUDAT2")) return ludat2;
-   return 0;
-}
+// void *djangoh_common_address(const char* name)
+// {
+//    if      (!strcmp(name,"LUJETS")) return lujets_;
+//    else if (!strcmp(name,"LUDAT1")) return ludat1_;
+//    else if (!strcmp(name,"LUDAT2")) return ludat2_;
+//    return 0;
+// }
 
 
 public:
