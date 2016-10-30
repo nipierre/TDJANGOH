@@ -10,7 +10,8 @@ int   const KEXCIT  =  4000000;
 int   const KNDCAY  =  8000; //should be 4000 for 1
 
 /// Djangoh common block Lujets
-struct Lujets_t {
+struct Lujets_t
+{
  int    N;
  int    NPAD;
  int    K[5][4000];
@@ -19,7 +20,8 @@ struct Lujets_t {
 };
 
 /// Djangoh common block Ludat1
-struct Ludat1_t {
+struct Ludat1_t
+{
  int    MSTU[200];
  double PARU[200];
  int    MSTJ[200];
@@ -27,7 +29,8 @@ struct Ludat1_t {
 };
 
 /// Djangoh common block Ludat2
-struct Ludat2_t {
+struct Ludat2_t
+{
  int    KCHG[4][500];
  double PMAS[4][500];
  double PARF[2000];

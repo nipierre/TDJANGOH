@@ -23,7 +23,7 @@ libTDjangoh: $(OBJSC)
 	$(CC) $(CCFlags) -shared $(ROOTFLAGS) $(INCDIR) -o libTDjangoh.so $(OBJSC) $(LDFLAGS) -L../lib -lDjangoh
 	mv libTDjangoh.so ../lib
 
-TDjangoh.o: TDjangoh.h TDjangohCalls.h TMCParticle.h TDjangoh_inputfile.h
+TDjangoh.o: TDjangoh.h TDjangohCalls.h TMCParticle.h
 	$(CC) $(CCFlags) $(ROOTFLAGS) $(INCDIR) -o TDjangoh.o -c TDjangoh.cc $(LDFLAGS)
 
 TMCParticle.o: TMCParticle.h

@@ -74,8 +74,6 @@ C
         N10CNT=0
         GSP=SP-MPRO2-MEI2
         OPEN(31,FILE=OUTFILENAM(1:ICH)//'_evt.dat',STATUS='NEW')
-        OPEN(6,FILE='luevents.dat',STATUS='NEW')
-	      CLOSE(6)
 
       ENDIF
 
@@ -366,15 +364,6 @@ C... -
       WRITE(31,2303) PHEP(1,2),PHEP(2,2),PHEP(3,2),PHEP(4,2),PHEP(5,2)
       WRITE(31,2302) IDHEP(3)
       WRITE(31,2303) PHEP(1,3),PHEP(2,3),PHEP(3,3),PHEP(4,3),PHEP(5,3)
-C...Write LULIST result to file for each event
-      CLOSE(LUNOUT)
-      OPEN(6,FILE='luevents.dat',POSITION='append',STATUS='OLD')
-      CALL LULIST(1)
-C... -
-      WRITE(6,2301) ICHNN
-      WRITE(6,2303) X,Y,Q2
-      CLOSE(6)
-      OPEN(LUNOUT,FILE=OUTFILENAM(1:ICH)//'_out.dat',POSITION='append')
 C... -
  2301 FORMAT(I4)
  2302 FORMAT(I4)

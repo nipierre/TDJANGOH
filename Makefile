@@ -1,12 +1,12 @@
-all: Djangoh_Interface src
+all: TDjangoh src
 
-Djangoh_Interface::
+TDjangoh::
 	$(MAKE) -C $@
 src::
 	$(MAKE) -C $@
 
 clean:
-	(cd Djangoh_Interface; make clean)
+	(cd TDjangoh; make clean)
 	(cd src; make clean)
 	(rm -f lib/* bin/*)
 
