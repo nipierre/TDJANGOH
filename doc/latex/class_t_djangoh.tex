@@ -1,0 +1,1073 @@
+\hypertarget{class_t_djangoh}{\section{T\+Djangoh Class Reference}
+\label{class_t_djangoh}\index{T\+Djangoh@{T\+Djangoh}}
+}
+
+
+C/\+C++ Interface to Djangoh.  
+
+
+
+
+{\ttfamily \#include $<$T\+Djangoh.\+h$>$}
+
+Inheritance diagram for T\+Djangoh\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_t_djangoh}
+\end{center}
+\end{figure}
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \hyperlink{class_t_djangoh_1_1_t_djangoh_cleaner}{T\+Djangoh\+Cleaner}
+\begin{DoxyCompactList}\small\item\em A cleaner for \hyperlink{class_t_djangoh}{T\+Djangoh}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{class_t_djangoh_a7cbbb76ddc4fe82e25bb1e58078e45bc}{T\+Djangoh} ()
+\begin{DoxyCompactList}\small\item\em Constructor of the \hyperlink{class_t_djangoh}{T\+Djangoh} class. \end{DoxyCompactList}\item 
+virtual \hyperlink{class_t_djangoh_abee806f1e4536b30624590e34869f0e0}{$\sim$\+T\+Djangoh} ()
+\begin{DoxyCompactList}\small\item\em Destructor of the \hyperlink{class_t_djangoh}{T\+Djangoh} class. \end{DoxyCompactList}\item 
+void \hyperlink{class_t_djangoh_a121effe35c3f3ac168a4663bcd5eef5c}{Generate\+Event} ()
+\begin{DoxyCompactList}\small\item\em Generation of an event. \end{DoxyCompactList}\item 
+void \hyperlink{class_t_djangoh_a073e114a26b9d27e3dddcdcc0e955746}{Initialize} (const char $\ast$beam, int nuc\+\_\+\+A, int nuc\+\_\+\+Z, float beam\+\_\+e, float nuc\+\_\+e, float pol=0)
+\begin{DoxyCompactList}\small\item\em Initialization of an event. \end{DoxyCompactList}\item 
+void \hyperlink{class_t_djangoh_a4ac910303945724305714d4fb92c1806}{Initialize\+\_\+\+File} (const char $\ast$beam, int P\+I\+D, int nuc\+\_\+\+A, int nuc\+\_\+\+Z, float beam\+\_\+e, float nuc\+\_\+e, float pol)
+\begin{DoxyCompactList}\small\item\em Initialization of the input file. \end{DoxyCompactList}\item 
+Int\+\_\+t \hyperlink{class_t_djangoh_a69e5ebe63faa2dd00d9bcd217ecdf825}{Import\+Particles} (T\+Clones\+Array $\ast$particles, Option\+\_\+t $\ast$option=\char`\"{}\char`\"{})
+\begin{DoxyCompactList}\small\item\em Import particles from lujets\+\_\+ subroutine and copy it in T\+Clones\+Array$\ast$. \end{DoxyCompactList}\item 
+T\+Obj\+Array $\ast$ \hyperlink{class_t_djangoh_ac63f2c463b6a2fff98f256952aaf945f}{Import\+Particles} (Option\+\_\+t $\ast$option=\char`\"{}\char`\"{})
+\begin{DoxyCompactList}\small\item\em Import particles from lujets\+\_\+ subroutine and copy it in T\+Clones\+Array$\ast$. \end{DoxyCompactList}\item 
+void \hyperlink{class_t_djangoh_adf5acc5294013735f2475d4ce8ccf012}{Clean\+\_\+\+File} ()
+\begin{DoxyCompactList}\small\item\em Clean files created by djangoh. \end{DoxyCompactList}\item 
+void \hyperlink{class_t_djangoh_a35e52b50d96fa03b74dc23cc32a8ca6f}{Lulist} (int flag)
+\begin{DoxyCompactList}\small\item\em lulist\+\_\+ routine \end{DoxyCompactList}\item 
+\hyperlink{struct_lujets__t}{Lujets\+\_\+t} $\ast$ \hyperlink{class_t_djangoh_a2572e682379a304f84f21840d488fa0c}{Get\+Lujets} ()
+\begin{DoxyCompactList}\small\item\em Recover the actual \hyperlink{struct_lujets__t}{Lujets\+\_\+t} structure. \end{DoxyCompactList}\item 
+int \hyperlink{class_t_djangoh_a501e50bbb1ad6a75014fd7c555313b74}{Get\+N} ()
+\begin{DoxyCompactList}\small\item\em Recover the number of particles. \end{DoxyCompactList}\item 
+int \hyperlink{class_t_djangoh_afb58be11a10e8a6a4b442ea0fe4e16f5}{Get\+N\+P\+A\+D} ()
+\begin{DoxyCompactList}\small\item\em Recover. \end{DoxyCompactList}\item 
+int \hyperlink{class_t_djangoh_aaf2c94dbb8382bbd3b7ed1530a8ac878}{Get\+K} (int ip, int i)
+\begin{DoxyCompactList}\small\item\em Recover the K\mbox{[}i-\/1\mbox{]}\mbox{[}ip-\/1\mbox{]} element. \end{DoxyCompactList}\item 
+double \hyperlink{class_t_djangoh_a2bc14d05d493e604f9f7fef847c19c9b}{Get\+P} (int ip, int i)
+\begin{DoxyCompactList}\small\item\em Recover the P\mbox{[}i-\/1\mbox{]}\mbox{[}ip-\/1\mbox{]} element. \end{DoxyCompactList}\item 
+double \hyperlink{class_t_djangoh_a4993a87fef8917b9ed8a55811aa2daf6}{Get\+V} (int ip, int i)
+\begin{DoxyCompactList}\small\item\em Recover the V\mbox{[}i-\/1\mbox{]}\mbox{[}ip-\/1\mbox{]} element. \end{DoxyCompactList}\item 
+void \hyperlink{class_t_djangoh_ac15b9862e954349fd9f0911c71e0e664}{Set\+N} (int n)
+\begin{DoxyCompactList}\small\item\em Set the number of particles. \end{DoxyCompactList}\item 
+void \hyperlink{class_t_djangoh_a0ed7bb7e7433a6385b5838ce519168a2}{Set\+N\+P\+A\+D} (int n)
+\begin{DoxyCompactList}\small\item\em Set N\+P\+A\+D. \end{DoxyCompactList}\item 
+void \hyperlink{class_t_djangoh_a045a7fabe350589453e240bff98ca54b}{Set\+K} (int ip, int i, int k)
+\begin{DoxyCompactList}\small\item\em Set the K\mbox{[}i-\/1\mbox{]}\mbox{[}ip-\/1\mbox{]} element. \end{DoxyCompactList}\item 
+void \hyperlink{class_t_djangoh_aa9cfa62ac6bf01a7f5214cc62cdae34c}{Set\+P} (int ip, int i, double p)
+\begin{DoxyCompactList}\small\item\em Set the P\mbox{[}i-\/1\mbox{]}\mbox{[}ip-\/1\mbox{]} element. \end{DoxyCompactList}\item 
+void \hyperlink{class_t_djangoh_a472e228f316f1473c940dfa37c22637c}{Set\+V} (int ip, int i, double v)
+\begin{DoxyCompactList}\small\item\em Set the V\mbox{[}i-\/1\mbox{]}\mbox{[}ip-\/1\mbox{]} element. \end{DoxyCompactList}\item 
+\hyperlink{struct_ludat1__t}{Ludat1\+\_\+t} $\ast$ \hyperlink{class_t_djangoh_a41238ae5ec3462ec62afd7e6b1a9c053}{Get\+Ludat1} ()
+\begin{DoxyCompactList}\small\item\em Recover the actual \hyperlink{struct_ludat1__t}{Ludat1\+\_\+t} structure. \end{DoxyCompactList}\item 
+int \hyperlink{class_t_djangoh_a945d0bc3bb15463dc13e5f317e1acb85}{Get\+M\+S\+T\+U} (int i)
+\begin{DoxyCompactList}\small\item\em Recover the i element of M\+S\+T\+U. \end{DoxyCompactList}\item 
+double \hyperlink{class_t_djangoh_a2437af1524d88ab2a27ce156e5b59dc3}{Get\+P\+A\+R\+U} (int i)
+\begin{DoxyCompactList}\small\item\em Recover the i element of P\+A\+R\+U. \end{DoxyCompactList}\item 
+int \hyperlink{class_t_djangoh_a0680c8515e55fe020bb5f6879e03e570}{Get\+M\+S\+T\+J} (int i)
+\begin{DoxyCompactList}\small\item\em Recover the i element of M\+S\+T\+J. \end{DoxyCompactList}\item 
+double \hyperlink{class_t_djangoh_acca1999c25174c677a7476936deda040}{Get\+P\+A\+R\+J} (int i)
+\begin{DoxyCompactList}\small\item\em Recover the i element of P\+A\+R\+J. \end{DoxyCompactList}\item 
+void \hyperlink{class_t_djangoh_a384df028825302ce79c109f145e1b02a}{Set\+M\+S\+T\+U} (int i, int m)
+\begin{DoxyCompactList}\small\item\em Set the i element of M\+S\+T\+U. \end{DoxyCompactList}\item 
+void \hyperlink{class_t_djangoh_ab7568cf96eb1a4ede5cc0d061a129db7}{Set\+P\+A\+R\+U} (int i, double p)
+\begin{DoxyCompactList}\small\item\em Set the i element of P\+A\+R\+U. \end{DoxyCompactList}\item 
+void \hyperlink{class_t_djangoh_a36615fc810cc9c50701982ed0cd3121b}{Set\+M\+S\+T\+J} (int i, int m)
+\begin{DoxyCompactList}\small\item\em Set the i element of M\+S\+T\+J. \end{DoxyCompactList}\item 
+void \hyperlink{class_t_djangoh_a40a5e2d72e700a53329fa10a3854b61e}{Set\+P\+A\+R\+J} (int i, double p)
+\begin{DoxyCompactList}\small\item\em Set the i element of P\+A\+R\+J. \end{DoxyCompactList}\item 
+\hyperlink{struct_ludat2__t}{Ludat2\+\_\+t} $\ast$ \hyperlink{class_t_djangoh_a64956ca441887fb27e45e795e2aa39c0}{Get\+Ludat2} ()
+\begin{DoxyCompactList}\small\item\em Recover the actual \hyperlink{struct_ludat1__t}{Ludat1\+\_\+t} structure. \end{DoxyCompactList}\item 
+int \hyperlink{class_t_djangoh_abbd060d5743513e954fb3980e1352d51}{Get\+K\+C\+H\+G} (int ip, int i)
+\begin{DoxyCompactList}\small\item\em Recover the K\+C\+H\+G\mbox{[}i-\/1\mbox{]}\mbox{[}ip-\/1\mbox{]} element. \end{DoxyCompactList}\item 
+double \hyperlink{class_t_djangoh_af02363ca029e8792ffe67f461d079b32}{Get\+P\+M\+A\+S} (int ip, int i)
+\begin{DoxyCompactList}\small\item\em Recover the P\+M\+A\+S\mbox{[}i-\/1\mbox{]}\mbox{[}ip-\/1\mbox{]} element. \end{DoxyCompactList}\item 
+double \hyperlink{class_t_djangoh_af2f727443a9cb1305cc4845e47100ab0}{Get\+P\+A\+R\+F} (int i)
+\begin{DoxyCompactList}\small\item\em Recover the i element of P\+A\+R\+F. \end{DoxyCompactList}\item 
+double \hyperlink{class_t_djangoh_a0b1b9096be193695aab3352ce9f81159}{Get\+V\+C\+K\+M} (int i, int j)
+\begin{DoxyCompactList}\small\item\em Recover the V\+C\+K\+M\mbox{[}i-\/1\mbox{]}\mbox{[}j-\/1\mbox{]} element. \end{DoxyCompactList}\item 
+void \hyperlink{class_t_djangoh_ac82d4f50980416893c9b1504247fe47f}{Set\+K\+C\+H\+G} (int ip, int i, int k)
+\begin{DoxyCompactList}\small\item\em Set the K\+C\+H\+G\mbox{[}i-\/1\mbox{]}\mbox{[}ip-\/1\mbox{]} element. \end{DoxyCompactList}\item 
+void \hyperlink{class_t_djangoh_a9e7308dceed0b17d8a61dd1018323b60}{Set\+P\+M\+A\+S} (int ip, int i, double m)
+\begin{DoxyCompactList}\small\item\em Set the P\+M\+A\+S\mbox{[}i-\/1\mbox{]}\mbox{[}ip-\/1\mbox{]} element. \end{DoxyCompactList}\item 
+void \hyperlink{class_t_djangoh_a351dee78b1ea5d9014e7913f52518cd9}{Set\+P\+A\+R\+F} (int i, double p)
+\begin{DoxyCompactList}\small\item\em Set the i element of P\+A\+R\+F. \end{DoxyCompactList}\item 
+void \hyperlink{class_t_djangoh_a8aea0e0f7735a1e457c7b30923d89bff}{Set\+V\+C\+K\+M} (int i, int j, double v)
+\begin{DoxyCompactList}\small\item\em Set the V\+C\+K\+M\mbox{[}i-\/1\mbox{]}\mbox{[}j-\/1\mbox{]} element. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static \hyperlink{class_t_djangoh}{T\+Djangoh} $\ast$ \hyperlink{class_t_djangoh_a2e9871b8bec6326bb518f218dc87402c}{Instance} ()
+\begin{DoxyCompactList}\small\item\em Instance creation. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+string \hyperlink{class_t_djangoh_ad1228120d77c6b6ddaced2c91715415c}{outfilename} = \char`\"{}T\+Djangoh\char`\"{}
+\item 
+int \hyperlink{class_t_djangoh_a6cc9b21270635d3dcee6de0c7e826726}{iounits} \mbox{[}3\mbox{]} = \{1,1,1\}
+\item 
+string \hyperlink{class_t_djangoh_ab3ffe8251846f31857f84d4368a31d96}{pr\+\_\+beam} \mbox{[}2\mbox{]} = \{\char`\"{}0\+D0\char`\"{},\char`\"{}0\+D0\char`\"{}\}
+\item 
+int \hyperlink{class_t_djangoh_a73c1e424fd8153cd323a25390efb2362}{gsw\+\_\+param} \mbox{[}11\mbox{]} = \{2,1,3,1,0,0,2,1,1,1,1\}
+\item 
+int \hyperlink{class_t_djangoh_a1e292bba8a06321f62a1548e74e0fb9e}{kinem\+\_\+cut\+\_\+var} = 3
+\item 
+string \hyperlink{class_t_djangoh_a97b4c77f2767a449920e0126ab7314b3}{kinem\+\_\+cut} \mbox{[}7\mbox{]}
+\item 
+string \hyperlink{class_t_djangoh_a942fe7661f7ca2e6e94eefc7efc8b523}{egam\+\_\+min} = \char`\"{}0\+D0\char`\"{}
+\item 
+int \hyperlink{class_t_djangoh_acd610fcad702bfa2bc5128426aab1300}{int\+\_\+opt\+\_\+nc} \mbox{[}9\mbox{]} = \{1, 18, 18, 18, 0, 0, 0, 0, 0\}
+\item 
+int \hyperlink{class_t_djangoh_ac6e61b78890fac424ba060d8411fc266}{int\+\_\+opt\+\_\+cc} \mbox{[}4\mbox{]} = \{0, 0, 0, 0\}
+\item 
+int \hyperlink{class_t_djangoh_ad3d8b1c563bb610f3a75735e2976f82d}{int\+\_\+only} = 0
+\item 
+int \hyperlink{class_t_djangoh_a4faef5bd11a1646664432b735c3998e8}{int\+\_\+point} = 3000
+\item 
+int \hyperlink{class_t_djangoh_adce1a30080fb56c2fb635826eebd05da}{sam\+\_\+opt\+\_\+nc} \mbox{[}9\mbox{]} = \{1, 1, 1, 1, 0, 0, 0, 0, 0\}
+\item 
+int \hyperlink{class_t_djangoh_a082064f93cd8e978c454044ab86b3007}{sam\+\_\+opt\+\_\+cc} \mbox{[}4\mbox{]} = \{0, 0, 0, 0\}
+\item 
+string \hyperlink{class_t_djangoh_a80f9f3c2ff9458df6c37f9a730d0d9d7}{nucl\+\_\+e} = \char`\"{}0.\+0\+D0\char`\"{}
+\item 
+int \hyperlink{class_t_djangoh_ad5881cf0e0f935682730fae53e30798b}{structfunc} \mbox{[}3\mbox{]} = \{0, 2, 10150\}
+\item 
+float \hyperlink{class_t_djangoh_a9eb43fe747243662ae9da94fb769a80b}{flong} \mbox{[}3\mbox{]} = \{111, 0.\+01, 0.\+03\}
+\item 
+float \hyperlink{class_t_djangoh_a74cbc9b27daed09c9b853b2f72669a71}{alfas} \mbox{[}4\mbox{]} = \{1, 1, 0.\+20, 0.\+235\}
+\item 
+int \hyperlink{class_t_djangoh_af4b02bd635a9e893dc83224ce9997b26}{nflavors} \mbox{[}2\mbox{]} = \{0, 3\}
+\item 
+int \hyperlink{class_t_djangoh_aa3e99a785adc52679432d6446dfdc850}{rndm\+\_\+seeds} \mbox{[}2\mbox{]} = \{-\/1, -\/1\}
+\item 
+int \hyperlink{class_t_djangoh_a8e88fc34f9f5e6e0b62af4054bbe9ce3}{start} = 1
+\item 
+float \hyperlink{class_t_djangoh_a1ecc5438155094281e9867acb6b4432f}{sophia} = 1.\+5
+\item 
+int \hyperlink{class_t_djangoh_a4b87824fa6a4af88c4c9bb69fdd87f31}{out\+\_\+lep} = 1
+\item 
+int \hyperlink{class_t_djangoh_ab7d3ea58eb6f4c59f68703e0b80614f9}{frag} = 1
+\item 
+int \hyperlink{class_t_djangoh_a804083301c1acef844fa78a2c36fdf32}{cascades} = 12
+\item 
+int \hyperlink{class_t_djangoh_aaf2a9c700d5ec37607f7241d2b13bd17}{max\+\_\+virt} = 5
+\end{DoxyCompactItemize}
+\subsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{class_t_djangoh_a7b47ea508e2047b99b6f3efd6ba37278}{T\+Djangoh} (const \hyperlink{class_t_djangoh}{T\+Djangoh} \&)
+\begin{DoxyCompactList}\small\item\em Copy Constructor of the \hyperlink{class_t_djangoh}{T\+Djangoh} class. \end{DoxyCompactList}\item 
+\hyperlink{class_t_djangoh}{T\+Djangoh} \& \hyperlink{class_t_djangoh_a987204dc283979db28c83e5a35177b7c}{operator=} (const \hyperlink{class_t_djangoh}{T\+Djangoh} \&)
+\begin{DoxyCompactList}\small\item\em = operator overload \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{struct_lujets__t}{Lujets\+\_\+t} $\ast$ \hyperlink{class_t_djangoh_a844cd27abcd743028fb98b3fba0c0fa9}{f\+Lujets}
+\item 
+\hyperlink{struct_ludat1__t}{Ludat1\+\_\+t} $\ast$ \hyperlink{class_t_djangoh_acc9083c81e338f4e9bc3266e4536fde1}{f\+Ludat1}
+\item 
+\hyperlink{struct_ludat2__t}{Ludat2\+\_\+t} $\ast$ \hyperlink{class_t_djangoh_af1cc34415736302400b5c343f8604e3b}{f\+Ludat2}
+\end{DoxyCompactItemize}
+\subsection*{Static Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+static \hyperlink{class_t_djangoh}{T\+Djangoh} $\ast$ \hyperlink{class_t_djangoh_ad154e9fce28f84ab490dc6508db58fb8}{fg\+Instance} = 0
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+C/\+C++ Interface to Djangoh. 
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{class_t_djangoh_a7b47ea508e2047b99b6f3efd6ba37278}{\index{T\+Djangoh@{T\+Djangoh}!T\+Djangoh@{T\+Djangoh}}
+\index{T\+Djangoh@{T\+Djangoh}!T\+Djangoh@{T\+Djangoh}}
+\subsubsection[{T\+Djangoh}]{\setlength{\rightskip}{0pt plus 5cm}T\+Djangoh\+::\+T\+Djangoh (
+\begin{DoxyParamCaption}
+\item[{const {\bf T\+Djangoh} \&}]{dj}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [protected]}}}\label{class_t_djangoh_a7b47ea508e2047b99b6f3efd6ba37278}
+
+
+Copy Constructor of the \hyperlink{class_t_djangoh}{T\+Djangoh} class. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em \hyperlink{class_t_djangoh}{T\+Djangoh}} & \+: \hyperlink{class_t_djangoh}{T\+Djangoh} object \\
+\hline
+\end{DoxyParams}
+\hypertarget{class_t_djangoh_a7cbbb76ddc4fe82e25bb1e58078e45bc}{\index{T\+Djangoh@{T\+Djangoh}!T\+Djangoh@{T\+Djangoh}}
+\index{T\+Djangoh@{T\+Djangoh}!T\+Djangoh@{T\+Djangoh}}
+\subsubsection[{T\+Djangoh}]{\setlength{\rightskip}{0pt plus 5cm}T\+Djangoh\+::\+T\+Djangoh (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{class_t_djangoh_a7cbbb76ddc4fe82e25bb1e58078e45bc}
+
+
+Constructor of the \hyperlink{class_t_djangoh}{T\+Djangoh} class. 
+
+\hypertarget{class_t_djangoh_abee806f1e4536b30624590e34869f0e0}{\index{T\+Djangoh@{T\+Djangoh}!````~T\+Djangoh@{$\sim$\+T\+Djangoh}}
+\index{````~T\+Djangoh@{$\sim$\+T\+Djangoh}!T\+Djangoh@{T\+Djangoh}}
+\subsubsection[{$\sim$\+T\+Djangoh}]{\setlength{\rightskip}{0pt plus 5cm}T\+Djangoh\+::$\sim$\+T\+Djangoh (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}}\label{class_t_djangoh_abee806f1e4536b30624590e34869f0e0}
+
+
+Destructor of the \hyperlink{class_t_djangoh}{T\+Djangoh} class. 
+
+
+
+\subsection{Member Function Documentation}
+\hypertarget{class_t_djangoh_adf5acc5294013735f2475d4ce8ccf012}{\index{T\+Djangoh@{T\+Djangoh}!Clean\+\_\+\+File@{Clean\+\_\+\+File}}
+\index{Clean\+\_\+\+File@{Clean\+\_\+\+File}!T\+Djangoh@{T\+Djangoh}}
+\subsubsection[{Clean\+\_\+\+File}]{\setlength{\rightskip}{0pt plus 5cm}void T\+Djangoh\+::\+Clean\+\_\+\+File (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{class_t_djangoh_adf5acc5294013735f2475d4ce8ccf012}
+
+
+Clean files created by djangoh. 
+
+\hypertarget{class_t_djangoh_a121effe35c3f3ac168a4663bcd5eef5c}{\index{T\+Djangoh@{T\+Djangoh}!Generate\+Event@{Generate\+Event}}
+\index{Generate\+Event@{Generate\+Event}!T\+Djangoh@{T\+Djangoh}}
+\subsubsection[{Generate\+Event}]{\setlength{\rightskip}{0pt plus 5cm}void T\+Djangoh\+::\+Generate\+Event (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{class_t_djangoh_a121effe35c3f3ac168a4663bcd5eef5c}
+
+
+Generation of an event. 
+
+\hypertarget{class_t_djangoh_aaf2c94dbb8382bbd3b7ed1530a8ac878}{\index{T\+Djangoh@{T\+Djangoh}!Get\+K@{Get\+K}}
+\index{Get\+K@{Get\+K}!T\+Djangoh@{T\+Djangoh}}
+\subsubsection[{Get\+K}]{\setlength{\rightskip}{0pt plus 5cm}int T\+Djangoh\+::\+Get\+K (
+\begin{DoxyParamCaption}
+\item[{int}]{ip, }
+\item[{int}]{i}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}}\label{class_t_djangoh_aaf2c94dbb8382bbd3b7ed1530a8ac878}
+
+
+Recover the K\mbox{[}i-\/1\mbox{]}\mbox{[}ip-\/1\mbox{]} element. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ip} & \+: column index \\
+\hline
+{\em i} & \+: line index \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+K\mbox{[}i-\/1\mbox{]}\mbox{[}ip-\/1\mbox{]} 
+\end{DoxyReturn}
+\hypertarget{class_t_djangoh_abbd060d5743513e954fb3980e1352d51}{\index{T\+Djangoh@{T\+Djangoh}!Get\+K\+C\+H\+G@{Get\+K\+C\+H\+G}}
+\index{Get\+K\+C\+H\+G@{Get\+K\+C\+H\+G}!T\+Djangoh@{T\+Djangoh}}
+\subsubsection[{Get\+K\+C\+H\+G}]{\setlength{\rightskip}{0pt plus 5cm}int T\+Djangoh\+::\+Get\+K\+C\+H\+G (
+\begin{DoxyParamCaption}
+\item[{int}]{ip, }
+\item[{int}]{i}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}}\label{class_t_djangoh_abbd060d5743513e954fb3980e1352d51}
+
+
+Recover the K\+C\+H\+G\mbox{[}i-\/1\mbox{]}\mbox{[}ip-\/1\mbox{]} element. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ip} & \+: column index \\
+\hline
+{\em i} & \+: line index \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+K\+C\+H\+G\mbox{[}i-\/1\mbox{]}\mbox{[}ip-\/1\mbox{]} 
+\end{DoxyReturn}
+\hypertarget{class_t_djangoh_a41238ae5ec3462ec62afd7e6b1a9c053}{\index{T\+Djangoh@{T\+Djangoh}!Get\+Ludat1@{Get\+Ludat1}}
+\index{Get\+Ludat1@{Get\+Ludat1}!T\+Djangoh@{T\+Djangoh}}
+\subsubsection[{Get\+Ludat1}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Ludat1\+\_\+t}$\ast$ T\+Djangoh\+::\+Get\+Ludat1 (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}}\label{class_t_djangoh_a41238ae5ec3462ec62afd7e6b1a9c053}
+
+
+Recover the actual \hyperlink{struct_ludat1__t}{Ludat1\+\_\+t} structure. 
+
+\begin{DoxyReturn}{Returns}
+f\+Ludat1 
+\end{DoxyReturn}
+\hypertarget{class_t_djangoh_a64956ca441887fb27e45e795e2aa39c0}{\index{T\+Djangoh@{T\+Djangoh}!Get\+Ludat2@{Get\+Ludat2}}
+\index{Get\+Ludat2@{Get\+Ludat2}!T\+Djangoh@{T\+Djangoh}}
+\subsubsection[{Get\+Ludat2}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Ludat2\+\_\+t}$\ast$ T\+Djangoh\+::\+Get\+Ludat2 (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}}\label{class_t_djangoh_a64956ca441887fb27e45e795e2aa39c0}
+
+
+Recover the actual \hyperlink{struct_ludat1__t}{Ludat1\+\_\+t} structure. 
+
+\begin{DoxyReturn}{Returns}
+f\+Ludat2 
+\end{DoxyReturn}
+\hypertarget{class_t_djangoh_a2572e682379a304f84f21840d488fa0c}{\index{T\+Djangoh@{T\+Djangoh}!Get\+Lujets@{Get\+Lujets}}
+\index{Get\+Lujets@{Get\+Lujets}!T\+Djangoh@{T\+Djangoh}}
+\subsubsection[{Get\+Lujets}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Lujets\+\_\+t}$\ast$ T\+Djangoh\+::\+Get\+Lujets (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}}\label{class_t_djangoh_a2572e682379a304f84f21840d488fa0c}
+
+
+Recover the actual \hyperlink{struct_lujets__t}{Lujets\+\_\+t} structure. 
+
+\begin{DoxyReturn}{Returns}
+f\+Lujets 
+\end{DoxyReturn}
+\hypertarget{class_t_djangoh_a0680c8515e55fe020bb5f6879e03e570}{\index{T\+Djangoh@{T\+Djangoh}!Get\+M\+S\+T\+J@{Get\+M\+S\+T\+J}}
+\index{Get\+M\+S\+T\+J@{Get\+M\+S\+T\+J}!T\+Djangoh@{T\+Djangoh}}
+\subsubsection[{Get\+M\+S\+T\+J}]{\setlength{\rightskip}{0pt plus 5cm}int T\+Djangoh\+::\+Get\+M\+S\+T\+J (
+\begin{DoxyParamCaption}
+\item[{int}]{i}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}}\label{class_t_djangoh_a0680c8515e55fe020bb5f6879e03e570}
+
+
+Recover the i element of M\+S\+T\+J. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em i} & \+: element index \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+M\+S\+T\+J\mbox{[}i-\/1\mbox{]} 
+\end{DoxyReturn}
+\hypertarget{class_t_djangoh_a945d0bc3bb15463dc13e5f317e1acb85}{\index{T\+Djangoh@{T\+Djangoh}!Get\+M\+S\+T\+U@{Get\+M\+S\+T\+U}}
+\index{Get\+M\+S\+T\+U@{Get\+M\+S\+T\+U}!T\+Djangoh@{T\+Djangoh}}
+\subsubsection[{Get\+M\+S\+T\+U}]{\setlength{\rightskip}{0pt plus 5cm}int T\+Djangoh\+::\+Get\+M\+S\+T\+U (
+\begin{DoxyParamCaption}
+\item[{int}]{i}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}}\label{class_t_djangoh_a945d0bc3bb15463dc13e5f317e1acb85}
+
+
+Recover the i element of M\+S\+T\+U. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em i} & \+: element index \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+M\+S\+T\+U\mbox{[}i-\/1\mbox{]} 
+\end{DoxyReturn}
+\hypertarget{class_t_djangoh_a501e50bbb1ad6a75014fd7c555313b74}{\index{T\+Djangoh@{T\+Djangoh}!Get\+N@{Get\+N}}
+\index{Get\+N@{Get\+N}!T\+Djangoh@{T\+Djangoh}}
+\subsubsection[{Get\+N}]{\setlength{\rightskip}{0pt plus 5cm}int T\+Djangoh\+::\+Get\+N (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}}\label{class_t_djangoh_a501e50bbb1ad6a75014fd7c555313b74}
+
+
+Recover the number of particles. 
+
+\begin{DoxyReturn}{Returns}
+N 
+\end{DoxyReturn}
+\hypertarget{class_t_djangoh_afb58be11a10e8a6a4b442ea0fe4e16f5}{\index{T\+Djangoh@{T\+Djangoh}!Get\+N\+P\+A\+D@{Get\+N\+P\+A\+D}}
+\index{Get\+N\+P\+A\+D@{Get\+N\+P\+A\+D}!T\+Djangoh@{T\+Djangoh}}
+\subsubsection[{Get\+N\+P\+A\+D}]{\setlength{\rightskip}{0pt plus 5cm}int T\+Djangoh\+::\+Get\+N\+P\+A\+D (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}}\label{class_t_djangoh_afb58be11a10e8a6a4b442ea0fe4e16f5}
+
+
+Recover. 
+
+\begin{DoxyReturn}{Returns}
+N\+P\+A\+D 
+\end{DoxyReturn}
+\hypertarget{class_t_djangoh_a2bc14d05d493e604f9f7fef847c19c9b}{\index{T\+Djangoh@{T\+Djangoh}!Get\+P@{Get\+P}}
+\index{Get\+P@{Get\+P}!T\+Djangoh@{T\+Djangoh}}
+\subsubsection[{Get\+P}]{\setlength{\rightskip}{0pt plus 5cm}double T\+Djangoh\+::\+Get\+P (
+\begin{DoxyParamCaption}
+\item[{int}]{ip, }
+\item[{int}]{i}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}}\label{class_t_djangoh_a2bc14d05d493e604f9f7fef847c19c9b}
+
+
+Recover the P\mbox{[}i-\/1\mbox{]}\mbox{[}ip-\/1\mbox{]} element. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ip} & \+: column index \\
+\hline
+{\em i} & \+: line index \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+P\mbox{[}i-\/1\mbox{]}\mbox{[}ip-\/1\mbox{]} 
+\end{DoxyReturn}
+\hypertarget{class_t_djangoh_af2f727443a9cb1305cc4845e47100ab0}{\index{T\+Djangoh@{T\+Djangoh}!Get\+P\+A\+R\+F@{Get\+P\+A\+R\+F}}
+\index{Get\+P\+A\+R\+F@{Get\+P\+A\+R\+F}!T\+Djangoh@{T\+Djangoh}}
+\subsubsection[{Get\+P\+A\+R\+F}]{\setlength{\rightskip}{0pt plus 5cm}double T\+Djangoh\+::\+Get\+P\+A\+R\+F (
+\begin{DoxyParamCaption}
+\item[{int}]{i}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}}\label{class_t_djangoh_af2f727443a9cb1305cc4845e47100ab0}
+
+
+Recover the i element of P\+A\+R\+F. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em i} & \+: element index \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+P\+A\+R\+F\mbox{[}i-\/1\mbox{]} 
+\end{DoxyReturn}
+\hypertarget{class_t_djangoh_acca1999c25174c677a7476936deda040}{\index{T\+Djangoh@{T\+Djangoh}!Get\+P\+A\+R\+J@{Get\+P\+A\+R\+J}}
+\index{Get\+P\+A\+R\+J@{Get\+P\+A\+R\+J}!T\+Djangoh@{T\+Djangoh}}
+\subsubsection[{Get\+P\+A\+R\+J}]{\setlength{\rightskip}{0pt plus 5cm}double T\+Djangoh\+::\+Get\+P\+A\+R\+J (
+\begin{DoxyParamCaption}
+\item[{int}]{i}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}}\label{class_t_djangoh_acca1999c25174c677a7476936deda040}
+
+
+Recover the i element of P\+A\+R\+J. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em i} & \+: element index \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+P\+A\+R\+J\mbox{[}i-\/1\mbox{]} 
+\end{DoxyReturn}
+\hypertarget{class_t_djangoh_a2437af1524d88ab2a27ce156e5b59dc3}{\index{T\+Djangoh@{T\+Djangoh}!Get\+P\+A\+R\+U@{Get\+P\+A\+R\+U}}
+\index{Get\+P\+A\+R\+U@{Get\+P\+A\+R\+U}!T\+Djangoh@{T\+Djangoh}}
+\subsubsection[{Get\+P\+A\+R\+U}]{\setlength{\rightskip}{0pt plus 5cm}double T\+Djangoh\+::\+Get\+P\+A\+R\+U (
+\begin{DoxyParamCaption}
+\item[{int}]{i}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}}\label{class_t_djangoh_a2437af1524d88ab2a27ce156e5b59dc3}
+
+
+Recover the i element of P\+A\+R\+U. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em i} & \+: element index \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+P\+A\+R\+U\mbox{[}i-\/1\mbox{]} 
+\end{DoxyReturn}
+\hypertarget{class_t_djangoh_af02363ca029e8792ffe67f461d079b32}{\index{T\+Djangoh@{T\+Djangoh}!Get\+P\+M\+A\+S@{Get\+P\+M\+A\+S}}
+\index{Get\+P\+M\+A\+S@{Get\+P\+M\+A\+S}!T\+Djangoh@{T\+Djangoh}}
+\subsubsection[{Get\+P\+M\+A\+S}]{\setlength{\rightskip}{0pt plus 5cm}double T\+Djangoh\+::\+Get\+P\+M\+A\+S (
+\begin{DoxyParamCaption}
+\item[{int}]{ip, }
+\item[{int}]{i}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}}\label{class_t_djangoh_af02363ca029e8792ffe67f461d079b32}
+
+
+Recover the P\+M\+A\+S\mbox{[}i-\/1\mbox{]}\mbox{[}ip-\/1\mbox{]} element. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ip} & \+: column index \\
+\hline
+{\em i} & \+: line index \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+P\+M\+A\+S\mbox{[}i-\/1\mbox{]}\mbox{[}ip-\/1\mbox{]} 
+\end{DoxyReturn}
+\hypertarget{class_t_djangoh_a4993a87fef8917b9ed8a55811aa2daf6}{\index{T\+Djangoh@{T\+Djangoh}!Get\+V@{Get\+V}}
+\index{Get\+V@{Get\+V}!T\+Djangoh@{T\+Djangoh}}
+\subsubsection[{Get\+V}]{\setlength{\rightskip}{0pt plus 5cm}double T\+Djangoh\+::\+Get\+V (
+\begin{DoxyParamCaption}
+\item[{int}]{ip, }
+\item[{int}]{i}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}}\label{class_t_djangoh_a4993a87fef8917b9ed8a55811aa2daf6}
+
+
+Recover the V\mbox{[}i-\/1\mbox{]}\mbox{[}ip-\/1\mbox{]} element. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ip} & \+: column index \\
+\hline
+{\em i} & \+: line index \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+V\mbox{[}i-\/1\mbox{]}\mbox{[}ip-\/1\mbox{]} 
+\end{DoxyReturn}
+\hypertarget{class_t_djangoh_a0b1b9096be193695aab3352ce9f81159}{\index{T\+Djangoh@{T\+Djangoh}!Get\+V\+C\+K\+M@{Get\+V\+C\+K\+M}}
+\index{Get\+V\+C\+K\+M@{Get\+V\+C\+K\+M}!T\+Djangoh@{T\+Djangoh}}
+\subsubsection[{Get\+V\+C\+K\+M}]{\setlength{\rightskip}{0pt plus 5cm}double T\+Djangoh\+::\+Get\+V\+C\+K\+M (
+\begin{DoxyParamCaption}
+\item[{int}]{i, }
+\item[{int}]{j}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}}\label{class_t_djangoh_a0b1b9096be193695aab3352ce9f81159}
+
+
+Recover the V\+C\+K\+M\mbox{[}i-\/1\mbox{]}\mbox{[}j-\/1\mbox{]} element. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em j} & \+: column index \\
+\hline
+{\em i} & \+: line index \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+V\+C\+K\+M\mbox{[}i-\/1\mbox{]}\mbox{[}j-\/1\mbox{]} 
+\end{DoxyReturn}
+\hypertarget{class_t_djangoh_a69e5ebe63faa2dd00d9bcd217ecdf825}{\index{T\+Djangoh@{T\+Djangoh}!Import\+Particles@{Import\+Particles}}
+\index{Import\+Particles@{Import\+Particles}!T\+Djangoh@{T\+Djangoh}}
+\subsubsection[{Import\+Particles}]{\setlength{\rightskip}{0pt plus 5cm}Int\+\_\+t T\+Djangoh\+::\+Import\+Particles (
+\begin{DoxyParamCaption}
+\item[{T\+Clones\+Array $\ast$}]{particles, }
+\item[{Option\+\_\+t $\ast$}]{option = {\ttfamily \char`\"{}\char`\"{}}}
+\end{DoxyParamCaption}
+)}}\label{class_t_djangoh_a69e5ebe63faa2dd00d9bcd217ecdf825}
+
+
+Import particles from lujets\+\_\+ subroutine and copy it in T\+Clones\+Array$\ast$. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em particles} & \+: Array of particles \\
+\hline
+{\em option} & \+: \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+nparts \+: number of particles 
+\end{DoxyReturn}
+\hypertarget{class_t_djangoh_ac63f2c463b6a2fff98f256952aaf945f}{\index{T\+Djangoh@{T\+Djangoh}!Import\+Particles@{Import\+Particles}}
+\index{Import\+Particles@{Import\+Particles}!T\+Djangoh@{T\+Djangoh}}
+\subsubsection[{Import\+Particles}]{\setlength{\rightskip}{0pt plus 5cm}T\+Obj\+Array $\ast$ T\+Djangoh\+::\+Import\+Particles (
+\begin{DoxyParamCaption}
+\item[{Option\+\_\+t $\ast$}]{option = {\ttfamily \char`\"{}\char`\"{}}}
+\end{DoxyParamCaption}
+)}}\label{class_t_djangoh_ac63f2c463b6a2fff98f256952aaf945f}
+
+
+Import particles from lujets\+\_\+ subroutine and copy it in T\+Clones\+Array$\ast$. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em option} & \+: \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+T\+Obj\+Array w/ particles 
+\end{DoxyReturn}
+\hypertarget{class_t_djangoh_a073e114a26b9d27e3dddcdcc0e955746}{\index{T\+Djangoh@{T\+Djangoh}!Initialize@{Initialize}}
+\index{Initialize@{Initialize}!T\+Djangoh@{T\+Djangoh}}
+\subsubsection[{Initialize}]{\setlength{\rightskip}{0pt plus 5cm}void T\+Djangoh\+::\+Initialize (
+\begin{DoxyParamCaption}
+\item[{const char $\ast$}]{beam, }
+\item[{int}]{nuc\+\_\+\+A, }
+\item[{int}]{nuc\+\_\+\+Z, }
+\item[{float}]{beam\+\_\+e, }
+\item[{float}]{nuc\+\_\+e, }
+\item[{float}]{pol = {\ttfamily 0}}
+\end{DoxyParamCaption}
+)}}\label{class_t_djangoh_a073e114a26b9d27e3dddcdcc0e955746}
+
+
+Initialization of an event. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em beam} & \+: Type of particle for the beam \\
+\hline
+{\em nuc\+\_\+\+A} & \+: A number of the target nucleus \\
+\hline
+{\em nuc\+\_\+\+Z} & \+: Z number of the target nucleus \\
+\hline
+{\em beam\+\_\+e} & \+: Energy of the beam (in Ge\+V) \\
+\hline
+{\em nuc\+\_\+e} & \+: Energy of the target (in Ge\+V, 0 for fixed target) \\
+\hline
+{\em pol} & \+: Polarization of the target \\
+\hline
+\end{DoxyParams}
+\hypertarget{class_t_djangoh_a4ac910303945724305714d4fb92c1806}{\index{T\+Djangoh@{T\+Djangoh}!Initialize\+\_\+\+File@{Initialize\+\_\+\+File}}
+\index{Initialize\+\_\+\+File@{Initialize\+\_\+\+File}!T\+Djangoh@{T\+Djangoh}}
+\subsubsection[{Initialize\+\_\+\+File}]{\setlength{\rightskip}{0pt plus 5cm}void T\+Djangoh\+::\+Initialize\+\_\+\+File (
+\begin{DoxyParamCaption}
+\item[{const char $\ast$}]{beam, }
+\item[{int}]{P\+I\+D, }
+\item[{int}]{nuc\+\_\+\+A, }
+\item[{int}]{nuc\+\_\+\+Z, }
+\item[{float}]{beam\+\_\+e, }
+\item[{float}]{nuc\+\_\+e, }
+\item[{float}]{pol}
+\end{DoxyParamCaption}
+)}}\label{class_t_djangoh_a4ac910303945724305714d4fb92c1806}
+
+
+Initialization of the input file. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em beam} & \+: Type of particle for the beam \\
+\hline
+{\em P\+I\+D} & \+: P\+I\+D of beam particle \\
+\hline
+{\em nuc\+\_\+\+A} & \+: A number of the target nucleus \\
+\hline
+{\em nuc\+\_\+\+Z} & \+: Z number of the target nucleus \\
+\hline
+{\em beam\+\_\+e} & \+: Energy of the beam (in Ge\+V) \\
+\hline
+{\em nuc\+\_\+e} & \+: Energy of the target (in Ge\+V, 0 for fixed target) \\
+\hline
+{\em pol} & \+: Polarization of the target \\
+\hline
+\end{DoxyParams}
+\hypertarget{class_t_djangoh_a2e9871b8bec6326bb518f218dc87402c}{\index{T\+Djangoh@{T\+Djangoh}!Instance@{Instance}}
+\index{Instance@{Instance}!T\+Djangoh@{T\+Djangoh}}
+\subsubsection[{Instance}]{\setlength{\rightskip}{0pt plus 5cm}{\bf T\+Djangoh} $\ast$ T\+Djangoh\+::\+Instance (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [static]}}}\label{class_t_djangoh_a2e9871b8bec6326bb518f218dc87402c}
+
+
+Instance creation. 
+
+\hypertarget{class_t_djangoh_a35e52b50d96fa03b74dc23cc32a8ca6f}{\index{T\+Djangoh@{T\+Djangoh}!Lulist@{Lulist}}
+\index{Lulist@{Lulist}!T\+Djangoh@{T\+Djangoh}}
+\subsubsection[{Lulist}]{\setlength{\rightskip}{0pt plus 5cm}void T\+Djangoh\+::\+Lulist (
+\begin{DoxyParamCaption}
+\item[{int}]{flag}
+\end{DoxyParamCaption}
+)}}\label{class_t_djangoh_a35e52b50d96fa03b74dc23cc32a8ca6f}
+
+
+lulist\+\_\+ routine 
+
+\hypertarget{class_t_djangoh_a987204dc283979db28c83e5a35177b7c}{\index{T\+Djangoh@{T\+Djangoh}!operator=@{operator=}}
+\index{operator=@{operator=}!T\+Djangoh@{T\+Djangoh}}
+\subsubsection[{operator=}]{\setlength{\rightskip}{0pt plus 5cm}{\bf T\+Djangoh}\& T\+Djangoh\+::operator= (
+\begin{DoxyParamCaption}
+\item[{const {\bf T\+Djangoh} \&}]{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [protected]}}}\label{class_t_djangoh_a987204dc283979db28c83e5a35177b7c}
+
+
+= operator overload 
+
+
+\begin{DoxyParams}{Parameters}
+{\em \hyperlink{class_t_djangoh}{T\+Djangoh}} & \+: \hyperlink{class_t_djangoh}{T\+Djangoh} object \\
+\hline
+\end{DoxyParams}
+\hypertarget{class_t_djangoh_a045a7fabe350589453e240bff98ca54b}{\index{T\+Djangoh@{T\+Djangoh}!Set\+K@{Set\+K}}
+\index{Set\+K@{Set\+K}!T\+Djangoh@{T\+Djangoh}}
+\subsubsection[{Set\+K}]{\setlength{\rightskip}{0pt plus 5cm}void T\+Djangoh\+::\+Set\+K (
+\begin{DoxyParamCaption}
+\item[{int}]{ip, }
+\item[{int}]{i, }
+\item[{int}]{k}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}}\label{class_t_djangoh_a045a7fabe350589453e240bff98ca54b}
+
+
+Set the K\mbox{[}i-\/1\mbox{]}\mbox{[}ip-\/1\mbox{]} element. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ip} & \+: column index \\
+\hline
+{\em i} & \+: line index \\
+\hline
+{\em k} & \+: value of K\mbox{[}i-\/1\mbox{]}\mbox{[}ip-\/1\mbox{]} \\
+\hline
+\end{DoxyParams}
+\hypertarget{class_t_djangoh_ac82d4f50980416893c9b1504247fe47f}{\index{T\+Djangoh@{T\+Djangoh}!Set\+K\+C\+H\+G@{Set\+K\+C\+H\+G}}
+\index{Set\+K\+C\+H\+G@{Set\+K\+C\+H\+G}!T\+Djangoh@{T\+Djangoh}}
+\subsubsection[{Set\+K\+C\+H\+G}]{\setlength{\rightskip}{0pt plus 5cm}void T\+Djangoh\+::\+Set\+K\+C\+H\+G (
+\begin{DoxyParamCaption}
+\item[{int}]{ip, }
+\item[{int}]{i, }
+\item[{int}]{k}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}}\label{class_t_djangoh_ac82d4f50980416893c9b1504247fe47f}
+
+
+Set the K\+C\+H\+G\mbox{[}i-\/1\mbox{]}\mbox{[}ip-\/1\mbox{]} element. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ip} & \+: column index \\
+\hline
+{\em i} & \+: line index \\
+\hline
+{\em k} & \+: value of K\+C\+H\+G\mbox{[}i-\/1\mbox{]}\mbox{[}ip-\/1\mbox{]} \\
+\hline
+\end{DoxyParams}
+\hypertarget{class_t_djangoh_a36615fc810cc9c50701982ed0cd3121b}{\index{T\+Djangoh@{T\+Djangoh}!Set\+M\+S\+T\+J@{Set\+M\+S\+T\+J}}
+\index{Set\+M\+S\+T\+J@{Set\+M\+S\+T\+J}!T\+Djangoh@{T\+Djangoh}}
+\subsubsection[{Set\+M\+S\+T\+J}]{\setlength{\rightskip}{0pt plus 5cm}void T\+Djangoh\+::\+Set\+M\+S\+T\+J (
+\begin{DoxyParamCaption}
+\item[{int}]{i, }
+\item[{int}]{m}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}}\label{class_t_djangoh_a36615fc810cc9c50701982ed0cd3121b}
+
+
+Set the i element of M\+S\+T\+J. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em i} & \+: element index \\
+\hline
+{\em m} & \+: value of M\+S\+T\+J\mbox{[}i-\/1\mbox{]} \\
+\hline
+\end{DoxyParams}
+\hypertarget{class_t_djangoh_a384df028825302ce79c109f145e1b02a}{\index{T\+Djangoh@{T\+Djangoh}!Set\+M\+S\+T\+U@{Set\+M\+S\+T\+U}}
+\index{Set\+M\+S\+T\+U@{Set\+M\+S\+T\+U}!T\+Djangoh@{T\+Djangoh}}
+\subsubsection[{Set\+M\+S\+T\+U}]{\setlength{\rightskip}{0pt plus 5cm}void T\+Djangoh\+::\+Set\+M\+S\+T\+U (
+\begin{DoxyParamCaption}
+\item[{int}]{i, }
+\item[{int}]{m}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}}\label{class_t_djangoh_a384df028825302ce79c109f145e1b02a}
+
+
+Set the i element of M\+S\+T\+U. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em i} & \+: element index \\
+\hline
+{\em m} & \+: value of M\+S\+T\+U\mbox{[}i-\/1\mbox{]} \\
+\hline
+\end{DoxyParams}
+\hypertarget{class_t_djangoh_ac15b9862e954349fd9f0911c71e0e664}{\index{T\+Djangoh@{T\+Djangoh}!Set\+N@{Set\+N}}
+\index{Set\+N@{Set\+N}!T\+Djangoh@{T\+Djangoh}}
+\subsubsection[{Set\+N}]{\setlength{\rightskip}{0pt plus 5cm}void T\+Djangoh\+::\+Set\+N (
+\begin{DoxyParamCaption}
+\item[{int}]{n}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}}\label{class_t_djangoh_ac15b9862e954349fd9f0911c71e0e664}
+
+
+Set the number of particles. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em n} & \+: number of particles \\
+\hline
+\end{DoxyParams}
+\hypertarget{class_t_djangoh_a0ed7bb7e7433a6385b5838ce519168a2}{\index{T\+Djangoh@{T\+Djangoh}!Set\+N\+P\+A\+D@{Set\+N\+P\+A\+D}}
+\index{Set\+N\+P\+A\+D@{Set\+N\+P\+A\+D}!T\+Djangoh@{T\+Djangoh}}
+\subsubsection[{Set\+N\+P\+A\+D}]{\setlength{\rightskip}{0pt plus 5cm}void T\+Djangoh\+::\+Set\+N\+P\+A\+D (
+\begin{DoxyParamCaption}
+\item[{int}]{n}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}}\label{class_t_djangoh_a0ed7bb7e7433a6385b5838ce519168a2}
+
+
+Set N\+P\+A\+D. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em n} & \+: N\+P\+A\+D \\
+\hline
+\end{DoxyParams}
+\hypertarget{class_t_djangoh_aa9cfa62ac6bf01a7f5214cc62cdae34c}{\index{T\+Djangoh@{T\+Djangoh}!Set\+P@{Set\+P}}
+\index{Set\+P@{Set\+P}!T\+Djangoh@{T\+Djangoh}}
+\subsubsection[{Set\+P}]{\setlength{\rightskip}{0pt plus 5cm}void T\+Djangoh\+::\+Set\+P (
+\begin{DoxyParamCaption}
+\item[{int}]{ip, }
+\item[{int}]{i, }
+\item[{double}]{p}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}}\label{class_t_djangoh_aa9cfa62ac6bf01a7f5214cc62cdae34c}
+
+
+Set the P\mbox{[}i-\/1\mbox{]}\mbox{[}ip-\/1\mbox{]} element. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ip} & \+: column index \\
+\hline
+{\em i} & \+: line index \\
+\hline
+{\em p} & \+: value of P\mbox{[}i-\/1\mbox{]}\mbox{[}ip-\/1\mbox{]} \\
+\hline
+\end{DoxyParams}
+\hypertarget{class_t_djangoh_a351dee78b1ea5d9014e7913f52518cd9}{\index{T\+Djangoh@{T\+Djangoh}!Set\+P\+A\+R\+F@{Set\+P\+A\+R\+F}}
+\index{Set\+P\+A\+R\+F@{Set\+P\+A\+R\+F}!T\+Djangoh@{T\+Djangoh}}
+\subsubsection[{Set\+P\+A\+R\+F}]{\setlength{\rightskip}{0pt plus 5cm}void T\+Djangoh\+::\+Set\+P\+A\+R\+F (
+\begin{DoxyParamCaption}
+\item[{int}]{i, }
+\item[{double}]{p}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}}\label{class_t_djangoh_a351dee78b1ea5d9014e7913f52518cd9}
+
+
+Set the i element of P\+A\+R\+F. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em i} & \+: element index \\
+\hline
+{\em p} & \+: value of P\+A\+R\+F\mbox{[}i-\/1\mbox{]} \\
+\hline
+\end{DoxyParams}
+\hypertarget{class_t_djangoh_a40a5e2d72e700a53329fa10a3854b61e}{\index{T\+Djangoh@{T\+Djangoh}!Set\+P\+A\+R\+J@{Set\+P\+A\+R\+J}}
+\index{Set\+P\+A\+R\+J@{Set\+P\+A\+R\+J}!T\+Djangoh@{T\+Djangoh}}
+\subsubsection[{Set\+P\+A\+R\+J}]{\setlength{\rightskip}{0pt plus 5cm}void T\+Djangoh\+::\+Set\+P\+A\+R\+J (
+\begin{DoxyParamCaption}
+\item[{int}]{i, }
+\item[{double}]{p}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}}\label{class_t_djangoh_a40a5e2d72e700a53329fa10a3854b61e}
+
+
+Set the i element of P\+A\+R\+J. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em i} & \+: element index \\
+\hline
+{\em p} & \+: value of P\+A\+R\+J\mbox{[}i-\/1\mbox{]} \\
+\hline
+\end{DoxyParams}
+\hypertarget{class_t_djangoh_ab7568cf96eb1a4ede5cc0d061a129db7}{\index{T\+Djangoh@{T\+Djangoh}!Set\+P\+A\+R\+U@{Set\+P\+A\+R\+U}}
+\index{Set\+P\+A\+R\+U@{Set\+P\+A\+R\+U}!T\+Djangoh@{T\+Djangoh}}
+\subsubsection[{Set\+P\+A\+R\+U}]{\setlength{\rightskip}{0pt plus 5cm}void T\+Djangoh\+::\+Set\+P\+A\+R\+U (
+\begin{DoxyParamCaption}
+\item[{int}]{i, }
+\item[{double}]{p}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}}\label{class_t_djangoh_ab7568cf96eb1a4ede5cc0d061a129db7}
+
+
+Set the i element of P\+A\+R\+U. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em i} & \+: element index \\
+\hline
+{\em p} & \+: value of P\+A\+R\+U\mbox{[}i-\/1\mbox{]} \\
+\hline
+\end{DoxyParams}
+\hypertarget{class_t_djangoh_a9e7308dceed0b17d8a61dd1018323b60}{\index{T\+Djangoh@{T\+Djangoh}!Set\+P\+M\+A\+S@{Set\+P\+M\+A\+S}}
+\index{Set\+P\+M\+A\+S@{Set\+P\+M\+A\+S}!T\+Djangoh@{T\+Djangoh}}
+\subsubsection[{Set\+P\+M\+A\+S}]{\setlength{\rightskip}{0pt plus 5cm}void T\+Djangoh\+::\+Set\+P\+M\+A\+S (
+\begin{DoxyParamCaption}
+\item[{int}]{ip, }
+\item[{int}]{i, }
+\item[{double}]{m}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}}\label{class_t_djangoh_a9e7308dceed0b17d8a61dd1018323b60}
+
+
+Set the P\+M\+A\+S\mbox{[}i-\/1\mbox{]}\mbox{[}ip-\/1\mbox{]} element. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ip} & \+: column index \\
+\hline
+{\em i} & \+: line index \\
+\hline
+{\em m} & \+: value of P\+M\+A\+S\mbox{[}i-\/1\mbox{]}\mbox{[}ip-\/1\mbox{]} \\
+\hline
+\end{DoxyParams}
+\hypertarget{class_t_djangoh_a472e228f316f1473c940dfa37c22637c}{\index{T\+Djangoh@{T\+Djangoh}!Set\+V@{Set\+V}}
+\index{Set\+V@{Set\+V}!T\+Djangoh@{T\+Djangoh}}
+\subsubsection[{Set\+V}]{\setlength{\rightskip}{0pt plus 5cm}void T\+Djangoh\+::\+Set\+V (
+\begin{DoxyParamCaption}
+\item[{int}]{ip, }
+\item[{int}]{i, }
+\item[{double}]{v}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}}\label{class_t_djangoh_a472e228f316f1473c940dfa37c22637c}
+
+
+Set the V\mbox{[}i-\/1\mbox{]}\mbox{[}ip-\/1\mbox{]} element. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ip} & \+: column index \\
+\hline
+{\em i} & \+: line index \\
+\hline
+{\em v} & \+: value of V\mbox{[}i-\/1\mbox{]}\mbox{[}ip-\/1\mbox{]} \\
+\hline
+\end{DoxyParams}
+\hypertarget{class_t_djangoh_a8aea0e0f7735a1e457c7b30923d89bff}{\index{T\+Djangoh@{T\+Djangoh}!Set\+V\+C\+K\+M@{Set\+V\+C\+K\+M}}
+\index{Set\+V\+C\+K\+M@{Set\+V\+C\+K\+M}!T\+Djangoh@{T\+Djangoh}}
+\subsubsection[{Set\+V\+C\+K\+M}]{\setlength{\rightskip}{0pt plus 5cm}void T\+Djangoh\+::\+Set\+V\+C\+K\+M (
+\begin{DoxyParamCaption}
+\item[{int}]{i, }
+\item[{int}]{j, }
+\item[{double}]{v}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}}\label{class_t_djangoh_a8aea0e0f7735a1e457c7b30923d89bff}
+
+
+Set the V\+C\+K\+M\mbox{[}i-\/1\mbox{]}\mbox{[}j-\/1\mbox{]} element. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em j} & \+: column index \\
+\hline
+{\em i} & \+: line index \\
+\hline
+{\em v} & \+: value of V\+C\+K\+M\mbox{[}i-\/1\mbox{]}\mbox{[}j-\/1\mbox{]} \\
+\hline
+\end{DoxyParams}
+
+
+\subsection{Member Data Documentation}
+\hypertarget{class_t_djangoh_a74cbc9b27daed09c9b853b2f72669a71}{\index{T\+Djangoh@{T\+Djangoh}!alfas@{alfas}}
+\index{alfas@{alfas}!T\+Djangoh@{T\+Djangoh}}
+\subsubsection[{alfas}]{\setlength{\rightskip}{0pt plus 5cm}float T\+Djangoh\+::alfas\mbox{[}4\mbox{]} = \{1, 1, 0.\+20, 0.\+235\}}}\label{class_t_djangoh_a74cbc9b27daed09c9b853b2f72669a71}
+Instance of \hyperlink{class_t_djangoh}{T\+Djangoh}. Only one at a time permitted \hypertarget{class_t_djangoh_a804083301c1acef844fa78a2c36fdf32}{\index{T\+Djangoh@{T\+Djangoh}!cascades@{cascades}}
+\index{cascades@{cascades}!T\+Djangoh@{T\+Djangoh}}
+\subsubsection[{cascades}]{\setlength{\rightskip}{0pt plus 5cm}int T\+Djangoh\+::cascades = 12}}\label{class_t_djangoh_a804083301c1acef844fa78a2c36fdf32}
+Instance of \hyperlink{class_t_djangoh}{T\+Djangoh}. Only one at a time permitted \hypertarget{class_t_djangoh_a942fe7661f7ca2e6e94eefc7efc8b523}{\index{T\+Djangoh@{T\+Djangoh}!egam\+\_\+min@{egam\+\_\+min}}
+\index{egam\+\_\+min@{egam\+\_\+min}!T\+Djangoh@{T\+Djangoh}}
+\subsubsection[{egam\+\_\+min}]{\setlength{\rightskip}{0pt plus 5cm}string T\+Djangoh\+::egam\+\_\+min = \char`\"{}0\+D0\char`\"{}}}\label{class_t_djangoh_a942fe7661f7ca2e6e94eefc7efc8b523}
+Definition of lower cutoff energy for bremsstrahlung photons (Ge\+V) \+:
+\begin{DoxyItemize}
+\item =0.\+0 \+: Both radiative and non-\/radiative events are generated. The separation of the the cross-\/section into rad/non-\/rad parts w/ the help of a soft-\/photon cutoff is determined internally as a function of x and y. Used if you want both rad/non-\/rad integrated.
+\item $>$0.\+0 \+: Only hard-\/photon bremsstrahlung is considered in event sampling. 
+\end{DoxyItemize}\hypertarget{class_t_djangoh_ad154e9fce28f84ab490dc6508db58fb8}{\index{T\+Djangoh@{T\+Djangoh}!fg\+Instance@{fg\+Instance}}
+\index{fg\+Instance@{fg\+Instance}!T\+Djangoh@{T\+Djangoh}}
+\subsubsection[{fg\+Instance}]{\setlength{\rightskip}{0pt plus 5cm}{\bf T\+Djangoh} $\ast$ T\+Djangoh\+::fg\+Instance = 0\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [protected]}}}\label{class_t_djangoh_ad154e9fce28f84ab490dc6508db58fb8}
+Instance of \hyperlink{class_t_djangoh}{T\+Djangoh}. Only one at a time permitted \hypertarget{class_t_djangoh_a9eb43fe747243662ae9da94fb769a80b}{\index{T\+Djangoh@{T\+Djangoh}!flong@{flong}}
+\index{flong@{flong}!T\+Djangoh@{T\+Djangoh}}
+\subsubsection[{flong}]{\setlength{\rightskip}{0pt plus 5cm}float T\+Djangoh\+::flong\mbox{[}3\mbox{]} = \{111, 0.\+01, 0.\+03\}}}\label{class_t_djangoh_a9eb43fe747243662ae9da94fb769a80b}
+Instance of \hyperlink{class_t_djangoh}{T\+Djangoh}. Only one at a time permitted \hypertarget{class_t_djangoh_acc9083c81e338f4e9bc3266e4536fde1}{\index{T\+Djangoh@{T\+Djangoh}!f\+Ludat1@{f\+Ludat1}}
+\index{f\+Ludat1@{f\+Ludat1}!T\+Djangoh@{T\+Djangoh}}
+\subsubsection[{f\+Ludat1}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Ludat1\+\_\+t}$\ast$ T\+Djangoh\+::f\+Ludat1\hspace{0.3cm}{\ttfamily [protected]}}}\label{class_t_djangoh_acc9083c81e338f4e9bc3266e4536fde1}
+Container of the ludat1\+\_\+ common block. For the moment not used due to 32/64 incomp \hypertarget{class_t_djangoh_af1cc34415736302400b5c343f8604e3b}{\index{T\+Djangoh@{T\+Djangoh}!f\+Ludat2@{f\+Ludat2}}
+\index{f\+Ludat2@{f\+Ludat2}!T\+Djangoh@{T\+Djangoh}}
+\subsubsection[{f\+Ludat2}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Ludat2\+\_\+t}$\ast$ T\+Djangoh\+::f\+Ludat2\hspace{0.3cm}{\ttfamily [protected]}}}\label{class_t_djangoh_af1cc34415736302400b5c343f8604e3b}
+Container of the ludat2\+\_\+ common block. For the moment not used due to 32/64 incomp \hypertarget{class_t_djangoh_a844cd27abcd743028fb98b3fba0c0fa9}{\index{T\+Djangoh@{T\+Djangoh}!f\+Lujets@{f\+Lujets}}
+\index{f\+Lujets@{f\+Lujets}!T\+Djangoh@{T\+Djangoh}}
+\subsubsection[{f\+Lujets}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Lujets\+\_\+t}$\ast$ T\+Djangoh\+::f\+Lujets\hspace{0.3cm}{\ttfamily [protected]}}}\label{class_t_djangoh_a844cd27abcd743028fb98b3fba0c0fa9}
+Container of the lujets\+\_\+ common block \hypertarget{class_t_djangoh_ab7d3ea58eb6f4c59f68703e0b80614f9}{\index{T\+Djangoh@{T\+Djangoh}!frag@{frag}}
+\index{frag@{frag}!T\+Djangoh@{T\+Djangoh}}
+\subsubsection[{frag}]{\setlength{\rightskip}{0pt plus 5cm}int T\+Djangoh\+::frag = 1}}\label{class_t_djangoh_ab7d3ea58eb6f4c59f68703e0b80614f9}
+Instance of \hyperlink{class_t_djangoh}{T\+Djangoh}. Only one at a time permitted \hypertarget{class_t_djangoh_a73c1e424fd8153cd323a25390efb2362}{\index{T\+Djangoh@{T\+Djangoh}!gsw\+\_\+param@{gsw\+\_\+param}}
+\index{gsw\+\_\+param@{gsw\+\_\+param}!T\+Djangoh@{T\+Djangoh}}
+\subsubsection[{gsw\+\_\+param}]{\setlength{\rightskip}{0pt plus 5cm}int T\+Djangoh\+::gsw\+\_\+param\mbox{[}11\mbox{]} = \{2,1,3,1,0,0,2,1,1,1,1\}}}\label{class_t_djangoh_a73c1e424fd8153cd323a25390efb2362}
+Monitoring the definition of E\+W parameters and inclusion of virtual corrections \+:
+\begin{DoxyItemize}
+\item L\+P\+A\+R\+I\+N(1) = 1 \+: E\+W param set w/ fixed values for bosons masses M\+\_\+\+W, M\+\_\+\+Z. = 2 \+: E\+W param calculated from fixed M\+\_\+\+W, M\+\_\+\+Z (D\+E\+F\+A\+U\+L\+T).
+\item L\+P\+A\+R\+I\+N(2) = 0 \+: only Born cross-\/section w/o E\+M or W corrections is integrated. = 1 \+: Born cross-\/section includes corrections.
+\item L\+P\+A\+R\+I\+N(3) \+: flag for inclusion of higher order contributions = 0 \+: no higher order corrections. ≥ 1 \+: terms of O(a$^\wedge$2.m\+\_\+t$^\wedge$2) included. ≥ 2 \+: terms of O(a.\+a\+\_\+s.\+m\+\_\+t$^\wedge$2) included. ≥ 3 \+: running a(\+Q2) used for the radiative cross-\/section.
+\item L\+P\+A\+R\+I\+N(4) \+: leptonic Q\+E\+D corrections.
+\item L\+P\+A\+R\+I\+N(5) \+: quarkonic Q\+E\+D cprrections.
+\item L\+P\+A\+R\+I\+N(6) \+: lepton-\/quark interference.
+\item L\+P\+A\+R\+I\+N(7) \+: fermionic contributions to the photon self energy sigma$^\wedge$gamma. = 0 \+: not included. = 1 \+: parametrization w/ the help of the quark masses. = 2 \+: parametrization from H. Burkhardt et al. (Polarization at L\+E\+P, C\+E\+R\+N 88-\/06).
+\item L\+P\+A\+R\+I\+N(8) \+: fermionic contribution to the gamma-\/\+Z mixing.
+\item L\+P\+A\+R\+I\+N(9) \+: fermionic contribution to the self energy of the Z bosons.
+\item L\+P\+A\+R\+I\+N(10) \+: fermionic contribution to the self energy of the W bosons.
+\item L\+P\+A\+R\+I\+N(11) \+: purely weak contributions to self energy, vertex corrections and boxes. 
+\end{DoxyItemize}\hypertarget{class_t_djangoh_ad3d8b1c563bb610f3a75735e2976f82d}{\index{T\+Djangoh@{T\+Djangoh}!int\+\_\+only@{int\+\_\+only}}
+\index{int\+\_\+only@{int\+\_\+only}!T\+Djangoh@{T\+Djangoh}}
+\subsubsection[{int\+\_\+only}]{\setlength{\rightskip}{0pt plus 5cm}int T\+Djangoh\+::int\+\_\+only = 0}}\label{class_t_djangoh_ad3d8b1c563bb610f3a75735e2976f82d}
+Instance of \hyperlink{class_t_djangoh}{T\+Djangoh}. Only one at a time permitted \hypertarget{class_t_djangoh_ac6e61b78890fac424ba060d8411fc266}{\index{T\+Djangoh@{T\+Djangoh}!int\+\_\+opt\+\_\+cc@{int\+\_\+opt\+\_\+cc}}
+\index{int\+\_\+opt\+\_\+cc@{int\+\_\+opt\+\_\+cc}!T\+Djangoh@{T\+Djangoh}}
+\subsubsection[{int\+\_\+opt\+\_\+cc}]{\setlength{\rightskip}{0pt plus 5cm}int T\+Djangoh\+::int\+\_\+opt\+\_\+cc\mbox{[}4\mbox{]} = \{0, 0, 0, 0\}}}\label{class_t_djangoh_ac6e61b78890fac424ba060d8411fc266}
+Instance of \hyperlink{class_t_djangoh}{T\+Djangoh}. Only one at a time permitted \hypertarget{class_t_djangoh_acd610fcad702bfa2bc5128426aab1300}{\index{T\+Djangoh@{T\+Djangoh}!int\+\_\+opt\+\_\+nc@{int\+\_\+opt\+\_\+nc}}
+\index{int\+\_\+opt\+\_\+nc@{int\+\_\+opt\+\_\+nc}!T\+Djangoh@{T\+Djangoh}}
+\subsubsection[{int\+\_\+opt\+\_\+nc}]{\setlength{\rightskip}{0pt plus 5cm}int T\+Djangoh\+::int\+\_\+opt\+\_\+nc\mbox{[}9\mbox{]} = \{1, 18, 18, 18, 0, 0, 0, 0, 0\}}}\label{class_t_djangoh_acd610fcad702bfa2bc5128426aab1300}
+Instance of \hyperlink{class_t_djangoh}{T\+Djangoh}. Only one at a time permitted \hypertarget{class_t_djangoh_a4faef5bd11a1646664432b735c3998e8}{\index{T\+Djangoh@{T\+Djangoh}!int\+\_\+point@{int\+\_\+point}}
+\index{int\+\_\+point@{int\+\_\+point}!T\+Djangoh@{T\+Djangoh}}
+\subsubsection[{int\+\_\+point}]{\setlength{\rightskip}{0pt plus 5cm}int T\+Djangoh\+::int\+\_\+point = 3000}}\label{class_t_djangoh_a4faef5bd11a1646664432b735c3998e8}
+Instance of \hyperlink{class_t_djangoh}{T\+Djangoh}. Only one at a time permitted \hypertarget{class_t_djangoh_a6cc9b21270635d3dcee6de0c7e826726}{\index{T\+Djangoh@{T\+Djangoh}!iounits@{iounits}}
+\index{iounits@{iounits}!T\+Djangoh@{T\+Djangoh}}
+\subsubsection[{iounits}]{\setlength{\rightskip}{0pt plus 5cm}int T\+Djangoh\+::iounits\mbox{[}3\mbox{]} = \{1,1,1\}}}\label{class_t_djangoh_a6cc9b21270635d3dcee6de0c7e826726}
+Logical numbers for in-\/ and output \hypertarget{class_t_djangoh_a97b4c77f2767a449920e0126ab7314b3}{\index{T\+Djangoh@{T\+Djangoh}!kinem\+\_\+cut@{kinem\+\_\+cut}}
+\index{kinem\+\_\+cut@{kinem\+\_\+cut}!T\+Djangoh@{T\+Djangoh}}
+\subsubsection[{kinem\+\_\+cut}]{\setlength{\rightskip}{0pt plus 5cm}string T\+Djangoh\+::kinem\+\_\+cut\mbox{[}7\mbox{]}}}\label{class_t_djangoh_a97b4c77f2767a449920e0126ab7314b3}
+{\bfseries Initial value\+:}
+\begin{DoxyCode}
+= \{\textcolor{stringliteral}{"0.0001D0"},\textcolor{stringliteral}{"1.00D0"},\textcolor{stringliteral}{"0.01D0"},\textcolor{stringliteral}{"0.95D0"},
+                         \textcolor{stringliteral}{"1.0D0"},\textcolor{stringliteral}{"1D5"},\textcolor{stringliteral}{"1.4D0"}\}
+\end{DoxyCode}
+Kinematical cuts \+: X\+M\+I\+N, X\+M\+A\+X, Y\+M\+I\+N, Y\+M\+A\+X, Q2\+M\+I\+N, Q2\+M\+A\+X, W\+M\+I\+N \hypertarget{class_t_djangoh_a1e292bba8a06321f62a1548e74e0fb9e}{\index{T\+Djangoh@{T\+Djangoh}!kinem\+\_\+cut\+\_\+var@{kinem\+\_\+cut\+\_\+var}}
+\index{kinem\+\_\+cut\+\_\+var@{kinem\+\_\+cut\+\_\+var}!T\+Djangoh@{T\+Djangoh}}
+\subsubsection[{kinem\+\_\+cut\+\_\+var}]{\setlength{\rightskip}{0pt plus 5cm}int T\+Djangoh\+::kinem\+\_\+cut\+\_\+var = 3}}\label{class_t_djangoh_a1e292bba8a06321f62a1548e74e0fb9e}
+Define the number of kinematical cuts\+:
+\begin{DoxyItemize}
+\item 1 \+: cuts in x\+\_\+l and lower cut in Q2\+\_\+l (Ge\+V$^\wedge$2), cuts in y\+\_\+l ignored
+\item 2 \+: cuts in x\+\_\+l, lower cut in Q2\+\_\+l and lower cut in W\+\_\+l, cuts in y\+\_\+l ignored
+\item 3 \+: cuts in x\+\_\+l, y\+\_\+l, Q2\+\_\+l and W\+\_\+l 
+\end{DoxyItemize}\hypertarget{class_t_djangoh_aaf2a9c700d5ec37607f7241d2b13bd17}{\index{T\+Djangoh@{T\+Djangoh}!max\+\_\+virt@{max\+\_\+virt}}
+\index{max\+\_\+virt@{max\+\_\+virt}!T\+Djangoh@{T\+Djangoh}}
+\subsubsection[{max\+\_\+virt}]{\setlength{\rightskip}{0pt plus 5cm}int T\+Djangoh\+::max\+\_\+virt = 5}}\label{class_t_djangoh_aaf2a9c700d5ec37607f7241d2b13bd17}
+Instance of \hyperlink{class_t_djangoh}{T\+Djangoh}. Only one at a time permitted \hypertarget{class_t_djangoh_af4b02bd635a9e893dc83224ce9997b26}{\index{T\+Djangoh@{T\+Djangoh}!nflavors@{nflavors}}
+\index{nflavors@{nflavors}!T\+Djangoh@{T\+Djangoh}}
+\subsubsection[{nflavors}]{\setlength{\rightskip}{0pt plus 5cm}int T\+Djangoh\+::nflavors\mbox{[}2\mbox{]} = \{0, 3\}}}\label{class_t_djangoh_af4b02bd635a9e893dc83224ce9997b26}
+Instance of \hyperlink{class_t_djangoh}{T\+Djangoh}. Only one at a time permitted \hypertarget{class_t_djangoh_a80f9f3c2ff9458df6c37f9a730d0d9d7}{\index{T\+Djangoh@{T\+Djangoh}!nucl\+\_\+e@{nucl\+\_\+e}}
+\index{nucl\+\_\+e@{nucl\+\_\+e}!T\+Djangoh@{T\+Djangoh}}
+\subsubsection[{nucl\+\_\+e}]{\setlength{\rightskip}{0pt plus 5cm}string T\+Djangoh\+::nucl\+\_\+e = \char`\"{}0.\+0\+D0\char`\"{}}}\label{class_t_djangoh_a80f9f3c2ff9458df6c37f9a730d0d9d7}
+Instance of \hyperlink{class_t_djangoh}{T\+Djangoh}. Only one at a time permitted \hypertarget{class_t_djangoh_a4b87824fa6a4af88c4c9bb69fdd87f31}{\index{T\+Djangoh@{T\+Djangoh}!out\+\_\+lep@{out\+\_\+lep}}
+\index{out\+\_\+lep@{out\+\_\+lep}!T\+Djangoh@{T\+Djangoh}}
+\subsubsection[{out\+\_\+lep}]{\setlength{\rightskip}{0pt plus 5cm}int T\+Djangoh\+::out\+\_\+lep = 1}}\label{class_t_djangoh_a4b87824fa6a4af88c4c9bb69fdd87f31}
+Instance of \hyperlink{class_t_djangoh}{T\+Djangoh}. Only one at a time permitted \hypertarget{class_t_djangoh_ad1228120d77c6b6ddaced2c91715415c}{\index{T\+Djangoh@{T\+Djangoh}!outfilename@{outfilename}}
+\index{outfilename@{outfilename}!T\+Djangoh@{T\+Djangoh}}
+\subsubsection[{outfilename}]{\setlength{\rightskip}{0pt plus 5cm}string T\+Djangoh\+::outfilename = \char`\"{}T\+Djangoh\char`\"{}}}\label{class_t_djangoh_ad1228120d77c6b6ddaced2c91715415c}
+User defined heading of the first output page \hypertarget{class_t_djangoh_ab3ffe8251846f31857f84d4368a31d96}{\index{T\+Djangoh@{T\+Djangoh}!pr\+\_\+beam@{pr\+\_\+beam}}
+\index{pr\+\_\+beam@{pr\+\_\+beam}!T\+Djangoh@{T\+Djangoh}}
+\subsubsection[{pr\+\_\+beam}]{\setlength{\rightskip}{0pt plus 5cm}string T\+Djangoh\+::pr\+\_\+beam\mbox{[}2\mbox{]} = \{\char`\"{}0\+D0\char`\"{},\char`\"{}0\+D0\char`\"{}\}}}\label{class_t_djangoh_ab3ffe8251846f31857f84d4368a31d96}
+Properties of the target/other beam \hypertarget{class_t_djangoh_aa3e99a785adc52679432d6446dfdc850}{\index{T\+Djangoh@{T\+Djangoh}!rndm\+\_\+seeds@{rndm\+\_\+seeds}}
+\index{rndm\+\_\+seeds@{rndm\+\_\+seeds}!T\+Djangoh@{T\+Djangoh}}
+\subsubsection[{rndm\+\_\+seeds}]{\setlength{\rightskip}{0pt plus 5cm}int T\+Djangoh\+::rndm\+\_\+seeds\mbox{[}2\mbox{]} = \{-\/1, -\/1\}}}\label{class_t_djangoh_aa3e99a785adc52679432d6446dfdc850}
+Instance of \hyperlink{class_t_djangoh}{T\+Djangoh}. Only one at a time permitted \hypertarget{class_t_djangoh_a082064f93cd8e978c454044ab86b3007}{\index{T\+Djangoh@{T\+Djangoh}!sam\+\_\+opt\+\_\+cc@{sam\+\_\+opt\+\_\+cc}}
+\index{sam\+\_\+opt\+\_\+cc@{sam\+\_\+opt\+\_\+cc}!T\+Djangoh@{T\+Djangoh}}
+\subsubsection[{sam\+\_\+opt\+\_\+cc}]{\setlength{\rightskip}{0pt plus 5cm}int T\+Djangoh\+::sam\+\_\+opt\+\_\+cc\mbox{[}4\mbox{]} = \{0, 0, 0, 0\}}}\label{class_t_djangoh_a082064f93cd8e978c454044ab86b3007}
+Instance of \hyperlink{class_t_djangoh}{T\+Djangoh}. Only one at a time permitted \hypertarget{class_t_djangoh_adce1a30080fb56c2fb635826eebd05da}{\index{T\+Djangoh@{T\+Djangoh}!sam\+\_\+opt\+\_\+nc@{sam\+\_\+opt\+\_\+nc}}
+\index{sam\+\_\+opt\+\_\+nc@{sam\+\_\+opt\+\_\+nc}!T\+Djangoh@{T\+Djangoh}}
+\subsubsection[{sam\+\_\+opt\+\_\+nc}]{\setlength{\rightskip}{0pt plus 5cm}int T\+Djangoh\+::sam\+\_\+opt\+\_\+nc\mbox{[}9\mbox{]} = \{1, 1, 1, 1, 0, 0, 0, 0, 0\}}}\label{class_t_djangoh_adce1a30080fb56c2fb635826eebd05da}
+Instance of \hyperlink{class_t_djangoh}{T\+Djangoh}. Only one at a time permitted \hypertarget{class_t_djangoh_a1ecc5438155094281e9867acb6b4432f}{\index{T\+Djangoh@{T\+Djangoh}!sophia@{sophia}}
+\index{sophia@{sophia}!T\+Djangoh@{T\+Djangoh}}
+\subsubsection[{sophia}]{\setlength{\rightskip}{0pt plus 5cm}float T\+Djangoh\+::sophia = 1.\+5}}\label{class_t_djangoh_a1ecc5438155094281e9867acb6b4432f}
+Instance of \hyperlink{class_t_djangoh}{T\+Djangoh}. Only one at a time permitted \hypertarget{class_t_djangoh_a8e88fc34f9f5e6e0b62af4054bbe9ce3}{\index{T\+Djangoh@{T\+Djangoh}!start@{start}}
+\index{start@{start}!T\+Djangoh@{T\+Djangoh}}
+\subsubsection[{start}]{\setlength{\rightskip}{0pt plus 5cm}int T\+Djangoh\+::start = 1}}\label{class_t_djangoh_a8e88fc34f9f5e6e0b62af4054bbe9ce3}
+Instance of \hyperlink{class_t_djangoh}{T\+Djangoh}. Only one at a time permitted \hypertarget{class_t_djangoh_ad5881cf0e0f935682730fae53e30798b}{\index{T\+Djangoh@{T\+Djangoh}!structfunc@{structfunc}}
+\index{structfunc@{structfunc}!T\+Djangoh@{T\+Djangoh}}
+\subsubsection[{structfunc}]{\setlength{\rightskip}{0pt plus 5cm}int T\+Djangoh\+::structfunc\mbox{[}3\mbox{]} = \{0, 2, 10150\}}}\label{class_t_djangoh_ad5881cf0e0f935682730fae53e30798b}
+Instance of \hyperlink{class_t_djangoh}{T\+Djangoh}. Only one at a time permitted 
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+T\+Djangoh/\hyperlink{_t_djangoh_8h}{T\+Djangoh.\+h}\item 
+T\+Djangoh/\hyperlink{_t_djangoh_8cc}{T\+Djangoh.\+cc}\end{DoxyCompactItemize}
