@@ -20,7 +20,6 @@
 #include "TClonesArray.h"
 #include "TMCParticle.h"
 #include "TParticle.h"
-#include "TDjangoh_inputfile.h"
 #include "TString.h"
 
 TDjangoh*  TDjangoh::fgInstance = 0;

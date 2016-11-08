@@ -20,8 +20,8 @@ class T4DjangohProcess : public T4ProcessBackEnd
 
   private:
     std::string getParticleString(int);
-    TPythia6* tDjangoh;
-    T4SPythia* djangoh; // See T4SGlobals
+    TDjangoh6* tDjangoh;
+    T4SDjangoh* djangoh; // See T4SGlobals
 
     std::string beamParticle;
 };
