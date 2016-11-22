@@ -4,10 +4,10 @@
 #define ROOT_TDjangohCalls
 
 
-int   const KSUSY1  =  1000000;
-int   const KSUSY2  =  2000000;
-int   const KEXCIT  =  4000000;
-int   const KNDCAY  =  8000; //should be 4000 for 1
+// int   const KSUSY1  =  1000000;
+// int   const KSUSY2  =  2000000;
+// int   const KEXCIT  =  4000000;
+// int   const KNDCAY  =  8000; //should be 4000 for 1
 
 /// Djangoh common block Lujets
 struct Lujets_t
@@ -35,6 +35,19 @@ struct Ludat2_t
  double PMAS[4][500];
  double PARF[2000];
  double VCKM[4][4];
+};
+
+/// Djangoh common block DJKIN
+struct Djkin_t
+{
+ double DJX;
+ double DJY;
+ double DJW2;
+ double DJQ2;
+ double DJU;
+ double DJXHAD;
+ double DJYHAD;
+ double DJQ2HAD;
 };
 
 #endif
