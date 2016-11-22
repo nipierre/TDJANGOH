@@ -29,6 +29,7 @@ TDjangoh*  TDjangoh::fgInstance = 0;
 Lujets_t lujets_;
 // Ludat1_t ludat1_;
 // Ludat2_t ludat2_;
+Djkin_t djkin_;
 
 extern "C"
 {
@@ -65,7 +66,8 @@ TDjangoh::TDjangoh(const TDjangoh& dj) :
  TGenerator(dj),
  fLujets(dj.fLujets),
  fLudat1(dj.fLudat1),
- fLudat2(dj.fLudat2)
+ fLudat2(dj.fLudat2),
+ fDjkin(dj.fDjkin)
 
 {}
 
@@ -96,6 +98,7 @@ void TDjangoh::GenerateEvent()
   fLujets = &lujets_;
   // fLudat1 = &ludat1_;
   // fLudat2 = &ludat2_;
+  fDjkin = &djkin_;
   ImportParticles();
 }
 
@@ -173,7 +176,7 @@ Int_t TDjangoh::ImportParticles(TClonesArray *particles, Option_t *option)
                          fLujets->K[2][i] ,
                          -1,
                          fLujets->K[3][i] ,
-                        fLujets->K[4][i] ,
+                         fLujets->K[4][i] ,
                          fLujets->P[0][i] ,
                          fLujets->P[1][i] ,
                          fLujets->P[2][i] ,
@@ -221,7 +224,7 @@ void TDjangoh::Initialize_File(const char *beam, int PID, int nuc_A, int nuc_Z, 
   << "OUTFILENAM\n" << outfilename
   << "\nTITLE\nDJANGOH 4.6.10 for COMPASS for " << beam << " on N(" << nuc_A << "," << nuc_Z
       << ") , NLO at " << beam_e << " , pol at " << pol << " , Wmin = " << kinem_cut[6]
-  << "\nEL-BEAM\n\t" << beam_e << ".0D0 0.0D0 " << PID
+  << "\nEL-BEAM\n\t" << beam_e << "D0 0.0D0 " << PID
   << "\nIOUNITS\n\t" << iounits[0] << " " << iounits[1] << " " << iounits[2]
   << "\nPR-BEAM\n\t" << pr_beam[0] << " " << pr_beam[1]
   << "\nGSW-PARAM\n\t" <<  gsw_param[0] << " " <<  gsw_param[1] << " " <<  gsw_param[2]  << " "
@@ -245,7 +248,7 @@ void TDjangoh::Initialize_File(const char *beam, int PID, int nuc_A, int nuc_Z, 
       << sam_opt_cc[2] << " " << sam_opt_cc[3]
   << "\nNUCLEUS\n\t" << nuc_e << " " << nuc_A << " " << nuc_Z
   << "\nSTRUCTFUNC\n\t" << structfunc[0] << " " << structfunc[1] << " " << structfunc[2]
-  << "\nLHAPATH\n\t" << getenv("LHAPATH")
+  << "\nLHAPATH\n" << getenv("LHAPATH")
   << "\nFLONG\n\t" << flong[0] << " " << flong[1] << " " << flong[2]
   << "\nALFAS\n\t" << alfas[0] << " " << alfas[1] << " " << alfas[2] << " " << alfas[3]
   << "\nNFLAVORS\n\t" << nflavors[0] << " " << nflavors[1]
