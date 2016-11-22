@@ -25,9 +25,16 @@ int main()
   cout << "Event Generated !" << endl;
 
   int nb;
+  float x;
+  float y;
+  float Q2;
 
   nb = tDjangoh->GetN();
   cout << "Total number of particles : " << nb << endl;
+  x = tDjangoh->GetX();
+  y = tDjangoh->GetY();
+  Q2 = tDjangoh->GetQ2();
+  cout << "Xbj : " << x << " y : " << y << " Q2 : " << Q2 << endl;
 
   return 0;
 }
