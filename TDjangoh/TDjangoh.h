@@ -55,6 +55,7 @@ protected:
   Lujets_t*  fLujets; /*!< Container of the lujets_ common block */
   Ludat1_t*  fLudat1; /*!< Container of the ludat1_ common block. For the moment not used due to 32/64 incomp */
   Ludat2_t*  fLudat2; /*!< Container of the ludat2_ common block. For the moment not used due to 32/64 incomp */
+  Djkin_t*   fDjkin;
 
   /*!
   * \class TDjangohCleaner
@@ -174,7 +175,6 @@ public:
   int cascades = 12;/*!< Instance of TDjangoh. Only one at a time permitted */
   int max_virt = 5;/*!< Instance of TDjangoh. Only one at a time permitted */
 
-
   /*!
   * \brief Constructor of the TDjangoh class
   */
@@ -232,7 +232,7 @@ public:
   /*!
   * \brief lulist_ routine
   */
-  void             Lulist(int flag);
+  void             Lulist(int flag) {}
 
 
   // ---------------------------------------------------------------------------
@@ -431,6 +431,43 @@ public:
   */
   void        SetVCKM (int i, int j, double v) { fLudat2->VCKM[j-1][i-1]  = v; }
 
+
+  // ---------------------------------------------------------------------------
+  // /DJKIN/
+
+  Djkin_t*    GetDjkin           () { return fDjkin; }
+
+  double      GetX() { return fDjkin->DJX; }
+
+  double      GetY() { return fDjkin->DJY; }
+
+  double      GetW2() { return fDjkin->DJW2; }
+
+  double      GetQ2() { return fDjkin->DJQ2; }
+
+  double      GetU() { return fDjkin->DJU; }
+
+  double      GetXHAD() { return fDjkin->DJXHAD; }
+
+  double      GetYHAD() { return fDjkin->DJYHAD; }
+
+  double      GetQ2HAD() { return fDjkin->DJQ2HAD; }
+
+  void        SetX(double x) { fDjkin->DJX = x; }
+
+  void        SetY(double y) { fDjkin->DJY = y; }
+
+  void        SetW2(double w) { fDjkin->DJW2 = w; }
+
+  void        SetQ2(double q) { fDjkin->DJQ2 = q; }
+
+  void        SetU(double u) { fDjkin->DJU = u; }
+
+  void        SetXHAD(double x) { fDjkin->DJXHAD = x; }
+
+  void        SetYHAD(double y) { fDjkin->DJYHAD = y; }
+
+  void        SetQ2HAD(double q) { fDjkin->DJQ2HAD = q; }
 };
 
 #endif
