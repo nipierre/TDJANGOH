@@ -33,115 +33,211 @@ Djkin_t djkin_;
 
 extern "C"
 {
-  void hsmain_(const char* inputfile, int* len, int* nbf);
+  void hsmain_(char* clhapathi,int* clhalen);
 }
 
-struct myabc
+extern "C" struct hselab
 {
-  int mya;
-  int myb;
-  int myc;
-} myabc_;
-
-struct hselab
-{
-  float sp;
-  float eele;
-  float pele;
-  float epro;
-  float ppro;
+  double sp;
+  double eele = 160.0;
+  double pele;
+  double epro = 0.0;
+  double ppro;
 } hselab_;
 
-struct hscuts
+extern "C" struct hscuts
 {
-  float xmin;
-  float xmax;
-  float q2min;
-  float q2max;
-  float ymin;
-  float ymax;
-  float wmin;
-  float wmax;
-  float gmin;
+  double xmin = 0.0001;
+  double xmax = 1.00;
+  double q2min = 1.0;
+  double q2max = 10^5;
+  double ymin = 0.01;
+  double ymax = 0.95;
+  double wmin = 1.4;
+  double gmin;
 } hscuts_;
 
-struct hstcut
+extern "C" struct hstcut
 {
-  float themin;
-  float themax;
-  float cthmin;
-  float cthcon;
+  double themin = 0.0;
+  double themax = 180.0;
+  double cthmin = 1.0;
+  double cthcon = 10^15;
 } hstcut_;
 
-struct hspcut
+extern "C" struct hspcut
 {
-  float ptimin;
-  float ptxm0;
+  double ptmin = 0.0;
+  double ptxm0 = 0.0;
 } hspcut_;
 
-struct hsisgm
+extern "C" struct hsisgm
 {
-  float tcutq;
-  float tcutqs;
+  double tcutq = 0.25;
+  double tcutqs = 0.25;
 } hsisgm_;
 
-struct hsparl
+extern "C" struct hsparl
 {
-  float lpar[20];
-  float lparin[12];
+  int lpar[20];
+  int lparin[12] = {2,1,3,1,0,0,2,1,1,1,1,1};
 } hsparl_;
 
-struct hsstrp
+extern "C" struct hsstrp
 {
-  float icode;
-  float ilib;
-  float ilqmod;
-  float idpvr;
-} hsstrp_
+  int icode = 3041;
+  int ilib = 2;
+  int ilqmod = 1;
+  int idpvr = 100;
+} hsstrp_;
 
-struct HSPDFO
+extern "C" struct hspdfo
 {
-  float ipdfop;
-  float iflopt;
-  float lqcd;
-  float ltm;
-  float lht;
+  int ipdfop;
+  int iflopt = 111;
+  int lqcd = 0;
+  int ltm = 0;
+  int lht = 0;
 } hspdfo_;
 
-struct hselep
+extern "C" struct hselep
 {
-  float idipol;
+  double idipol = 0;
 } hselep_;
 
-struct hsnucl
+extern "C" struct hsnucl
 {
-  int hna;
-  int hnz;
-  float inumod;
+  double hna = 1;
+  double hnz = 1;
+  double inumod = 0;
 } hsnucl_;
 
-struct hsparm
+extern "C" struct hsparm
 {
-  float polari;
-  float hpolar;
-  float llept;
-  float lqua;
+  double polari = 0.0;
+  double hpolar = 0.0;
+  int llept = -3;
+  int lqua = 0;
 } hsparm_;
 
-struct hswgtc
+extern "C" struct hswgtc
 {
-  float iweigs;
+  int iweigs;
+  int iweigr = 0;
 } hswgtc_;
 
-struct hsonly
+extern "C" struct hsirct
 {
-  float ihsonl;
-} hsonly_;
+  double deleps;
+  double delta;
+  double egmin = 0.0;
+  double iopegm;
+} hsirct_;
 
-struct hsltyp
+extern "C" struct hsalfs
 {
-  float lepin1;
-} hsltyp_;
+  double par111;
+  double par112;
+  double parl11;
+  double parl19;
+  double mst111;
+  double mst115;
+} hsalfs_;
+
+extern "C" struct hsintnc
+{
+  int inc2 = 1;
+  int inc31 = 18;
+  int inc32 = 18;
+  int inc33 = 18;
+  int inc34 = 0;
+  int iel2 = 0;
+  int iel31 = 0;
+  int iel32 = 0;
+  int iel33 = 0;
+} hsintnc_;
+
+extern "C" struct hsintcc
+{
+  int icc2 = 0;
+  int icc31 = 0;
+  int icc32 = 0;
+  int icc33 = 0;
+} hsintcc_;
+
+extern "C" struct hssamnc
+{
+  int isnc2 = 1;
+  int isnc31 = 1;
+  int isnc32 = 1;
+  int isnc33 = 1;
+  int isnc34 = 0;
+  int isel2 = 0;
+  int isel31 = 0;
+  int isel32 = 0;
+  int isel33 = 0;
+} hssamnc_;
+
+extern "C" struct hssamcc
+{
+  int iscc2 = 0;
+  int iscc31 = 0;
+  int iscc32 = 0;
+  int iscc33 = 0;
+} hssamcc_;
+
+extern "C" struct hsrdio
+{
+  int isdinp = -1;
+  int isdout = -1;
+} hsrdio_;
+
+extern "C" struct hsvglp
+{
+  int npoveg = 3000;
+  int numint;
+  int nphyp = 20;
+} hsvglp_;
+
+extern "C" struct hystfu
+{
+  int pystop;
+  int pyslam;
+  int npymax = 3;
+  int npymin = 0;
+} hystfu_;
+
+extern "C" struct hsoptn
+{
+  int int2[5];
+  int int3[15];
+  int isam2[5];
+  int isam3[15];
+  int ioplot = 0;
+  int iprint = 0;
+  int icut = 3;
+} hsoptn_;
+
+extern "C" struct hsnume
+{
+  double sigtot;
+  double sigerr;
+  double sigg[20];
+  double siggrr[20];
+  int nevent = 1;
+  int neve[20];
+} hsnume_;
+
+extern "C" struct lhapdfc
+{
+  char* lhapath;
+} lhapdfc_;
+
+extern "C" struct hsoutf
+{
+  char* outfilenam;
+  int ich;
+} hsoutf_;
 
 using namespace std;
 
@@ -195,16 +291,16 @@ TDjangoh* TDjangoh::Instance()
 }
 
 
-void TDjangoh::GenerateEvent(const char* cfile, int nbf)
+void TDjangoh::GenerateEvent()
 {
   //char* cfile = "TDjangoh.in";
-  int len_cfile = strlen(cfile);
+  //int len_cfile = strlen(cfile);
 
-  myabc_.mya=1;
-  myabc_.myb=2;
-  myabc_.myc=3;
+  cout << lhapathi << " " << lhalen;
 
-  hsmain_(cfile,&len_cfile,&nbf);
+
+  hsmain_(lhapathi,&lhalen);
+
   // cout << lujets_.N << endl;
   fLujets = &lujets_;
   // fLudat1 = &ludat1_;
@@ -303,7 +399,7 @@ Int_t TDjangoh::ImportParticles(TClonesArray *particles, Option_t *option)
 }
 
 
-void TDjangoh::Initialize(const char *name,const char *beam, int nuc_A, int nuc_Z, float beam_e, float nuc_e, float pol)
+void TDjangoh::Initialize(const char *beam, int nuc_A, int nuc_Z, float beam_e, float nuc_e, float pol)
 {
   int PID;
   char atitle[32];
@@ -321,59 +417,156 @@ void TDjangoh::Initialize(const char *name,const char *beam, int nuc_A, int nuc_
      PID = 11;
   }
 
-  Initialize_File(name,beam,PID,nuc_A,nuc_Z,beam_e,nuc_e,pol);
-  cout << "File initialized !" << endl;
+  Data_default();
+
+  // Initialize_File(name,beam,PID,nuc_A,nuc_Z,beam_e,nuc_e,pol);
+  // cout << "File initialized !" << endl;
 
   snprintf(atitle,32," %s-N(%d,%d) at %g GeV",beam,nuc_A,nuc_Z,sqrt(pow(beam_e,2)+pow(nuc_e,2)));
   SetTitle(atitle);
 }
 
-void TDjangoh::Initialize_File(const char *name, const char *beam, int PID, int nuc_A, int nuc_Z, float beam_e, float nuc_e, float pol)
+void TDjangoh::Data_default()
 {
-  ofstream ofs("TDjangoh.in", std::ofstream::out | std::ofstream::trunc);
 
-  ofs
-  << "OUTFILENAM\n" << outfilename
-  << "\nTITLE\nDJANGOH 4.6.10 for COMPASS for " << beam << " on N(" << nuc_A << "," << nuc_Z
-      << ") , NLO at " << beam_e << " , pol at " << pol << " , Wmin = " << kinem_cut[6]
-  << "\nEL-BEAM\n\t" << beam_e << "D0 0.0D0 " << PID
-  << "\nIOUNITS\n\t" << iounits[0] << " " << iounits[1] << " " << iounits[2]
-  << "\nPR-BEAM\n\t" << pr_beam[0] << " " << pr_beam[1]
-  << "\nGSW-PARAM\n\t" <<  gsw_param[0] << " " <<  gsw_param[1] << " " <<  gsw_param[2]  << " "
-      <<  gsw_param[3] << " " <<  gsw_param[4] << " " <<  gsw_param[5] << " " <<  gsw_param[6] << " "
-      <<  gsw_param[7] << " " <<  gsw_param[8] << " " <<  gsw_param[9] << " " <<  gsw_param[10]
-  << "\nKINEM-CUTS\n\t" << kinem_cut_var << " " << kinem_cut[0] << " "  << kinem_cut[1] << " "
-      << kinem_cut[2] << " " << kinem_cut[3] << " " << kinem_cut[4] << " "
-      << kinem_cut[5] << " " << kinem_cut[6]
-  << "\nEGAM-MIN\n\t" << egam_min
-  << "\nINT-OPT-NC\n\t" << int_opt_nc[0] << " " << int_opt_nc[1] << " " << int_opt_nc[2] << " "
-      << int_opt_nc[3] << " " << int_opt_nc[4] << " " << int_opt_nc[5] << " "
-      << int_opt_nc[6] << " " << int_opt_nc[7] << " " << int_opt_nc[8]
-  << "\nINT-OPT-CC\n\t" << int_opt_cc[0] << " " << int_opt_cc[1] << " "
-      << int_opt_cc[2] << " " << int_opt_cc[3]
-  << "\nINT-ONLY\n\t" << int_only
-  << "\nINT-POINTS\n\t" << int_point
-  << "\nSAM-OPT-NC\n\t" << sam_opt_nc[0] << " " << sam_opt_nc[1] << " " << sam_opt_nc[2] << " "
-      << sam_opt_nc[3] << " " << sam_opt_nc[4] << " " << sam_opt_nc[5] << " "
-      << sam_opt_nc[6] << " " << sam_opt_nc[7] << " " << sam_opt_nc[8]
-  << "\nSAM-OPT-CC\n\t" << sam_opt_cc[0] << " " << sam_opt_cc[1] << " "
-      << sam_opt_cc[2] << " " << sam_opt_cc[3]
-  << "\nNUCLEUS\n\t" << nuc_e << " " << nuc_A << " " << nuc_Z
-  << "\nSTRUCTFUNC\n\t" << structfunc[0] << " " << structfunc[1] << " " << structfunc[2]
-  << "\nLHAPATH\n" << getenv("LHAPATH")
-  << "\nFLONG\n\t" << flong[0] << " " << flong[1] << " " << flong[2]
-  << "\nALFAS\n\t" << alfas[0] << " " << alfas[1] << " " << alfas[2] << " " << alfas[3]
-  << "\nNFLAVORS\n\t" << nflavors[0] << " " << nflavors[1]
-  << "\nRNDM-SEEDS\n\t" << rndm_seeds[0] << " " << rndm_seeds[1]
-  << "\nSTART\n\t" << start
-  << "\nSOPHIA\n\t" << sophia
-  << "\nOUT-LEP\n\t" << out_lep
-  << "\nFRAG\n\t" << frag
-  << "\nCASCADES\n\t" << cascades
-  << "\nMAX-VIRT\n\t" << max_virt
-  << "\nCONTINUE";
+  // OUTFILENAME
+  hsoutf_.outfilenam = "TDjangoh";
+  // outlen = int(strlen("TDjangoh"));
 
-  ofs.close();
+  // EL-BEAM
+  hselab_.eele = 130.0;
+  hsparm_.polari = 0;
+  hsparm_.llept = -3;
+
+  // KINEM-CUTS
+  hsoptn_.icut = 3;
+  hscuts_.xmin = 0.0001;
+  hscuts_.xmax = 1.00;
+  hscuts_.ymin = 0.01;
+  hscuts_.ymax = 0.95;
+  hscuts_.q2min = 1.0;
+  hscuts_.q2max = 1e5;
+  hscuts_.wmin = 1.40;
+
+  // EGAM-MIN
+  hsirct_.egmin = 0.0;
+
+  // INT-OPT-NC
+  hsintnc_.inc2 = 1;
+  hsintnc_.inc31 = 18;
+  hsintnc_.inc32 = 18;
+  hsintnc_.inc33 = 18;
+  hsintnc_.inc34 = 0;
+  hsintnc_.iel2 = 0;
+  hsintnc_.iel31 = 0;
+  hsintnc_.iel32 = 0;
+  hsintnc_.iel33 = 0;
+
+  // INT-OPT-CC
+  hsintcc_.icc2 = 0;
+  hsintcc_.icc31 = 0;
+  hsintcc_.icc32 = 0;
+  hsintcc_.icc33 = 0;
+
+  // INT-POINTS
+  hsvglp_.npoveg = 3000;
+
+  // HYP-CUBES
+  hsvglp_.nphyp = 20;
+
+  // GSW-PARAM
+  hsparl_.lparin[0] = 2;
+  hsparl_.lparin[1] = 1;
+  hsparl_.lparin[2] = 3;
+  hsparl_.lparin[3] = 1;
+  hsparl_.lparin[4] = 0;
+  hsparl_.lparin[5] = 0;
+  hsparl_.lparin[6] = 2;
+  hsparl_.lparin[7] = 1;
+  hsparl_.lparin[8] = 1;
+  hsparl_.lparin[9] = 1;
+  hsparl_.lparin[10] = 1;
+  hsparl_.lparin[10] = 1;
+
+  // STRUCTFUNC
+  hsstrp_.ilqmod = 1;
+  hsstrp_.ilib = 2;
+  hsstrp_.icode = 10150;
+
+  // NFLAVORS
+  hystfu_.npymin = 0;
+  hystfu_.npymax = 3;
+
+  // SAM-OPT-NC
+  hssamnc_.isnc2 = 1;
+  hssamnc_.isnc31 = 1;
+  hssamnc_.isnc32 = 1;
+  hssamnc_.isnc33 = 1;
+  hssamnc_.isnc34 = 0;
+  hssamnc_.isel2 = 0;
+  hssamnc_.isel31 = 0;
+  hssamnc_.isel32 = 0;
+  hssamnc_.isel33 = 0;
+
+  // SAM-OPT-CC
+  hssamcc_.iscc2 = 0;
+  hssamcc_.iscc31 = 0;
+  hssamcc_.iscc32 = 0;
+  hssamcc_.iscc33 = 0;
+
+  // RNDM-SEEDS
+  hsrdio_.isdinp = -1;
+  hsrdio_.isdout = -1;
+
+  // THMIN-QRAD
+  hsisgm_.tcutq = 0.25;
+  hsisgm_.tcutqs = 0.25;
+
+  // FLONG
+  hspdfo_.iflopt = 111;
+  // hsalfs_.parl11 = 0.01;
+  // hsalfs_.parl19 = 0.03;
+
+  // ALFAS
+  // hsalfs_.mst111 = 1.0;
+  // hsalfs_.mst115 = 1.0;
+  // hsalfs_.par111 = 0.20;
+  // hsalfs_.par112 = 0.235;
+
+  // EP-DIPOLE
+  hselep_.idipol = 0;
+
+  // NUCLEUS
+  hselab_.epro = 0;
+  hsparm_.hpolar = 0;
+  hsnucl_.hna = 1.0;
+  hsnucl_.hnz = 1.0;
+
+  // NUCL-MOD
+  hsnucl_.inumod = 0;
+
+  // LHAPATH
+  lhapathi = getenv("LHAPATH");
+  lhalen = strlen(lhapathi);
+
+  // THETA-CUT
+  hstcut_.themin = 0.0;
+  hstcut_.themax = 180.0;
+
+  // PT-CUT
+  hspcut_.ptmin = 0.0;
+
+  // POLPDF
+  hsstrp_.idpvr = 100;
+
+  // WEIGHTS
+  hswgtc_.iweigr = 0;
+
+  // INT-ONLY
+  hsoptn_.ioplot = 0;
+
+  // START
+  hsnume_.nevent = 1;
 }
 
 void TDjangoh::Clean_File()

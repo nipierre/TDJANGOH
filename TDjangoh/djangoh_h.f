@@ -1,5 +1,5 @@
 C
-      SUBROUTINE HSMAIN(INPUTFILE,LEN,NBF)
+      SUBROUTINE HSMAIN(LHAPATHI,LHALEN)
 C
 C
 C***********************************************************************
@@ -33,10 +33,11 @@ C***********************************************************************
 C
       IMPLICIT DOUBLE PRECISION (A-H,M,O-Z)
       EXTERNAL HSNCG1,HSNCG2,HSTSK1,HSTSK2,HSK1TS,HSK1K3
-      EXTERNAL HSCCG1,HSCCG2,HSCCKL,HSCCQI,HSCCQF
+      EXTERNAL HSCCG1,HSCCG2,HSCCKL,HSCCQI,HSCCQFE
       EXTERNAL HSELG1,HSELG2,HSELK1,HSELK2,HSELCO
       CHARACTER*19 FNAME,FNAMET
-      CHARACTER*(LEN) INPUTFILE
+      CHARACTER*(LHALEN) LHAPATHI
+C      CHARACTER*(LEN) INPUTFILE
       PARAMETER (NCHN2=1,NCHC2=2,NCHE2=3)
       PARAMETER (NCHN31=6,NCHN32=7,NCHN33=8,NCHN34=9)
       PARAMETER (NCHC31=12,NCHC32=13,NCHC33=14)
@@ -58,9 +59,13 @@ C
       COMMON /HSELEP/ IDIPOL
       COMMON /HSNUCL/ HNA,HNZ,INUMOD
       COMMON /HSPARM/ POLARI,HPOLAR,LLEPT,LQUA
-      COMMON /HSWGTC/ IWEIGS
+      COMMON /HSWGTC/ IWEIGS, IWEIGR
       COMMON /HSONLY/ IHSONL
       COMMON /HSLTYP/ LEPIN1
+      COMMON /HSINTNC/ INC2,INC31,INC32,INC33,INC34,IEL2,IEL31,IEL32,IEL33
+      COMMON /HSINTCC/ ICC2,ICC31,ICC32,ICC33
+      COMMON /HSSAMNC/ ISNC2,ISNC31,ISNC32,ISNC33,ISNC34,ISEL2,ISEL31,ISEL32,ISEL33
+      COMMON /HSSAMCC/ ISCC2,ISCC31,ISCC32,ISCC33
 C---
       PARAMETER(NDIM2=2,NBIN2=50)
       PARAMETER(NREG2N=2500)
@@ -221,7 +226,6 @@ C-------------------------
       COMMON /HSALFS/ PAR111,PAR112,PARL11,PARL19,MST111,MST115
       REAL            PAR111,PAR112,PARL11,PARL19
       INTEGER         MST111,MST115
-      CHARACTER*80 LHAPATHI
       CHARACTER*232 LHAPATH
       COMMON /LHAPDFC/ LHAPATH
       SAVE /LHAPDFC/
@@ -232,8 +236,6 @@ C-------------------------
       COMMON /DJKIN/ DJX,DJY,DJW2,DJQ2,DJU
       REAL           DJX,DJY,DJW2,DJQ2,DJU
       SAVE /DJKIN/
-      COMMON /MYABC/ MYA,MYB,MYC
-      INTEGER        MYA,MYB,MYC
       CHARACTER*80 TITLE
       CHARACTER*10 CODE,CODEWD
       DIMENSION CODE(40)
@@ -283,11 +285,12 @@ C      OPEN(LUNRND,FILE='djhrnd.dat',STATUS='UNKNOWN',FORM='FORMATTED')
       OUTFILENAM='djangoh-default-output'
       ICH=INDEX(OUTFILENAM,' ')-1
       IODEF=0
-      OPEN(unit = NBF,file = INPUTFILE,action='READ')
-      WRITE(6,*) INPUTFILE
-      WRITE(6,*) MYA
-      WRITE(6,*) MYB
-      WRITE(6,*) MYC
+C      OPEN(unit = NBF,file = INPUTFILE,action='READ')
+C      WRITE(6,*) INPUTFILE
+      WRITE(6,*) EELE
+      WRITE(6,*) HNA
+      WRITE(6,*) HNZ
+      WRITE(6,*) LHAPATHI
 
 C---PRINT THE TITLE
       WRITE(6,9)
@@ -310,69 +313,69 @@ C                         1)  CODEWD  (A10)
 C                         2)  CORRESPONDING DATA (FORMAT FREE)
 C***********************************************************************
 C
- 1    CONTINUE
-      READ(NBF,90,END=4) CODEWD
-      WRITE(6,91) CODEWD
-      DO 2 ISW=1,40
-      IF(CODEWD.EQ.CODE(ISW))GO TO 3
- 2    CONTINUE
-      WRITE(6,92)
-      GO TO 1
- 3    GO TO(
+C 1    CONTINUE
+C      READ(NBF,90,END=4) CODEWD
+C      WRITE(6,91) CODEWD
+C      DO 2 ISW=1,40
+C      IF(CODEWD.EQ.CODE(ISW))GO TO 3
+C 2    CONTINUE
+C      WRITE(6,92)
+C      GO TO 1
+C 3    GO TO(
+CC------------------------------------------------------------------
+CC        TITLE    , EL-BEAM   , PR-BEAM   , KINEM-CUTS, EGAM-MIN  ,
+C     1   100      , 200       , 300       , 400       , 500       ,
+CC
+CC------------------------------------------------------------------
+CC       INT-OPT-NC, INT-OPT-CC, INT-POINTS, HYP-CUBES , GSW-PARAM ,
+C     2  600       , 700       , 800       , 900       , 1000      ,
+CC
+CC------------------------------------------------------------------
+CC       STRUCTFUNC, NFLAVORS  , SAM-OPT-NC, SAM-OPT-CC, RNDM-SEEDS,
+C     3  1100      , 1200      , 1300      , 1400      , 1500      ,
+CC
+CC------------------------------------------------------------------
+CC       GSW-MASS  , THMIN-QRAD, FLONG     , ALFAS     ,           ,
+C     4  1600      , 1700      , 1800      , 1900      , 2000      ,
+CC
+CC------------------------------------------------------------------
+CC       EP-DIPOLE , NUCLEUS   , NUCL-MOD  , LHAPATH   , OUTFILENAM,
+C     5  2100      , 2200      , 2300      , 2400      , 2500      ,
+CC
+CC------------------------------------------------------------------
+CC       THETA-CUT , PT-CUT    , POLPDF    ,           ,           ,
+C     6  2600      , 2700      , 2800      , 2900      , 3000      ,
+CC
+CC------------------------------------------------------------------
+CC       WEIGHTS   ,           ,           ,           ,           ,
+C     7  3100      , 3200      , 3300      , 3400      , 3500      ,
+CC
+CC------------------------------------------------------------------
+CC       INT-ONLY  , TEST-OPT  , IOUNITS   , START     , STOP      )
+C     8  3600      , 3700      , 3800      , 3900      , 4000      )
+
 C------------------------------------------------------------------
-C        TITLE    , EL-BEAM   , PR-BEAM   , KINEM-CUTS, EGAM-MIN  ,
-     1   100      , 200       , 300       , 400       , 500       ,
-C
-C------------------------------------------------------------------
-C       INT-OPT-NC, INT-OPT-CC, INT-POINTS, HYP-CUBES , GSW-PARAM ,
-     2  600       , 700       , 800       , 900       , 1000      ,
-C
-C------------------------------------------------------------------
-C       STRUCTFUNC, NFLAVORS  , SAM-OPT-NC, SAM-OPT-CC, RNDM-SEEDS,
-     3  1100      , 1200      , 1300      , 1400      , 1500      ,
-C
-C------------------------------------------------------------------
-C       GSW-MASS  , THMIN-QRAD, FLONG     , ALFAS     ,           ,
-     4  1600      , 1700      , 1800      , 1900      , 2000      ,
-C
-C------------------------------------------------------------------
-C       EP-DIPOLE , NUCLEUS   , NUCL-MOD  , LHAPATH   , OUTFILENAM,
-     5  2100      , 2200      , 2300      , 2400      , 2500      ,
-C
-C------------------------------------------------------------------
-C       THETA-CUT , PT-CUT    , POLPDF    ,           ,           ,
-     6  2600      , 2700      , 2800      , 2900      , 3000      ,
-C
-C------------------------------------------------------------------
-C       WEIGHTS   ,           ,           ,           ,           ,
-     7  3100      , 3200      , 3300      , 3400      , 3500      ,
-C
-C------------------------------------------------------------------
-C       INT-ONLY  , TEST-OPT  , IOUNITS   , START     , STOP      )
-     8  3600      , 3700      , 3800      , 3900      , 4000      )
-C
-C------------------------------------------------------------------
-     9,ISW
-      GO TO 1
- 4    CONTINUE
-      WRITE(6,93)
-      GO TO 4000
-C
- 90   FORMAT(A10)
- 91   FORMAT(//' *****NEXT CONTROL CARD ***** ',A10/)
- 92   FORMAT(/,' UNKNOWN CODEWORD - CONTROL CARD IGNORED')
- 93   FORMAT(/,' UNEXPECTED END OF INPUT - STOP ASSUMED.')
+C     9,ISW
+C      GO TO 1
+C 4    CONTINUE
+C      WRITE(6,93)
+C      GO TO 4000
+
+C 90   FORMAT(A10)
+C 91   FORMAT(//' *****NEXT CONTROL CARD ***** ',A10/)
+C 92   FORMAT(/,' UNKNOWN CODEWORD - CONTROL CARD IGNORED')
+C 93   FORMAT(/,' UNEXPECTED END OF INPUT - STOP ASSUMED.')
 C
 C***********************************************************************
 C               CONTROL CARD: CODEWD = TITLE
 C               DEFINES THE TITLE OF THE JOB
 C***********************************************************************
- 100  CONTINUE
-      READ(NBF,190) TITLE
-      WRITE(LUNOUT,191) TITLE
-      GO TO 1
- 190  FORMAT(A80)
- 191  FORMAT(/,6X,A80,/)
+C 100  CONTINUE
+C      READ(NBF,190) TITLE
+C      WRITE(LUNOUT,191) TITLE
+C      GO TO 1
+C 190  FORMAT(A80)
+C 191  FORMAT(/,6X,A80,/)
 C
 C***********************************************************************
 C               CONTROL CARD: CODEWD = EL-BEAM
@@ -385,8 +388,8 @@ C             =  +1  POSITRON BEAM
 C     LLEPT   =  -3  muon- BEAM
 C             =  +4  muon+ BEAM
 C***********************************************************************
- 200  CONTINUE
-      READ(NBF,*) EELE, POLARI, LLEPT
+C 200  CONTINUE
+C      READ(NBF,*) EELE, POLARI, LLEPT
       WRITE(LUNOUT,'(5X,2(A,1PE12.3,5X),A,I3)')
      *        ' EELE=',EELE,'POLARI=',POLARI,'LLEPT=',LLEPT
 C...27.05.2016: new option for muon scattering via this input
@@ -402,7 +405,7 @@ C...27.05.2016: new option for muon scattering via this input
       LEPIN=LEPIN1
       IF (LLEPT.EQ.-3) LLEPT=-1
       IF (LLEPT.EQ.3) LLEPT=1
-      GO TO 1
+C      GO TO 1
 C
 C***********************************************************************
 C               CONTROL CARD: CODEWD = PR-BEAM
@@ -411,11 +414,11 @@ C
 C     EPRO    =  ENERGY OF THE PROTON BEAM
 C     HPOLAR  =  DEGREE OF PROTON BEAM POLARIZATION
 C***********************************************************************
- 300  CONTINUE
-      READ(NBF,*) EPRO,HPOLAR
+C 300  CONTINUE
+C      READ(NBF,*) EPRO,HPOLAR
       WRITE(LUNOUT,'(5X,2(A,1PE12.3,5X))')
      *        ' EPRO=',EPRO,'HPOLAR=',HPOLAR
-      GO TO 1
+C      GO TO 1
 C
 C***********************************************************************
 C               CONTROL CARD: CODEWD = KINEM-CUTS
@@ -429,8 +432,8 @@ C     NOTE :  FINAL SETTING OF CUTS
 C             ACCORDING TO THE MOST RESTRICTIVE CONDITIONS
 C             IN SUBROUTINE HSPRLG
 C***********************************************************************
- 400  CONTINUE
-      READ(NBF,*) ICUT, XMIN,XMAX, YMIN,YMAX, Q2MIN,Q2MAX, WMIN
+C 400  CONTINUE
+C      READ(NBF,*) ICUT, XMIN,XMAX, YMIN,YMAX, Q2MIN,Q2MAX, WMIN
       WRITE(LUNOUT,'(5X,A/4X,I3,2X,4(1PE13.4))')
      &       ' ICUT, XMIN,        XMAX,        YMIN,        YMAX ',
      &         ICUT, XMIN,XMAX, YMIN,YMAX
@@ -450,16 +453,16 @@ C***********************************************************************
      &  ' ****** Q2MIN > Q2MAX: EXECUTION STOPPED'
         STOP
       ENDIF
-      GO TO 1
+C      GO TO 1
 C
 C***********************************************************************
 C               CONTROL CARD: CODEWD = EGAM-MIN
 C***********************************************************************
-  500 CONTINUE
-      READ(NBF,*) EGMIN
+C  500 CONTINUE
+C      READ(NBF,*) EGMIN
       WRITE(LUNOUT,'(5X,A,3X,1PE13.4)') ' EGMIN = ',EGMIN
       IF(EGMIN.GT.0D0) IOPEGM=1
-      GO TO 1
+C      GO TO 1
 C
 C***********************************************************************
 C               CONTROL CARD: CODEWD = INT-OPT-NC
@@ -483,9 +486,9 @@ C               IEL32 :  ELASTIC TAIL, CHANNEL 16 (LEPTONIC FINAL
 C                        STATE RADIATION)
 C               IEL33 :  ELASTIC TAIL, CHANNEL 17 (COMPTON PART)
 C***********************************************************************
- 600  CONTINUE
-      READ(NBF,*) INC2,INC31,INC32,INC33,INC34,
-     +              IEL2,IEL31,IEL32,IEL33
+C 600  CONTINUE
+C      READ(NBF,*) INC2,INC31,INC32,INC33,INC34,
+C     +              IEL2,IEL31,IEL32,IEL33
       WRITE(LUNOUT,'(5X,A,3X,I5)')
      +               ' INC2  = ' ,INC2
       WRITE(LUNOUT,'(2(5X,A,3X,I5))')
@@ -507,8 +510,8 @@ C***********************************************************************
       INT3(10)=IEL31
       INT3(11)=IEL32
       INT3(12)=IEL33
-      GO TO 1
-C
+C      GO TO 1
+
 C***********************************************************************
 C               CONTROL CARD: CODEWD = INT-OPT-CC
 C
@@ -522,8 +525,8 @@ C               ICC31 :  CHARGED CURRENT CHANNEL 1 (KP)
 C               ICC32 :  CHARGED CURRENT CHANNEL 2 (KQ)
 C               ICC33 :  CHARGED CURRENT CHANNEL 3 (KQS)
 C***********************************************************************
- 700  CONTINUE
-      READ(NBF,*) ICC2,ICC31,ICC32,ICC33
+C 700  CONTINUE
+C      READ(NBF,*) ICC2,ICC31,ICC32,ICC33
       WRITE(LUNOUT,'(2(5X,A,3X,I5))')
      +               ' ICC2  = ' ,ICC2,  ' ICC31 = ',ICC31
      +             , ' ICC32 = ' ,ICC32, ' ICC33 = ',ICC33
@@ -531,7 +534,7 @@ C***********************************************************************
       INT3(7)=ICC31
       INT3(8)=ICC32
       INT3(9)=ICC33
-      GO TO 1
+C      GO TO 1
 C
 C***********************************************************************
 C               CONTROL CARD: CODEWD = INT-POINTS
@@ -539,10 +542,10 @@ C
 C   NUMBER OF INTEGRATION POINTS FOR VEGAS
 C   DEFAULT: 1000
 C***********************************************************************
- 800  CONTINUE
-      READ(NBF,*) NPOVEG
+C 800  CONTINUE
+C      READ(NBF,*) NPOVEG
       WRITE(LUNOUT,'(5X,A,5X,4I6)') ' NPOVEG', NPOVEG
-      GO TO 1
+C      GO TO 1
 C
 C***********************************************************************
 C               CONTROL CARD: CODEWD = HYP-CUBES
@@ -550,12 +553,12 @@ C
 C       NPHYP  =  NUMBER OF POINTS TO BE SAMPLED PER HYPERCUBE
 C                 FOR ESTIMATION OF THE LOCAL MAXIMA
 C***********************************************************************
- 900  CONTINUE
-      READ(NBF,*) NPHYP
+C 900  CONTINUE
+C      READ(NBF,*) NPHYP
       IF(NPHYP.LT.3) NPHYP=3
       WRITE(LUNOUT,'(5X,A/5X,4I6)') ' NPHYP', NPHYP
       NPOIN=NPHYP
-      GO TO 1
+C      GO TO 1
 C
 C***********************************************************************
 C               CONTROL CARD: CODEWD = GSW-PARAM
@@ -587,8 +590,8 @@ C      LPARIN(11) :  PURELY WEAK CONTRIBUTIONS TO THE SELF ENERGIES,
 C                    VERTEX CORRECTIONS AND BOXES
 C      LPARIN(12) :  Z-EXCHANGE INCLUDED
 C***********************************************************************
- 1000 CONTINUE
-      READ(NBF,*) (LPARIN(I),I=1,11)
+C 1000 CONTINUE
+C      READ(NBF,*) (LPARIN(I),I=1,11)
       WRITE(LUNOUT,'(5X,20I2)') (LPARIN(I),I=1,11)
       LPARIN(12)=1
 C---REDEFINITION FOR INTERNAL USE
@@ -609,7 +612,7 @@ C---REDEFINITION FOR INTERNAL USE
       LPAR(15)=LPARIN(11)
       LPAR(16)=LPARIN(11)
       LPAR(17)=LPARIN(12)
-      GO TO 1
+C      GO TO 1
 C
 C***********************************************************************
 C               CONTROL CARD: CODEWD = STRUCTFUNC
@@ -619,26 +622,26 @@ C               OR STRUCTURE FUNCTIONS
 C               APPLIED IN THE ACTUAL CALCULATION
 C
 C***********************************************************************
- 1100 CONTINUE
-      READ(NBF,*) ILQMOD,ILIB,ICODE
+C 1100 CONTINUE
+C      READ(NBF,*) ILQMOD,ILIB,ICODE
       IPDFOP=0
       IF (ILQMOD.LE.1) IPDFOP=1
       WRITE(LUNOUT,'(5X,A,I7)') ' ILQMOD = ',ILQMOD
       WRITE(LUNOUT,'(5X,A,I7)') ' ILIB   = ',ILIB
       WRITE(LUNOUT,'(5X,A,I7)') ' ICODE  = ',ICODE
-      GO TO 1
+C      GO TO 1
 C
 C***********************************************************************
 C               CONTROL CARD: CODEWD = NFLAVORS
 C***********************************************************************
- 1200 CONTINUE
-      READ(NBF,*) NPYMIN,NPYMAX
+C 1200 CONTINUE
+C      READ(NBF,*) NPYMIN,NPYMAX
       IF(NPYMIN.GT.6) NPYMIN=6
       IF(NPYMAX.LT.NPYMIN) NPYMAX=NPYMIN
       IF(NPYMAX.LE.0) NPYMAX=6
       WRITE(LUNOUT,'(5X,A,I6)') ' NPYMIN = ',NPYMIN
       WRITE(LUNOUT,'(5X,A,I6)') ' NPYMAX = ',NPYMAX
-      GO TO 1
+C      GO TO 1
 C
 C***********************************************************************
 C               CONTROL CARD: CODEWD = SAM-OPT-NC
@@ -659,9 +662,9 @@ C               ISEL32:  ELASTIC TAIL, CHANNEL 2 (LEPTONIC FINAL
 C                        STATE RADIATION)
 C               ISEL33:  ELASTIC TAIL, CHANNEL 3 (COMPTON PART)
 C***********************************************************************
-1300  CONTINUE
-      READ(NBF,*) ISNC2,ISNC31,ISNC32,ISNC33,ISNC34
-     +             ,ISEL2,ISEL31,ISEL32,ISEL33
+C1300  CONTINUE
+C      READ(NBF,*) ISNC2,ISNC31,ISNC32,ISNC33,ISNC34
+C     +             ,ISEL2,ISEL31,ISEL32,ISEL33
       WRITE(LUNOUT,'(5X,A,3X,I5)')
      +               ' ISNC2  = ' ,ISNC2
       WRITE(LUNOUT,'(2(5X,A,3X,I5))')
@@ -683,7 +686,7 @@ C***********************************************************************
       ISAM3(10)=ISEL31
       ISAM3(11)=ISEL32
       ISAM3(12)=ISEL33
-      GO TO 1
+C      GO TO 1
 C
 C***********************************************************************
 C               CONTROL CARD: CODEWD = SAM-OPT-CC
@@ -696,8 +699,8 @@ C              ISCC31 :  CHARGED CURRENT CHANNEL 1 (KP)
 C              ISCC32 :  CHARGED CURRENT CHANNEL 2 (KQ)
 C              ISCC33 :  CHARGED CURRENT CHANNEL 3 (KQS)
 C***********************************************************************
-1400  CONTINUE
-      READ(NBF,*) ISCC2,ISCC31,ISCC32,ISCC33
+C1400  CONTINUE
+C      READ(NBF,*) ISCC2,ISCC31,ISCC32,ISCC33
       WRITE(LUNOUT,'(2(5X,A,3X,I5))')
      +               ' ISCC2  = ' ,ISCC2,  ' ISCC31 = ',ISCC31
      +             , ' ISCC32 = ' ,ISCC32, ' ISCC33 = ',ISCC33
@@ -707,15 +710,15 @@ C***********************************************************************
       ISAM3(9)=ISCC33
 C---CHANNELS NOT YET DEFINED
       ISAM3(8)=0
-      GO TO 1
+C      GO TO 1
 C
 C***********************************************************************
 C               CONTROL CARD: CODEWD = RNDM-SEEDS
 C
 C   INPUT / OUTPUT OF ACTUAL RANDOM NUMBER SEEDS
 C***********************************************************************
- 1500 CONTINUE
-      READ(NBF,*) ISDINP,ISDOUT
+C 1500 CONTINUE
+C      READ(NBF,*) ISDINP,ISDOUT
       WRITE(LUNOUT,'(5X,A,I6)') ' ISDINP = ',ISDINP
       WRITE(LUNOUT,'(5X,A,I6)') ' ISDOUT = ',ISDOUT
       IF(ISDINP.GT.0) THEN
@@ -730,18 +733,18 @@ C***********************************************************************
         write(lunout,'(5X,A,I12)') ' SEED = ', initseed
         call rndmq (idum1,idum2,initseed,' ')
       ENDIF
-      GO TO 1
+C      GO TO 1
 C
 C***********************************************************************
 C               CONTROL CARD: CODEWD = GSW-MASS
 C
 C   ELECTROWEAK MASS PARAMETERS
 C***********************************************************************
- 1600 CONTINUE
-      READ(NBF,*) MW,MZ,MH,MT
+C 1600 CONTINUE
+C      READ(NBF,*) MW,MZ,MH,MT
       LPAR(5)=1
       WRITE(LUNOUT,'(5X,A,4F12.4)') ' MW, MZ, MH, MT = ',MW,MZ,MH,MT
-      GOTO 1
+C      GOTO 1
 C
 C***********************************************************************
 C               CONTROL CARD: CODEWD = THMIN-QRAD
@@ -752,12 +755,12 @@ C              TCUTQ  :  INITIAL STATE RADIATION
 C              TCUTQS :  FINAL STATE RADIATION
 C
 C***********************************************************************
-1700  CONTINUE
-      READ(NBF,*) TCUTQ,TCUTQS
+C1700  CONTINUE
+C      READ(NBF,*) TCUTQ,TCUTQS
       WRITE(LUNOUT,'(2(5X,A,F10.4,A))')
      &               ' TCUTQ =  ', TCUTQ, ' RAD',
      &               ' TCUTQS =  ', TCUTQS, ' RAD'
-      GO TO 1
+C      GO TO 1
 C
 C***********************************************************************
 C               CONTROL CARD: CODEWD = FLONG
@@ -765,15 +768,15 @@ C
 C    INCLUDE THE LONGITUDINAL STRUCTURE FUNCTION (FOR IPART < 1000)
 C
 C***********************************************************************
- 1800 CONTINUE
-      READ(NBF,*) IFLOPT,PARL11,PARL19
+C 1800 CONTINUE
+C      READ(NBF,*) IFLOPT,PARL11,PARL19
       WRITE(LUNOUT,'(5X,A,I5,A,F10.4,A,F10.4)')
      &               ' IFLOPT =  ', IFLOPT,
      &               '   PARL11 =', PARL11,
      &               '   PARL19 =', PARL19
       CALL DIFLOP
-      GO TO 1
- 1900 CONTINUE
+C      GO TO 1
+C 1900 CONTINUE
 C
 C***********************************************************************
 C               CONTROL CARD: CODEWD = ALFAS
@@ -782,16 +785,16 @@ C    DEFINITION OF ALPHA_S IN THE CALCULATION OF THE LONGITUDINAL
 C    STRUCTURE FUNCTION
 C
 C***********************************************************************
-      READ(NBF,*) MST111,MST115,PAR111,PAR112
+C      READ(NBF,*) MST111,MST115,PAR111,PAR112
       WRITE(LUNOUT,'(5X,A,I5)') ' MST111 =  ', MST111
       WRITE(LUNOUT,'(5X,A,I5)') ' MST115 =  ', MST115
       WRITE(LUNOUT,'(5X,A,F10.4)') ' PAR111 = ', PAR111
       WRITE(LUNOUT,'(5X,A,F10.4)') ' PAR112 = ', PAR112
       CALL DIALFS
-      GO TO 1
- 2000 CONTINUE
- 2100 CONTINUE
-C
+C      GO TO 1
+C 2000 CONTINUE
+C 2100 CONTINUE
+
 C***********************************************************************
 C               CONTROL CARD: CODEWD = EP-DIPOLE
 C
@@ -799,23 +802,23 @@ C    INCLUDE PARAMETRIZATION OF STEIN ET AL. FOR THE DEVIATION
 C    OF THE DIPOLE FORM FACTOR FOR ELASTIC EP SCATTERING
 C
 C***********************************************************************
-      READ(NBF,*) IDIPOL
+C      READ(NBF,*) IDIPOL
       WRITE(LUNOUT,'(5X,A,I5)') ' IDIPOL =  ', IDIPOL
-      GO TO 1
- 2200 CONTINUE
-C
+C      GO TO 1
+C 2200 CONTINUE
+
 C***********************************************************************
 C               CONTROL CARD: CODEWD = NUCLEUS
 C
 C    SCATTERING OFF HEAVY NUCLEI
 C
 C***********************************************************************
-      READ(NBF,*) EPRO,HNA,HNZ
+C      READ(NBF,*) EPRO,HNA,HNZ
       WRITE(LUNOUT,'(5X,A,1PE13.3)') ' E PER NUCLEON=',EPRO
       WRITE(LUNOUT,'(5X,A,F5.0)')    ' A-NUCLEUS=',HNA
       WRITE(LUNOUT,'(5X,A,F5.0)')    ' Z-NUCLEUS=',HNZ
-      GO TO 1
- 2300 CONTINUE
+C      GO TO 1
+C 2300 CONTINUE
 C
 C***********************************************************************
 C               CONTROL CARD: CODEWD = NUCL-MOD
@@ -823,10 +826,10 @@ C
 C    MODEL FOR NUCLEAR PARTON DISTRIBUTIONS
 C
 C***********************************************************************
-      READ(NBF,*) INUMOD
+C      READ(NBF,*) INUMOD
       WRITE(LUNOUT,'(5X,A,I5)')    ' INUMOD=',INUMOD
-      GO TO 1
- 2400 CONTINUE
+C      GO TO 1
+C 2400 CONTINUE
 C
 C***********************************************************************
 C               CONTROL CARD: CODEWD = LHAPATH
@@ -834,12 +837,13 @@ C
 C    PATH NAME FOR GRID FILES OF LHAPDF LIBRARY
 C
 C***********************************************************************
-      READ(NBF,2590) LHAPATHI
-      LHAPATH=LHAPATHI
-      WRITE(LUNOUT,'(5X,A,A)')    ' LHAPATH=',LHAPATHI
-      GOTO 1
- 2590 FORMAT(A80)
- 2500 CONTINUE
+C      READ(NBF,2590) LHAPATHI
+C      LHAPATH=TRANSFER(LHAPATHI,LHAPATH,41)
+      LHAPATH='/sps/compass/npierre/lhapdf5/share/lhapdf/'
+      WRITE(LUNOUT,'(5X,A,A)')    ' LHAPATH=',LHAPATH
+C      GOTO 1
+C 2590 FORMAT(A80)
+C 2500 CONTINUE
 C
 C***********************************************************************
 C               CONTROL CARD: CODEWD = OUTFILENAM
@@ -847,13 +851,13 @@ C
 C    FILE NAME TO REDIRECT STANDARD OUTPUT VIA LUNOUT (D=6)
 C
 C***********************************************************************
-      READ(NBF,2590) OUTFILENAM
+C      READ(NBF,2590) OUTFILENAM
       ICH=INDEX(OUTFILENAM,' ')-1
       IODEF=1
       WRITE(LUNOUT,'(5X,A,A)')    ' OUTFILENAM=',OUTFILENAM
 C...Open files when reading input is finished
-      GOTO 1
- 2600 CONTINUE
+C      GOTO 1
+C 2600 CONTINUE
 C
 C***********************************************************************
 C               CONTROL CARD: CODEWD = THETA-CUT
@@ -861,11 +865,11 @@ C
 C    CUT ON MINIMUM ELECTRON SCATTERING ANGLE (MASSES NEGLECTED)
 C
 C***********************************************************************
-      READ(NBF,*) THEMIN,THEMAX
+C      READ(NBF,*) THEMIN,THEMAX
       WRITE(LUNOUT,'(5X,A,F12.4)') ' THETA-MIN =  ', THEMIN
       WRITE(LUNOUT,'(5X,A,F12.4)') ' THETA-MAX =  ', THEMAX
-      GO TO 1
- 2700 CONTINUE
+C      GO TO 1
+C 2700 CONTINUE
 C
 C***********************************************************************
 C               CONTROL CARD: CODEWD = PT-CUT
@@ -873,10 +877,10 @@ C
 C    CUT ON MINIMUM ELECTRON SCATTERING ANGLE (MASSES NEGLECTED)
 C
 C***********************************************************************
-      READ(NBF,*) PTMIN
+C      READ(NBF,*) PTMIN
       WRITE(LUNOUT,'(5X,A,F12.4)') ' PT-MIN =  ', PTMIN
-      GO TO 1
- 2800 CONTINUE
+C      GO TO 1
+C 2800 CONTINUE
 C
 C***********************************************************************
 C               CONTROL CARD: CODEWD = POLPDF
@@ -884,12 +888,12 @@ C
 C    CODE FOR PARAMETRIZATION OF POLARIZED PARTON DISTRIBUTIONS
 C
 C***********************************************************************
-      READ(NBF,*) IDPVR
+C      READ(NBF,*) IDPVR
       WRITE(LUNOUT,'(5X,A,I8)') ' IDPVR =  ', IDPVR
-      GO TO 1
- 2900 CONTINUE
- 3000 CONTINUE
- 3100 CONTINUE
+C      GO TO 1
+C 2900 CONTINUE
+C 3000 CONTINUE
+C 3100 CONTINUE
 C
 C***********************************************************************
 C               CONTROL CARD: CODEWD = WEIGHTS
@@ -897,16 +901,16 @@ C
 C    USE EXTERNALLY DEFINED WEIGHT IN EVENT GENERATION
 C
 C***********************************************************************
-      READ(NBF,*) IWEIGR
+C      READ(NBF,*) IWEIGR
       WRITE(LUNOUT,'(5X,A,I5)') ' IWEIGS =  ', IWEIGR
 C...for initialization keep
       IWEIGS=0
-      GO TO 1
- 3200 CONTINUE
- 3300 CONTINUE
- 3400 CONTINUE
- 3500 CONTINUE
-C
+C      GO TO 1
+C 3200 CONTINUE
+C 3300 CONTINUE
+C 3400 CONTINUE
+C 3500 CONTINUE
+
 C***********************************************************************
 C               CONTROL CARD: CODEWD = INT-ONLY
 C
@@ -914,10 +918,10 @@ C               PERFORM ONLY INTEGRATION, NO ETIMATION OF MAXIMA
 C               IOPLOT < 0: NO CALL TO HSESTM
 C               IOPLOT >= 0: CALL TO HSESTM
 C***********************************************************************
- 3600 CONTINUE
-      READ(NBF,*) IOPLOT
+C 3600 CONTINUE
+C      READ(NBF,*) IOPLOT
       WRITE(LUNOUT,'(5X,A,5X,I3)') ' INTOPT', IOPLOT
-      GO TO 1
+C      GO TO 1
 C
 C***********************************************************************
 C               CONTROL CARD: CODEWD = TEST-OPT
@@ -927,12 +931,12 @@ C
 C     IPRINT :  DIFFERENT QUANTITY OF TEST OUTPUT FOR IPRINT GT. 0
 C
 C***********************************************************************
- 3700 CONTINUE
-      READ(NBF,*) IPRINT
+C 3700 CONTINUE
+C      READ(NBF,*) IPRINT
       WRITE(LUNOUT,'(5X,A,5X,I3)') ' IPRINT',
      *                               IPRINT
-      GO TO 1
-C
+C      GO TO 1
+
 C***********************************************************************
 C               CONTROL CARD: CODEWD = IOUNITS
 C
@@ -945,9 +949,9 @@ C
 C     disabled as of version 4.6.9 onwards
 C
 C***********************************************************************
- 3800 CONTINUE
+C 3800 CONTINUE
 c      LUOOLD=LUNOUT
-      READ(NBF,*) LDUMY1,LDUMY2,LDUMY3
+C      READ(NBF,*) LDUMY1,LDUMY2,LDUMY3
 c      IF (LUNOUT.NE.LUOOLD) THEN
 c        WRITE(LUOOLD,'(5X,A,I3,A)')
 c     *  ' ******* WARNING: LOGICAL UNIT FOR STANDARD OUTPUT CHANGED TO '
@@ -959,9 +963,9 @@ c     *            ' LUNOUT,LUNRND,LUNDAT'
 c     *             ,LUNOUT,LUNRND,LUNDAT
 c      OPEN(LUNDAT,FILE='djh.dat',STATUS='UNKNOWN',FORM='UNFORMATTED')
 c      OPEN(LUNRND,FILE='djhrnd.dat',STATUS='UNKNOWN',FORM='FORMATTED')
-        WRITE(LUNOUT,'(5X,A)')
-     *  ' ******* WARNING: CODEWORD IOUNITS IS DISABLED '
-      GO TO 1
+C        WRITE(LUNOUT,'(5X,A)')
+C     *  ' ******* WARNING: CODEWORD IOUNITS IS DISABLED '
+C      GO TO 1
 C
 C***********************************************************************
 C               CONTROL CARD: CODEWD = START
@@ -970,14 +974,14 @@ C               OUTPUT
 C
 C     NEVENT :  NUMBER OF EVENTS TO BE SAMPLED
 C***********************************************************************
- 3900 CONTINUE
-      READ(NBF,*) NEVENT
+C 3900 CONTINUE
+C      READ(NBF,*) NEVENT
       WRITE(LUNOUT,'(5X,A,I12,/)') ' NEVENT =',NEVENT
       INFOCA=0
       DO 3921 I=1,5
         IF(NEVENT.LE.0) ISAM2(I)=0
         IF(INT2(I).GT.0) INFOCA=1
- 3921   CONTINUE
+ 3921 CONTINUE
       DO 3922 I=1,15
         IF(NEVENT.LE.0) ISAM3(I)=0
         IF(INT3(I).GT.0) INFOCA=1
@@ -1725,7 +1729,7 @@ C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
       COMMON /HSOPTN/ INT2(5),INT3(15),ISAM2(5),ISAM3(15),
      *                IOPLOT,IPRINT,ICUT
       COMMON /HSISGM/ TCUTQ,TCUTQS
-      COMMON /HSWGTC/ IWEIGS
+      COMMON /HSWGTC/ IWEIGS, IWEIGR
       COMMON /HSONLY/ IHSONL
 C---------------------------------------------------------------------
       PARAMETER(NDIM2=2,NBIN2=50)
@@ -1898,41 +1902,43 @@ cs..Sophia
       COMMON /SOPHCT/ WSOPHIA
 C
 C--- STANDARD KINEMATICS
-      DATA EELE, EPRO  / 27.5D0, 920D0 /
+C      DATA EELE, EPRO  / 27.5D0, 920D0 /
       DATA SIGTOT,SIGTRR,SIGG,SIGGRR /42*0D0/
-      DATA NEVENT,NEVE               /21*0/
+C      DATA NEVENT,NEVE               /21*0/
+      DATA NEVE               /20*0/
       DATA LUNIN,LUNOUT,LUNTES,LUNRND,LUNDAT
      *    /    5,     6,     6,    10,    11/
       DATA NINP,NOUTP /   5,    6/
-      DATA ISDINP,ISDOUT / 0, 0/
-      DATA NPOVEG   / 10000 /
+C      DATA ISDINP,ISDOUT / 0, 0/
+C      DATA NPOVEG   / 10000 /
       DATA INT2, INT3   / 20*0/
       DATA ISAM2, ISAM3 / 20*0/
-      DATA IOPLOT, IPRINT /  0, 0 /
+C      DATA IOPLOT, IPRINT /  0, 0 /
       DATA IWEIGS / 0 /
       DATA IHSONL / 1 /
-      DATA DELEPS, DELTA, EGMIN, IOPEGM   / 2D-2,  0D0,  0D0, 0 /
+C      DATA DELEPS, DELTA, EGMIN, IOPEGM   / 2D-2,  0D0,  0D0, 0 /
+      DATA DELEPS, DELTA, IOPEGM   / 2D-2,  0D0, 0 /
       DATA XIRDEL /2D-2/
-      DATA XMIN, XMAX, Q2MIN, Q2MAX, YMIN, YMAX, WMIN, ICUT
-     *    /1D-5,  1D0,   4D0,   1D8, 1D-2,  1D0,  5D0,    3 /
-      DATA THEMIN,THEMAX,CTHMIN,CTHCON,PTMIN,PTXM0
-     *    /0D0   ,180D0, 1D0,   1D15,  0D0,  0D0  /
-      DATA TCUTQ,TCUTQS / 0.25, 0.25/
-      DATA POLARI, HPOLAR, LLEPT, LQUA / 0D0, 0D0, -1, 0/
+C      DATA XMIN, XMAX, Q2MIN, Q2MAX, YMIN, YMAX, WMIN, ICUT
+C     *    /1D-5,  1D0,   4D0,   1D8, 1D-2,  1D0,  5D0,    3 /
+C      DATA THEMIN,THEMAX,CTHMIN,CTHCON,PTMIN,PTXM0
+C     *    /0D0   ,180D0, 1D0,   1D15,  0D0,  0D0  /
+C      DATA TCUTQ,TCUTQS / 0.25, 0.25/
+C      DATA POLARI, HPOLAR, LLEPT, LQUA / 0D0, 0D0, -1, 0/
 C
 C---DEFINE GSW PARAMETERS
-      DATA LPARIN / 2, 1, 3, 1, 0, 0, 2, 0, 0, 0, 0, 1/
-      DATA ICODE /3041/, ILIB /2/, ILQMOD /1/, IDPVR /100/
-      DATA NPYMIN /1/, NPYMAX/6/
+C      DATA LPARIN / 2, 1, 3, 1, 0, 0, 2, 0, 0, 0, 0, 1/
+C      DATA ICODE /3041/, ILIB /2/, ILQMOD /1/, IDPVR /100/
+C      DATA NPYMIN /1/, NPYMAX/6/
       DATA PAR111 /0.2/, PAR112/0.25/, MST111/1/, MST115/0/
       DATA PARL11 /0.01/, PARL19/0.03/
       DATA LPAR / 1, 1, 3, 2, 0, 123041, 2, 0, 0, 0,
      *            1, 1, 0, 0, 0, 0, 0, 2, 0, 0/
       DATA IPDFOP / 1 /
-      DATA IFLOPT,LQCD,LTM,LHT / 4*0 /
-      DATA IDIPOL / 0 /
-      DATA HNA,HNZ / 1D0,1D0 /
-      DATA INUMOD / 0 /
+C      DATA IFLOPT,LQCD,LTM,LHT / 4*0 /
+C      DATA IDIPOL / 0 /
+C      DATA HNA,HNZ / 1D0,1D0 /
+C      DATA INUMOD / 0 /
 C
       DATA WSOPHIA /1.5D0/
 C
@@ -6255,7 +6261,7 @@ C
       SUBROUTINE HSWGTX(X,Y,IACPT)
       IMPLICIT DOUBLE PRECISION (A-H,M,O-Z)
       COMMON /HSELAB/ SP,EELE,PELE,EPRO,PPRO
-      COMMON /HSWGTC/ IWEIGS
+      COMMON /HSWGTC/ IWEIGS, IWEIGR
       LOGICAL LFIRST
       DATA LFIRST/.TRUE./
 
@@ -6791,7 +6797,7 @@ C
       COMMON /HSGIJK/ G1(2,2),G3(2,2),G4(2,2)
       COMMON /HSPSPC/ IPHSPC
       COMMON /HSPDFO/ IPDFOP,IFLOPT,LQCD,LTM,LHT
-      COMMON /HSWGTC/ IWEIGS
+      COMMON /HSWGTC/ IWEIGS, IWEIGR
       DIMENSION X(5),DBOS(2),DSBOS(2),RUNALP(2)
       COMPLEX*16 HSSRGG,CG
 C
@@ -7379,7 +7385,7 @@ C
       COMMON /HSGIJK/ G1(2,2),G3(2,2),G4(2,2)
       COMMON /HSPSPC/ IPHSPC
       COMMON /HSPDFO/ IPDFOP,IFLOPT,LQCD,LTM,LHT
-      COMMON /HSWGTC/ IWEIGS
+      COMMON /HSWGTC/ IWEIGS, IWEIGR
       DIMENSION X(5),DBOS(2),DSBOS(2),RUNALP(2)
       COMPLEX*16 HSSRGG,CG
 C
@@ -7975,7 +7981,7 @@ C
       COMMON /HSGIJK/ G1(2,2),G3(2,2),G4(2,2)
       COMMON /HSPSPC/ IPHSPC
       COMMON /HSPDFO/ IPDFOP,IFLOPT,LQCD,LTM,LHT
-      COMMON /HSWGTC/ IWEIGS
+      COMMON /HSWGTC/ IWEIGS, IWEIGR
       DIMENSION X(5),DBOS(2),DSBOS(2),RUNALP(2)
       COMPLEX*16 HSSRGG,CG
 C
@@ -8599,7 +8605,7 @@ C
       COMMON /HSFIJK/ F1(2,2),F2(2,2),F3(2,2)
       COMMON /HSPSPC/ IPHSPC
       COMMON /HSPDFO/ IPDFOP,IFLOPT,LQCD,LTM,LHT
-      COMMON /HSWGTC/ IWEIGS
+      COMMON /HSWGTC/ IWEIGS, IWEIGR
       COMMON /HSISGM/ TCUTQ,TCUTQS
       DIMENSION X(5),DBOS(2),DSBOS(2)
 
@@ -9069,7 +9075,7 @@ C
      *                DQT,DQBT
       COMMON /HSNUCL/ HNA,HNZ,INUMOD
       COMMON /HSPDFO/ IPDFOP,IFLOPT,LQCD,LTM,LHT
-      COMMON /HSWGTC/ IWEIGS
+      COMMON /HSWGTC/ IWEIGS, IWEIGR
       COMMON /HSFIJK/ F1(2,2),F2(2,2),F3(2,2)
       COMMON /HSGIJK/ G1(2,2),G3(2,2),G4(2,2)
 C
@@ -11129,7 +11135,7 @@ C
       COMMON /HSNUCL/ HNA,HNZ,INUMOD
       COMMON /HSPARM/ POLARI,HPOLAR,LLEPT,LQUA
       COMMON /HSPSPC/ IPHSPC
-      COMMON /HSWGTC/ IWEIGS
+      COMMON /HSWGTC/ IWEIGS, IWEIGR
       DIMENSION X(5)
 C
 C---X-VALUE
@@ -11407,7 +11413,7 @@ C
       COMMON /HSDPDF/ DQU,DQBU,DQD,DQBD,DQS,DQBS,DQC,DQBC,DQB,DQBB,
      *                DQT,DQBT
       COMMON /HSPARM/ POLARI,HPOLAR,LLEPT,LQUA
-      COMMON /HSWGTC/ IWEIGS
+      COMMON /HSWGTC/ IWEIGS, IWEIGR
       DIMENSION X(5)
 C
 C      DATA ICOUNT /0/
@@ -11464,7 +11470,7 @@ C
      *                DQT,DQBT
       COMMON /HSNUCL/ HNA,HNZ,INUMOD
       COMMON /HSPARM/ POLARI,HPOLAR,LLEPT,LQUA
-      COMMON /HSWGTC/ IWEIGS
+      COMMON /HSWGTC/ IWEIGS, IWEIGR
       DIMENSION X(5)
 C
 C---X-VALUE
@@ -11662,7 +11668,7 @@ C
       COMMON /HSPDFQ/ QU,QBU,QD,QBD,QS,QBS,QC,QBC,QB,QBB,QT,QBT
       COMMON /HSDPDF/ DQU,DQBU,DQD,DQBD,DQS,DQBS,DQC,DQBC,DQB,DQBB,
      *                DQT,DQBT
-      COMMON /HSWGTC/ IWEIGS
+      COMMON /HSWGTC/ IWEIGS, IWEIGR
 C
 C---EXTERNAL WEIGHT
       IACPT=1

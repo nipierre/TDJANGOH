@@ -88,6 +88,9 @@ protected:
 
 public:
 
+  char* lhapathi;
+  int lhalen;
+
   //----------------------------------------------------------------------------
   // All variables hard-coded for the Djangoh input file -> copy djangoh man
   //----------------------------------------------------------------------------
@@ -130,7 +133,7 @@ public:
   int int_opt_nc[9] = {1, 18, 18, 18, 0, 0, 0, 0, 0};/*!< Instance of TDjangoh. Only one at a time permitted */
   int int_opt_cc[4] = {0, 0, 0, 0};/*!< Instance of TDjangoh. Only one at a time permitted */
   int int_only = 0;/*!< Instance of TDjangoh. Only one at a time permitted */
-  int int_point = 3000;/*!< Instance of TDjangoh. Only one at a time permitted */
+  int int_point = 3000;/*!< Number of integration points. */
   int sam_opt_nc[9] = {1, 1, 1, 1, 0, 0, 0, 0, 0};/*!< Instance of TDjangoh. Only one at a time permitted */
   int sam_opt_cc[4] = {0, 0, 0, 0};/*!< Instance of TDjangoh. Only one at a time permitted */
   string nucl_e = "0.0D0";/*!< Energy per nucleon in the target/beam (GeV). */
@@ -190,7 +193,7 @@ public:
   /*!
   * \brief Generation of an event
   */
-  void             GenerateEvent(const char *cfile, int nbf);
+  void             GenerateEvent();
   /*!
   * \brief Initialization of an event
   * \param beam : Type of particle for the beam
@@ -200,7 +203,7 @@ public:
   * \param nuc_e : Energy of the target (in GeV, 0 for fixed target)
   * \param pol : Polarization of the target
   */
-  void             Initialize(const char *name,const char *beam, int nuc_A, int nuc_Z, float beam_e, float nuc_e, float pol=0);
+  void             Initialize(const char *beam, int nuc_A, int nuc_Z, float beam_e, float nuc_e, float pol=0);
   /*!
   * \brief Initialization of the input file
   * \param beam : Type of particle for the beam
@@ -211,7 +214,7 @@ public:
   * \param nuc_e : Energy of the target (in GeV, 0 for fixed target)
   * \param pol : Polarization of the target
   */
-  void             Initialize_File(const char *name, const char *beam, int PID, int nuc_A, int nuc_Z, float beam_e, float nuc_e, float pol);
+  void             Data_default();
   /*!
   * \brief Import particles from lujets_ subroutine and copy it in TClonesArray*
   * \param particles : Array of particles

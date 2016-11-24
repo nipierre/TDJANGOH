@@ -16,11 +16,11 @@ int main()
   cout << "Instance created !" << endl;
 
   cout << "Initialization.." << endl;
-  tDjangoh->Initialize("TDjangoh.in","mu-", 1, 1, 160.0, 0.0);
+  tDjangoh->Initialize("mu-", 1, 1, 160.0, 0.0);
   cout << "Initialized !" << endl;
 
   cout << "Event Generation.." << endl;
-  tDjangoh->GenerateEvent("TDjangoh.in",19);
+  tDjangoh->GenerateEvent();
   cout << "Event Generated !" << endl;
 
   cout << "Instance creation.." << endl;
@@ -28,11 +28,11 @@ int main()
   cout << "Instance created !" << endl;
 
   cout << "Initialization.." << endl;
-  tDjangoh1->Initialize("TDjangoh1.in","mu+", 1, 1, 180.0, 0.0);
+  tDjangoh1->Initialize("mu+", 1, 1, 180.0, 0.0);
   cout << "Initialized !" << endl;
 
   cout << "Event Generation.." << endl;
-  tDjangoh1->GenerateEvent("TDjangoh1.in",97);
+  tDjangoh1->GenerateEvent();
   cout << "Event Generated !" << endl;
 
   int nb;
