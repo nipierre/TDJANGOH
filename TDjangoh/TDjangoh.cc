@@ -33,8 +33,115 @@ Djkin_t djkin_;
 
 extern "C"
 {
-  void hsmain_(char* inputfile, int* len);
+  void hsmain_(const char* inputfile, int* len, int* nbf);
 }
+
+struct myabc
+{
+  int mya;
+  int myb;
+  int myc;
+} myabc_;
+
+struct hselab
+{
+  float sp;
+  float eele;
+  float pele;
+  float epro;
+  float ppro;
+} hselab_;
+
+struct hscuts
+{
+  float xmin;
+  float xmax;
+  float q2min;
+  float q2max;
+  float ymin;
+  float ymax;
+  float wmin;
+  float wmax;
+  float gmin;
+} hscuts_;
+
+struct hstcut
+{
+  float themin;
+  float themax;
+  float cthmin;
+  float cthcon;
+} hstcut_;
+
+struct hspcut
+{
+  float ptimin;
+  float ptxm0;
+} hspcut_;
+
+struct hsisgm
+{
+  float tcutq;
+  float tcutqs;
+} hsisgm_;
+
+struct hsparl
+{
+  float lpar[20];
+  float lparin[12];
+} hsparl_;
+
+struct hsstrp
+{
+  float icode;
+  float ilib;
+  float ilqmod;
+  float idpvr;
+} hsstrp_
+
+struct HSPDFO
+{
+  float ipdfop;
+  float iflopt;
+  float lqcd;
+  float ltm;
+  float lht;
+} hspdfo_;
+
+struct hselep
+{
+  float idipol;
+} hselep_;
+
+struct hsnucl
+{
+  int hna;
+  int hnz;
+  float inumod;
+} hsnucl_;
+
+struct hsparm
+{
+  float polari;
+  float hpolar;
+  float llept;
+  float lqua;
+} hsparm_;
+
+struct hswgtc
+{
+  float iweigs;
+} hswgtc_;
+
+struct hsonly
+{
+  float ihsonl;
+} hsonly_;
+
+struct hsltyp
+{
+  float lepin1;
+} hsltyp_;
 
 using namespace std;
 
@@ -88,12 +195,16 @@ TDjangoh* TDjangoh::Instance()
 }
 
 
-void TDjangoh::GenerateEvent()
+void TDjangoh::GenerateEvent(const char* cfile, int nbf)
 {
-  char* cfile = "TDjangoh.in";
+  //char* cfile = "TDjangoh.in";
   int len_cfile = strlen(cfile);
 
-  hsmain_(cfile,&len_cfile);
+  myabc_.mya=1;
+  myabc_.myb=2;
+  myabc_.myc=3;
+
+  hsmain_(cfile,&len_cfile,&nbf);
   // cout << lujets_.N << endl;
   fLujets = &lujets_;
   // fLudat1 = &ludat1_;
@@ -192,7 +303,7 @@ Int_t TDjangoh::ImportParticles(TClonesArray *particles, Option_t *option)
 }
 
 
-void TDjangoh::Initialize(const char *beam, int nuc_A, int nuc_Z, float beam_e, float nuc_e, float pol)
+void TDjangoh::Initialize(const char *name,const char *beam, int nuc_A, int nuc_Z, float beam_e, float nuc_e, float pol)
 {
   int PID;
   char atitle[32];
@@ -210,15 +321,16 @@ void TDjangoh::Initialize(const char *beam, int nuc_A, int nuc_Z, float beam_e, 
      PID = 11;
   }
 
-  Initialize_File(beam,PID,nuc_A,nuc_Z,beam_e,nuc_e,pol);
+  Initialize_File(name,beam,PID,nuc_A,nuc_Z,beam_e,nuc_e,pol);
+  cout << "File initialized !" << endl;
 
   snprintf(atitle,32," %s-N(%d,%d) at %g GeV",beam,nuc_A,nuc_Z,sqrt(pow(beam_e,2)+pow(nuc_e,2)));
   SetTitle(atitle);
 }
 
-void TDjangoh::Initialize_File(const char *beam, int PID, int nuc_A, int nuc_Z, float beam_e, float nuc_e, float pol)
+void TDjangoh::Initialize_File(const char *name, const char *beam, int PID, int nuc_A, int nuc_Z, float beam_e, float nuc_e, float pol)
 {
-  ofstream ofs("TDjangoh.in", std::ofstream::out);
+  ofstream ofs("TDjangoh.in", std::ofstream::out | std::ofstream::trunc);
 
   ofs
   << "OUTFILENAM\n" << outfilename

@@ -190,7 +190,7 @@ public:
   /*!
   * \brief Generation of an event
   */
-  void             GenerateEvent();
+  void             GenerateEvent(const char *cfile, int nbf);
   /*!
   * \brief Initialization of an event
   * \param beam : Type of particle for the beam
@@ -200,7 +200,7 @@ public:
   * \param nuc_e : Energy of the target (in GeV, 0 for fixed target)
   * \param pol : Polarization of the target
   */
-  void             Initialize(const char *beam, int nuc_A, int nuc_Z, float beam_e, float nuc_e, float pol=0);
+  void             Initialize(const char *name,const char *beam, int nuc_A, int nuc_Z, float beam_e, float nuc_e, float pol=0);
   /*!
   * \brief Initialization of the input file
   * \param beam : Type of particle for the beam
@@ -211,7 +211,7 @@ public:
   * \param nuc_e : Energy of the target (in GeV, 0 for fixed target)
   * \param pol : Polarization of the target
   */
-  void             Initialize_File(const char *beam, int PID, int nuc_A, int nuc_Z, float beam_e, float nuc_e, float pol);
+  void             Initialize_File(const char *name, const char *beam, int PID, int nuc_A, int nuc_Z, float beam_e, float nuc_e, float pol);
   /*!
   * \brief Import particles from lujets_ subroutine and copy it in TClonesArray*
   * \param particles : Array of particles

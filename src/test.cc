@@ -8,20 +8,31 @@ using namespace std;
 int main()
 {
   TDjangoh* tDjangoh;
-
-  if (tDjangoh != NULL)
-    delete tDjangoh;
+  TDjangoh* tDjangoh1;
+  FILE *f;
 
   cout << "Instance creation.." << endl;
   tDjangoh = new TDjangoh();
   cout << "Instance created !" << endl;
 
   cout << "Initialization.." << endl;
-  tDjangoh->Initialize("mu-", 1, 1, 160.0, 0.0);
+  tDjangoh->Initialize("TDjangoh.in","mu-", 1, 1, 160.0, 0.0);
   cout << "Initialized !" << endl;
 
   cout << "Event Generation.." << endl;
-  tDjangoh->GenerateEvent();
+  tDjangoh->GenerateEvent("TDjangoh.in",19);
+  cout << "Event Generated !" << endl;
+
+  cout << "Instance creation.." << endl;
+  tDjangoh1 = new TDjangoh();
+  cout << "Instance created !" << endl;
+
+  cout << "Initialization.." << endl;
+  tDjangoh1->Initialize("TDjangoh1.in","mu+", 1, 1, 180.0, 0.0);
+  cout << "Initialized !" << endl;
+
+  cout << "Event Generation.." << endl;
+  tDjangoh1->GenerateEvent("TDjangoh1.in",97);
   cout << "Event Generated !" << endl;
 
   int nb;
