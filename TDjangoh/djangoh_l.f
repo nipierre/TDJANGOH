@@ -677,54 +677,54 @@ C                         1)  CODEWD  (A10)
 C                         2)  CORRESPONDING DATA (FORMAT FREE)
 C***********************************************************************
 C
- 1    CONTINUE
-      READ(19,90,END=4) CODEWD
-      WRITE(LUNOUT,91) CODEWD
-      DO 2 ISW=1,20
-      IF(CODEWD.EQ.CODE(ISW))GO TO 3
- 2    CONTINUE
-      WRITE(LUNOUT,92)
-      GO TO 1
- 3    GO TO(
+C 1    CONTINUE
+C      READ(19,90,END=4) CODEWD
+C      WRITE(LUNOUT,91) CODEWD
+C      DO 2 ISW=1,20
+C      IF(CODEWD.EQ.CODE(ISW))GO TO 3
+C 2    CONTINUE
+C      WRITE(LUNOUT,92)
+C      GO TO 1
+C 3    GO TO(
 C------------------------------------------------------------------
 C        TITLE    , OUT-LEP   , FRAME     , FRAG      , CASCADES  ,
-     1   100      , 200       , 300       , 400       , 500       ,
+C     1   100      , 200       , 300       , 400       , 500       ,
 C
 C------------------------------------------------------------------
 C       BARYON    , MAX-VIRT  , KT-PARTON , DIQUARK   , KT-REMNANT,
-     2  600       , 700       , 800       , 900       , 1000      ,
+C     2  600       , 700       , 800       , 900       , 1000      ,
 C
 C------------------------------------------------------------------
 C      AR-REMNANT ,           ,           ,           ,           ,
-     3  1100      , 1200      , 1300      , 1400      , 1500      ,
+C     3  1100      , 1200      , 1300      , 1400      , 1500      ,
 C
 C------------------------------------------------------------------
 C      SOPHIA     ,           ,           ,           , CONTINUE  ,
-     4  1600      , 1700      , 1800      , 1900      , 2000      )
+C     4  1600      , 1700      , 1800      , 1900      , 2000      )
 C
 C------------------------------------------------------------------
-     9,ISW
-      GO TO 1
- 4    CONTINUE
-      IHSONL=1
-      WRITE(6,93)
-      GOTO 2000
+C     9,ISW
+C      GO TO 1
+C 4    CONTINUE
+C      IHSONL=1
+C      WRITE(6,93)
+C      GOTO 2000
 C
- 90   FORMAT(A10)
- 91   FORMAT(//' *****NEXT CONTROL CARD ***** ',A10/)
- 92   FORMAT(/,' UNKNOWN CODEWORD - CONTROL CARD IGNORED')
- 93   FORMAT(/,' NO INPUT FOR DJANGO6 - RUN HERACLES ONLY.')
+C 90   FORMAT(A10)
+C 91   FORMAT(//' *****NEXT CONTROL CARD ***** ',A10/)
+C 92   FORMAT(/,' UNKNOWN CODEWORD - CONTROL CARD IGNORED')
+C 93   FORMAT(/,' NO INPUT FOR DJANGO6 - RUN HERACLES ONLY.')
 C
 C***********************************************************************
 C               CONTROL CARD: CODEWD = TITLE
 C               DEFINES THE TITLE OF THE JOB
 C***********************************************************************
- 100  CONTINUE
-      READ(19,190) TITLE
-      WRITE(6,191) TITLE
-      GO TO 1
- 190  FORMAT(A80)
- 191  FORMAT(//,5X,A80,//)
+C 100  CONTINUE
+C      READ(19,190) TITLE
+C      WRITE(6,191) TITLE
+C      GO TO 1
+C 190  FORMAT(A80)
+C 191  FORMAT(//,5X,A80,//)
 C
 C***********************************************************************
 C               CONTROL CARD: CODEWD = OUT-LEP
@@ -733,11 +733,11 @@ C     LST(4)  = I_lepton + 10*I_shower
 C               I_lepton = 0/1 inactive/active scattered electron
 C               I_shower = 0/1 excluded/included interm. partons
 C***********************************************************************
- 200  CONTINUE
-      READ(19,*) LST(4)
+C 200  CONTINUE
+C      READ(19,*) LST(4)
       WRITE(LUNOUT,'(5X,A,I3)')
      *        ' LST(4)=',LST(4)
-      GO TO 1
+C      GO TO 1
 C
 C***********************************************************************
 C               CONTROL CARD: CODEWD = FRAME
@@ -748,11 +748,11 @@ C                =3 : lab system as defined by HS (e in + z direction)
 C                =4 : as 3 but z-axis along exchanged boson
 C
 C***********************************************************************
- 300  CONTINUE
-      READ(19,*) LST(5)
+C 300  CONTINUE
+C      READ(19,*) LST(5)
       WRITE(LUNOUT,'(5X,A,I3)')
      *        ' LST(5)=',LST(5)
-      GO TO 1
+C      GO TO 1
 C
 C***********************************************************************
 C               CONTROL CARD: CODEWD = FRAG
@@ -760,8 +760,8 @@ C               Fragmentation (D=1)
 C     LST(7)  = 0 : only parton level
 C             = 1 : as 0 + hadronization and decays
 C***********************************************************************
- 400  CONTINUE
-      READ(19,*) LST(7)
+C 400  CONTINUE
+C      READ(19,*) LST(7)
       WRITE(LUNOUT,'(5X,A,I3)')
      *        ' LST(7)=',LST(7)
       IF (LST(7).LT.0) THEN
@@ -770,7 +770,7 @@ C***********************************************************************
      *        ' RUN ONLY HERACLES, ADDITIONAL DJANGO6-INPUT IGNORED'
         GOTO 2000
       ENDIF
-      GO TO 1
+C      GO TO 1
 C
 C***********************************************************************
 C               CONTROL CARD: CODEWD = CASCADES
@@ -788,8 +788,8 @@ C             colour dipole model
 C     =12-15: ME+PS (as 2-5)
 C
 C***********************************************************************
- 500  CONTINUE
-      READ(19,*) LST(8)
+C 500  CONTINUE
+C      READ(19,*) LST(8)
       WRITE(LUNOUT,'(5X,A,I3)')
      *        ' LST(8)=',LST(8)
       IF(LST(8).NE.0.AND.LST(8).NE.1.AND.
@@ -801,7 +801,7 @@ C***********************************************************************
         WRITE(LUNOUT,'(5X,A,I3)')
      *        'Warning: LST(8) out of range, set to: ',LST(8)
       ENDIF
-      GO TO 1
+C      GO TO 1
 C
 C***********************************************************************
 C           CONTROL CARD: CODEWD = BARYON
@@ -810,11 +810,11 @@ C  LST(14) = 0 : as an anti-parton
 C          = 1 : into baryon
 C          = 2 & 3 : as 1 but with different probability distributions
 C***********************************************************************
- 600  CONTINUE
-      READ(19,*) LST(14)
+C 600  CONTINUE
+C      READ(19,*) LST(14)
       WRITE(LUNOUT,'(5X,A,I3)')
      *        ' LST(14)=',LST(14)
-      GO TO 1
+C      GO TO 1
 C
 C***********************************************************************
 C               CONTROL CARD: CODEWD = MAX-VIRT
@@ -826,11 +826,11 @@ C             =4: Q^2*(1-x)
 C             =5: Q^2*(1-x)*max(1,ln1/x)
 C             =9: W^4/3, i.e. similar as in dipole model
 C***********************************************************************
- 700  CONTINUE
-      READ(19,*) LST(9)
+C 700  CONTINUE
+C      READ(19,*) LST(9)
       WRITE(LUNOUT,'(5X,A,I3)')
      *        ' LST(9)=',LST(9)
-      GO TO 1
+C      GO TO 1
 C
 C***********************************************************************
 C               CONTROL CARD: CODEWD = KT-PARTON
@@ -838,11 +838,11 @@ C               width of gaussian primordial transverse momentum distr.
 C
 C     PARL(3) = 0.44 GeV (Default)
 C***********************************************************************
- 800  CONTINUE
-      READ(19,*) PARL(3)
+C 800  CONTINUE
+C      READ(19,*) PARL(3)
       WRITE(LUNOUT,'(5X,A,1PE13.4)')
      *        ' PARL(3)=',PARL(3)
-      GO TO 1
+C      GO TO 1
 C
 C***********************************************************************
 C               CONTROL CARD: CODEWD = DIQUARK
@@ -850,11 +850,11 @@ C               Probability that a ud-diquark in target remnant has
 C               spin and isospin equal zero, i.e. I=S=0
 C     PARL(4) = 0.75 (Default)
 C***********************************************************************
- 900  CONTINUE
-      READ(19,*) PARL(4)
+C 900  CONTINUE
+C      READ(19,*) PARL(4)
       WRITE(LUNOUT,'(5X,A,1PE13.4)')
      *        ' PARL(4)=',PARL(4)
-      GO TO 1
+C      GO TO 1
 C
 C***********************************************************************
 C               CONTROL CARD: CODEWD = KT-REMNANT
@@ -862,11 +862,11 @@ C               width of gaussian pt when non-trivial target remnant is
 C               split into a particle and a jet
 C    PARL(14) = 0.44 GeV (Default)
 C***********************************************************************
-1000  CONTINUE
-      READ(19,*) PARL(14)
+C1000  CONTINUE
+C      READ(19,*) PARL(14)
       WRITE(LUNOUT,'(5X,A,1PE13.4)')
      *        ' PARL(14)=',PARL(14)
-      GO TO 1
+C      GO TO 1
 C
 C***********************************************************************
 C               CONTROL CARD: CODEWD = AR-REMNANT
@@ -875,15 +875,15 @@ C    MSTA(30) = 0 : struck quark pointlike, mu=PARA(11)
 C             = 1 : as 1                    mu=PARA(11)/(1-x)
 C             = 2 : as 1                  , mu=Q
 C***********************************************************************
-1100  CONTINUE
-      READ(19,*) MSTA(30)
+C1100  CONTINUE
+C      READ(19,*) MSTA(30)
       WRITE(LUNOUT,'(5X,A,I3)')
      *        ' MSTA(30)=',MSTA(30)
-      GO TO 1
- 1200 CONTINUE
- 1300 CONTINUE
- 1400 CONTINUE
- 1500 CONTINUE
+C      GO TO 1
+C 1200 CONTINUE
+C 1300 CONTINUE
+C 1400 CONTINUE
+C 1500 CONTINUE
 C
 C***********************************************************************
 C               CONTROL CARD: CODEWD = SOPHIA
@@ -891,15 +891,15 @@ C               for Sophia: maximal value of Whad for which
 C               the hadronic final state is generated by Sophia
 C    WSOPHIA = 1.5 GeV (Default)
 C***********************************************************************
- 1600 CONTINUE
-      READ(19,*) WSOPHIA
+C 1600 CONTINUE
+C      READ(19,*) WSOPHIA
       WRITE(LUNOUT,'(5X,A,1PE13.4)')
      *        ' WSOPHIA=',WSOPHIA
-      GO TO 1
- 1700 CONTINUE
- 1800 CONTINUE
- 1900 CONTINUE
-      GO TO 1
+C      GO TO 1
+C 1700 CONTINUE
+C 1800 CONTINUE
+C 1900 CONTINUE
+C      GO TO 1
 C
 C***********************************************************************
  2000 CONTINUE

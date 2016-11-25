@@ -36,6 +36,13 @@ extern "C"
   void hsmain_(char* clhapathi,int* clhalen);
 }
 
+extern "C" struct myabc
+{
+  int mya;
+  int myb;
+  int myc;
+} myabc_;
+
 extern "C" struct hselab
 {
   double sp;
@@ -45,17 +52,16 @@ extern "C" struct hselab
   double ppro;
 } hselab_;
 
-extern "C" struct hscuts
+extern "C" struct ihscut
 {
-  double xmin = 0.0001;
-  double xmax = 1.00;
-  double q2min = 1.0;
-  double q2max = 10^5;
-  double ymin = 0.01;
-  double ymax = 0.95;
-  double wmin = 1.4;
-  double gmin;
-} hscuts_;
+  float ixmin;
+  float ixmax;
+  float iq2min;
+  float iq2max;
+  float iymin;
+  float iymax;
+  float iwmin;
+} ihscut_;
 
 extern "C" struct hstcut
 {
@@ -134,77 +140,77 @@ extern "C" struct hsirct
   double iopegm;
 } hsirct_;
 
-extern "C" struct hsalfs
+extern "C" struct ihsalf
 {
-  double par111;
-  double par112;
-  double parl11;
-  double parl19;
-  double mst111;
-  double mst115;
-} hsalfs_;
+  double ipar111;
+  double ipar112;
+  double iparl11;
+  double iparl19;
+  int imst111;
+  int imst115;
+} ihsalf_;
 
 extern "C" struct hsintnc
 {
-  int inc2 = 1;
-  int inc31 = 18;
-  int inc32 = 18;
-  int inc33 = 18;
-  int inc34 = 0;
-  int iel2 = 0;
-  int iel31 = 0;
-  int iel32 = 0;
-  int iel33 = 0;
+  int inc2;
+  int inc31 ;
+  int inc32 ;
+  int inc33 ;
+  int inc34;
+  int iel2;
+  int iel31;
+  int iel32;
+  int iel33;
 } hsintnc_;
 
 extern "C" struct hsintcc
 {
-  int icc2 = 0;
-  int icc31 = 0;
-  int icc32 = 0;
-  int icc33 = 0;
+  int icc2;
+  int icc31;
+  int icc32;
+  int icc33;
 } hsintcc_;
 
 extern "C" struct hssamnc
 {
-  int isnc2 = 1;
-  int isnc31 = 1;
-  int isnc32 = 1;
-  int isnc33 = 1;
-  int isnc34 = 0;
-  int isel2 = 0;
-  int isel31 = 0;
-  int isel32 = 0;
-  int isel33 = 0;
+  int isnc2;
+  int isnc31;
+  int isnc32;
+  int isnc33;
+  int isnc34;
+  int isel2;
+  int isel31;
+  int isel32;
+  int isel33;
 } hssamnc_;
 
 extern "C" struct hssamcc
 {
-  int iscc2 = 0;
-  int iscc31 = 0;
-  int iscc32 = 0;
-  int iscc33 = 0;
+  int iscc2;
+  int iscc31;
+  int iscc32;
+  int iscc33;
 } hssamcc_;
 
 extern "C" struct hsrdio
 {
-  int isdinp = -1;
-  int isdout = -1;
+  int isdinp;
+  int isdout;
 } hsrdio_;
 
 extern "C" struct hsvglp
 {
-  int npoveg = 3000;
+  int npoveg;
   int numint;
-  int nphyp = 20;
+  int nphyp;
 } hsvglp_;
 
 extern "C" struct hystfu
 {
-  int pystop;
-  int pyslam;
-  int npymax = 3;
-  int npymin = 0;
+  float pystop;
+  float pyslam;
+  int npymax;
+  int npymin;
 } hystfu_;
 
 extern "C" struct hsoptn
@@ -213,9 +219,9 @@ extern "C" struct hsoptn
   int int3[15];
   int isam2[5];
   int isam3[15];
-  int ioplot = 0;
-  int iprint = 0;
-  int icut = 3;
+  int ioplot;
+  int iprint;
+  int icut;
 } hsoptn_;
 
 extern "C" struct hsnume
@@ -224,7 +230,7 @@ extern "C" struct hsnume
   double sigerr;
   double sigg[20];
   double siggrr[20];
-  int nevent = 1;
+  int nevent;
   int neve[20];
 } hsnume_;
 
@@ -296,8 +302,11 @@ void TDjangoh::GenerateEvent()
   //char* cfile = "TDjangoh.in";
   //int len_cfile = strlen(cfile);
 
-  cout << lhapathi << " " << lhalen;
+  // cout << lhapathi << " " << lhalen;
 
+  myabc_.mya = 1;
+  myabc_.myb = 2;
+  myabc_.myc = 3;
 
   hsmain_(lhapathi,&lhalen);
 
@@ -431,7 +440,7 @@ void TDjangoh::Data_default()
 
   // OUTFILENAME
   hsoutf_.outfilenam = "TDjangoh";
-  // outlen = int(strlen("TDjangoh"));
+  //outlen = int(strlen("TDjangoh"));
 
   // EL-BEAM
   hselab_.eele = 130.0;
@@ -440,13 +449,13 @@ void TDjangoh::Data_default()
 
   // KINEM-CUTS
   hsoptn_.icut = 3;
-  hscuts_.xmin = 0.0001;
-  hscuts_.xmax = 1.00;
-  hscuts_.ymin = 0.01;
-  hscuts_.ymax = 0.95;
-  hscuts_.q2min = 1.0;
-  hscuts_.q2max = 1e5;
-  hscuts_.wmin = 1.40;
+  ihscut_.ixmin = 0.0001;
+  ihscut_.ixmax = 1.00;
+  ihscut_.iymin = 0.01;
+  ihscut_.iymax = 0.95;
+  ihscut_.iq2min = 1.0;
+  ihscut_.iq2max = 1e5;
+  ihscut_.iwmin = 1.40;
 
   // EGAM-MIN
   hsirct_.egmin = 0.0;
@@ -524,14 +533,14 @@ void TDjangoh::Data_default()
 
   // FLONG
   hspdfo_.iflopt = 111;
-  // hsalfs_.parl11 = 0.01;
-  // hsalfs_.parl19 = 0.03;
+  ihsalf_.iparl11 = 0.01;
+  ihsalf_.iparl19 = 0.03;
 
   // ALFAS
-  // hsalfs_.mst111 = 1.0;
-  // hsalfs_.mst115 = 1.0;
-  // hsalfs_.par111 = 0.20;
-  // hsalfs_.par112 = 0.235;
+  ihsalf_.imst111 = 1;
+  ihsalf_.imst115 = 1;
+  ihsalf_.ipar111 = 0.20;
+  ihsalf_.ipar112 = 0.235;
 
   // EP-DIPOLE
   hselep_.idipol = 0;
