@@ -73,8 +73,6 @@ C
         NEVMOD=10000
         N10CNT=0
         GSP=SP-MPRO2-MEI2
-        OPEN(31,FILE=OUTFILENAM(1:ICH)//'_evt.dat',STATUS='REPLACE')
-
       ENDIF
 
 C-----------------------------------------------------------------------

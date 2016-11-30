@@ -8,44 +8,34 @@ using namespace std;
 int main()
 {
   TDjangoh* tDjangoh;
-  TDjangoh* tDjangoh1;
-  FILE *f;
+  int nb;
+  float x;
+  float y;
+  float Q2;
 
   cout << "Instance creation.." << endl;
   tDjangoh = new TDjangoh();
   cout << "Instance created !" << endl;
 
   cout << "Initialization.." << endl;
-  tDjangoh->Initialize("TDjangoh.in","mu-", 1, 1, 160.0, 0.0);
+  tDjangoh->Initialize("mu-", 1, 1, 160.0, 0.0);
   cout << "Initialized !" << endl;
 
-  cout << "Event Generation.." << endl;
-  tDjangoh->GenerateEvent("TDjangoh.in",19);
-  cout << "Event Generated !" << endl;
+  for(int i=0; i<4; i++)
+  {
+    tDjangoh->Configure("mu-", 1, 1, 160.0, 0.0);
 
-  cout << "Instance creation.." << endl;
-  tDjangoh1 = new TDjangoh();
-  cout << "Instance created !" << endl;
+    cout << "\n\nEvent Generation.." << endl;
+    tDjangoh->GenerateEvent();
+    cout << "Event Generated !\n" << endl;
 
-  cout << "Initialization.." << endl;
-  tDjangoh1->Initialize("TDjangoh1.in","mu+", 1, 1, 180.0, 0.0);
-  cout << "Initialized !" << endl;
-
-  cout << "Event Generation.." << endl;
-  tDjangoh1->GenerateEvent("TDjangoh1.in",97);
-  cout << "Event Generated !" << endl;
-
-  int nb;
-  float x;
-  float y;
-  float Q2;
-
-  nb = tDjangoh->GetN();
-  cout << "Total number of particles : " << nb << endl;
-  x = tDjangoh->GetX();
-  y = tDjangoh->GetY();
-  Q2 = tDjangoh->GetQ2();
-  cout << "Xbj : " << x << " y : " << y << " Q2 : " << Q2 << endl;
+    nb = tDjangoh->GetN();
+    cout << "Total number of particles : " << nb << endl;
+    x = tDjangoh->GetX();
+    y = tDjangoh->GetY();
+    Q2 = tDjangoh->GetQ2();
+    cout << "Xbj : " << x << " y : " << y << " Q2 : " << Q2 << "\n\n" << endl;
+  }
 
   return 0;
 }

@@ -1,5 +1,5 @@
 C
-      SUBROUTINE HSMAIN(INPUTFILE,LEN,NBF)
+      SUBROUTINE HSMAIN()
 C
 C
 C***********************************************************************
@@ -36,7 +36,6 @@ C
       EXTERNAL HSCCG1,HSCCG2,HSCCKL,HSCCQI,HSCCQF
       EXTERNAL HSELG1,HSELG2,HSELK1,HSELK2,HSELCO
       CHARACTER*19 FNAME,FNAMET
-      CHARACTER*(LEN) INPUTFILE
       PARAMETER (NCHN2=1,NCHC2=2,NCHE2=3)
       PARAMETER (NCHN31=6,NCHN32=7,NCHN33=8,NCHN34=9)
       PARAMETER (NCHC31=12,NCHC32=13,NCHC33=14)
@@ -49,6 +48,8 @@ C
      *              ,MW2,MZ2,MH2,ME2,MMY2,MTAU2,MU2,MD2,MS2,MC2,MB2,MT2
       COMMON /HSELAB/ SP,EELE,PELE,EPRO,PPRO
       COMMON /HSCUTS/ XMIN,XMAX,Q2MIN,Q2MAX,YMIN,YMAX,WMIN,GMIN
+      COMMON /IHSCUT/ IXMIN,IXMAX,IQ2MIN,IQ2MAX,IYMIN,IYMAX,IWMIN,IGMIN
+      REAL            IXMIN,IXMAX,IQ2MIN,IQ2MAX,IYMIN,IYMAX,IWMIN,IGMIN
       COMMON /HSTCUT/ THEMIN,THEMAX,CTHMIN,CTHCON
       COMMON /HSPCUT/ PTMIN,PTXM0
       COMMON /HSISGM/ TCUTQ,TCUTQS
@@ -57,10 +58,19 @@ C
       COMMON /HSPDFO/ IPDFOP,IFLOPT,LQCD,LTM,LHT
       COMMON /HSELEP/ IDIPOL
       COMMON /HSNUCL/ HNA,HNZ,INUMOD
+      INTEGER         HNA,HNZ
       COMMON /HSPARM/ POLARI,HPOLAR,LLEPT,LQUA
       COMMON /HSWGTC/ IWEIGS
       COMMON /HSONLY/ IHSONL
       COMMON /HSLTYP/ LEPIN1
+      COMMON /HSINTNC/ INC2,INC31,INC32,INC33,INC34,IEL2,IEL31,IEL32,IEL33
+      INTEGER          INC2,INC31,INC32,INC33,INC34,IEL2,IEL31,IEL32,IEL33
+      COMMON /HSINTCC/ ICC2,ICC31,ICC32,ICC33
+      INTEGER          ICC2,ICC31,ICC32,ICC33
+      COMMON /HSSAMNC/ ISNC2,ISNC31,ISNC32,ISNC33,ISNC34,ISEL2,ISEL31,ISEL32,ISEL33
+      INTEGER          ISNC2,ISNC31,ISNC32,ISNC33,ISNC34,ISEL2,ISEL31,ISEL32,ISEL33
+      COMMON /HSSAMCC/ ISCC2,ISCC31,ISCC32,ISCC33
+      INTEGER          ISCC2,ISCC31,ISCC32,ISCC33
 C---
       PARAMETER(NDIM2=2,NBIN2=50)
       PARAMETER(NREG2N=2500)
@@ -220,20 +230,26 @@ C-------------------------
       REAL            PYSTOP,PYSLAM
       COMMON /HSALFS/ PAR111,PAR112,PARL11,PARL19,MST111,MST115
       REAL            PAR111,PAR112,PARL11,PARL19
-      INTEGER         MST111,MST115
+      INTEGER                                     MST111,MST115
+      COMMON /IHSALF/ IPAR111,IPAR112,IPARL11,IPARL19,IMST111,IMST115
+      REAL            IPAR111,IPAR112,IPARL11,IPARL19
+      INTEGER                                         IMST111,IMST115
       CHARACTER*80 LHAPATHI
       CHARACTER*232 LHAPATH
       COMMON /LHAPDFC/ LHAPATH
       SAVE /LHAPDFC/
-      CHARACTER*80 OUTFILENAM
-      COMMON /HSOUTF/ OUTFILENAM,ICH
       COMMON /LEPTOU/ CUTDJ(14),LST(40),PARL(30),XDJ,YDJ,W2DJ,Q2DJ,UDJ
       REAL            CUTDJ,            PARL,    XDJ,YDJ,W2DJ,Q2DJ,UDJ
       COMMON /DJKIN/ DJX,DJY,DJW2,DJQ2,DJU
-      REAL           DJX,DJY,DJW2,DJQ2,DJU
       SAVE /DJKIN/
-      COMMON /MYABC/ MYA,MYB,MYC
-      INTEGER        MYA,MYB,MYC
+      COMMON /ISDEBUG/ ISDBG
+      INTEGER          ISDBG
+      COMMON /IHSCW/ INPUTCODEWD(46), ITCW
+      CHARACTER*10   INPUTCODEWD
+      INTEGER                         ITCW
+      SAVE   /IHSCW/
+      COMMON /HSOUTF/ OUTFILENAM
+      CHARACTER*80    OUTFILENAM
       CHARACTER*80 TITLE
       CHARACTER*10 CODE,CODEWD
       DIMENSION CODE(40)
@@ -241,6 +257,7 @@ C-------------------------
       DIMENSION INT2C(5),ISAM2C(5),INT3C(15),ISAM3C(15)
 C---for date and time, used as seeds for random number generator
       integer today(3), now(3)
+
 C
 C-------------------------------
 C---INITIALIZE DEFAULTS NOT YET INITIALIZED IN BLOCK DATA
@@ -272,7 +289,7 @@ C     CALL HSRNTE(1)
 C
 C---for version 4.6.9: fix output units,
 C   and changed to avoid conflict with output units used in polpdf.f
-      LUNOUT=71
+      LUNOUT=6
       LUNDAT=9
       LUNRND=8
 C---for version 4.6.10: move output file definitions to where
@@ -280,14 +297,61 @@ C   file name is known, only set default name here,
 C   see code word OUTFILENAM
 C      OPEN(LUNDAT,FILE='djh.dat',STATUS='UNKNOWN',FORM='UNFORMATTED')
 C      OPEN(LUNRND,FILE='djhrnd.dat',STATUS='UNKNOWN',FORM='FORMATTED')
-      OUTFILENAM='djangoh-default-output'
-      ICH=INDEX(OUTFILENAM,' ')-1
+C      OUTFILENAM='djangoh-default-output'
+C      ICH=INDEX(OUTFILENAM,' ')-1
       IODEF=0
-      OPEN(unit = NBF,file = INPUTFILE,action='READ')
-      WRITE(6,*) INPUTFILE
-      WRITE(6,*) MYA
-      WRITE(6,*) MYB
-      WRITE(6,*) MYC
+      ITCW=0
+
+C---for Interface version 4.6.13i : initialization of cross-section recipient
+C   or they should increment after each call of event generation from the
+C   interface and maybe lead to crashes.
+C     --- /HSSNC2/ INIT ---
+      SIG2=0
+      SIG2E=0
+C     --- /HSSCC2/ INIT ---
+      SIG2C=0
+      SIG2EC=0
+C     --- /HSSEL2/ INIT ---
+      SIG2L=0
+      SIG2EE=0
+C     --- /HSSN31/ INIT ---
+      SIG31=0
+      SIG31E=0
+C     --- /HSSN32/ INIT ---
+      SIG32=0
+      SIG32E=0
+C     --- /HSSN33/ INIT ---
+      SIG33=0
+      SIG33E=0
+C     --- /HSSN34/ INIT ---
+      SIG34=0
+      SIG34E=0
+C     --- /HSSC31/ INIT ---
+      SIG31C=0
+      SIG31EC=0
+C     --- /HSSC32/ INIT ---
+      SIG32C=0
+      SIG32EC=0
+C     --- /HSSC33/ INIT ---
+      SIG33C=0
+      SIG33EC=0
+C     --- /HSSE31/ INIT ---
+      SIG31L=0
+      SIG31EE=0
+C     --- /HSSE32/ INIT ---
+      SIG32L=0
+      SIG32EE=0
+C     --- /HSSE33/ INIT ---
+      SIG33L=0
+      SIG33EE=0
+C     --- /HSNUME/ INIT ---
+      SIGTOT=0
+      SIGTRR=0
+      DO I=1,20
+        SIGG(I)=0
+        SIGGRR(I)=0
+        NEVE(I)=0
+      END DO
 
 C---PRINT THE TITLE
       WRITE(6,9)
@@ -297,7 +361,7 @@ C---PRINT THE TITLE
      3//,10X,'                         HERACLES '
      4//,10X,'     Event generator for deep-inelastic e-P collisions '
      5 /,10X,'              including radiative corrections  '
-     6//,10X,'                 VERSION 4.6.13, 27.05.2016 '//
+     6//,10X,'                 VERSION 4.6.13i, 30.11.2016 '//
      8//,10X,'                      H. Spiesberger '//
      9' **************************************************',
      1'****************************',//)
@@ -311,10 +375,9 @@ C                         2)  CORRESPONDING DATA (FORMAT FREE)
 C***********************************************************************
 C
  1    CONTINUE
-      READ(NBF,90,END=4) CODEWD
-      WRITE(6,91) CODEWD
+      ITCW=ITCW+1
       DO 2 ISW=1,40
-      IF(CODEWD.EQ.CODE(ISW))GO TO 3
+      IF(INPUTCODEWD(ITCW).EQ.CODE(ISW))GO TO 3
  2    CONTINUE
       WRITE(6,92)
       GO TO 1
@@ -368,8 +431,9 @@ C               CONTROL CARD: CODEWD = TITLE
 C               DEFINES THE TITLE OF THE JOB
 C***********************************************************************
  100  CONTINUE
-      READ(NBF,190) TITLE
+C      READ(NBF,190) TITLE
       WRITE(LUNOUT,191) TITLE
+      WRITE(6,*) 'COUCOU LE TITRE'
       GO TO 1
  190  FORMAT(A80)
  191  FORMAT(/,6X,A80,/)
@@ -386,7 +450,7 @@ C     LLEPT   =  -3  muon- BEAM
 C             =  +4  muon+ BEAM
 C***********************************************************************
  200  CONTINUE
-      READ(NBF,*) EELE, POLARI, LLEPT
+C      READ(NBF,*) EELE, POLARI, LLEPT
       WRITE(LUNOUT,'(5X,2(A,1PE12.3,5X),A,I3)')
      *        ' EELE=',EELE,'POLARI=',POLARI,'LLEPT=',LLEPT
 C...27.05.2016: new option for muon scattering via this input
@@ -412,7 +476,7 @@ C     EPRO    =  ENERGY OF THE PROTON BEAM
 C     HPOLAR  =  DEGREE OF PROTON BEAM POLARIZATION
 C***********************************************************************
  300  CONTINUE
-      READ(NBF,*) EPRO,HPOLAR
+C      READ(NBF,*) EPRO,HPOLAR
       WRITE(LUNOUT,'(5X,2(A,1PE12.3,5X))')
      *        ' EPRO=',EPRO,'HPOLAR=',HPOLAR
       GO TO 1
@@ -430,7 +494,14 @@ C             ACCORDING TO THE MOST RESTRICTIVE CONDITIONS
 C             IN SUBROUTINE HSPRLG
 C***********************************************************************
  400  CONTINUE
-      READ(NBF,*) ICUT, XMIN,XMAX, YMIN,YMAX, Q2MIN,Q2MAX, WMIN
+C      READ(NBF,*) ICUT, XMIN,XMAX, YMIN,YMAX, Q2MIN,Q2MAX, WMIN
+      XMIN=IXMIN
+      XMAX=IXMAX
+      YMIN=IYMIN
+      YMAX=IYMAX
+      Q2MIN=IQ2MIN
+      Q2MAX=IQ2MAX
+      WMIN=IWMIN
       WRITE(LUNOUT,'(5X,A/4X,I3,2X,4(1PE13.4))')
      &       ' ICUT, XMIN,        XMAX,        YMIN,        YMAX ',
      &         ICUT, XMIN,XMAX, YMIN,YMAX
@@ -456,7 +527,7 @@ C***********************************************************************
 C               CONTROL CARD: CODEWD = EGAM-MIN
 C***********************************************************************
   500 CONTINUE
-      READ(NBF,*) EGMIN
+C      READ(NBF,*) EGMIN
       WRITE(LUNOUT,'(5X,A,3X,1PE13.4)') ' EGMIN = ',EGMIN
       IF(EGMIN.GT.0D0) IOPEGM=1
       GO TO 1
@@ -484,8 +555,8 @@ C                        STATE RADIATION)
 C               IEL33 :  ELASTIC TAIL, CHANNEL 17 (COMPTON PART)
 C***********************************************************************
  600  CONTINUE
-      READ(NBF,*) INC2,INC31,INC32,INC33,INC34,
-     +              IEL2,IEL31,IEL32,IEL33
+C      READ(NBF,*) INC2,INC31,INC32,INC33,INC34,
+C     +              IEL2,IEL31,IEL32,IEL33
       WRITE(LUNOUT,'(5X,A,3X,I5)')
      +               ' INC2  = ' ,INC2
       WRITE(LUNOUT,'(2(5X,A,3X,I5))')
@@ -523,7 +594,7 @@ C               ICC32 :  CHARGED CURRENT CHANNEL 2 (KQ)
 C               ICC33 :  CHARGED CURRENT CHANNEL 3 (KQS)
 C***********************************************************************
  700  CONTINUE
-      READ(NBF,*) ICC2,ICC31,ICC32,ICC33
+C      READ(NBF,*) ICC2,ICC31,ICC32,ICC33
       WRITE(LUNOUT,'(2(5X,A,3X,I5))')
      +               ' ICC2  = ' ,ICC2,  ' ICC31 = ',ICC31
      +             , ' ICC32 = ' ,ICC32, ' ICC33 = ',ICC33
@@ -540,7 +611,7 @@ C   NUMBER OF INTEGRATION POINTS FOR VEGAS
 C   DEFAULT: 1000
 C***********************************************************************
  800  CONTINUE
-      READ(NBF,*) NPOVEG
+C      READ(NBF,*) NPOVEG
       WRITE(LUNOUT,'(5X,A,5X,4I6)') ' NPOVEG', NPOVEG
       GO TO 1
 C
@@ -551,7 +622,7 @@ C       NPHYP  =  NUMBER OF POINTS TO BE SAMPLED PER HYPERCUBE
 C                 FOR ESTIMATION OF THE LOCAL MAXIMA
 C***********************************************************************
  900  CONTINUE
-      READ(NBF,*) NPHYP
+C      READ(NBF,*) NPHYP
       IF(NPHYP.LT.3) NPHYP=3
       WRITE(LUNOUT,'(5X,A/5X,4I6)') ' NPHYP', NPHYP
       NPOIN=NPHYP
@@ -588,7 +659,7 @@ C                    VERTEX CORRECTIONS AND BOXES
 C      LPARIN(12) :  Z-EXCHANGE INCLUDED
 C***********************************************************************
  1000 CONTINUE
-      READ(NBF,*) (LPARIN(I),I=1,11)
+C      READ(NBF,*) (LPARIN(I),I=1,11)
       WRITE(LUNOUT,'(5X,20I2)') (LPARIN(I),I=1,11)
       LPARIN(12)=1
 C---REDEFINITION FOR INTERNAL USE
@@ -620,7 +691,7 @@ C               APPLIED IN THE ACTUAL CALCULATION
 C
 C***********************************************************************
  1100 CONTINUE
-      READ(NBF,*) ILQMOD,ILIB,ICODE
+C      READ(NBF,*) ILQMOD,ILIB,ICODE
       IPDFOP=0
       IF (ILQMOD.LE.1) IPDFOP=1
       WRITE(LUNOUT,'(5X,A,I7)') ' ILQMOD = ',ILQMOD
@@ -632,7 +703,7 @@ C***********************************************************************
 C               CONTROL CARD: CODEWD = NFLAVORS
 C***********************************************************************
  1200 CONTINUE
-      READ(NBF,*) NPYMIN,NPYMAX
+C      READ(NBF,*) NPYMIN,NPYMAX
       IF(NPYMIN.GT.6) NPYMIN=6
       IF(NPYMAX.LT.NPYMIN) NPYMAX=NPYMIN
       IF(NPYMAX.LE.0) NPYMAX=6
@@ -660,8 +731,8 @@ C                        STATE RADIATION)
 C               ISEL33:  ELASTIC TAIL, CHANNEL 3 (COMPTON PART)
 C***********************************************************************
 1300  CONTINUE
-      READ(NBF,*) ISNC2,ISNC31,ISNC32,ISNC33,ISNC34
-     +             ,ISEL2,ISEL31,ISEL32,ISEL33
+C      READ(NBF,*) ISNC2,ISNC31,ISNC32,ISNC33,ISNC34
+C     +             ,ISEL2,ISEL31,ISEL32,ISEL33
       WRITE(LUNOUT,'(5X,A,3X,I5)')
      +               ' ISNC2  = ' ,ISNC2
       WRITE(LUNOUT,'(2(5X,A,3X,I5))')
@@ -697,7 +768,7 @@ C              ISCC32 :  CHARGED CURRENT CHANNEL 2 (KQ)
 C              ISCC33 :  CHARGED CURRENT CHANNEL 3 (KQS)
 C***********************************************************************
 1400  CONTINUE
-      READ(NBF,*) ISCC2,ISCC31,ISCC32,ISCC33
+C      READ(NBF,*) ISCC2,ISCC31,ISCC32,ISCC33
       WRITE(LUNOUT,'(2(5X,A,3X,I5))')
      +               ' ISCC2  = ' ,ISCC2,  ' ISCC31 = ',ISCC31
      +             , ' ISCC32 = ' ,ISCC32, ' ISCC33 = ',ISCC33
@@ -715,7 +786,7 @@ C
 C   INPUT / OUTPUT OF ACTUAL RANDOM NUMBER SEEDS
 C***********************************************************************
  1500 CONTINUE
-      READ(NBF,*) ISDINP,ISDOUT
+C      READ(NBF,*) ISDINP,ISDOUT
       WRITE(LUNOUT,'(5X,A,I6)') ' ISDINP = ',ISDINP
       WRITE(LUNOUT,'(5X,A,I6)') ' ISDOUT = ',ISDOUT
       IF(ISDINP.GT.0) THEN
@@ -738,7 +809,7 @@ C
 C   ELECTROWEAK MASS PARAMETERS
 C***********************************************************************
  1600 CONTINUE
-      READ(NBF,*) MW,MZ,MH,MT
+C      READ(NBF,*) MW,MZ,MH,MT
       LPAR(5)=1
       WRITE(LUNOUT,'(5X,A,4F12.4)') ' MW, MZ, MH, MT = ',MW,MZ,MH,MT
       GOTO 1
@@ -753,7 +824,7 @@ C              TCUTQS :  FINAL STATE RADIATION
 C
 C***********************************************************************
 1700  CONTINUE
-      READ(NBF,*) TCUTQ,TCUTQS
+C      READ(NBF,*) TCUTQ,TCUTQS
       WRITE(LUNOUT,'(2(5X,A,F10.4,A))')
      &               ' TCUTQ =  ', TCUTQ, ' RAD',
      &               ' TCUTQS =  ', TCUTQS, ' RAD'
@@ -766,7 +837,9 @@ C    INCLUDE THE LONGITUDINAL STRUCTURE FUNCTION (FOR IPART < 1000)
 C
 C***********************************************************************
  1800 CONTINUE
-      READ(NBF,*) IFLOPT,PARL11,PARL19
+C      READ(NBF,*) IFLOPT,PARL11,PARL19
+C      PARL11=IPARL11
+C      PARL19=IPARL19
       WRITE(LUNOUT,'(5X,A,I5,A,F10.4,A,F10.4)')
      &               ' IFLOPT =  ', IFLOPT,
      &               '   PARL11 =', PARL11,
@@ -782,7 +855,11 @@ C    DEFINITION OF ALPHA_S IN THE CALCULATION OF THE LONGITUDINAL
 C    STRUCTURE FUNCTION
 C
 C***********************************************************************
-      READ(NBF,*) MST111,MST115,PAR111,PAR112
+C      READ(NBF,*) MST111,MST115,PAR111,PAR112
+C      MST111=IMST111
+C      MST115=IMST115
+C      PAR111=IPAR111
+C      PAR112=IPAR112
       WRITE(LUNOUT,'(5X,A,I5)') ' MST111 =  ', MST111
       WRITE(LUNOUT,'(5X,A,I5)') ' MST115 =  ', MST115
       WRITE(LUNOUT,'(5X,A,F10.4)') ' PAR111 = ', PAR111
@@ -799,7 +876,7 @@ C    INCLUDE PARAMETRIZATION OF STEIN ET AL. FOR THE DEVIATION
 C    OF THE DIPOLE FORM FACTOR FOR ELASTIC EP SCATTERING
 C
 C***********************************************************************
-      READ(NBF,*) IDIPOL
+C      READ(NBF,*) IDIPOL
       WRITE(LUNOUT,'(5X,A,I5)') ' IDIPOL =  ', IDIPOL
       GO TO 1
  2200 CONTINUE
@@ -810,10 +887,10 @@ C
 C    SCATTERING OFF HEAVY NUCLEI
 C
 C***********************************************************************
-      READ(NBF,*) EPRO,HNA,HNZ
+C      READ(NBF,*) EPRO,HNA,HNZ
       WRITE(LUNOUT,'(5X,A,1PE13.3)') ' E PER NUCLEON=',EPRO
-      WRITE(LUNOUT,'(5X,A,F5.0)')    ' A-NUCLEUS=',HNA
-      WRITE(LUNOUT,'(5X,A,F5.0)')    ' Z-NUCLEUS=',HNZ
+      WRITE(LUNOUT,'(5X,A,I5)')    ' A-NUCLEUS=',HNA
+      WRITE(LUNOUT,'(5X,A,I5)')    ' Z-NUCLEUS=',HNZ
       GO TO 1
  2300 CONTINUE
 C
@@ -823,7 +900,7 @@ C
 C    MODEL FOR NUCLEAR PARTON DISTRIBUTIONS
 C
 C***********************************************************************
-      READ(NBF,*) INUMOD
+C      READ(NBF,*) INUMOD
       WRITE(LUNOUT,'(5X,A,I5)')    ' INUMOD=',INUMOD
       GO TO 1
  2400 CONTINUE
@@ -834,9 +911,10 @@ C
 C    PATH NAME FOR GRID FILES OF LHAPDF LIBRARY
 C
 C***********************************************************************
-      READ(NBF,2590) LHAPATHI
-      LHAPATH=LHAPATHI
-      WRITE(LUNOUT,'(5X,A,A)')    ' LHAPATH=',LHAPATHI
+C      READ(NBF,2590) LHAPATHI
+      LHAPATHI='/sps/compass/npierre/lhapdf5/share/lhapdf'
+C      LHAPATH=LHAPATHI
+      WRITE(LUNOUT,'(5X,A,A)')    ' LHAPATH=',LHAPATH
       GOTO 1
  2590 FORMAT(A80)
  2500 CONTINUE
@@ -847,7 +925,7 @@ C
 C    FILE NAME TO REDIRECT STANDARD OUTPUT VIA LUNOUT (D=6)
 C
 C***********************************************************************
-      READ(NBF,2590) OUTFILENAM
+C      READ(NBF,2590) OUTFILENAM
       ICH=INDEX(OUTFILENAM,' ')-1
       IODEF=1
       WRITE(LUNOUT,'(5X,A,A)')    ' OUTFILENAM=',OUTFILENAM
@@ -861,7 +939,7 @@ C
 C    CUT ON MINIMUM ELECTRON SCATTERING ANGLE (MASSES NEGLECTED)
 C
 C***********************************************************************
-      READ(NBF,*) THEMIN,THEMAX
+C      READ(NBF,*) THEMIN,THEMAX
       WRITE(LUNOUT,'(5X,A,F12.4)') ' THETA-MIN =  ', THEMIN
       WRITE(LUNOUT,'(5X,A,F12.4)') ' THETA-MAX =  ', THEMAX
       GO TO 1
@@ -873,7 +951,7 @@ C
 C    CUT ON MINIMUM ELECTRON SCATTERING ANGLE (MASSES NEGLECTED)
 C
 C***********************************************************************
-      READ(NBF,*) PTMIN
+C      READ(NBF,*) PTMIN
       WRITE(LUNOUT,'(5X,A,F12.4)') ' PT-MIN =  ', PTMIN
       GO TO 1
  2800 CONTINUE
@@ -884,7 +962,7 @@ C
 C    CODE FOR PARAMETRIZATION OF POLARIZED PARTON DISTRIBUTIONS
 C
 C***********************************************************************
-      READ(NBF,*) IDPVR
+C      READ(NBF,*) IDPVR
       WRITE(LUNOUT,'(5X,A,I8)') ' IDPVR =  ', IDPVR
       GO TO 1
  2900 CONTINUE
@@ -897,7 +975,7 @@ C
 C    USE EXTERNALLY DEFINED WEIGHT IN EVENT GENERATION
 C
 C***********************************************************************
-      READ(NBF,*) IWEIGR
+C      READ(NBF,*) IWEIGR
       WRITE(LUNOUT,'(5X,A,I5)') ' IWEIGS =  ', IWEIGR
 C...for initialization keep
       IWEIGS=0
@@ -915,7 +993,7 @@ C               IOPLOT < 0: NO CALL TO HSESTM
 C               IOPLOT >= 0: CALL TO HSESTM
 C***********************************************************************
  3600 CONTINUE
-      READ(NBF,*) IOPLOT
+C      READ(NBF,*) IOPLOT
       WRITE(LUNOUT,'(5X,A,5X,I3)') ' INTOPT', IOPLOT
       GO TO 1
 C
@@ -928,7 +1006,7 @@ C     IPRINT :  DIFFERENT QUANTITY OF TEST OUTPUT FOR IPRINT GT. 0
 C
 C***********************************************************************
  3700 CONTINUE
-      READ(NBF,*) IPRINT
+C      READ(NBF,*) IPRINT
       WRITE(LUNOUT,'(5X,A,5X,I3)') ' IPRINT',
      *                               IPRINT
       GO TO 1
@@ -947,7 +1025,7 @@ C
 C***********************************************************************
  3800 CONTINUE
 c      LUOOLD=LUNOUT
-      READ(NBF,*) LDUMY1,LDUMY2,LDUMY3
+C      READ(NBF,*) LDUMY1,LDUMY2,LDUMY3
 c      IF (LUNOUT.NE.LUOOLD) THEN
 c        WRITE(LUOOLD,'(5X,A,I3,A)')
 c     *  ' ******* WARNING: LOGICAL UNIT FOR STANDARD OUTPUT CHANGED TO '
@@ -971,7 +1049,7 @@ C
 C     NEVENT :  NUMBER OF EVENTS TO BE SAMPLED
 C***********************************************************************
  3900 CONTINUE
-      READ(NBF,*) NEVENT
+C      READ(NBF,*) NEVENT
       WRITE(LUNOUT,'(5X,A,I12,/)') ' NEVENT =',NEVENT
       INFOCA=0
       DO 3921 I=1,5
@@ -997,6 +1075,7 @@ C---Now we can open output files
      *     FORM='UNFORMATTED')
       OPEN(LUNRND,FILE=OUTFILENAM(1:ICH)//'_rnd.dat'
      *     ,STATUS='REPLACE', FORM='FORMATTED')
+      OPEN(31,FILE=OUTFILENAM(1:ICH)//'_evt.dat',STATUS='UNKNOWN')
 C---PRINT THE TITLE ALSO TO FILE
       WRITE(LUNOUT,9)
 
@@ -1681,9 +1760,12 @@ C---SAVE KINEMATIC VARIABLE FOR INTERFACE (N.P. 17/11/2016)
       DJW2=W2DJ
       DJU=UDJ
 
-      WRITE(LUNOUT,*) DJX
-      WRITE(LUNOUT,*) DJY
-      WRITE(LUNOUT,*) DJQ2
+      WRITE(6,*) DJX
+      WRITE(6,*) DJY
+      WRITE(6,*) DJQ2
+      WRITE(6,*) XDJ
+      WRITE(6,*) YDJ
+      WRITE(6,*) Q2DJ
 
       GOTO 5000
 C
@@ -6239,9 +6321,9 @@ C other nuclei
 
       CALL HSUSER(2,X,Y,Q2)
 
-      WRITE(LUNOUT,*) DJX
-      WRITE(LUNOUT,*) DJY
-      WRITE(LUNOUT,*) DJQ2
+      WRITE(6,*) DJX
+      WRITE(6,*) DJY
+      WRITE(6,*) DJQ2
 C
       RETURN
       END

@@ -40,14 +40,14 @@ struct Ludat2_t
 /// Djangoh common block DJKIN
 struct Djkin_t
 {
- double DJX;
- double DJY;
- double DJW2;
- double DJQ2;
- double DJU;
- double DJXHAD;
- double DJYHAD;
- double DJQ2HAD;
+ float DJX;
+ float DJY;
+ float DJW2;
+ float DJQ2;
+ float DJU;
+ float DJXHAD;
+ float DJYHAD;
+ float DJQ2HAD;
 };
 
 #endif
