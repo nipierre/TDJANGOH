@@ -433,7 +433,6 @@ C***********************************************************************
  100  CONTINUE
 C      READ(NBF,190) TITLE
       WRITE(LUNOUT,191) TITLE
-      WRITE(6,*) 'COUCOU LE TITRE'
       GO TO 1
  190  FORMAT(A80)
  191  FORMAT(/,6X,A80,/)
