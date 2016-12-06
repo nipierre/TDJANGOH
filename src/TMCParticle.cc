@@ -10,7 +10,7 @@ which is done by interface class TDjangoh.
 
 */
 
-#include "TMCParticle.h"
+#include "../include/TMCParticle.h"
 #include "TPrimary.h"
 
 # define pyname PYNAME

@@ -15,8 +15,8 @@ struct Lujets_t
  int    N;
  int    NPAD;
  int    K[5][4000];
- double P[5][4000];
- double V[5][4000];
+ float  P[5][4000];
+ float  V[5][4000];
 };
 
 /// Djangoh common block Ludat1
