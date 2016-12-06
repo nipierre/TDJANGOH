@@ -31,6 +31,25 @@ int main()
 
     nb = tDjangoh->GetN();
     cout << "Total number of particles : " << nb << endl;
+    for(int j=0; j<nb; j++)
+    {
+	cout 
+	<< tDjangoh->GetK(0,j) << " "
+	<< tDjangoh->GetK(1,j) << " "
+	<< tDjangoh->GetK(2,j) << " "
+	<< tDjangoh->GetK(3,j) << " "
+	<< tDjangoh->GetK(4,j) << " \n"
+	<< tDjangoh->GetP(0,j) << " "
+        << tDjangoh->GetP(1,j) << " "
+        << tDjangoh->GetP(2,j) << " "
+        << tDjangoh->GetP(3,j) << " "
+        << tDjangoh->GetP(4,j) << " \n"
+	<< tDjangoh->GetV(0,j) << " "
+        << tDjangoh->GetV(1,j) << " "
+        << tDjangoh->GetV(2,j) << " "
+        << tDjangoh->GetV(3,j) << " "
+        << tDjangoh->GetV(4,j) << " \n" << endl;
+    }
     x = tDjangoh->GetX();
     y = tDjangoh->GetY();
     Q2 = tDjangoh->GetQ2();

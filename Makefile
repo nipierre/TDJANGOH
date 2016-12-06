@@ -1,14 +1,14 @@
-all: TDjangoh src
+all: src
 
-TDjangoh::
-	$(MAKE) -C $@
 src::
+	$(MAKE) -C $@
+test::
 	$(MAKE) -C $@
 
 clean:
-	(cd TDjangoh; make clean)
+	(cd test; make clean)
 	(cd src; make clean)
 	(rm -f lib/* bin/*)
 
 clfile:
-	rm luevents.dat fort.6 TDjangoh_*.dat tdjangoh_his.paw
+	rm TDjangoh_*.dat

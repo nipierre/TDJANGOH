@@ -1,10 +1,3 @@
-!
-! Modified: HS, 30.10.2011
-! type mismatch of common block /LUDAT1/
-! between lhaglue and PYTHIA
-! -> commented lines 196-197 and 268
-!
-
 ! -*- F90 -*-
 
 
@@ -133,7 +126,7 @@
 !
 !*********************************************************************
 !
-! $Id: lhaglue.f 826 2011-08-02 09:41:58Z whalley $
+! $Id: lhaglue.f 1448 2013-09-24 15:03:20Z whalley $
 !
 ! $Log$
 ! Revision 1.7  2005/12/02 14:50:54  whalley
@@ -192,10 +185,8 @@ subroutine pdfset(parm,value)
   common/pypars/mstp(200),parp(200),msti(200),pari(200)
   save /pypars/
   ! following 2 for earlier Pythia versions
-  ! hs-begin
-  ! common/ludat1/mstu5(200),paru5(200),mstj5(200),parj5(200)
-  ! save /ludat1/
-  ! hs-end
+  common/ludat1/mstu5(200),paru5(200),mstj5(200),parj5(200)
+  save /ludat1/
   ! Interface to LHAPDFLIB.
   double precision qcdlha4, qcdlha5
   integer nfllha
@@ -264,9 +255,7 @@ subroutine pdfset(parm,value)
      if(mstp(181).ge.6) then
         lhaprint = mstu(11)
      else
-     ! hs-begin
-     !   lhaprint = mstu5(11)
-     ! hs-end
+        lhaprint = mstu5(11)
      endif
      if(value(1) .eq. 1) then         !   nucleon
         lhainput = abs(mstp(51))
@@ -303,7 +292,7 @@ subroutine pdfset(parm,value)
   ! Protons
   ! 
   ! CTEQ Family
-  if ((lhainput .ge. 10000) .and. (lhainput .le. 19999)) then
+  if (((lhainput.ge.10000).and.(lhainput .le. 10999)).or.((lhainput.ge.19000).and.(lhainput .le. 19999))) then
      q2max = 1.0d08
      if ((lhainput .ge. 10000) .and. (lhainput .le. 10040)) then
         lhaset = 10000
@@ -506,6 +495,227 @@ subroutine pdfset(parm,value)
         write(lhaprint,5150)  lhaset
         stop
      endif
+     
+   ! New CT10 (ct12 format) family)
+  elseif((lhainput .ge. 11000) .and. (lhainput .le. 11280)) then 
+     q2min = 1.69d0
+     q2max = 1.0d10
+     xmin =  1.0d-8
+ !ct10nlo
+     if ((lhainput .ge. 11000) .and. (lhainput .le. 11052)) then
+        lhaset = 11000
+        lhaname=lhapath(1:lhapathlen)//'/CT10nlo.LHgrid'
+ !ct10nlo_as_xxxx
+     elseif ((lhainput .ge. 11062) .and. (lhainput .le. 11062)) then
+        lhaset = 11062
+        lhaname=lhapath(1:lhapathlen)//'/CT10nlo_as_0112.LHgrid'
+     elseif ((lhainput .ge. 11063) .and. (lhainput .le. 11063)) then
+        lhaset = 11063
+        lhaname=lhapath(1:lhapathlen)//'/CT10nlo_as_0113.LHgrid'
+     elseif ((lhainput .ge. 11064) .and. (lhainput .le. 11064)) then
+        lhaset = 11064
+        lhaname=lhapath(1:lhapathlen)//'/CT10nlo_as_0114.LHgrid'
+     elseif ((lhainput .ge. 11065) .and. (lhainput .le. 11065)) then
+        lhaset = 11065
+        lhaname=lhapath(1:lhapathlen)//'/CT10nlo_as_0115.LHgrid'
+     elseif ((lhainput .ge. 11066) .and. (lhainput .le. 11066)) then
+        lhaset = 11066
+        lhaname=lhapath(1:lhapathlen)//'/CT10nlo_as_0116.LHgrid'
+     elseif ((lhainput .ge. 11067) .and. (lhainput .le. 11067)) then
+        lhaset = 11067
+        lhaname=lhapath(1:lhapathlen)//'/CT10nlo_as_0117.LHgrid'
+     elseif ((lhainput .ge. 11068) .and. (lhainput .le. 11068)) then
+        lhaset = 11068
+        lhaname=lhapath(1:lhapathlen)//'/CT10nlo_as_0118.LHgrid'
+     elseif ((lhainput .ge. 11069) .and. (lhainput .le. 11069)) then
+        lhaset = 11069
+        lhaname=lhapath(1:lhapathlen)//'/CT10nlo_as_0119.LHgrid'
+     elseif ((lhainput .ge. 11070) .and. (lhainput .le. 11070)) then
+        lhaset = 11070
+        lhaname=lhapath(1:lhapathlen)//'/CT10nlo_as_0120.LHgrid'
+     elseif ((lhainput .ge. 11071) .and. (lhainput .le. 11071)) then
+        lhaset = 11071
+        lhaname=lhapath(1:lhapathlen)//'/CT10nlo_as_0121.LHgrid'
+     elseif ((lhainput .ge. 11072) .and. (lhainput .le. 11072)) then
+        lhaset = 11072
+        lhaname=lhapath(1:lhapathlen)//'/CT10nlo_as_0122.LHgrid'
+     elseif ((lhainput .ge. 11073) .and. (lhainput .le. 11073)) then
+        lhaset = 11073
+        lhaname=lhapath(1:lhapathlen)//'/CT10nlo_as_0123.LHgrid'
+     elseif ((lhainput .ge. 11074) .and. (lhainput .le. 11074)) then
+        lhaset = 11074
+        lhaname=lhapath(1:lhapathlen)//'/CT10nlo_as_0124.LHgrid'
+     elseif ((lhainput .ge. 11075) .and. (lhainput .le. 11075)) then
+        lhaset = 11075
+        lhaname=lhapath(1:lhapathlen)//'/CT10nlo_as_0125.LHgrid'
+     elseif ((lhainput .ge. 11076) .and. (lhainput .le. 11076)) then
+        lhaset = 11076
+        lhaname=lhapath(1:lhapathlen)//'/CT10nlo_as_0126.LHgrid'
+     elseif ((lhainput .ge. 11077) .and. (lhainput .le. 11077)) then
+        lhaset = 11077
+        lhaname=lhapath(1:lhapathlen)//'/CT10nlo_as_0127.LHgrid'
+ !ct10nlo_nf3/4
+     elseif ((lhainput .ge. 11080) .and. (lhainput .le. 11081)) then
+        lhaset = 11080
+        lhaname=lhapath(1:lhapathlen)//'/CT10nlo_nf3.LHgrid'
+     elseif ((lhainput .ge. 11082) .and. (lhainput .le. 11083)) then
+        lhaset = 11082
+        lhaname=lhapath(1:lhapathlen)//'/CT10nlo_nf4.LHgrid'
+ !ct10wnlo
+     elseif ((lhainput .ge. 11100) .and. (lhainput .le. 11152)) then
+        lhaset = 11100
+        lhaname=lhapath(1:lhapathlen)//'/CT10wnlo.LHgrid'
+ !ct10wnlo_as_xxxx
+     elseif ((lhainput .ge. 11162) .and. (lhainput .le. 11162)) then
+        lhaset = 11162
+        lhaname=lhapath(1:lhapathlen)//'/CT10wnlo_as_0112.LHgrid'
+     elseif ((lhainput .ge. 11163) .and. (lhainput .le. 11163)) then
+        lhaset = 11163
+        lhaname=lhapath(1:lhapathlen)//'/CT10wnlo_as_0113.LHgrid'
+     elseif ((lhainput .ge. 11164) .and. (lhainput .le. 11164)) then
+        lhaset = 11164
+        lhaname=lhapath(1:lhapathlen)//'/CT10wnlo_as_0114.LHgrid'
+     elseif ((lhainput .ge. 11165) .and. (lhainput .le. 11165)) then
+        lhaset = 11165
+        lhaname=lhapath(1:lhapathlen)//'/CT10wnlo_as_0115.LHgrid'
+     elseif ((lhainput .ge. 11166) .and. (lhainput .le. 11166)) then
+        lhaset = 11166
+        lhaname=lhapath(1:lhapathlen)//'/CT10wnlo_as_0116.LHgrid'
+     elseif ((lhainput .ge. 11167) .and. (lhainput .le. 11167)) then
+        lhaset = 11167
+        lhaname=lhapath(1:lhapathlen)//'/CT10wnlo_as_0117.LHgrid'
+     elseif ((lhainput .ge. 11168) .and. (lhainput .le. 11168)) then
+        lhaset = 11168
+        lhaname=lhapath(1:lhapathlen)//'/CT10wnlo_as_0118.LHgrid'
+     elseif ((lhainput .ge. 11169) .and. (lhainput .le. 11169)) then
+        lhaset = 11169
+        lhaname=lhapath(1:lhapathlen)//'/CT10wnlo_as_0119.LHgrid'
+     elseif ((lhainput .ge. 11170) .and. (lhainput .le. 11170)) then
+        lhaset = 11170
+        lhaname=lhapath(1:lhapathlen)//'/CT10wnlo_as_0120.LHgrid'
+     elseif ((lhainput .ge. 11171) .and. (lhainput .le. 11171)) then
+        lhaset = 11171
+        lhaname=lhapath(1:lhapathlen)//'/CT10wnlo_as_0121.LHgrid'
+     elseif ((lhainput .ge. 11172) .and. (lhainput .le. 11172)) then
+        lhaset = 11172
+        lhaname=lhapath(1:lhapathlen)//'/CT10wnlo_as_0122.LHgrid'
+     elseif ((lhainput .ge. 11173) .and. (lhainput .le. 11173)) then
+        lhaset = 11173
+        lhaname=lhapath(1:lhapathlen)//'/CT10wnlo_as_0123.LHgrid'
+     elseif ((lhainput .ge. 11174) .and. (lhainput .le. 11174)) then
+        lhaset = 11174
+        lhaname=lhapath(1:lhapathlen)//'/CT10wnlo_as_0124.LHgrid'
+     elseif ((lhainput .ge. 11175) .and. (lhainput .le. 11175)) then
+        lhaset = 11175
+        lhaname=lhapath(1:lhapathlen)//'/CT10wnlo_as_0125.LHgrid'
+     elseif ((lhainput .ge. 11176) .and. (lhainput .le. 11176)) then
+        lhaset = 11176
+        lhaname=lhapath(1:lhapathlen)//'/CT10wnlo_as_0126.LHgrid'
+     elseif ((lhainput .ge. 11177) .and. (lhainput .le. 11177)) then
+        lhaset = 11177
+        lhaname=lhapath(1:lhapathlen)//'/CT10wnlo_as_0127.LHgrid'
+ !ct10wnlo_nf3/4
+     elseif ((lhainput .ge. 11180) .and. (lhainput .le. 11181)) then
+        lhaset = 11180
+        lhaname=lhapath(1:lhapathlen)//'/CT10wnlo_nf3.LHgrid'
+     elseif ((lhainput .ge. 11182) .and. (lhainput .le. 11183)) then
+        lhaset = 11182
+        lhaname=lhapath(1:lhapathlen)//'/CT10wnlo_nf4.LHgrid'
+ !ct10nnlo
+     elseif ((lhainput .ge. 11200) .and. (lhainput .le. 11250)) then
+        lhaset = 11200
+        lhaname=lhapath(1:lhapathlen)//'/CT10nnlo.LHgrid'
+ !ct10nnlo_as_xxxx
+     elseif ((lhainput .ge. 11260) .and. (lhainput .le. 11260)) then
+        lhaset = 11260
+        lhaname=lhapath(1:lhapathlen)//'/CT10nnlo_as_0110.LHgrid'
+     elseif ((lhainput .ge. 11261) .and. (lhainput .le. 11261)) then
+        lhaset = 11261
+        lhaname=lhapath(1:lhapathlen)//'/CT10nnlo_as_0111.LHgrid'
+     elseif ((lhainput .ge. 11262) .and. (lhainput .le. 11262)) then
+        lhaset = 11262
+        lhaname=lhapath(1:lhapathlen)//'/CT10nnlo_as_0112.LHgrid'
+     elseif ((lhainput .ge. 11263) .and. (lhainput .le. 11263)) then
+        lhaset = 11263
+        lhaname=lhapath(1:lhapathlen)//'/CT10nnlo_as_0113.LHgrid'
+     elseif ((lhainput .ge. 11264) .and. (lhainput .le. 11264)) then
+        lhaset = 11264
+        lhaname=lhapath(1:lhapathlen)//'/CT10nnlo_as_0114.LHgrid'
+     elseif ((lhainput .ge. 11265) .and. (lhainput .le. 11265)) then
+        lhaset = 11265
+        lhaname=lhapath(1:lhapathlen)//'/CT10nnlo_as_0115.LHgrid'
+     elseif ((lhainput .ge. 11266) .and. (lhainput .le. 11266)) then
+        lhaset = 11266
+        lhaname=lhapath(1:lhapathlen)//'/CT10nnlo_as_0116.LHgrid'
+     elseif ((lhainput .ge. 11267) .and. (lhainput .le. 11267)) then
+        lhaset = 11267
+        lhaname=lhapath(1:lhapathlen)//'/CT10nnlo_as_0117.LHgrid'
+     elseif ((lhainput .ge. 11268) .and. (lhainput .le. 11268)) then
+        lhaset = 11268
+        lhaname=lhapath(1:lhapathlen)//'/CT10nnlo_as_0118.LHgrid'
+     elseif ((lhainput .ge. 11269) .and. (lhainput .le. 11269)) then
+        lhaset = 11269
+        lhaname=lhapath(1:lhapathlen)//'/CT10nnlo_as_0119.LHgrid'
+     elseif ((lhainput .ge. 11270) .and. (lhainput .le. 11270)) then
+        lhaset = 11270
+        lhaname=lhapath(1:lhapathlen)//'/CT10nnlo_as_0120.LHgrid'
+     elseif ((lhainput .ge. 11271) .and. (lhainput .le. 11271)) then
+        lhaset = 11271
+        lhaname=lhapath(1:lhapathlen)//'/CT10nnlo_as_0121.LHgrid'
+     elseif ((lhainput .ge. 11272) .and. (lhainput .le. 11272)) then
+        lhaset = 11272
+        lhaname=lhapath(1:lhapathlen)//'/CT10nnlo_as_0122.LHgrid'
+     elseif ((lhainput .ge. 11273) .and. (lhainput .le. 11273)) then
+        lhaset = 11273
+        lhaname=lhapath(1:lhapathlen)//'/CT10nnlo_as_0123.LHgrid'
+     elseif ((lhainput .ge. 11274) .and. (lhainput .le. 11274)) then
+        lhaset = 11274
+        lhaname=lhapath(1:lhapathlen)//'/CT10nnlo_as_0124.LHgrid'
+     elseif ((lhainput .ge. 11275) .and. (lhainput .le. 11275)) then
+        lhaset = 11275
+        lhaname=lhapath(1:lhapathlen)//'/CT10nnlo_as_0125.LHgrid'
+     elseif ((lhainput .ge. 11276) .and. (lhainput .le. 11276)) then
+        lhaset = 11276
+        lhaname=lhapath(1:lhapathlen)//'/CT10nnlo_as_0126.LHgrid'
+     elseif ((lhainput .ge. 11277) .and. (lhainput .le. 11277)) then
+        lhaset = 11277
+        lhaname=lhapath(1:lhapathlen)//'/CT10nnlo_as_0127.LHgrid'
+     elseif ((lhainput .ge. 11278) .and. (lhainput .le. 11278)) then
+        lhaset = 11278
+        lhaname=lhapath(1:lhapathlen)//'/CT10nnlo_as_0128.LHgrid'
+     elseif ((lhainput .ge. 11279) .and. (lhainput .le. 11279)) then
+        lhaset = 11279
+        lhaname=lhapath(1:lhapathlen)//'/CT10nnlo_as_0129.LHgrid'
+     elseif ((lhainput .ge. 11280) .and. (lhainput .le. 11280)) then
+        lhaset = 11280
+        lhaname=lhapath(1:lhapathlen)//'/CT10nnlo_as_0130.LHgrid'
+     else
+        write(lhaprint,5150)  lhaset
+        stop
+     endif
+
+  ! CJ12  (family)
+  elseif((lhainput .ge. 12000) .and. (lhainput .le. 12238)) then 
+     q2min = 1.69d0
+     q2max = 1.0d10
+     xmin =  1.0d-6
+ !cj12min
+     if ((lhainput .ge. 12000) .and. (lhainput .le. 12038)) then
+        lhaset = 12000
+        lhaname=lhapath(1:lhapathlen)//'/CJ12min.LHgrid'
+ !cj12mid
+     elseif ((lhainput .ge. 12100) .and. (lhainput .le. 12138)) then
+        lhaset = 12100
+        lhaname=lhapath(1:lhapathlen)//'/CJ12mid.LHgrid'
+ !cj12max
+     elseif ((lhainput .ge. 12200) .and. (lhainput .le. 12238)) then
+        lhaset = 12200
+        lhaname=lhapath(1:lhapathlen)//'/CJ12max.LHgrid'
+     else
+        write(lhaprint,5150)  lhaset
+        stop
+     endif
+
      ! MRST Family
   elseif((lhainput .ge. 20000) .and. (lhainput .le. 20999)) then
      q2min = 1.25d0
@@ -600,7 +810,7 @@ subroutine pdfset(parm,value)
         stop
      endif
      ! next are MSTW
-  elseif((lhainput .ge. 21000) .and. (lhainput .le. 23799)) then
+  elseif((lhainput .ge. 21000) .and. (lhainput .le. 23896)) then
      q2min = 1.0d0
      q2max = 1.0d09
      xmin = 1.0d-6
@@ -755,6 +965,12 @@ subroutine pdfset(parm,value)
      elseif((lhainput .ge. 23790) .and. (lhainput .le. 23796)) then
         lhaset = 23790
         lhaname=lhapath(1:lhapathlen)//'/MSTW2008nnlo_mbrange_nf4.LHgrid'
+     elseif((lhainput .ge. 23800) .and. (lhainput .le. 23846)) then
+        lhaset = 23800
+        lhaname=lhapath(1:lhapathlen)//'/MSTW2008CPdeutnlo68cl.LHgrid'
+     elseif((lhainput .ge. 23850) .and. (lhainput .le. 23896)) then
+        lhaset = 23850
+        lhaname=lhapath(1:lhapathlen)//'/MSTW2008CPdeutnnlo68cl.LHgrid'
 !
      else
         write(lhaprint,5150)  lhaset
@@ -796,68 +1012,92 @@ subroutine pdfset(parm,value)
         write(lhaprint,5150)  lhaset
         stop
      endif
+   ! a02m Family 
+  elseif((lhainput .ge. 40350) .and. (lhainput .le. 40567)) then
+     xmin = 1.0d-7
+     q2min = 0.8d0
+     q2max = 2.0d08
+     if((lhainput .ge. 40350) .and. (lhainput .le. 40367)) then
+        lhaset = 40350
+        lhaname=lhapath(1:lhapathlen)//'/a02m_lo.LHgrid'
+     elseif((lhainput .ge. 40450) .and. (lhainput .le. 40467)) then
+        lhaset = 40450
+        lhaname=lhapath(1:lhapathlen)//'/a02m_nlo.LHgrid'
+     elseif((lhainput .ge. 40550) .and. (lhainput .le. 40567)) then
+        lhaset = 40550 
+        lhaname=lhapath(1:lhapathlen)//'/a02m_nnlo.LHgrid'
+     else
+        write(lhaprint,5150)  lhaset
+        stop
+     endif
+   ! abkm09 Family 
+  elseif((lhainput .ge. 40650) .and. (lhainput .le. 40975)) then
+     xmin = 1.0d-7
+     q2min = 0.8d0
+     q2max = 2.0d08
+     if((lhainput .ge. 40650) .and. (lhainput .le. 40675)) then
+        lhaset = 40650 
+        lhaname=lhapath(1:lhapathlen)//'/abkm09_3_nlo.LHgrid'
+     elseif((lhainput .ge. 40750) .and. (lhainput .le. 40775)) then
+        lhaset = 40750 
+        lhaname=lhapath(1:lhapathlen)//'/abkm09_3_nnlo.LHgrid'
+     elseif((lhainput .ge. 40780) .and. (lhainput .le. 40805)) then
+        lhaset = 40780 
+        lhaname=lhapath(1:lhapathlen)//'/abkm09_4_nlo.LHgrid'
+     elseif((lhainput .ge. 40810) .and. (lhainput .le. 40835)) then
+        lhaset = 40810 
+        lhaname=lhapath(1:lhapathlen)//'/abkm09_4_nnlo.LHgrid'
+     elseif((lhainput .ge. 40850) .and. (lhainput .le. 40875)) then
+        lhaset = 40850 
+        lhaname=lhapath(1:lhapathlen)//'/abkm09_5_nlo.LHgrid'
+     elseif((lhainput .ge. 40950) .and. (lhainput .le. 40975)) then
+        lhaset = 40950 
+        lhaname=lhapath(1:lhapathlen)//'/abkm09_5_nnlo.LHgrid'
+     else
+        write(lhaprint,5150)  lhaset
+        stop
+     endif
+   ! abm11 Family 
+  elseif((lhainput .ge. 42000) .and. (lhainput .le. 42246)) then
+     xmin = 1.0d-7
+     q2min = 0.8d0
+     q2max = 2.0d08
+     if((lhainput .ge. 42000) .and. (lhainput .le. 42028)) then
+        lhaset = 42000 
+        lhaname=lhapath(1:lhapathlen)//'/abm11_3n_nlo.LHgrid'
+     elseif((lhainput .ge. 42030) .and. (lhainput .le. 42058)) then
+        lhaset = 42030 
+        lhaname=lhapath(1:lhapathlen)//'/abm11_4n_nlo.LHgrid'
+     elseif((lhainput .ge. 42060) .and. (lhainput .le. 42088)) then
+        lhaset = 42060 
+        lhaname=lhapath(1:lhapathlen)//'/abm11_5n_nlo.LHgrid'
+     elseif((lhainput .ge. 42100) .and. (lhainput .le. 42128)) then
+        lhaset = 42100 
+        lhaname=lhapath(1:lhapathlen)//'/abm11_3n_nnlo.LHgrid'
+     elseif((lhainput .ge. 42130) .and. (lhainput .le. 42158)) then
+        lhaset = 42130 
+        lhaname=lhapath(1:lhapathlen)//'/abm11_4n_nnlo.LHgrid'
+     elseif((lhainput .ge. 42160) .and. (lhainput .le. 42188)) then
+        lhaset = 42160 
+        lhaname=lhapath(1:lhapathlen)//'/abm11_5n_nnlo.LHgrid'
+     elseif((lhainput .ge. 42200) .and. (lhainput .le. 42220)) then
+        lhaset = 42200 
+        lhaname=lhapath(1:lhapathlen)//'/abm11_5n_as_nlo.LHgrid'
+     elseif((lhainput .ge. 42230) .and. (lhainput .le. 42246)) then
+        lhaset = 42230 
+        lhaname=lhapath(1:lhapathlen)//'/abm11_5n_as_nnlo.LHgrid'
+     else
+        write(lhaprint,5150)  lhaset
+        stop
+     endif
      ! Alekhin Family
-  elseif((lhainput .ge. 40000) .and. (lhainput .le. 49999)) then
+  elseif((lhainput .ge. 40000) .and. (lhainput .le. 41999)) then
      if((lhainput .ge. 40100) .and. (lhainput .le. 40200)) then
         lhaset = 40100
         lhaname=lhapath(1:lhapathlen)//'/Alekhin_100.LHpdf'
      elseif((lhainput .ge. 41000) .and. (lhainput .le. 41999)) then
         lhaset = 41000
         lhaname=lhapath(1:lhapathlen)//'/Alekhin_1000.LHpdf'
-     elseif((lhainput .ge. 40350) .and. (lhainput .le. 40367)) then
-        lhaset = 40350
-        lhaname=lhapath(1:lhapathlen)//'/a02m_lo.LHgrid'
-        xmin = 1.0d-7
-        q2min = 0.8d0
-        q2max = 2.0d08
-     elseif((lhainput .ge. 40450) .and. (lhainput .le. 40467)) then
-        lhaset = 40450
-        lhaname=lhapath(1:lhapathlen)//'/a02m_nlo.LHgrid'
-        xmin = 1.0d-7
-        q2min = 0.8d0
-        q2max = 2.0d08
-     elseif((lhainput .ge. 40550) .and. (lhainput .le. 40567)) then
-        lhaset = 40550 
-        lhaname=lhapath(1:lhapathlen)//'/a02m_nnlo.LHgrid'
-        xmin = 1.0d-7
-        q2min = 0.8d0
-        q2max = 2.0d08
-     elseif((lhainput .ge. 40650) .and. (lhainput .le. 40675)) then
-        lhaset = 40650 
-        lhaname=lhapath(1:lhapathlen)//'/abkm09_3_nlo.LHgrid'
-        xmin = 1.0d-7
-        q2min = 0.8d0
-        q2max = 2.0d08
-     elseif((lhainput .ge. 40750) .and. (lhainput .le. 40775)) then
-        lhaset = 40750 
-        lhaname=lhapath(1:lhapathlen)//'/abkm09_3_nnlo.LHgrid'
-        xmin = 1.0d-7
-        q2min = 0.8d0
-        q2max = 2.0d08
-     elseif((lhainput .ge. 40780) .and. (lhainput .le. 40805)) then
-        lhaset = 40780 
-        lhaname=lhapath(1:lhapathlen)//'/abkm09_4_nlo.LHgrid'
-        xmin = 1.0d-7
-        q2min = 0.8d0
-        q2max = 2.0d08
-     elseif((lhainput .ge. 40810) .and. (lhainput .le. 40835)) then
-        lhaset = 40810 
-        lhaname=lhapath(1:lhapathlen)//'/abkm09_4_nnlo.LHgrid'
-        xmin = 1.0d-7
-        q2min = 0.8d0
-        q2max = 2.0d08
-     elseif((lhainput .ge. 40850) .and. (lhainput .le. 40875)) then
-        lhaset = 40850 
-        lhaname=lhapath(1:lhapathlen)//'/abkm09_5_nlo.LHgrid'
-        xmin = 1.0d-7
-        q2min = 0.8d0
-        q2max = 2.0d08
-     elseif((lhainput .ge. 40950) .and. (lhainput .le. 40975)) then
-        lhaset = 40950 
-        lhaname=lhapath(1:lhapathlen)//'/abkm09_5_nnlo.LHgrid'
-        xmin = 1.0d-7
-        q2min = 0.8d0
-        q2max = 2.0d08
      else
         write(lhaprint,5150)  lhaset
         stop
@@ -874,7 +1114,7 @@ subroutine pdfset(parm,value)
         write(lhaprint,5150)  lhaset
         stop
      endif
-     ! ZEUS Family
+     ! ZEUS (+ ATLAS) Family
   elseif((lhainput .ge. 60000) .and. (lhainput .le. 69999)) then
      q2min = 0.3d0
      q2max = 2.0d05
@@ -967,6 +1207,27 @@ subroutine pdfset(parm,value)
         q2max=1.0d09
         lhaset = 60750
         lhaname=lhapath(1:lhapathlen)//'/HERAPDF15NLO_ALPHAS.LHgrid'
+     elseif((lhainput .ge. 60800) .and. (lhainput .le. 60824)) then
+        xmin=1.0d-8
+        xmax=1.0d0
+        q2min=1.0d0
+        q2max=1.0d09
+        lhaset = 60800
+        lhaname=lhapath(1:lhapathlen)//'/LHECNLO_EIG.LHgrid'
+     elseif((lhainput .ge. 65000) .and. (lhainput .le. 65030)) then
+        xmin=1.0d-7
+        xmax=1.0d0
+        q2min=1.0d0
+        q2max=1.0d09
+        lhaset = 65000
+        lhaname=lhapath(1:lhapathlen)//'/ATLAS-epWZ12-EIG.LHgrid'
+     elseif((lhainput .ge. 65040) .and. (lhainput .le. 65051)) then
+        xmin=1.0d-7
+        xmax=1.0d0
+        q2min=1.0d0
+        q2max=1.0d09
+        lhaset = 65040
+        lhaname=lhapath(1:lhapathlen)//'/ATLAS-epWZ12-VAR.LHgrid'
      else
         write(lhaprint,5150)  lhaset
         stop
@@ -1056,10 +1317,10 @@ subroutine pdfset(parm,value)
      Q2MIN = 2.0D0 
      Q2MAX = 1.0D08  
      IF((LHAINPUT .GE. 90000) .AND. (LHAINPUT .LE. 90100)) THEN
-      LHASET = 90000
-      LHANAME=LHAPATH(1:LHAPATHLEN)//'/NNPDF10_100.LHpdf'
+     	LHASET = 90000
+     	LHANAME=LHAPATH(1:LHAPATHLEN)//'/NNPDF10_100.LHpdf'
      ELSEIF((LHAINPUT .GE. 90200) .AND. (LHAINPUT .LE. 90300))THEN
-      LHASET = 90200
+     	LHASET = 90200
      	LHANAME=LHAPATH(1:LHAPATHLEN)//'/NNPDF10_100.LHgrid'
      ELSEIF((LHAINPUT .GE. 90400) .AND. (LHAINPUT .LE. 90500))THEN
      	LHASET = 90400
@@ -1117,7 +1378,7 @@ subroutine pdfset(parm,value)
      	STOP
         ENDIF          
 !...NNPDF  Family second tranche
-  ELSEIF((LHAINPUT .GE. 190000) .AND. (LHAINPUT .LE. 207700)) THEN
+  ELSEIF((LHAINPUT .GE. 190000) .AND. (LHAINPUT .LE. 210100)) THEN
      XMIN = 1.0D-9 
      Q2MIN = 2.0D0 
      Q2MAX = 1.0D08  
@@ -1322,6 +1583,317 @@ subroutine pdfset(parm,value)
      ELSEIF((LHAINPUT .GE. 207600) .AND. (LHAINPUT .LE.207700))THEN
      	LHASET = 207600 
      	LHANAME=LHAPATH(1:LHAPATHLEN)//'/NNPDF21_nnlo_collider_100.LHgrid'
+     ELSEIF((LHAINPUT .GE. 207800) .AND. (LHAINPUT .LE.207900))THEN
+     	LHASET = 207800 
+     	LHANAME=LHAPATH(1:LHAPATHLEN)//'/NNPDF21_nnlo_nf5_100.LHgrid'
+     ELSEIF((LHAINPUT .GE. 210000) .AND. (LHAINPUT .LE.210100))THEN
+     	LHASET = 210000 
+     	LHANAME=LHAPATH(1:LHAPATHLEN)//'/NNPDF22_nlo_100.LHgrid'
+     ELSE
+     	WRITE(LHAPRINT,5150)  LHASET
+     	STOP
+        ENDIF          
+!...NNPDF 2.3  Family 
+  ELSEIF((LHAINPUT .GE. 229000) .AND. (LHAINPUT .LE. 246700)) THEN
+     XMIN = 1.0D-9 
+     Q2MIN = 2.0D0 
+     Q2MAX = 1.0D08  
+
+     IF((LHAINPUT .GE. 229000) .AND. (LHAINPUT .LE. 229100))THEN
+     	LHASET = 229000
+     	LHANAME=LHAPATH(1:LHAPATHLEN)//'/NNPDF23_nlo_as_0114.LHgrid'
+     ELSEIF((LHAINPUT .GE. 229200) .AND. (LHAINPUT .LE. 229300))THEN
+     	LHASET = 229200
+     	LHANAME=LHAPATH(1:LHAPATHLEN)//'/NNPDF23_nlo_as_0115.LHgrid'
+     ELSEIF((LHAINPUT .GE. 229400) .AND. (LHAINPUT .LE. 229500))THEN
+     	LHASET = 229400
+     	LHANAME=LHAPATH(1:LHAPATHLEN)//'/NNPDF23_nlo_as_0116.LHgrid'
+     ELSEIF((LHAINPUT .GE. 229600) .AND. (LHAINPUT .LE. 229700))THEN
+     	LHASET = 229600
+     	LHANAME=LHAPATH(1:LHAPATHLEN)//'/NNPDF23_nlo_as_0117.LHgrid'
+     ELSEIF((LHAINPUT .GE. 229800) .AND. (LHAINPUT .LE. 229900))THEN
+     	LHASET = 229800
+     	LHANAME=LHAPATH(1:LHAPATHLEN)//'/NNPDF23_nlo_as_0118.LHgrid'
+     ELSEIF((LHAINPUT .GE. 230000) .AND. (LHAINPUT .LE. 230100))THEN
+     	LHASET = 230000
+     	LHANAME=LHAPATH(1:LHAPATHLEN)//'/NNPDF23_nlo_as_0119.LHgrid'
+     ELSEIF((LHAINPUT .GE. 230200) .AND. (LHAINPUT .LE. 230300))THEN
+     	LHASET = 230200
+     	LHANAME=LHAPATH(1:LHAPATHLEN)//'/NNPDF23_nlo_as_0120.LHgrid'
+     ELSEIF((LHAINPUT .GE. 230400) .AND. (LHAINPUT .LE. 230500))THEN
+     	LHASET = 230400
+     	LHANAME=LHAPATH(1:LHAPATHLEN)//'/NNPDF23_nlo_as_0121.LHgrid'
+     ELSEIF((LHAINPUT .GE. 230600) .AND. (LHAINPUT .LE. 230700))THEN
+     	LHASET = 230600
+     	LHANAME=LHAPATH(1:LHAPATHLEN)//'/NNPDF23_nlo_as_0122.LHgrid'
+     ELSEIF((LHAINPUT .GE. 230800) .AND. (LHAINPUT .LE. 230900))THEN
+     	LHASET = 230800
+     	LHANAME=LHAPATH(1:LHAPATHLEN)//'/NNPDF23_nlo_as_0123.LHgrid'
+     ELSEIF((LHAINPUT .GE. 231000) .AND. (LHAINPUT .LE. 231100))THEN
+     	LHASET = 231000
+     	LHANAME=LHAPATH(1:LHAPATHLEN)//'/NNPDF23_nlo_as_0124.LHgrid'
+
+     ELSEIF((LHAINPUT .GE. 231200) .AND. (LHAINPUT .LE. 231300))THEN
+     	LHASET = 231200
+     	LHANAME=LHAPATH(1:LHAPATHLEN)//'/NNPDF23_nnlo_as_0114.LHgrid'
+     ELSEIF((LHAINPUT .GE. 231400) .AND. (LHAINPUT .LE. 231500))THEN
+     	LHASET = 231400
+     	LHANAME=LHAPATH(1:LHAPATHLEN)//'/NNPDF23_nnlo_as_0115.LHgrid'
+     ELSEIF((LHAINPUT .GE. 231600) .AND. (LHAINPUT .LE. 231700))THEN
+     	LHASET = 231600
+     	LHANAME=LHAPATH(1:LHAPATHLEN)//'/NNPDF23_nnlo_as_0116.LHgrid'
+     ELSEIF((LHAINPUT .GE. 231800) .AND. (LHAINPUT .LE. 231900))THEN
+     	LHASET = 231800
+     	LHANAME=LHAPATH(1:LHAPATHLEN)//'/NNPDF23_nnlo_as_0117.LHgrid'
+     ELSEIF((LHAINPUT .GE. 232000) .AND. (LHAINPUT .LE. 232100))THEN
+     	LHASET = 232000
+     	LHANAME=LHAPATH(1:LHAPATHLEN)//'/NNPDF23_nnlo_as_0118.LHgrid'
+     ELSEIF((LHAINPUT .GE. 232200) .AND. (LHAINPUT .LE. 232300))THEN
+     	LHASET = 232200
+     	LHANAME=LHAPATH(1:LHAPATHLEN)//'/NNPDF23_nnlo_as_0119.LHgrid'
+     ELSEIF((LHAINPUT .GE. 232400) .AND. (LHAINPUT .LE. 232500))THEN
+     	LHASET = 232400
+     	LHANAME=LHAPATH(1:LHAPATHLEN)//'/NNPDF23_nnlo_as_0120.LHgrid'
+     ELSEIF((LHAINPUT .GE. 232600) .AND. (LHAINPUT .LE. 232700))THEN
+     	LHASET = 232600
+     	LHANAME=LHAPATH(1:LHAPATHLEN)//'/NNPDF23_nnlo_as_0121.LHgrid'
+     ELSEIF((LHAINPUT .GE. 232800) .AND. (LHAINPUT .LE. 232900))THEN
+     	LHASET = 232800
+     	LHANAME=LHAPATH(1:LHAPATHLEN)//'/NNPDF23_nnlo_as_0122.LHgrid'
+     ELSEIF((LHAINPUT .GE. 233000) .AND. (LHAINPUT .LE. 233100))THEN
+     	LHASET = 233000
+     	LHANAME=LHAPATH(1:LHAPATHLEN)//'/NNPDF23_nnlo_as_0123.LHgrid'
+     ELSEIF((LHAINPUT .GE. 233200) .AND. (LHAINPUT .LE. 233300))THEN
+     	LHASET = 233200
+     	LHANAME=LHAPATH(1:LHAPATHLEN)//'/NNPDF23_nnlo_as_0124.LHgrid'
+
+     ELSEIF((LHAINPUT .GE. 233400) .AND. (LHAINPUT .LE. 233500))THEN
+     	LHASET = 233400
+     	LHANAME=LHAPATH(1:LHAPATHLEN)//'/NNPDF23_nlo_noLHC_as_0116.LHgrid'
+     ELSEIF((LHAINPUT .GE. 233600) .AND. (LHAINPUT .LE. 233700))THEN
+     	LHASET = 233600
+     	LHANAME=LHAPATH(1:LHAPATHLEN)//'/NNPDF23_nlo_noLHC_as_0117.LHgrid'
+     ELSEIF((LHAINPUT .GE. 233800) .AND. (LHAINPUT .LE. 233900))THEN
+     	LHASET = 233800
+     	LHANAME=LHAPATH(1:LHAPATHLEN)//'/NNPDF23_nlo_noLHC_as_0118.LHgrid'
+     ELSEIF((LHAINPUT .GE. 234000) .AND. (LHAINPUT .LE. 234100))THEN
+     	LHASET = 234000
+     	LHANAME=LHAPATH(1:LHAPATHLEN)//'/NNPDF23_nlo_noLHC_as_0119.LHgrid'
+     ELSEIF((LHAINPUT .GE. 234200) .AND. (LHAINPUT .LE. 234300))THEN
+     	LHASET = 234200
+     	LHANAME=LHAPATH(1:LHAPATHLEN)//'/NNPDF23_nlo_noLHC_as_0120.LHgrid'
+
+     ELSEIF((LHAINPUT .GE. 234400) .AND. (LHAINPUT .LE. 234500))THEN
+     	LHASET = 234400
+     	LHANAME=LHAPATH(1:LHAPATHLEN)//'/NNPDF23_nnlo_noLHC_as_0116.LHgrid'
+     ELSEIF((LHAINPUT .GE. 234600) .AND. (LHAINPUT .LE. 234700))THEN
+     	LHASET = 234600
+     	LHANAME=LHAPATH(1:LHAPATHLEN)//'/NNPDF23_nnlo_noLHC_as_0117.LHgrid'
+     ELSEIF((LHAINPUT .GE. 234800) .AND. (LHAINPUT .LE. 234900))THEN
+     	LHASET = 234800
+     	LHANAME=LHAPATH(1:LHAPATHLEN)//'/NNPDF23_nnlo_noLHC_as_0118.LHgrid'
+     ELSEIF((LHAINPUT .GE. 235000) .AND. (LHAINPUT .LE. 235100))THEN
+     	LHASET = 235000
+     	LHANAME=LHAPATH(1:LHAPATHLEN)//'/NNPDF23_nnlo_noLHC_as_0119.LHgrid'
+     ELSEIF((LHAINPUT .GE. 235200) .AND. (LHAINPUT .LE. 235300))THEN
+     	LHASET = 235200
+     	LHANAME=LHAPATH(1:LHAPATHLEN)//'/NNPDF23_nnlo_noLHC_as_0120.LHgrid'
+
+     ELSEIF((LHAINPUT .GE. 235400) .AND. (LHAINPUT .LE. 235500))THEN
+     	LHASET = 235400
+     	LHANAME=LHAPATH(1:LHAPATHLEN)//'/NNPDF23_nlo_collider_as_0116.LHgrid'
+     ELSEIF((LHAINPUT .GE. 235600) .AND. (LHAINPUT .LE. 235700))THEN
+     	LHASET = 235600
+     	LHANAME=LHAPATH(1:LHAPATHLEN)//'/NNPDF23_nlo_collider_as_0117.LHgrid'
+     ELSEIF((LHAINPUT .GE. 235800) .AND. (LHAINPUT .LE. 235900))THEN
+     	LHASET = 235800
+     	LHANAME=LHAPATH(1:LHAPATHLEN)//'/NNPDF23_nlo_collider_as_0118.LHgrid'
+     ELSEIF((LHAINPUT .GE. 236000) .AND. (LHAINPUT .LE. 236100))THEN
+     	LHASET = 236000
+     	LHANAME=LHAPATH(1:LHAPATHLEN)//'/NNPDF23_nlo_collider_as_0119.LHgrid'
+     ELSEIF((LHAINPUT .GE. 236200) .AND. (LHAINPUT .LE. 236300))THEN
+     	LHASET = 236200
+     	LHANAME=LHAPATH(1:LHAPATHLEN)//'/NNPDF23_nlo_collider_as_0120.LHgrid'
+
+     ELSEIF((LHAINPUT .GE. 236400) .AND. (LHAINPUT .LE. 236500))THEN
+     	LHASET = 236400
+     	LHANAME=LHAPATH(1:LHAPATHLEN)//'/NNPDF23_nnlo_collider_as_0116.LHgrid'
+     ELSEIF((LHAINPUT .GE. 236600) .AND. (LHAINPUT .LE. 236700))THEN
+     	LHASET = 236600
+     	LHANAME=LHAPATH(1:LHAPATHLEN)//'/NNPDF23_nnlo_collider_as_0117.LHgrid'
+     ELSEIF((LHAINPUT .GE. 236800) .AND. (LHAINPUT .LE. 236900))THEN
+     	LHASET = 236800
+     	LHANAME=LHAPATH(1:LHAPATHLEN)//'/NNPDF23_nnlo_collider_as_0118.LHgrid'
+     ELSEIF((LHAINPUT .GE. 237000) .AND. (LHAINPUT .LE. 237100))THEN
+     	LHASET = 237000
+     	LHANAME=LHAPATH(1:LHAPATHLEN)//'/NNPDF23_nnlo_collider_as_0119.LHgrid'
+     ELSEIF((LHAINPUT .GE. 237200) .AND. (LHAINPUT .LE. 237300))THEN
+     	LHASET = 237200
+     	LHANAME=LHAPATH(1:LHAPATHLEN)//'/NNPDF23_nnlo_collider_as_0120.LHgrid'
+
+     ELSEIF((LHAINPUT .GE. 237400) .AND. (LHAINPUT .LE. 237500))THEN
+     	LHASET = 237400
+     	LHANAME=LHAPATH(1:LHAPATHLEN)//'/NNPDF23_nlo_FFN_NF4_as_0116.LHgrid'
+     ELSEIF((LHAINPUT .GE. 237600) .AND. (LHAINPUT .LE. 237700))THEN
+     	LHASET = 237600
+     	LHANAME=LHAPATH(1:LHAPATHLEN)//'/NNPDF23_nlo_FFN_NF4_as_0117.LHgrid'
+     ELSEIF((LHAINPUT .GE. 237800) .AND. (LHAINPUT .LE. 237900))THEN
+     	LHASET = 237800
+     	LHANAME=LHAPATH(1:LHAPATHLEN)//'/NNPDF23_nlo_FFN_NF4_as_0118.LHgrid'
+     ELSEIF((LHAINPUT .GE. 238000) .AND. (LHAINPUT .LE. 238100))THEN
+     	LHASET = 238000
+     	LHANAME=LHAPATH(1:LHAPATHLEN)//'/NNPDF23_nlo_FFN_NF4_as_0119.LHgrid'
+     ELSEIF((LHAINPUT .GE. 238200) .AND. (LHAINPUT .LE. 238300))THEN
+     	LHASET = 238200
+     	LHANAME=LHAPATH(1:LHAPATHLEN)//'/NNPDF23_nlo_FFN_NF4_as_0120.LHgrid'
+
+     ELSEIF((LHAINPUT .GE. 238400) .AND. (LHAINPUT .LE. 238500))THEN
+     	LHASET = 238400
+     	LHANAME=LHAPATH(1:LHAPATHLEN)//'/NNPDF23_nnlo_FFN_NF4_as_0116.LHgrid'
+     ELSEIF((LHAINPUT .GE. 238600) .AND. (LHAINPUT .LE. 238700))THEN
+     	LHASET = 238600
+     	LHANAME=LHAPATH(1:LHAPATHLEN)//'/NNPDF23_nnlo_FFN_NF4_as_0117.LHgrid'
+     ELSEIF((LHAINPUT .GE. 238800) .AND. (LHAINPUT .LE. 238900))THEN
+     	LHASET = 238800
+     	LHANAME=LHAPATH(1:LHAPATHLEN)//'/NNPDF23_nnlo_FFN_NF4_as_0118.LHgrid'
+     ELSEIF((LHAINPUT .GE. 239000) .AND. (LHAINPUT .LE. 239100))THEN
+     	LHASET = 239000
+     	LHANAME=LHAPATH(1:LHAPATHLEN)//'/NNPDF23_nnlo_FFN_NF4_as_0119.LHgrid'
+     ELSEIF((LHAINPUT .GE. 239200) .AND. (LHAINPUT .LE. 239300))THEN
+     	LHASET = 239200
+     	LHANAME=LHAPATH(1:LHAPATHLEN)//'/NNPDF23_nnlo_FFN_NF4_as_0120.LHgrid'
+
+     ELSEIF((LHAINPUT .GE. 239400) .AND. (LHAINPUT .LE. 239500))THEN
+     	LHASET = 239400
+     	LHANAME=LHAPATH(1:LHAPATHLEN)//'/NNPDF23_nlo_FFN_NF5_as_0116.LHgrid'
+     ELSEIF((LHAINPUT .GE. 239600) .AND. (LHAINPUT .LE. 239700))THEN
+     	LHASET = 239600
+     	LHANAME=LHAPATH(1:LHAPATHLEN)//'/NNPDF23_nlo_FFN_NF5_as_0117.LHgrid'
+     ELSEIF((LHAINPUT .GE. 239800) .AND. (LHAINPUT .LE. 239900))THEN
+     	LHASET = 239800
+     	LHANAME=LHAPATH(1:LHAPATHLEN)//'/NNPDF23_nlo_FFN_NF5_as_0118.LHgrid'
+     ELSEIF((LHAINPUT .GE. 240000) .AND. (LHAINPUT .LE. 240100))THEN
+     	LHASET = 240000
+     	LHANAME=LHAPATH(1:LHAPATHLEN)//'/NNPDF23_nlo_FFN_NF5_as_0119.LHgrid'
+     ELSEIF((LHAINPUT .GE. 240200) .AND. (LHAINPUT .LE. 240300))THEN
+     	LHASET = 240200
+     	LHANAME=LHAPATH(1:LHAPATHLEN)//'/NNPDF23_nlo_FFN_NF5_as_0120.LHgrid'
+
+     ELSEIF((LHAINPUT .GE. 240400) .AND. (LHAINPUT .LE. 240500))THEN
+     	LHASET = 240400
+     	LHANAME=LHAPATH(1:LHAPATHLEN)//'/NNPDF23_nnlo_FFN_NF5_as_0116.LHgrid'
+     ELSEIF((LHAINPUT .GE. 240600) .AND. (LHAINPUT .LE. 240700))THEN
+     	LHASET = 240600
+     	LHANAME=LHAPATH(1:LHAPATHLEN)//'/NNPDF23_nnlo_FFN_NF5_as_0117.LHgrid'
+     ELSEIF((LHAINPUT .GE. 240800) .AND. (LHAINPUT .LE. 240900))THEN
+     	LHASET = 240800
+     	LHANAME=LHAPATH(1:LHAPATHLEN)//'/NNPDF23_nnlo_FFN_NF5_as_0118.LHgrid'
+     ELSEIF((LHAINPUT .GE. 241000) .AND. (LHAINPUT .LE. 241100))THEN
+     	LHASET = 241000
+     	LHANAME=LHAPATH(1:LHAPATHLEN)//'/NNPDF23_nnlo_FFN_NF5_as_0119.LHgrid'
+     ELSEIF((LHAINPUT .GE. 241200) .AND. (LHAINPUT .LE. 241300))THEN
+     	LHASET = 241200
+     	LHANAME=LHAPATH(1:LHAPATHLEN)//'/NNPDF23_nnlo_FFN_NF5_as_0120.LHgrid'
+
+     ELSEIF((LHAINPUT .GE. 241400) .AND. (LHAINPUT .LE. 241500))THEN
+     	LHASET = 241400
+     	LHANAME=LHAPATH(1:LHAPATHLEN)//'/NNPDF23_nlo_as_0116_mc.LHgrid'
+     ELSEIF((LHAINPUT .GE. 241600) .AND. (LHAINPUT .LE. 241700))THEN
+     	LHASET = 241600
+     	LHANAME=LHAPATH(1:LHAPATHLEN)//'/NNPDF23_nlo_as_0117_mc.LHgrid'
+     ELSEIF((LHAINPUT .GE. 241800) .AND. (LHAINPUT .LE. 241900))THEN
+     	LHASET = 241800
+     	LHANAME=LHAPATH(1:LHAPATHLEN)//'/NNPDF23_nlo_as_0118_mc.LHgrid'
+     ELSEIF((LHAINPUT .GE. 242000) .AND. (LHAINPUT .LE. 242100))THEN
+     	LHASET = 242000
+     	LHANAME=LHAPATH(1:LHAPATHLEN)//'/NNPDF23_nlo_as_0119_mc.LHgrid'
+     ELSEIF((LHAINPUT .GE. 242200) .AND. (LHAINPUT .LE. 242300))THEN
+     	LHASET = 242200
+     	LHANAME=LHAPATH(1:LHAPATHLEN)//'/NNPDF23_nlo_as_0120_mc.LHgrid'
+
+     ELSEIF((LHAINPUT .GE. 242400) .AND. (LHAINPUT .LE. 242500))THEN
+     	LHASET = 242400
+     	LHANAME=LHAPATH(1:LHAPATHLEN)//'/NNPDF23_nlo_FFN_NF4_as_0116_mc.LHgrid'
+     ELSEIF((LHAINPUT .GE. 242600) .AND. (LHAINPUT .LE. 242700))THEN
+     	LHASET = 242600
+     	LHANAME=LHAPATH(1:LHAPATHLEN)//'/NNPDF23_nlo_FFN_NF4_as_0117_mc.LHgrid'
+     ELSEIF((LHAINPUT .GE. 242800) .AND. (LHAINPUT .LE. 242900))THEN
+     	LHASET = 242800
+     	LHANAME=LHAPATH(1:LHAPATHLEN)//'/NNPDF23_nlo_FFN_NF4_as_0118_mc.LHgrid'
+     ELSEIF((LHAINPUT .GE. 243000) .AND. (LHAINPUT .LE. 243100))THEN
+     	LHASET = 243000
+     	LHANAME=LHAPATH(1:LHAPATHLEN)//'/NNPDF23_nlo_FFN_NF4_as_0119_mc.LHgrid'
+     ELSEIF((LHAINPUT .GE. 243200) .AND. (LHAINPUT .LE. 243300))THEN
+     	LHASET = 243200
+     	LHANAME=LHAPATH(1:LHAPATHLEN)//'/NNPDF23_nlo_FFN_NF4_as_0120_mc.LHgrid'
+
+     ELSEIF((LHAINPUT .GE. 243400) .AND. (LHAINPUT .LE. 243500))THEN
+     	LHASET = 243400
+     	LHANAME=LHAPATH(1:LHAPATHLEN)//'/NNPDF23_nlo_FFN_NF5_as_0116_mc.LHgrid'
+     ELSEIF((LHAINPUT .GE. 243600) .AND. (LHAINPUT .LE. 243700))THEN
+     	LHASET = 243600
+     	LHANAME=LHAPATH(1:LHAPATHLEN)//'/NNPDF23_nlo_FFN_NF5_as_0117_mc.LHgrid'
+     ELSEIF((LHAINPUT .GE. 243800) .AND. (LHAINPUT .LE. 243900))THEN
+     	LHASET = 243800
+     	LHANAME=LHAPATH(1:LHAPATHLEN)//'/NNPDF23_nlo_FFN_NF5_as_0118_mc.LHgrid'
+     ELSEIF((LHAINPUT .GE. 244000) .AND. (LHAINPUT .LE. 244100))THEN
+     	LHASET = 244000
+     	LHANAME=LHAPATH(1:LHAPATHLEN)//'/NNPDF23_nlo_FFN_NF5_as_0119_mc.LHgrid'
+     ELSEIF((LHAINPUT .GE. 244200) .AND. (LHAINPUT .LE. 244300))THEN
+     	LHASET = 244200
+     	LHANAME=LHAPATH(1:LHAPATHLEN)//'/NNPDF23_nlo_FFN_NF5_as_0120_mc.LHgrid'
+
+     ELSEIF((LHAINPUT .GE. 244400) .AND. (LHAINPUT .LE. 244500))THEN
+     	LHASET = 244400
+     	LHANAME=LHAPATH(1:LHAPATHLEN)//'/NNPDF23_nlo_as_0117_qed.LHgrid'
+     ELSEIF((LHAINPUT .GE. 244600) .AND. (LHAINPUT .LE. 244700))THEN
+     	LHASET = 244600
+     	LHANAME=LHAPATH(1:LHAPATHLEN)//'/NNPDF23_nlo_as_0118_qed.LHgrid'
+     ELSEIF((LHAINPUT .GE. 244800) .AND. (LHAINPUT .LE. 244900))THEN
+     	LHASET = 244800
+     	LHANAME=LHAPATH(1:LHAPATHLEN)//'/NNPDF23_nlo_as_0119_qed.LHgrid'
+
+     ELSEIF((LHAINPUT .GE. 245000) .AND. (LHAINPUT .LE. 245100))THEN
+     	LHASET = 245000
+     	LHANAME=LHAPATH(1:LHAPATHLEN)//'/NNPDF23_nlo_as_0117_qed_neutron.LHgrid'
+     ELSEIF((LHAINPUT .GE. 245200) .AND. (LHAINPUT .LE. 245300))THEN
+     	LHASET = 245200
+     	LHANAME=LHAPATH(1:LHAPATHLEN)//'/NNPDF23_nlo_as_0118_qed_neutron.LHgrid'
+     ELSEIF((LHAINPUT .GE. 245400) .AND. (LHAINPUT .LE. 245500))THEN
+     	LHASET = 245400
+     	LHANAME=LHAPATH(1:LHAPATHLEN)//'/NNPDF23_nlo_as_0119_qed_neutron.LHgrid'
+
+     ELSEIF((LHAINPUT .GE. 245600) .AND. (LHAINPUT .LE. 245700))THEN
+     	LHASET = 245600
+     	LHANAME=LHAPATH(1:LHAPATHLEN)//'/NNPDF23_nnlo_as_0117_qed.LHgrid'
+     ELSEIF((LHAINPUT .GE. 245800) .AND. (LHAINPUT .LE. 245900))THEN
+     	LHASET = 245800
+     	LHANAME=LHAPATH(1:LHAPATHLEN)//'/NNPDF23_nnlo_as_0118_qed.LHgrid'
+     ELSEIF((LHAINPUT .GE. 246000) .AND. (LHAINPUT .LE. 246100))THEN
+     	LHASET = 246000
+     	LHANAME=LHAPATH(1:LHAPATHLEN)//'/NNPDF23_nnlo_as_0119_qed.LHgrid'
+     ELSEIF((LHAINPUT .GE. 246200) .AND. (LHAINPUT .LE. 246300))THEN
+     	LHASET = 246200
+     	LHANAME=LHAPATH(1:LHAPATHLEN)//'/NNPDF23_nnlo_as_0117_qed_neutron.LHgrid'
+     ELSEIF((LHAINPUT .GE. 246400) .AND. (LHAINPUT .LE. 246500))THEN
+     	LHASET = 246400
+     	LHANAME=LHAPATH(1:LHAPATHLEN)//'/NNPDF23_nnlo_as_0118_qed_neutron.LHgrid'
+     ELSEIF((LHAINPUT .GE. 246600) .AND. (LHAINPUT .LE. 246700))THEN
+     	LHASET = 246600
+     	LHANAME=LHAPATH(1:LHAPATHLEN)//'/NNPDF23_nnlo_as_0119_qed_neutron.LHgrid'
+
+     ELSE
+     	WRITE(LHAPRINT,5150)  LHASET
+     	STOP
+        ENDIF          
+!...NNPDF Pol  Family 
+  ELSEIF((LHAINPUT .GE. 250000) .AND. (LHAINPUT .LE. 250100)) THEN
+     XMIN = 1.0D-9 
+     Q2MIN = 2.0D0 
+     Q2MAX = 1.0D08  
+     IF((LHAINPUT .GE. 250000) .AND. (LHAINPUT .LE. 250100))THEN
+     	LHASET = 250000
+     	LHANAME=LHAPATH(1:LHAPATHLEN)//'/NNPDFpol10_100.LHgrid'
      ELSE
      	WRITE(LHAPRINT,5150)  LHASET
      	STOP
@@ -1589,8 +2161,6 @@ subroutine pdfset(parm,value)
      write(lhaprint,5150)  lhaset
      stop
   endif
-
-  print *,lhaname
 
   lhamemb=lhainput-lhaset
   ! Now work out if we have already called this set/member

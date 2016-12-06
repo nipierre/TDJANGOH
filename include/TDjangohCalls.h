@@ -15,8 +15,8 @@ struct Lujets_t
  int    N;
  int    NPAD;
  int    K[5][4000];
- double P[5][4000];
- double V[5][4000];
+ float  P[5][4000];
+ float  V[5][4000];
 };
 
 /// Djangoh common block Ludat1
@@ -40,14 +40,14 @@ struct Ludat2_t
 /// Djangoh common block DJKIN
 struct Djkin_t
 {
- float DJX;
- float DJY;
- float DJW2;
- float DJQ2;
- float DJU;
- float DJXHAD;
- float DJYHAD;
- float DJQ2HAD;
+ double DJX;
+ double DJY;
+ double DJW2;
+ double DJQ2;
+ double DJU;
+ double DJXHAD;
+ double DJYHAD;
+ double DJQ2HAD;
 };
 
 #endif

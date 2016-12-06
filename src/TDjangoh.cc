@@ -17,9 +17,9 @@
 #include <fstream>
 #include <cstring>
 
-#include "TDjangoh.h"
+#include "../include/TDjangoh.h"
 #include "TClonesArray.h"
-#include "TMCParticle.h"
+#include "../include/TMCParticle.h"
 #include "TParticle.h"
 #include "TString.h"
 
@@ -51,9 +51,9 @@ extern "C" struct isdebug
 extern "C" struct hselab
 {
   double sp;
-  double eele = 160.0;
+  double eele;
   double pele;
-  double epro = 0.0;
+  double epro;
   double ppro;
 } hselab_;
 
@@ -70,10 +70,10 @@ extern "C" struct ihscut
 
 extern "C" struct hstcut
 {
-  double themin = 0.0;
-  double themax = 180.0;
-  double cthmin = 1.0;
-  double cthcon = 10^15;
+  double themin;
+  double themax;
+  double cthmin;
+  double cthcon;
 } hstcut_;
 
 extern "C" struct hspcut
@@ -84,22 +84,22 @@ extern "C" struct hspcut
 
 extern "C" struct hsisgm
 {
-  double tcutq = 0.25;
-  double tcutqs = 0.25;
+  double tcutq;
+  double tcutqs;
 } hsisgm_;
 
 extern "C" struct hsparl
 {
   int lpar[20];
-  int lparin[12] = {2,1,3,1,0,0,2,1,1,1,1,1};
+  int lparin[12];
 } hsparl_;
 
 extern "C" struct hsstrp
 {
-  int icode = 3041;
-  int ilib = 2;
-  int ilqmod = 1;
-  int idpvr = 100;
+  int icode;
+  int ilib;
+  int ilqmod;
+  int idpvr;
 } hsstrp_;
 
 extern "C" struct hspdfo
