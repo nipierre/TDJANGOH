@@ -4,7 +4,8 @@ CXX             = g++
 CCFlags         = -g -O1 -Wall -fPIC
 ROOTFLAGS 	= `root-config --cflags`
 INCFLAGS	= -I../include/
-LDFLAGS		= `root-config --libs` -L/sps/compass/npierre/TDJANGOH/lib -lDjangoh
+TDJANGOH_LIB=$(TDJANGOH)/lib
+LDFLAGS		= `root-config --libs` -L$(TDJANGOH_LIB) -lDjangoh
 #DevFlags	=
 
 %.o: %.cc
