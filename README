@@ -15,7 +15,7 @@ CERNLIB (2006)
 Compilers and Options
 =====================
 
-Put in src/Makefile and TDjangoh/Makefile the actual location of LHAPDF and libDjangoh (path/to/package/lib)
+Put in src/Makefile the actual location of LHAPDF (path/to/LHAPDF)
 
 To build :
   make (in the root directory of the package)
@@ -23,6 +23,11 @@ To build :
 
 Test Program
 ============
+
+Put in test/Makefile the actual location of libDjangoh (path/to/package/lib)
+
+To build test :
+  make test (in the root directory of the package)
 
 To launch test :
   bin/test
