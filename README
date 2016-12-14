@@ -15,8 +15,7 @@ CERNLIB (2006)
 Environment variables
 =====================
 
-After recovering the package, export the following variables (better in .bashrc
-or similar) :
+After recovering the package, export the following variables (better in .bashrc or similar) :
 
   export TDJANGOH=/path/to/TDJANGOH/
   export LHAPDF5=/path/to/LHAPDF5/
@@ -24,6 +23,11 @@ or similar) :
 
 Setup
 =====
+
+*** Special for CCAGE *** 
+   In src/Makefile, replace $(shell cernlib) by -L/afs/in2p3.fr/cernlib/@sys/pro/lib/
+   Patch correcting this problem will arrive soon :-).
+*************************
 
 To setup :
   make setup (in the root directory of the package)
