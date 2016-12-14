@@ -16,5 +16,9 @@ test: $(Objs)
 	$(CXX) $(CCFlags) $(ROOTFLAGS) $(INCFLAGS) -o $@ $< $(LDFLAGS)
 	mv test ../bin
 
+setup:
+	mkdir lib
+	mkdir bin
+
 clean:
 	rm -f *.o
