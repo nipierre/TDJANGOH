@@ -6,16 +6,31 @@ Requirements
 
 GCC > 4.4.7 with build-in GFORTRAN
 ROOT > 5.34/32
-LHAPDF 5.9.1
+LHAPDF 5.9.1 (in any case lower than LHAPDF 6.x.x)
 CERNLIB (2006)
 
 (Tested on LXPLUS and CCAGE)
 
 
-Compilers and Options
+Environment variables
 =====================
 
-Put in src/Makefile the actual location of LHAPDF (path/to/LHAPDF)
+After recovering the package, export the following variables (better in .bashrc
+or similar) :
+
+  export TDJANGOH=/path/to/TDJANGOH/
+  export LHAPDF5=/path/to/LHAPDF5/
+
+
+Setup
+=====
+
+To setup :
+  make setup (in the root directory of the package)
+
+
+Compilers and Options
+=====================
 
 To build :
   make (in the root directory of the package)
@@ -23,8 +38,6 @@ To build :
 
 Test Program
 ============
-
-Put in test/Makefile the actual location of libDjangoh (path/to/package/lib)
 
 To build test :
   make test (in the root directory of the package)
