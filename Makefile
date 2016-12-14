@@ -4,6 +4,9 @@ src::
 	$(MAKE) -C $@
 test::
 	$(MAKE) -C $@
+setup::
+	mkdir lib
+	mkdir bin
 
 clean:
 	(cd test; make clean)
