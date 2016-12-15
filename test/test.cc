@@ -33,22 +33,22 @@ int main()
     cout << "Total number of particles : " << nb << endl;
     for(int j=0; j<nb; j++)
     {
-	cout 
-	<< tDjangoh->GetK(0,j) << " "
-	<< tDjangoh->GetK(1,j) << " "
-	<< tDjangoh->GetK(2,j) << " "
-	<< tDjangoh->GetK(3,j) << " "
-	<< tDjangoh->GetK(4,j) << " \n"
-	<< tDjangoh->GetP(0,j) << " "
-        << tDjangoh->GetP(1,j) << " "
-        << tDjangoh->GetP(2,j) << " "
-        << tDjangoh->GetP(3,j) << " "
-        << tDjangoh->GetP(4,j) << " \n"
-	<< tDjangoh->GetV(0,j) << " "
-        << tDjangoh->GetV(1,j) << " "
-        << tDjangoh->GetV(2,j) << " "
-        << tDjangoh->GetV(3,j) << " "
-        << tDjangoh->GetV(4,j) << " \n" << endl;
+	cout
+	<< tDjangoh->GetK(j,1) << " "
+	<< tDjangoh->GetK(j,2) << " "
+	<< tDjangoh->GetK(j,3) << " "
+	<< tDjangoh->GetK(j,4) << " "
+	<< tDjangoh->GetK(j,5) << " \n"
+	<< tDjangoh->GetP(j,1) << " "
+  << tDjangoh->GetP(j,2) << " "
+  << tDjangoh->GetP(j,3) << " "
+  << tDjangoh->GetP(j,4) << " "
+  << tDjangoh->GetP(j,5) << " \n"
+  << tDjangoh->GetV(j,1) << " "
+  << tDjangoh->GetV(j,2) << " "
+  << tDjangoh->GetV(j,3) << " "
+  << tDjangoh->GetV(j,4) << " "
+  << tDjangoh->GetV(j,5) << " \n" << endl;
     }
     x = tDjangoh->GetX();
     y = tDjangoh->GetY();
