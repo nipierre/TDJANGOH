@@ -12,11 +12,14 @@ INCDIR		= -I`root-config --incdir`
 LDFLAGS		= `root-config --libs --evelibs --glibs` -L$(LHAPDF5_LIB) -lLHAPDF -L/usr/lib/gcc/x86_64-redhat-linux/3.4.6/ -lg2c $(shell cernlib) -Wl,-lmathlib -lpacklib -lkernlib -Wl,-dy -lm -lnsl -lcrypt -ldl
 #DevFlags	=
 
-all: libDjangoh
+all: modules libDjangoh
 
 libDjangoh: $(OBJSF)
 	$(CC) $(CCFlags) -shared $(ROOTFLAGS) $(INCDIR) -o libDjangoh.so $(OBJSF) $(LDFLAGS)
 	mv libDjangoh.so ../lib
+
+modules: xSectionModule.f90
+	$(GFF) -c xSectionModule.f90
 
 TDjangoh.o: ../include/TDjangoh.h ../include/TDjangohCalls.h ../include/TMCParticle.h
 	$(CC) $(CCFlags) $(ROOTFLAGS) $(INCDIR) -o TDjangoh.o -c TDjangoh.cc $(LDFLAGS)
