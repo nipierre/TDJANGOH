@@ -123,6 +123,7 @@ extern "C" struct hsnucl
   double inumod;
 } hsnucl_;
 
+
 extern "C" struct hsparm
 {
   double polari;
@@ -523,7 +524,6 @@ void TDjangoh::Initialize(const char *beam, int nuc_A, int nuc_Z, float beam_e, 
   hsparl_.lparin[7] = 1;
   hsparl_.lparin[8] = 1;
   hsparl_.lparin[9] = 1;
-  hsparl_.lparin[10] = 1;
   hsparl_.lparin[10] = 1;
 
   // STRUCTFUNC
