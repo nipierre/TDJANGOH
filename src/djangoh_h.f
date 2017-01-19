@@ -31,6 +31,7 @@ C     VERSION 4.6.13,  May, 27, 2016
 C
 C***********************************************************************
 C
+      USE xSectionModule
       IMPLICIT DOUBLE PRECISION (A-H,M,O-Z)
       EXTERNAL HSNCG1,HSNCG2,HSTSK1,HSTSK2,HSK1TS,HSK1K3
       EXTERNAL HSCCG1,HSCCG2,HSCCKL,HSCCQI,HSCCQF
@@ -217,6 +218,24 @@ C---                     NRG33E=NBN33E**NDM3EL
      +                NTT33E,NCL33E,NC133E,NC233E,IBM33E,JCR33E,
      +                LGL33E,LLC33E
 C-------------------------
+      TYPE(xSection2) :: HSXNC2
+      TYPE(xSection2C) :: HSXCC2
+      TYPE(xSection2E) :: HSXEL2
+      TYPE(xSection31) :: HSXN31
+      TYPE(xSection32) :: HSXN32
+      TYPE(xSection33) :: HSXN33
+      TYPE(xSection34) :: HSXN34
+      TYPE(xSection31C) :: HSXC31
+      TYPE(xSection32C) :: HSXC32
+      TYPE(xSection33C) :: HSXC33
+      TYPE(xSection31E) :: HSXE31
+      TYPE(xSection32E) :: HSXE32
+      TYPE(xSection33E) :: HSXE33
+      COMMON /HSXSEC/ HSXNC2(10),HSXCC2(10),HSXEL2(10),
+     +                HSXN31(10),HSXN32(10),HSXN33(10),HSXN34(10),
+     +                HSXC31(10),HSXC32(10),HSXC33(10),
+     +                HSXE31(10),HSXE32(10),HSXE33(10)
+C-------------------------
       CHARACTER*45 CHNAME
       COMMON /HSNAMC/ CHNAME(20)
       COMMON /HSNUME/ SIGTOT,SIGTRR,SIGG(20),SIGGRR(20),NEVENT,NEVE(20)
@@ -257,6 +276,11 @@ C-------------------------
       DIMENSION INT2C(5),ISAM2C(5),INT3C(15),ISAM3C(15)
 C---for date and time, used as seeds for random number generator
       integer today(3), now(3)
+
+C---Test for new xsection struct
+      HSXC31(7)%XX31C(30,3)=36.7
+
+      WRITE(6,*) HSXC31(7)%XX31C(30,3)
 
 C
 C-------------------------------
@@ -1142,15 +1166,17 @@ C
         WRITE(LUNOUT,'(///,5X,2A)') ' START INTEGRATION FOR ',CHNAME(1)
 C---INTEGRATION
         INCCC=1
-        CALL HSINIT(INCCC,EPSO,NBIN2,NDO2,SIG2,SIG2E,XX2)
+        CALL HSINIT(INCCC,EPSO,NBIN2,NDO2,HSXNC2(1)%SIG2,
+     *              HSXNC2(1)%SIG2E,XX2)
         WRITE(LUNOUT,'(//A/5X,A/5X,1PE12.4,A,1PE12.4,A)')
      *       ' CROSS SECTION (WITH ERROR ESTIMATE) FOR THE CHANNEL:',
-     *       CHNAME(1), SIG2, ' +/- ', SIG2E, '  NB'
+     *       CHNAME(1), HSXNC2(1)%SIG2, ' +/- ', HSXNC2(1)%SIG2E, '  NB'
         WRITE(LUNTES,'(5X,A,1PD10.1)') ' RELATIVE ACCURACY REQUIRED:',
      &      EPSO
 C---LOCAL/GLOBAL MAXIMA FOR THE MODIFIED SAMPLING FUNCTION
         CALL HSESTM(HSNCG2,NCHN2,NDIM2,NPOIN,NDO2,NBIN2,
-     *              T2GGMA,T2GMAX,XX2,IBIM2,NREG2N)
+     *              T2GGMA,T2GMAX,
+     *              XX2,IBIM2,NREG2N)
 C---SET OPTION TO SAVE INFORMATION FROM INTEGRATION ONTO UNIT LUNDAT
         INFOSA=1
         INT2C(1)=1
@@ -1979,7 +2005,7 @@ cs..Sophia
       COMMON /SOPHCT/ WSOPHIA
 C
 C--- STANDARD KINEMATICS
-      DATA EELE, EPRO  / 27.5D0, 920D0 /
+      DATA EELE, EPRO  / 160D0, 0D0 /
       DATA SIGTOT,SIGTRR,SIGG,SIGGRR /42*0D0/
       DATA NEVENT,NEVE               /21*0/
       DATA LUNIN,LUNOUT,LUNTES,LUNRND,LUNDAT
