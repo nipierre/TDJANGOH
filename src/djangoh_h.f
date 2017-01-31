@@ -936,7 +936,7 @@ C    PATH NAME FOR GRID FILES OF LHAPDF LIBRARY
 C
 C***********************************************************************
 C      READ(NBF,2590) LHAPATHI
-      LHAPATHI='/sps/compass/npierre/lhapdf5/share/lhapdf'
+C      LHAPATHI='/sps/compass/npierre/lhapdf5/share/lhapdf'
 C      LHAPATH=LHAPATHI
       WRITE(LUNOUT,'(5X,A,A)')    ' LHAPATH=',LHAPATH
       GOTO 1
@@ -1158,16 +1158,17 @@ C***********************************************************************
 C               INTEGRATION / INITIALIZATION FOR EVENT SAMPLING
 C               DETERMINATION OF GLOBAL/LOCAL MAXIMA
 C***********************************************************************
-      INFOSA=0
-      GDSIZE=10.0
-      GDSDDV=10.0
+
+      GDSIZE=4
+      GDSDDV=4.0
+      GDSCLE=2.0
       GDMEAN=160.0
-      EDUMMY=EELE
 C---LOOPY-LOOP OVER XSECTION GRID
       DO 3980 I = 1, GDSIZE
-        EELE=GDMEAN-GDSDDV+(I-1)*2*GDSDDV/GDSIZE
+        INFOSA=0
+        EELE=GDMEAN-GDSDDV+(I-1)*GDSCLE
         WRITE(455,*)'EELE VALUE : '
-        WRITE(455,*) EELE
+C        WRITE(455,*) EELE
 C---NEUTRAL CURRENT
         WRITE(455,*)'NEUTRAL CURRENT TREE'
 C---BORN TERM + SOFT & VIRTUAL CORRECTIONS------------------------------
@@ -5350,12 +5351,12 @@ C
       EXTERNAL F
 C
       IF(NCALL(NCONT).EQ.0) THEN
-        WRITE(455,*) '2.3.1'
+C        WRITE(455,*) '2.3.1'
         NCALL(NCONT)=1
         R(NCONT)=NDO**NDIM
       ENDIF
 C
-      WRITE(455,*) '2.3.2'
+C      WRITE(455,*) '2.3.2'
       W=R(NCONT)
       DO 4 I=1,NDIM
          XX=X(I)*NDO
@@ -5371,11 +5372,11 @@ C
          W=W*DD
 4     CONTINUE
 C
-      WRITE(455,*) '2.3.3'
+C      WRITE(455,*) '2.3.3'
       FZ=F(Z)
-      WRITE(455,*) '2.3.4'
+C      WRITE(455,*) '2.3.4'
       HSTRIT=W*FZ
-      WRITE(455,*) '2.3.5'
+C      WRITE(455,*) '2.3.5'
 C
       IF(HSTRIT.LE.0D0.AND.IPRINT.GE.5) THEN
         WRITE(LUNOUT,'(A,5(1PE12.4)/15X,5(1PE12.4))')
@@ -5412,17 +5413,17 @@ C
         FMAX(J)=0D0
  5    CONTINUE
 C
-      WRITE(455,*) '1'
+C      WRITE(455,*) '1'
       SUM=0D0
       SUM2=0D0
       SUM2P=0D0
       IF(IPRINT.GE.1) WRITE(LUNTES,200) MBIN,NREGX,NPOIN
 
 C...DETERMINATION OF GLOBAL/LOCAL MAXIMA
-      WRITE(455,*) '2'
+C      WRITE(455,*) '2'
       DO 1 J=1,NREGX
          JJ=J-1
-         WRITE(455,*) '2.1'
+C         WRITE(455,*) '2.1'
          DO 2 K=1,NDIM
             JJJ=JJ/MBIN
             N(K)=JJ-JJJ*MBIN
@@ -5430,24 +5431,24 @@ C...DETERMINATION OF GLOBAL/LOCAL MAXIMA
 2        CONTINUE
          FSUM=0D0
          FSUM2=0D0
-         WRITE(455,*) '2.2'
+C         WRITE(455,*) '2.2'
          DO 3 M=1,NPOIN
             DO 4 K=1,NDIM
                X(K)=(HSRNDM(-1)+N(K))/MBIN
 4           CONTINUE
-            WRITE(455,*) '2.3'
+C            WRITE(455,*) '2.3'
             Z=HSTRIT(F,X,NDIM,NCONT,XI,NDO)
             IF(Z.GT.FMAX(J)) FMAX(J)=Z
             FSUM=FSUM + Z
             FSUM2=FSUM2 + Z*Z
 3        CONTINUE
-         WRITE(455,*) '2.4'
+C         WRITE(455,*) '2.4'
          IF(FMAX(J).GT.FFMAX) THEN
            FFMAX=FMAX(J)
            IBIMAX=J
          ENDIF
 C
-         WRITE(455,*) '3'
+C         WRITE(455,*) '3'
          AV=FSUM/FLOAT(NPOIN)
          AV2=FSUM2/FLOAT(NPOIN)
          SIG2=AV2-AV*AV
@@ -5469,7 +5470,7 @@ C
       DO 6 J=1,NREGX
          EFF1=EFF1+FMAX(J)
 6     CONTINUE
-      WRITE(455,*) '4'
+C      WRITE(455,*) '4'
       EFF1=EFF1/(NREGX*SUM)
       EFF2=FFMAX/SUM
       IF(IPRINT.GE.1) THEN
@@ -5477,7 +5478,7 @@ C
         WRITE (LUNTES,'(/A,1PE13.5,5X,A,I5)')
      &        ' GLOBAL MAXIMUM FFMAX=',FFMAX,' IN BIN IBIMAX=',IBIMAX
       ENDIF
-      WRITE(455,*) '5'
+C      WRITE(455,*) '5'
 C
 100   FORMAT(I6,3X,G13.6,G12.4,G13.6,3X,F8.2,3X,10I2)
 101   FORMAT(' THE AVERAGE FUNCTION VALUE =',G14.6/
