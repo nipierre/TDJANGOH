@@ -104,7 +104,7 @@ MODULE xSectionModule
     REAL :: SIG32E
     REAL :: T32GMA
     REAL :: T32MAX(7776)
-    REAL :: XX2C(50,5)
+    REAL :: XX32(50,5)
     REAL :: FFGO32
     REAL :: DNCG32
     REAL :: FFLO32
