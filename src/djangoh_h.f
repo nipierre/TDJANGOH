@@ -1159,16 +1159,16 @@ C               INTEGRATION / INITIALIZATION FOR EVENT SAMPLING
 C               DETERMINATION OF GLOBAL/LOCAL MAXIMA
 C***********************************************************************
 
-      GDSIZE=4
-      GDSDDV=4.0
-      GDSCLE=2.0
+      GDSIZE=8
+      GDSDDV=2.0
+      GDSCLE=0.5
       GDMEAN=160.0
 C---LOOPY-LOOP OVER XSECTION GRID
       DO 3980 I = 1, GDSIZE
         INFOSA=0
         EELE=GDMEAN-GDSDDV+(I-1)*GDSCLE
         WRITE(455,*)'EELE VALUE : '
-C        WRITE(455,*) EELE
+        WRITE(455,*) EELE
 C---NEUTRAL CURRENT
         WRITE(455,*)'NEUTRAL CURRENT TREE'
 C---BORN TERM + SOFT & VIRTUAL CORRECTIONS------------------------------
