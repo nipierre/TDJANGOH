@@ -192,7 +192,7 @@ public:
   */
   void             GenerateEvent();
   /*!
-  * \brief Initialization of an event
+  * \brief Initialization of DJANGOH
   * \param beam : Type of particle for the beam
   * \param nuc_A : A number of the target nucleus
   * \param nuc_Z : Z number of the target nucleus
@@ -202,13 +202,25 @@ public:
   */
   void             Initialize(const char *beam, int nuc_A, int nuc_Z, float beam_e, float nuc_e, float pol=0);
   /*!
+  * \brief Configuration of DJANGOHs
+  * \param beam : Type of particle for the beam
+  * \param nuc_A : A number of the target nucleus
+  * \param nuc_Z : Z number of the target nucleus
+  * \param beam_e : Energy of the beam (in GeV)
+  * \param nuc_e : Energy of the target (in GeV, 0 for fixed target)
+  * \param pol : Polarization of the target
+  */
+  void             Configure(const char *beam, int nuc_A, int nuc_Z, float beam_e, float nuc_e, float pol=0);
+  /*!
+  * \brief Generates the Grid of cross-section
+  */
+  void             Generate_XSectionGrid();
+  /*!
   * \brief Import particles from lujets_ subroutine and copy it in TClonesArray*
   * \param particles : Array of particles
   * \param option :
   * \return nparts : number of particles
   */
-  void             Configure(const char *beam, int nuc_A, int nuc_Z, float beam_e, float nuc_e, float pol=0);
-
   Int_t            ImportParticles(TClonesArray *particles, Option_t *option="");
   /*!
   * \brief Import particles from lujets_ subroutine and copy it in TClonesArray*

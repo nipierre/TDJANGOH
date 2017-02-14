@@ -34,7 +34,12 @@ Djkin_t djkin_;
 
 extern "C"
 {
-  void hsmain_();
+  void hsinpt_();
+}
+
+extern "C"
+{
+  void hsegen_();
 }
 
 extern "C" struct ihscw
@@ -232,13 +237,22 @@ extern "C" struct hsoptn
 
 extern "C" struct hsnume
 {
-  double sigtot;
-  double sigerr;
-  double sigg[20];
-  double siggrr[20];
+  double sigtot[100];
+  double sigerr[100];
+  double sigg[100][20];
+  double siggrr[100][20];
   int nevent;
   int neve[20];
 } hsnume_;
+
+extern "C" struct hsgrid
+{
+  int gdsize;
+  int gdindx;
+  double gdmean;
+  double gdsddv;
+  double gdscle;
+} hsgrid_;
 
 extern "C" struct lhapdfc
 {
@@ -320,8 +334,8 @@ TDjangoh* TDjangoh::Instance()
 
 void TDjangoh::GenerateEvent()
 {
-  hsmain_();
-  // cout << lujets_.N << endl;
+  hsegen_();
+  //cout << lujets_.N << endl;
   fLujets = &lujets_;
   // fLudat1 = &ludat1_;
   // fLudat2 = &ludat2_;
@@ -440,7 +454,7 @@ void TDjangoh::Initialize(const char *beam, int nuc_A, int nuc_Z, float beam_e, 
   inputcw[0] = "OUTFILENAM";
   inputcw[1] = "TITLE     ";
   inputcw[2] = "EL-BEAM   ";
-  inputcw[3] = "IOUNITS   ";
+  inputcw[3] = "GD-OPT    ";
   inputcw[4] = "GSW-PARAM ";
   inputcw[5] = "KINEM-CUTS";
   inputcw[6] = "EGAM-MIN  ";
@@ -489,6 +503,11 @@ void TDjangoh::Initialize(const char *beam, int nuc_A, int nuc_Z, float beam_e, 
 
   // EGAM-MIN
   hsirct_.egmin = 0.0;
+
+  // GD-OPT
+  hsgrid_.gdmean=160.0;
+  hsgrid_.gdsddv=2.0;
+  hsgrid_.gdsize=2;
 
   // INT-OPT-NC
   hsintnc_.inc2 = 1;
@@ -610,6 +629,12 @@ void TDjangoh::Initialize(const char *beam, int nuc_A, int nuc_Z, float beam_e, 
   // DEBUG_MODE
   isdebug_.isdbg = 1;
 
+  hsinpt_();
+
+  cout << ">>> TDJANGOH message : <<<" << endl;
+  cout << "*** DJANGOH initialized ! ***" << endl;
+  cout << ">>>         ***        <<<" << endl;
+
 }
 
 
@@ -639,6 +664,7 @@ void TDjangoh::Configure(const char *beam, int nuc_A, int nuc_Z, float beam_e, f
   hselab_.epro = nuc_e;
   hsnucl_.hna = nuc_A;
   hsnucl_.hnz = nuc_Z;
+
 }
 
 void TDjangoh::Clean_File()

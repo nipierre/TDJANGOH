@@ -229,8 +229,12 @@ ckc..HERACLES
      *              ,MW2,MZ2,MH2,ME2,MMY2,MTAU2,MU2,MD2,MS2,MC2,MB2,MT2
       COMMON /HSKNST/ PI,ALPHA,ALP1PI,ALP2PI,ALP4PI,E,GF,SXNORM,SX1NRM
       COMMON /HSDELR/ DELTAR,AGF0,DRHOT,DALPMZ,XGMT,ALPQCD,BTOP4,DRPIW2
-      COMMON /HSNUME/ SIGTOT,SIGTRR,SIGG(20),SIGGRR(20),NEVENT,NEVE(20)
+      COMMON /HSNUME/ SIGTOT(100),SIGTRR(100),
+     +                SIGG(100,20),SIGGRR(100,20),
+     +                NEVENT,NEVE(20)
       COMMON /HSPDFO/ IPDFOP,IFLOPT,LQCD,LTM,LHT
+      COMMON /HSGRID/ GDSIZE, GDINDX, GDMEAN, GDSDDV, GDSCLE
+      INTEGER         GDSIZE, GDINDX
 chs-20.02.2016: Do not initialize for nucleon
 c      COMMON /HSNUCL/ HNA,HNZ,INUMOD
 c      DOUBLE PRECISION HNA,HNZ
@@ -278,10 +282,10 @@ C...G_F
 C...\Delta r
       PARL(18)=DELTAR
 C...Cross section within user defined cuts (in picobarn)
-      PARL(23)=SIGTOT*1E3
-      PARL(24)=SIGTOT*1E3
+      PARL(23)=SIGTOT(GDINDX)*1E3
+      PARL(24)=SIGTOT(GDINDX)*1E3
 C...Relative accuracy of cross section
-      ACCUR=SIGTRR/SIGTOT
+      ACCUR=SIGTRR(GDINDX)/SIGTOT(GDINDX)
 
 ckc..LEPTO
       NCALL=NCALL+1
@@ -921,7 +925,9 @@ ckc..from DJANGO; modified
 ckc..IQF in old quark convention; should be modified
       IMPLICIT double precision (A-H,M,O-Z)
 ckc..from HS
-      COMMON /HSNUME/ SIGTOT,SIGTRR,SIGG(20),SIGGRR(20),NEVENT,NEVE(20)
+      COMMON /HSNUME/ SIGTOT(100),SIGTRR(100),
+     +                SIGG(100,20),SIGGRR(100,20),
+     +                NEVENT,NEVE(20)
       LOGICAL LFIRST
       DATA LFIRST/.TRUE./
 ckc..from L61
