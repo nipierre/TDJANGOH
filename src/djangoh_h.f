@@ -345,6 +345,8 @@ C      OUTFILENAM='djangoh-default-output'
 C      ICH=INDEX(OUTFILENAM,' ')-1
       IODEF=0
       ITCW=0
+      NTOT=0
+      NPASS=0
 
 C---PRINT THE TITLE
       WRITE(6,9)
@@ -1181,6 +1183,7 @@ C---LOCAL/GLOBAL MAXIMA FOR THE MODIFIED SAMPLING FUNCTION
           CALL HSESTM(HSNCG2,NCHN2,NDIM2,NPOIN,NDO2,NBIN2,
      *                T2GGMA,T2GMAX,
      *                XX2,IBIM2,NREG2N)
+          WRITE(6,*) 'NDO2 = ',NDO2
           HSXNC2(I)%T2GGMA=T2GGMA
           HSXNC2(I)%T2GMAX=T2GMAX
           HSXNC2(I)%XX2=XX2
@@ -1216,11 +1219,13 @@ C
 C---LOCAL/GLOBAL MAXIMA FOR THE MODIFIED SAMPLING FUNCTION
           CALL HSESTM(HSTSK1,NCHN31,NDIM31,NPOIN,NDO31,NBIN31,
      *                T31GMA,T31MAX,XX31,IBIM31,NREG31)
+          WRITE(6,*) 'NDO31 = ',NDO31
           HSXN31(I)%NDO31=NDO31
           HSXN31(I)%T31GMA=T31GMA
           HSXN31(I)%T31MAX=T31MAX
           HSXN31(I)%XX31=XX31
           HSXN31(I)%IBIM31=IBIM31
+          WRITE(6,*) 'HSXN31(I)%NDO31 = ',HSXN31(I)%NDO31
 C---SET OPTION TO SAVE INFORMATION FROM INTEGRATION ONTO UNIT LUNDAT
           INFOSA=1
           INT3C(1)=INT3C(1) + ITMX31
@@ -1252,6 +1257,7 @@ C
 C---LOCAL/GLOBAL MAXIMA FOR THE MODIFIED SAMPLING FUNCTION
           CALL HSESTM(HSTSK2,NCHN32,NDIM32,NPOIN,NDO32,NBIN32,
      *                T32GMA,T32MAX,XX32,IBIM32,NREG32)
+          WRITE(6,*) 'NDO32 = ',NDO32
           HSXN32(I)%NDO32=NDO32
           HSXN32(I)%T32GMA=T32GMA
           HSXN32(I)%T32MAX=T32MAX
@@ -1288,6 +1294,7 @@ C
 C---LOCAL/GLOBAL MAXIMA FOR THE MODIFIED SAMPLING FUNCTION
           CALL HSESTM(HSK1TS,NCHN33,NDIM33,NPOIN,NDO33,NBIN33,
      *                T33GMA,T33MAX,XX33,IBIM33,NREG33)
+          WRITE(6,*) 'NDO33 = ',NDO33
           HSXN33(I)%NDO33=NDO33
           HSXN33(I)%T33GMA=T33GMA
           HSXN33(I)%T33MAX=T33MAX
@@ -1767,6 +1774,8 @@ C---READ INPUT FOR DJANGO6
         WRITE(LUNOUT,*) 'SIGTRR(',I,')=',SIGTRR(I)
       END DO
 
+      WRITE(6,*) 'HSXN31(1)%NDO31', HSXN31(1)%NDO31
+
       GOTO 5000
 
 C---ERROR WHILE WRITING HERACLES DATA FILE
@@ -2041,6 +2050,10 @@ C-------------------------
       DIMENSION UIO(97)
       DIMENSION INT2C(5),ISAM2C(5),INT3C(15),ISAM3C(15)
 
+      WRITE(6,*) 'HSXN31(1)%NDO31', HSXN31(1)%NDO31
+      WRITE(6,*) 'HSXN32(1)%NDO32', HSXN32(1)%NDO32
+      WRITE(6,*) 'HSXN31(2)%NDO31', HSXN31(2)%NDO31
+      WRITE(6,*) 'HSXN32(2)%NDO32', HSXN32(2)%NDO32
       WRITE(LUNOUT,*) 'GDSIZE = ',GDSIZE
       WRITE(LUNOUT,*) 'GDSCLE = ',GDSCLE
 
@@ -3476,10 +3489,10 @@ C-------------------------
       TYPE(xSection31E) :: HSXE31
       TYPE(xSection32E) :: HSXE32
       TYPE(xSection33E) :: HSXE33
-      COMMON /HSXSEC/ HSXNC2(10),HSXCC2(10),HSXEL2(10),
-     +                HSXN31(10),HSXN32(10),HSXN33(10),HSXN34(10),
-     +                HSXC31(10),HSXC32(10),HSXC33(10),
-     +                HSXE31(10),HSXE32(10),HSXE33(10)
+      COMMON /HSXSEC/ HSXNC2(100),HSXCC2(100),HSXEL2(100),
+     +                HSXN31(100),HSXN32(100),HSXN33(100),HSXN34(100),
+     +                HSXC31(100),HSXC32(100),HSXC33(100),
+     +                HSXE31(100),HSXE32(100),HSXE33(100)
       COMMON /HSGRID/ GDSIZE, GDINDX, GDMEAN, GDSDDV, GDSCLE
       INTEGER         GDSIZE, GDINDX
 C-------------------------
@@ -3493,6 +3506,10 @@ C-------------------------
       WRITE(LUNOUT,*) 'GDINDX = ', GDINDX
       WRITE(LUNOUT,*) 'SIGTOT(GDINDX) = ', SIGTOT(GDINDX)
       WRITE(LUNOUT,*) 'NC BORN = ', HSXNC2(GDINDX)%SIG2
+      WRITE(6,*) 'HSXN31(1)%NDO31', HSXN31(1)%NDO31
+      WRITE(6,*) 'HSXN32(1)%NDO32', HSXN32(1)%NDO32
+      WRITE(6,*) 'HSXN31(2)%NDO31', HSXN31(2)%NDO31
+      WRITE(6,*) 'HSXN32(2)%NDO32', HSXN32(2)%NDO32
 C-----------------------------------------------------------------------
       WRITE(LUNOUT,'(//A/)')
      * ' CROSS SECTIONS ACTUALLY APPLIED FOR SAMPLING (IN NANOBARN): '
@@ -3507,8 +3524,10 @@ C-----------------------------------------------------------------------
 C-----------------------------------------------------------------------
 C---CUMULATIVE PROBABILITIES FOR CHOSING THE ACTUAL CONTRIBUTION
       PROCON(1)=SIGG(GDINDX,1)/SIGTOT(GDINDX)
+      WRITE(LUNOUT,*) PROCON(1)
       DO 101 I=2,20
         PROCON(I)=PROCON(I-1) + SIGG(GDINDX,I)/SIGTOT(GDINDX)
+        WRITE(LUNOUT,*) PROCON(I)
   101 CONTINUE
       DO 102 I=1,5
         ICONTI(I)=ISAM2(I)
@@ -3520,8 +3539,9 @@ C-----------------------------------------------------------------------
 C---EVENT SAMPLING
 
 C---CHANNEL SELECTION
+      RNC=HSRNDM(-1)
       DO 1001 NC=1,20
-        WRITE(LUNOUT,*) 'NC = ', NC
+        WRITE(LUNOUT,*) 'RNC = ', RNC
         IF(RNC.LE.PROCON(NC)) THEN
           NCA=NC
           WRITE(LUNOUT,*) 'NCA = ', NCA
@@ -3542,28 +3562,36 @@ C---NON RADIATIVE EVENTS - NEUTRAL CURRENT / BORN + VIRTUAL&SOFT
      *    WRITE(LUNTES,'(//A/A,5X,2I3,I8,2I4)')
      *          ' CALL HSGENM ',' NCHN2,NDIM2,NEV2,NDO2,NBIN2',
      *                            NCHN2,NDIM2,NEV2,NDO2,NBIN2
-          T2GGMA=HSXNC2(GDINDX)%T2GGMA
-          T2GMAX=HSXNC2(GDINDX)%T2GMAX
-          GOLD2=HSXNC2(GDINDX)%GOLD2
-          FFGO2=HSXNC2(GDINDX)%FFGO2
-          FFLO2=HSXNC2(GDINDX)%FFLO2
-          DNCG2=HSXNC2(GDINDX)%DNCG2
-          DNCL2=HSXNC2(GDINDX)%DNCL2
-          LLOC2=HSXNC2(GDINDX)%LLOC2
-          LGLO2=HSXNC2(GDINDX)%LGLO2
-          NTOT2=HSXNC2(GDINDX)%NTOT2
-          NM2=HSXNC2(GDINDX)%NM2
-          NCAL2=HSXNC2(GDINDX)%NCAL2
-          NCA12=HSXNC2(GDINDX)%NCA12
-          NCA22=HSXNC2(GDINDX)%NCA22
-          IBIM2=HSXNC2(GDINDX)%IBIM2
-          JCOR2=HSXNC2(GDINDX)%JCOR2
-          XX2=HSXNC2(GDINDX)%XX2
-          NDO2=HSXNC2(GDINDX)%NDO2
-          CALL HSGENM(HSNCG2,NCHN2,NDIM2,NEV2,ICONTI(1),T2GGMA,T2GMAX,
-     &                GOLD2,FFGO2,FFLO2,DNCG2,DNCL2,LLOC2,LGLO2,
-     &                NTOT2,NM2,NCAL2,NCA12,NCA22,IBIM2,JCOR2,
-     &                XX2,NDO2,NBIN2,NREG2N)
+          WRITE(6,*) 'HSXNC2(GDINDX)%T2GGMA',HSXNC2(GDINDX)%T2GGMA
+          WRITE(6,*) 'HSXNC2(GDINDX)%T2GMAX(1)',HSXNC2(GDINDX)%T2GMAX(1)
+          WRITE(6,*) 'HSXNC2(GDINDX)%GOLD2',HSXNC2(GDINDX)%GOLD2
+          WRITE(6,*) 'HSXNC2(GDINDX)%FFGO2',HSXNC2(GDINDX)%FFGO2
+          WRITE(6,*) 'HSXNC2(GDINDX)%FFLO2',HSXNC2(GDINDX)%FFLO2
+          WRITE(6,*) 'HSXNC2(GDINDX)%DNCG2',HSXNC2(GDINDX)%DNCG2
+          WRITE(6,*) 'HSXNC2(GDINDX)%DNCL2',HSXNC2(GDINDX)%DNCL2
+          WRITE(6,*) 'HSXNC2(GDINDX)%LLOC2',HSXNC2(GDINDX)%LLOC2
+          WRITE(6,*) 'HSXNC2(GDINDX)%LGLO2',HSXNC2(GDINDX)%LGLO2
+          WRITE(6,*) 'HSXNC2(GDINDX)%NTOT2',HSXNC2(GDINDX)%NTOT2
+          WRITE(6,*) 'HSXNC2(GDINDX)%NM2(1)',HSXNC2(GDINDX)%NM2(1)
+          WRITE(6,*) 'HSXNC2(GDINDX)%NCAL2',HSXNC2(GDINDX)%NCAL2
+          WRITE(6,*) 'HSXNC2(GDINDX)%NCA12',HSXNC2(GDINDX)%NCA12
+          WRITE(6,*) 'HSXNC2(GDINDX)%NCA22',HSXNC2(GDINDX)%NCA22
+          WRITE(6,*) 'HSXNC2(GDINDX)%IBIM2',HSXNC2(GDINDX)%IBIM2
+          WRITE(6,*) 'HSXNC2(GDINDX)%JCOR2',HSXNC2(GDINDX)%JCOR2
+          WRITE(6,*) 'HSXNC2(GDINDX)%XX2(1,1)',HSXNC2(GDINDX)%XX2(1,1)
+          WRITE(6,*) 'HSXNC2(GDINDX)%NDO2',HSXNC2(GDINDX)%NDO2
+          CALL HSGENM(HSNCG2,NCHN2,NDIM2,NEV2,ICONTI(1),
+     &                HSXNC2(GDINDX)%T2GGMA,HSXNC2(GDINDX)%T2GMAX,
+     &                HSXNC2(GDINDX)%GOLD2,HSXNC2(GDINDX)%FFGO2,
+     &                HSXNC2(GDINDX)%DNCG2,HSXNC2(GDINDX)%DNCL2,
+     &                HSXNC2(GDINDX)%DNCL2,HSXNC2(GDINDX)%LLOC2,
+     &                HSXNC2(GDINDX)%LGLO2,
+     &                HSXNC2(GDINDX)%NTOT2,HSXNC2(GDINDX)%NM2,
+     &                HSXNC2(GDINDX)%NCAL2,HSXNC2(GDINDX)%NCA12,
+     &                HSXNC2(GDINDX)%NCA22,HSXNC2(GDINDX)%IBIM2,
+     &                HSXNC2(GDINDX)%JCOR2,
+     &                HSXNC2(GDINDX)%XX2,HSXNC2(GDINDX)%NDO2,
+     &                NBIN2,NREG2N)
           GOTO 1010
 C---NON RADIATIVE EVENTS - CHARGED CURRENT / BORN + VIRTUAL&SOFT
   2     CONTINUE
@@ -3595,30 +3623,44 @@ C---RADIATIVE EVENTS - NEUTRAL CURRENT / INITIAL STATE LEPTONIC RAD.
      *      WRITE(LUNTES,'(//A/A,5X,2I3,I8,2I4)')
      *           ' CALL HSGENM ',' NCHN31,NDIM31,NEV3NC,NDO31,NBIN31',
      *                             NCHN31,NDIM31,NEV3NC,NDO31,NBIN31
-          T31GMA=HSXN31(GDINDX)%T31GMA
-          T31GMA=HSXN31(GDINDX)%T31GMA
-          GOLD31=HSXN31(GDINDX)%GOLD31
-          FFGO31=HSXN31(GDINDX)%FFGO31
-          FFLO31=HSXN31(GDINDX)%FFLO31
-          DNCG31=HSXN31(GDINDX)%DNCG31
-          DNCL31=HSXN31(GDINDX)%DNCL31
-          LLOC31=HSXN31(GDINDX)%LLOC31
-          LGLO31=HSXN31(GDINDX)%LGLO31
-          NTOT31=HSXN31(GDINDX)%NTOT31
-          NM31=HSXN31(GDINDX)%NM31
-          NCAL31=HSXN31(GDINDX)%NCAL31
-          NCA131=HSXN31(GDINDX)%NCA131
-          NCA231=HSXN31(GDINDX)%NCA231
-          IBIM31=HSXN31(GDINDX)%IBIM31
-          JCOR31=HSXN31(GDINDX)%JCOR31
-          XX31=HSXN31(GDINDX)%XX31
-          NDO31=HSXN31(GDINDX)%NDO31
+          WRITE(6,*) 'NCHN31',NCHN31
+          WRITE(6,*) 'NDIM31',NDIM31
+          WRITE(6,*) 'NEV3NC',NEV3NC
+          WRITE(6,*) 'ICONTI(6)',ICONTI(6)
+          WRITE(6,*) 'HSXN31(GDINDX)%T31GMA',HSXN31(GDINDX)%T31GMA
+          WRITE(6,*) 'HSXN31(GDINDX)%T31MAX(1)',HSXN31(GDINDX)%T31MAX(1)
+          WRITE(6,*) 'HSXN31(GDINDX)%GOLD31',HSXN31(GDINDX)%GOLD31
+          WRITE(6,*) 'HSXN31(GDINDX)%FFGO31',HSXN31(GDINDX)%FFGO31
+          WRITE(6,*) 'HSXN31(GDINDX)%FFLO31',HSXN31(GDINDX)%FFLO31
+          WRITE(6,*) 'HSXN31(GDINDX)%DNCG31',HSXN31(GDINDX)%DNCG31
+          WRITE(6,*) 'HSXN31(GDINDX)%DNCL31',HSXN31(GDINDX)%DNCL31
+          WRITE(6,*) 'HSXN31(GDINDX)%LLOC31',HSXN31(GDINDX)%LLOC31
+          WRITE(6,*) 'HSXN31(GDINDX)%LGLO31',HSXN31(GDINDX)%LGLO31
+          WRITE(6,*) 'HSXN31(GDINDX)%NTOT31',HSXN31(GDINDX)%NTOT31
+          WRITE(6,*) 'HSXN31(GDINDX)%NM31(1)',HSXN31(GDINDX)%NM31(1)
+          WRITE(6,*) 'HSXN31(GDINDX)%NCAL31',HSXN31(GDINDX)%NCAL31
+          WRITE(6,*) 'HSXN31(GDINDX)%NCA131',HSXN31(GDINDX)%NCA131
+          WRITE(6,*) 'HSXN31(GDINDX)%NCA231',HSXN31(GDINDX)%NCA231
+          WRITE(6,*) 'HSXN31(GDINDX)%IBIM31',HSXN31(GDINDX)%IBIM31
+          WRITE(6,*) 'HSXN31(GDINDX)%JCOR31',HSXN31(GDINDX)%JCOR31
+          WRITE(6,*) 'HSXN31(GDINDX)%XX31(1,1)',HSXN31(GDINDX)%XX31(1,1)
+          WRITE(6,*) 'HSXN31(GDINDX)%NDO31',HSXN31(GDINDX)%NDO31
+          WRITE(6,*) 'NBIN31',NBIN31
+          WRITE(6,*) 'NREG31',NREG31
           WRITE(LUNOUT,*) 'ISR'
           CALL HSGENM(HSTSK1,NCHN31,NDIM31,NEV3NC,ICONTI(6),
-     &                T31GMA,T31MAX,
-     &                GOLD31,FFGO31,FFLO31,DNCG31,DNCL31,LLOC31,LGLO31,
-     &                NTOT31,NM31,NCAL31,NCA131,NCA231,IBIM31,JCOR31,
-     &                XX31,NDO31,NBIN31,NREG31)
+     &                HSXN31(GDINDX)%T31GMA,HSXN31(GDINDX)%T31MAX,
+     &                HSXN31(GDINDX)%GOLD31,HSXN31(GDINDX)%FFGO31,
+     &                HSXN31(GDINDX)%FFLO31,HSXN31(GDINDX)%DNCG31,
+     &                HSXN31(GDINDX)%DNCL31,HSXN31(GDINDX)%LLOC31,
+     &                HSXN31(GDINDX)%LGLO31,
+     &                HSXN31(GDINDX)%NTOT31,HSXN31(GDINDX)%NM31,
+     &                HSXN31(GDINDX)%NCAL31,HSXN31(GDINDX)%NCA131,
+     &                HSXN31(GDINDX)%NCA231,HSXN31(GDINDX)%IBIM31,
+     &                HSXN31(GDINDX)%JCOR31,
+     &                HSXN31(GDINDX)%XX31,HSXN31(GDINDX)%NDO31,
+     &                NBIN31,NREG31)
+          WRITE(LUNOUT,*) 'END ISR'
           GOTO 1010
 C---RADIATIVE EVENTS - NEUTRAL CURRENT / FINAL STATE LEPTONIC RAD.
   7     CONTINUE
@@ -3626,30 +3668,38 @@ C---RADIATIVE EVENTS - NEUTRAL CURRENT / FINAL STATE LEPTONIC RAD.
      *      WRITE(LUNTES,'(//A/A,5X,2I3,I8,2I4)')
      *           ' CALL HSGENM ',' NCHN32,NDIM32,NEV3NC,NDO32,NBIN32',
      *                             NCHN32,NDIM32,NEV3NC,NDO32,NBIN32
-          T32GMA=HSXN32(GDINDX)%T32GMA
-          T32GMA=HSXN32(GDINDX)%T32GMA
-          GOLD32=HSXN32(GDINDX)%GOLD32
-          FFGO32=HSXN32(GDINDX)%FFGO32
-          FFLO32=HSXN32(GDINDX)%FFLO32
-          DNCG32=HSXN32(GDINDX)%DNCG32
-          DNCL32=HSXN32(GDINDX)%DNCL32
-          LLOC32=HSXN32(GDINDX)%LLOC32
-          LGLO32=HSXN32(GDINDX)%LGLO32
-          NTOT32=HSXN32(GDINDX)%NTOT32
-          NM32=HSXN32(GDINDX)%NM32
-          NCAL32=HSXN32(GDINDX)%NCAL32
-          NCA132=HSXN32(GDINDX)%NCA132
-          NCA232=HSXN32(GDINDX)%NCA232
-          IBIM32=HSXN32(GDINDX)%IBIM32
-          JCOR32=HSXN32(GDINDX)%JCOR32
-          XX32=HSXN32(GDINDX)%XX32
-          NDO32=HSXN32(GDINDX)%NDO32
+          WRITE(6,*) 'HSXN32(GDINDX)%T32GMA',HSXN32(GDINDX)%T32GMA
+          WRITE(6,*) 'HSXN32(GDINDX)%T32MAX(1)',HSXN32(GDINDX)%T32MAX(1)
+          WRITE(6,*) 'HSXN32(GDINDX)%GOLD32',HSXN32(GDINDX)%GOLD32
+          WRITE(6,*) 'HSXN32(GDINDX)%FFGO32',HSXN32(GDINDX)%FFGO32
+          WRITE(6,*) 'HSXN32(GDINDX)%FFLO32',HSXN32(GDINDX)%FFLO32
+          WRITE(6,*) 'HSXN32(GDINDX)%DNCG32',HSXN32(GDINDX)%DNCG32
+          WRITE(6,*) 'HSXN32(GDINDX)%DNCL32',HSXN32(GDINDX)%DNCL32
+          WRITE(6,*) 'HSXN32(GDINDX)%LLOC32',HSXN32(GDINDX)%LLOC32
+          WRITE(6,*) 'HSXN32(GDINDX)%LGLO32',HSXN32(GDINDX)%LGLO32
+          WRITE(6,*) 'HSXN32(GDINDX)%NTOT32',HSXN32(GDINDX)%NTOT32
+          WRITE(6,*) 'HSXN32(GDINDX)%NM32(1)',HSXN32(GDINDX)%NM32(1)
+          WRITE(6,*) 'HSXN32(GDINDX)%NCAL32',HSXN32(GDINDX)%NCAL32
+          WRITE(6,*) 'HSXN32(GDINDX)%NCA132',HSXN32(GDINDX)%NCA132
+          WRITE(6,*) 'HSXN32(GDINDX)%NCA232',HSXN32(GDINDX)%NCA232
+          WRITE(6,*) 'HSXN32(GDINDX)%IBIM32',HSXN32(GDINDX)%IBIM32
+          WRITE(6,*) 'HSXN32(GDINDX)%JCOR32',HSXN32(GDINDX)%JCOR32
+          WRITE(6,*) 'HSXN32(GDINDX)%XX32(1,1)',HSXN32(GDINDX)%XX32(1,1)
+          WRITE(6,*) 'HSXN32(GDINDX)%NDO32',HSXN32(GDINDX)%NDO32
           WRITE(LUNOUT,*) 'FSR'
           CALL HSGENM(HSTSK2,NCHN32,NDIM32,NEV3NC,ICONTI(7),
-     &                T32GMA,T32MAX,
-     &                GOLD32,FFGO32,FFLO32,DNCG32,DNCL32,LLOC32,LGLO32,
-     &                NTOT32,NM32,NCAL32,NCA132,NCA232,IBIM32,JCOR32,
-     &                XX32,NDO32,NBIN32,NREG32)
+     &                HSXN32(GDINDX)%T32GMA,HSXN32(GDINDX)%T32MAX,
+     &                GOLD32,FFGO32,
+     &                HSXN32(GDINDX)%FFLO32,HSXN32(GDINDX)%DNCG32,
+     &                HSXN32(GDINDX)%DNCL32,HSXN32(GDINDX)%LLOC32,
+     &                HSXN32(GDINDX)%LGLO32,
+     &                NTOT32,NM32,
+     &                HSXN32(GDINDX)%NCAL32,HSXN32(GDINDX)%NCA132,
+     &                HSXN32(GDINDX)%NCA232,HSXN32(GDINDX)%IBIM32,
+     &                HSXN32(GDINDX)%JCOR32,
+     &                HSXN32(GDINDX)%XX32,HSXN32(GDINDX)%NDO32,
+     &                NBIN32,NREG32)
+          WRITE(LUNOUT,*) 'END FSR'
           GOTO 1010
 C---RADIATIVE EVENTS - NEUTRAL CURRENT / COMPTON CONTRIBUTION
   8     CONTINUE
@@ -3657,30 +3707,31 @@ C---RADIATIVE EVENTS - NEUTRAL CURRENT / COMPTON CONTRIBUTION
      *      WRITE(LUNTES,'(//A/A,5X,2I3,I8,2I4)')
      *           ' CALL HSGENM ',' NCHN33,NDIM33,NEV3NC,NDO33,NBIN33',
      *                             NCHN33,NDIM33,NEV3NC,NDO33,NBIN33
-          T33GMA=HSXN33(GDINDX)%T33GMA
-          T33GMA=HSXN33(GDINDX)%T33GMA
-          GOLD33=HSXN33(GDINDX)%GOLD33
-          FFGO33=HSXN33(GDINDX)%FFGO33
-          FFLO33=HSXN33(GDINDX)%FFLO33
-          DNCG33=HSXN33(GDINDX)%DNCG33
-          DNCL33=HSXN33(GDINDX)%DNCL33
-          LLOC33=HSXN33(GDINDX)%LLOC33
-          LGLO33=HSXN33(GDINDX)%LGLO33
-          NTOT33=HSXN33(GDINDX)%NTOT33
-          NM33=HSXN33(GDINDX)%NM33
-          NCAL33=HSXN33(GDINDX)%NCAL33
-          NCA133=HSXN33(GDINDX)%NCA133
-          NCA233=HSXN33(GDINDX)%NCA233
-          IBIM33=HSXN33(GDINDX)%IBIM33
-          JCOR33=HSXN33(GDINDX)%JCOR33
-          XX33=HSXN33(GDINDX)%XX33
-          NDO33=HSXN33(GDINDX)%NDO33
+          WRITE(6,*) 'HSXN33(GDINDX)%T33GMA',HSXN33(GDINDX)%T33GMA
+          WRITE(6,*) 'HSXN33(GDINDX)%T33MAX(1)',HSXN33(GDINDX)%T33MAX(1)
+          WRITE(6,*) 'HSXN33(GDINDX)%GOLD33',HSXN33(GDINDX)%GOLD33
+          WRITE(6,*) 'HSXN33(GDINDX)%FFGO33',HSXN33(GDINDX)%FFGO33
+          WRITE(6,*) 'HSXN33(GDINDX)%FFLO33',HSXN33(GDINDX)%FFLO33
+          WRITE(6,*) 'HSXN33(GDINDX)%DNCG33',HSXN33(GDINDX)%DNCG33
+          WRITE(6,*) 'HSXN33(GDINDX)%DNCL33',HSXN33(GDINDX)%DNCL33
+          WRITE(6,*) 'HSXN33(GDINDX)%LLOC33',HSXN33(GDINDX)%LLOC33
+          WRITE(6,*) 'HSXN33(GDINDX)%LGLO33',HSXN33(GDINDX)%LGLO33
+          WRITE(6,*) 'HSXN33(GDINDX)%NTOT33',HSXN33(GDINDX)%NTOT33
+          WRITE(6,*) 'HSXN33(GDINDX)%NM33(1)',HSXN33(GDINDX)%NM33(1)
+          WRITE(6,*) 'HSXN33(GDINDX)%NCAL33',HSXN33(GDINDX)%NCAL33
+          WRITE(6,*) 'HSXN33(GDINDX)%NCA133',HSXN33(GDINDX)%NCA133
+          WRITE(6,*) 'HSXN33(GDINDX)%NCA233',HSXN33(GDINDX)%NCA233
+          WRITE(6,*) 'HSXN33(GDINDX)%IBIM33',HSXN33(GDINDX)%IBIM33
+          WRITE(6,*) 'HSXN33(GDINDX)%JCOR33',HSXN33(GDINDX)%JCOR33
+          WRITE(6,*) 'HSXN33(GDINDX)%XX33(1,1)',HSXN33(GDINDX)%XX33(1,1)
+          WRITE(6,*) 'HSXN33(GDINDX)%NDO33',HSXN33(GDINDX)%NDO33
           WRITE(LUNOUT,*) 'COMPTON'
           CALL HSGENM(HSK1TS,NCHN33,NDIM33,NEV3NC,ICONTI(8),
      &                T33GMA,T33MAX,
      &                GOLD33,FFGO33,FFLO33,DNCG33,DNCL33,LLOC33,LGLO33,
      &                NTOT33,NM33,NCAL33,NCA133,NCA233,IBIM33,JCOR33,
      &                XX33,NDO33,NBIN33,NREG33)
+          WRITE(LUNOUT,*) 'END COMPTON'
           GOTO 1010
 C---RADIATIVE EVENTS - NEUTRAL CURRENT / QUARKONIC RADIATION
   9     CONTINUE
@@ -5672,14 +5723,13 @@ C      WRITE(455,*) '2.3.2'
             DD=XI(JJ,I)-XI(J,I)
          ENDIF
          Z(I)=XI(JJ,I)-DD*(1.-Y)
+         WRITE(123,*) 'Z(I)',Z(I)
          W=W*DD
 4     CONTINUE
 C
 C      WRITE(455,*) '2.3.3'
       FZ=F(Z)
-C      WRITE(455,*) '2.3.4'
       HSTRIT=W*FZ
-C      WRITE(455,*) '2.3.5'
 C
       IF(HSTRIT.LE.0D0.AND.IPRINT.GE.5) THEN
         WRITE(LUNOUT,'(A,5(1PE12.4)/15X,5(1PE12.4))')
@@ -5917,7 +5967,7 @@ C            DURING CORRECTION PROCEDURE FOR UNDERESTIMATED GLOBAL MAX.
 C
 C-----------------------------------------------------------------------
 
-      IF(IPRINT.GE.2) THEN
+      IF(IPRINT.GE.3) THEN
         WRITE(LUNTES,'(//A/A,5X,2I3,I8,I3,2(1PE13.6))')
      +     ' ENTRY HSGENM ',' NCONT,NDIM,NEVENT,ICONTI,FFMAX, GLAST',
      +                        NCONT,NDIM,NEVENT,ICONTI,FFMAX,GLAST
@@ -5931,6 +5981,8 @@ C-----------------------------------------------------------------------
       ENDIF
 
 C...Basic initialization
+      WRITE(6,*) 'FFMAX',FFMAX
+      WRITE(6,*) '1'
       NN=0
       NEV=0
       MEV1=0
@@ -5945,7 +5997,8 @@ C...information on trial numbers and corrections from previous runs
         DNCGLO=0D0
         DNCLOC=0D0
         JCOR=0
-        NTOT=0
+C...Remove here and put it somwhere else
+C        NTOT=0
         NCALL=0
         MCALL1=0
         MCALL2=0
@@ -5982,6 +6035,7 @@ C...Test whether last function value exceeds local/global maxima
       ENDIF
 
   100 CONTINUE
+      WRITE(6,*) '100'
 C...Entry after correctino procedures for local/global maxima
       LLOCAL=.FALSE.
       LGLOB=.FALSE.
@@ -5989,11 +6043,15 @@ C...Entry after correctino procedures for local/global maxima
       DNCLOC=0D0
 
   110 CONTINUE
+C      WRITE(6,*) '110'
 C...Unrestricted event sampling
       NTOT=NTOT + 1
       NN=NN + 1
       J=HSRNDM(-1)*FLOAT(NREG) + 1D0
+C      WRITE(6,*) 'FFMAX',FFMAX
+C      WRITE(6,*) 'HSRNDM(-1)',HSRNDM(-1)
       Y=HSRNDM(-1)*FFMAX
+C      WRITE(6,*) 'Y',Y
       NM(J)=NM(J)+1
 C...Rejection on the basis of estimated local maxima
       IF(Y.GT.FMAX(J)) GOTO 110
@@ -6004,12 +6062,17 @@ C...Rejection on the basis of estimated local maxima
         X(K)=(HSRNDM(-1)+N(K))*AMI
         JJ=JJJ
  10   CONTINUE
+C      WRITE(6,*) '10'
+      WRITE(6,*) 'HSTRIT', HSTRIT(F,X,NDIM,NCONT,XI,NDO)
       G=HSTRIT(F,X,NDIM,NCONT,XI,NDO)
       NCALL=NCALL + 1
+      WRITE(6,*) 'Y',Y
+      WRITE(6,*) 'G',G
 C...Rejection on the basis of actual function value
       IF (Y.GE.G) GOTO 110
 
 C...Event accepted
+      WRITE(6,*) '2'
       CALL HSACPT(NCONT)
       NEV=NEV + 1
       IF(NEV.GE.NEVENT) THEN
@@ -6024,6 +6087,7 @@ C...Entry for restart with continued sampling. No further correction
 C...from previous runs necessary: test the last function value
 C...evaluated in the prevsious runs.
  190  CONTINUE
+      WRITE(6,*) '190'
       IF (G.LE.FMAX(J)) GOTO 110
       JCOR=J
 
@@ -6042,6 +6106,7 @@ C...Correction for global maximum later at 300
       GLOMAX=FFMAX
 
  200  CONTINUE
+      WRITE(6,*) '200'
 C...Entry for correction loop with continued correction of maximum
       IF(G.GT.GLOMAX) THEN
 C...New local maximum larger than current global one
@@ -6059,6 +6124,7 @@ C...New value smaller than global maximum
       ENDIF
 
  201  CONTINUE
+      WRITE(6,*) '201'
       IF(IPRINT.GE.4) THEN
         WRITE(LUNTES,'(/A,I2/A,I5,A,2(1PD14.5))')
      &       ' HSGENM / NCONT=', NCONT,
@@ -6068,6 +6134,7 @@ C...New value smaller than global maximum
       FMAX(JCOR)=G
 
  210  CONTINUE
+      WRITE(6,*) '210'
 C...Entry for correction loop without continued correction of the
 C...local maximum
       IF(DNCLOC.LT.1D0) THEN
@@ -6082,6 +6149,7 @@ C...local maximum
       DO 211 K=1,NDIM
         X(K)=(HSRNDM(-1)+N(K))*AMI
  211  CONTINUE
+      WRITE(6,*) '211'
       G=HSTRIT(F,X,NDIM,NCONT,XI,NDO)
       MCALL1=MCALL1 + 1
       NCALL=NCALL+1
@@ -6125,6 +6193,7 @@ C...Entry for restart with continued sampling / correction for wrong
 C...local maximum to be continued: test the function value from the
 C...previous run
  290  CONTINUE
+      WRITE(6,*) '290'
       IF (G.LE.FMAX(JCOR)) THEN
         GOTO 210
       ELSE
@@ -6134,12 +6203,14 @@ C...could become global one
       ENDIF
 
  300  CONTINUE
+      WRITE(6,*) '300'
       IF (.NOT.LGLOB) GOTO 100
 C...Correction for underestimation of global maximum
       IBIMAX=JCOR
       NTOLD=NTOT
 
  320  CONTINUE
+      WRITE(6,*) '320'
 C...Entry if repeated correction of global maximum is necessary
       DNCGLO=DNCGLO + NTOLD*(GLOMAX-FFMAX)/FFMOLD
       IF(IPRINT.GE.3) THEN
@@ -6169,6 +6240,7 @@ C...Entry if repeated correction of global maximum is necessary
       FMAX(JCOR)=GLOMAX
 
  310  CONTINUE
+      WRITE(6,*) '310'
       IF(DNCGLO.LT.1D0) THEN
         IF(HSRNDM(-1).GT.DNCGLO) THEN
           DNCGLO=0D0
@@ -6214,6 +6286,7 @@ C...Entry for restart with continued sampling / correction of wrong
 C...global maximum to be continued: Test the function value of the
 C...previous run
  390  CONTINUE
+      WRITE(6,*) '390'
       IF (G.GT.FFMAX) THEN
         GLOMAX=G
         GOTO 320
@@ -6222,6 +6295,7 @@ C...previous run
       ENDIF
 
  400  CONTINUE
+      WRITE(6,*) '400'
       GLAST=G
 
       IF(IPRINT.GE.3) THEN
@@ -13571,8 +13645,9 @@ C...Quark part.
         ACCUR=PARL(11)
         IT=0
   100   IT=IT+1
-        NTOT=0
-        NPASS=0
+C... NTOT+NPASS
+C        NTOT=0
+C        NPASS=0
         EPS=ACCUR
         CALL GADAP(X,1.,FLQINT,EPS,FLQ)
         IF(FLQ.LT.1) THEN
@@ -13584,8 +13659,9 @@ C...Gluon part.
         ACCUR=PARL(11)
         IT=0
   200   IT=IT+1
-        NTOT=0
-        NPASS=0
+C... NTOT+NPASS
+C        NTOT=0
+C        NPASS=0
         EPS=ACCUR
         CALL GADAP(X,1.,FLGINT,EPS,FLG)
         IF(FLG.LT.1.) THEN
@@ -13599,8 +13675,9 @@ C...Target mass  part.
         ACCUR=PARL(11)
         IT=0
   300   IT=IT+1
-        NTOT=0
-        NPASS=0
+C... NTOT+NPASS
+C        NTOT=0
+C        NPASS=0
         EPS=ACCUR
         CALL GADAP(X,1.,FLTINT,EPS,FLM)
         IF(FLM.LT.1) THEN
@@ -13727,8 +13804,9 @@ C...FL from QCD, quark and gluon contributions.
         ACCUR=PARL(11)
         IT=0
   100   IT=IT+1
-        NTOT=0
-        NPASS=0
+C... NTOT+NPASS
+C        NTOT=0
+C        NPASS=0
         EPS=ACCUR
         CALL GADAP(X,1.,FLQINT,EPS,CFLQ)
         IF(CFLQ.LT.1) THEN
@@ -13738,8 +13816,9 @@ C...FL from QCD, quark and gluon contributions.
         ACCUR=PARL(11)
         IT=0
   200   IT=IT+1
-        NTOT=0
-        NPASS=0
+C... NTOT+NPASS
+C        NTOT=0
+C        NPASS=0
         EPS=ACCUR
         CALL GADAP(X,1.,FLGINT,EPS,CFLG)
         IF(CFLG.LT.1.) THEN
@@ -13751,8 +13830,9 @@ C...FL from QCD, quark and gluon contributions.
         ACCUR=PARL(11)
         IT=0
   300   IT=IT+1
-        NTOT=0
-        NPASS=0
+C... NTOT+NPASS
+C        NTOT=0
+C        NPASS=0
         EPS=ACCUR
         CALL GADAP(X,1.,FLTINT,EPS,CFLM)
         IF(CFLM.LT.1.) THEN

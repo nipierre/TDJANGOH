@@ -563,9 +563,9 @@ C...Calculate weights if 1st order QCD requested.
       ENDIF
 
 C...Reset counters
-      NFAILL=0
-      NPASS=0
-      NTOT=0
+C      NFAILL=0
+C      NPASS=0
+C      NTOT=0
 C...Reset counters to zero for Monte Carlo estimate of cross section.
       LST(32)=0
       RETURN
