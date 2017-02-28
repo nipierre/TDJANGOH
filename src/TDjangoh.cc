@@ -507,7 +507,7 @@ void TDjangoh::Initialize(const char *beam, int nuc_A, int nuc_Z, float beam_e, 
   // GD-OPT
   hsgrid_.gdmean=160.0;
   hsgrid_.gdsddv=20.0;
-  hsgrid_.gdsize=2;
+  hsgrid_.gdsize=1;
 
   // INT-OPT-NC
   hsintnc_.inc2 = 1;
