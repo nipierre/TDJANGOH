@@ -212,9 +212,9 @@ public:
   */
   void             Configure(const char *beam, int nuc_A, int nuc_Z, float beam_e, float nuc_e, float pol=0);
   /*!
-  * \brief Generates the Grid of cross-section
+  * \brief Print a recap of the generation made
   */
-  void             Generate_XSectionGrid();
+  void             EndRecap();
   /*!
   * \brief Import particles from lujets_ subroutine and copy it in TClonesArray*
   * \param particles : Array of particles

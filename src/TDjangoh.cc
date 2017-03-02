@@ -42,6 +42,11 @@ extern "C"
   void hsegen_();
 }
 
+extern "C"
+{
+  void hsrcap_();
+}
+
 extern "C" struct ihscw
 {
   char inputcodewd[46][10];
@@ -341,6 +346,12 @@ void TDjangoh::GenerateEvent()
   // fLudat2 = &ludat2_;
   fDjkin = &djkin_;
   ImportParticles();
+}
+
+
+void TDjangoh::EndRecap()
+{
+  hsrcap_();
 }
 
 

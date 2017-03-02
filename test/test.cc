@@ -58,5 +58,7 @@ int main()
     cout << "Xbj : " << x << " y : " << y << " Q2 : " << Q2 << "\n\n" << endl;
   }
 
+  tDjangoh->EndRecap();
+
   return 0;
 }

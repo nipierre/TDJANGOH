@@ -82,8 +82,8 @@ C...Initialization of user action
  100  CONTINUE
 C-----------------------------------------------------------------------
 C...initialize event
-      DO 13 I=-6,6
-   13  IFLCNT(I)=0
+C      DO 13 I=-6,6
+C   13  IFLCNT(I)=0
 C...initialize hbook
 C      CALL HLIMIT(NWPAWC)
 C      Q2MNL=DLOG10(Q2MIN)
