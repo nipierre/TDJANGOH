@@ -12,7 +12,6 @@ int main()
   float x;
   float y;
   float Q2;
-  float eele[4] = {145.0,161.0,148.0,160.5};
 
   cout << "Instance creation.." << endl;
   tDjangoh = new TDjangoh();
@@ -22,10 +21,10 @@ int main()
   tDjangoh->Initialize("mu-", 1.0, 1.0, 160.0, 0.0);
   cout << "Initialized !" << endl;
 
-  for(int i=0; i<1000000; i++)
+  for(int i=0; i<1000; i++)
   {
 
-    tDjangoh->Configure("mu-", 1.0, 1.0, eele[i%4], 0.0);
+    tDjangoh->Configure("mu-", 1.0, 1.0, 140+rand()%40, 0.0);
 
     cout << "\n\nEvent Generation (N°" << i << ").." << endl;
     tDjangoh->GenerateEvent();
