@@ -26,6 +26,7 @@
 TDjangoh*  TDjangoh::fgInstance = 0;
 
 # define type_of_call _stdcall
+# define VERSION 1.0
 
 Lujets_t lujets_;
 // Ludat1_t ludat1_;
@@ -305,6 +306,22 @@ TDjangoh::TDjangoh() : TGenerator("TDjangoh","TDjangoh")
   if (fgInstance)
      Fatal("TDjangoh", "There's already an instance of TDjangoh");
 
+
+  // LOGO display.
+  cout
+  << "\n\n\n"
+  << "          *//---------------------------------------------------------------------------------------//* "
+  << "         *// ___________ _____  ___________ _______ _____       ___ _______   _______   ___   ___  //* "
+  << "        *// /____    __/  __  \/____   ___/  ___   |     |     /  /*******/  /*******\ /  /  /**/ //* "
+  << "       *//      /  /  /  /  \  \   /  /  /  /   |  | /|  |    /  /*/        /**/   \**\  /__/**/ //* "
+  << "      *//      /  /  /  /   /  /  /  /  /  /____|  |/ |  |   /  /*/    ____/**/     \**\___ **/ //* "
+  << "     *//      /  /  /  /   /  /  /  /  /  ______   |  |  |  /  /\**\  |****\**\     /**/  /**/ //* "
+  << "    *//      /  /  /  /___/  /  /  /  /  /      |  |  |  | /  /  \**\___/**/\**\___/**/  ___  //* "
+  << "   *//      /__/  /_________/_____/  /__/       |__|  |_____/     \*******/  \*******/  /**/ //*"
+  << "  *//------------------------------------------------------------------------------ v. " << VERSION << " -//*"
+  << " *//----- TDjangoh : An Interface to Djangoh ----- N. PIERRE, nicolas.pierre@cern.ch ------//*"
+  << "*//---------------------------------------------------------------------------------------//*\n\n\n"
+
   delete fParticles;
 
   fParticles = new TClonesArray("TMCParticle",50);
@@ -457,8 +474,8 @@ void TDjangoh::Initialize(const char *beam, int nuc_A, int nuc_Z, float beam_e, 
   else
   {
      printf("WARNING! In TDjangoh:Initialize():\n");
-     printf(" specified beam=%s is unrecognized .\n",beam);
-     printf(" resetting to \"e+\" .");
+     printf("Specified beam=%s is unrecognized .\n",beam);
+     printf("Resetting to \"e+\" .");
      PID = 11;
   }
 
@@ -661,8 +678,8 @@ void TDjangoh::Configure(const char *beam, int nuc_A, int nuc_Z, float beam_e, f
   else
   {
      printf("WARNING! In TDjangoh:Initialize():\n");
-     printf(" specified beam=%s is unrecognized .\n",beam);
-     printf(" resetting to \"e+\" .");
+     printf("Specified beam = %s is unrecognized .\n",beam);
+     printf("Resetting to \"e+\" .");
      PID = 11;
   }
 
