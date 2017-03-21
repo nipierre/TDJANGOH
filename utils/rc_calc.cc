@@ -48,6 +48,14 @@ int main(int argc,char *argv[])
 
   TGraph* rc_g[5];
 
+  for(int i=0;i<5;i++)
+  {
+	for(int j=0;j<9;j++)
+ 	{
+		re[i][j] = 0; born[i][j]=0;
+	}
+   }
+
   ifstream revt(argv[1]);
 
   while(revt >> dummy)
@@ -88,7 +96,7 @@ int main(int argc,char *argv[])
     }
 
     if(xflag && yflag)
-      rc[yi][xi]++;
+      re[yi][xi]++;
   }
 
   revt.close();
@@ -133,7 +141,7 @@ int main(int argc,char *argv[])
     }
 
     if(xflag && yflag)
-      rc[yi][xi]++;
+      born[yi][xi]++;
   }
 
   bevt.close();
@@ -144,7 +152,10 @@ int main(int argc,char *argv[])
   {
     for(int j=0;j<9;j++)
     {
-      rc[i][j] = double(born[i][j])/double(re[i][j]);
+      if(re[i][j])
+	rc[i][j] = double(born[i][j])/double(re[i][j]);
+      else
+	rc[i][j] = 0;
     }
     rc_g[i] = new TGraph(9,xtab,rc[i]);
 
@@ -153,9 +164,49 @@ int main(int argc,char *argv[])
     rc_g[i]->GetYaxis()->SetTitle("RC");
     rc_g[i]->GetYaxis()->SetTitleOffset(1.5);
     rc_g[i]->SetTitle(Form("RC @ %f < y < %f",ytab[i],ytab[i+1]));
-    rc_g[i]->Draw();
+    rc_g[i]->SetMarkerStyle(22);
+    rc_g[i]->SetMarkerColor(601);
+    rc_g[i]->SetMarkerSize(3);
+    rc_g[i]->GetYaxis()->SetRangeUser(0.,1.3);
+    rc_g[i]->Draw("AP");
     c1.Update();
   }
+
+  cout << "x/y";
+
+  for(int i=0;i<5;i++)
+    cout << "\t" << ytab[i];
+
+  cout << endl;
+
+  for(int j=0;j<9;j++)
+  {
+    cout << xtab[j];
+    for(int i=0;i<5;i++)
+    {
+      cout << "\t" << born[i][j];
+    }
+    cout << endl;
+  }
+
+  cout << "x/y";
+
+  for(int i=0;i<5;i++)
+    cout << "\t" << ytab[i];
+
+  cout << endl;
+
+  for(int j=0;j<9;j++)
+  {
+    cout << xtab[j];
+    for(int i=0;i<5;i++)
+    {
+      cout << "\t" << re[i][j];
+    }
+    cout << endl;
+  }
+
+  outfile << setprecision(5);
 
   outfile << "x/y";
 
