@@ -26,7 +26,8 @@
 TDjangoh*  TDjangoh::fgInstance = 0;
 
 # define type_of_call _stdcall
-# define VERSION 1.0
+# define VERSION 1
+# define SUBVERSION 0
 
 Lujets_t lujets_;
 // Ludat1_t ludat1_;
@@ -310,17 +311,17 @@ TDjangoh::TDjangoh() : TGenerator("TDjangoh","TDjangoh")
   // LOGO display.
   cout
   << "\n\n\n"
-  << "          *//---------------------------------------------------------------------------------------//*\n"
-  << "         *// ___________ _____  ___________ _______ _____      ___ _______   _______   ___   ___  //*\n"
-  << "        *// /____    __/  __  \/____   ___/  ___   |     |    /  /*******/  /*******\ /  /  /**/ //*\n"
-  << "       *//      /  /  /  /  |  \   /  /  /  /   |  | /|  |   /  /*/        /**/   \**\  /__/**/ //*\n"
-  << "      *//      /  /  /  /   /  /  /  /  /  /____|  |/ |  |  /  /*/    ____/**/     \**\___ **/ //*\n"
-  << "     *//      /  /  /  /   /  /  /  /  /  ______   |  |  | /  /\**\  |****\**\     /**/  /**/ //*\n"
-  << "    *//      /  /  /  /___/  /__/  /  /  /      |  |  |  |/  /  \**\___/**/\**\___/**/  ___  //*\n"
-  << "   *//      /__/  /_________/_____/  /__/       |__|  |_____/    \*******/  \*******/  /**/ //*\n"
-  << "  *//----------------------------------------------------------------------------- v. " << VERSION << " -//*\n"
-  << " *//----- TDjangoh : An Interface to Djangoh ----- N. PIERRE, nicolas.pierre@cern.ch -----//*\n"
-  << "*//--------------------------------------------------------------------------------------//*\n\n\n";
+  << "             *//---------------------------------------------------------------------------------------//*\n"
+  << "            *// ___________ _____  ___________ _______ _____      ___ _______   _______   ___   ___  //*\n"
+  << "           *// /____    __/  __  \\/____   ___/  ___   |     |    /  /*******/  /*******\\ /  /  /**/ //*\n"
+  << "          *//      /  /  /  /  \\  \\   /  /  /  /   |  | /|  |   /  /*/        /**/   \\**\\  /__/**/ //*\n"
+  << "         *//      /  /  /  /   /  /  /  /  /  /____|  |/ |  |  /  /*/    ____/**/     \\**\\___ **/ //*\n"
+  << "        *//      /  /  /  /   /  /  /  /  /  ______   |  |  | /  /\\**\\  |****\\**\\     /**/  /**/ //*\n"
+  << "       *//      /  /  /  /___/  /__/  /  /  /      |  |  |  |/  /  \\**\\___/**/\\**\\___/**/  ___  //*\n"
+  << "      *//      /__/  /_________/_____/  /__/       |__|  |_____/    \\*******/  \\*******/  /**/ //*\n"
+  << "     *//----------------------------------------------------------------------------- v. " << VERSION << "." << SUBVERSION << " -//*\n"
+  << "    *//----- TDjangoh : An Interface to Djangoh ----- N. PIERRE, nicolas.pierre@cern.ch -----//*\n"
+  << "   *//--------------------------------------------------------------------------------------//*\n\n\n";
 
   delete fParticles;
 
@@ -521,10 +522,10 @@ void TDjangoh::Initialize(const char *beam, int nuc_A, int nuc_Z, float beam_e, 
 
   // KINEM-CUTS
   hsoptn_.icut = 3;
-  ihscut_.ixmin = 0.0001;
-  ihscut_.ixmax = 1.00;
-  ihscut_.iymin = 0.01;
-  ihscut_.iymax = 0.95;
+  ihscut_.ixmin = 0.004;
+  ihscut_.ixmax = 0.4;
+  ihscut_.iymin = 0.1;
+  ihscut_.iymax = 0.7;
   ihscut_.iq2min = 1.0;
   ihscut_.iq2max = 1e5;
   ihscut_.iwmin = 1.40;
@@ -539,9 +540,9 @@ void TDjangoh::Initialize(const char *beam, int nuc_A, int nuc_Z, float beam_e, 
 
   // INT-OPT-NC
   hsintnc_.inc2 = 1;
-  hsintnc_.inc31 = 18;
-  hsintnc_.inc32 = 18;
-  hsintnc_.inc33 = 18;
+  hsintnc_.inc31 = 0;
+  hsintnc_.inc32 = 0;
+  hsintnc_.inc33 = 0;
   hsintnc_.inc34 = 0;
   hsintnc_.iel2 = 0;
   hsintnc_.iel31 = 0;
@@ -584,9 +585,9 @@ void TDjangoh::Initialize(const char *beam, int nuc_A, int nuc_Z, float beam_e, 
 
   // SAM-OPT-NC
   hssamnc_.isnc2 = 1;
-  hssamnc_.isnc31 = 1;
-  hssamnc_.isnc32 = 1;
-  hssamnc_.isnc33 = 1;
+  hssamnc_.isnc31 = 0;
+  hssamnc_.isnc32 = 0;
+  hssamnc_.isnc33 = 0;
   hssamnc_.isnc34 = 0;
   hssamnc_.isel2 = 0;
   hssamnc_.isel31 = 0;

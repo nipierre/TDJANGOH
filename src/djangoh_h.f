@@ -340,7 +340,7 @@ C   see code word OUTFILENAM
       ITCW=0
       NTOT=0
       NPASS=0
-      VERBOZ=1
+      VERBOZ=0
 
 C---PRINT THE TITLE
       WRITE(6,9)
@@ -939,12 +939,10 @@ C***********************************************************************
       IF(VERBOZ.EQ.1) THEN
         WRITE(LUNOUT,'(5X,A,A)')    ' OUTFILENAM=',OUTFILENAM
         WRITE(6,'(5X,A)') '***** All output is redirected to file '
-        WRITE(6,'(5X,A,A)') 'OUTFILENAM = ',
-     *                      OUTFILENAM(1:ICH)//'_out.dat'
+        WRITE(6,'(5X,A,A)') OUTFILENAM(1:ICH)//'_out.dat'
         WRITE(6,'(5X,A)') '***** from now on '
       ENDIF
       OPEN(LUNOUT,FILE=OUTFILENAM(1:ICH)//'_out.dat',STATUS='REPLACE')
-C...Open files when reading input is finished
       GOTO 1
  2600 CONTINUE
 C
@@ -1097,7 +1095,7 @@ C***********************************************************************
         WRITE(LUNOUT,'(5X,A,3X,I5)')
      +               ' ISAM3(12) = ',ISAM3(12)
       ENDIF
-C
+
 C---Now we can open output files
       OPEN(LUNDAT,FILE=OUTFILENAM(1:ICH)//'_smp.dat',STATUS='REPLACE',
      *     FORM='UNFORMATTED')
@@ -1136,18 +1134,18 @@ C 3902   CONTINUE
 
 C 3998   CONTINUE
 C
-        INTEST=0
-        DO 3903 I=1,15
-          IF(INT3(I).GT.100.AND.INT3C(I).EQ.0) INTEST=1
- 3903   CONTINUE
-        IF(INTEST.EQ.1) THEN
-          WRITE(LUNOUT,'(A/A,15I4/A,15I4/A)')
+      INTEST=0
+      DO 3903 I=1,15
+        IF(INT3(I).GT.100.AND.INT3C(I).EQ.0) INTEST=1
+ 3903 CONTINUE
+      IF(INTEST.EQ.1) THEN
+        WRITE(LUNOUT,'(A/A,15I4/A,15I4/A)')
      &        ' *** INCONSISTENT INPUT DATA FOR INTEGRATION (INT3) ***',
      &        ' *** INT3(I) : ',INT3,
      &        ' *** INT3C(I): ',INT3C,
      &        ' *** EXECUTION STOPPED ***'
-          STOP
-        ENDIF
+        STOP
+      ENDIF
 C      ENDIF
 
 
@@ -5841,7 +5839,6 @@ C      WRITE(455,*) '2.3.2'
             DD=XI(JJ,I)-XI(J,I)
          ENDIF
          Z(I)=XI(JJ,I)-DD*(1.-Y)
-         WRITE(123,*) 'Z(I)',Z(I)
          W=W*DD
 4     CONTINUE
 C
