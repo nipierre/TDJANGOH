@@ -7,7 +7,7 @@ ROOTVERSION = -D ROOT5
 all: pdist rc_calc
 
 pdist:: pdist.cc
-	$(CX) $(CCFLAGS) $(ROOTFLAGS) $(ROOTVERSION) -o $@ $<
+	$(CX) $(CCFLAGS) $(ROOTFLAGS) $(ROOTVERSION) -o $@ $< 
 	mv pdist ../bin
 
 rc_calc:: rc_calc.cc
@@ -16,3 +16,4 @@ rc_calc:: rc_calc.cc
 
 clean:
 	rm -rf *.o
+
