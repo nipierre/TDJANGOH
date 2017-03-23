@@ -12,6 +12,7 @@
 #include <TGraph.h>
 #include <TArrow.h>
 #include <TAxis.h>
+#include <TLine.h>
 #include <vector>
 #include <math.h>
 
@@ -146,6 +147,8 @@ int main(int argc,char *argv[])
 
   bevt.close();
 
+  TLine l(0,1,0.2,1);
+
   ofstream outfile(OUTFILE);
 
   for(int i=0;i<5;i++)
@@ -169,6 +172,7 @@ int main(int argc,char *argv[])
     rc_g[i]->SetMarkerSize(3);
     rc_g[i]->GetYaxis()->SetRangeUser(0.,1.3);
     rc_g[i]->Draw("AP");
+    l.Draw("SAME");
     c1.Update();
   }
 
