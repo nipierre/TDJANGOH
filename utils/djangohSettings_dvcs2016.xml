@@ -21,7 +21,6 @@
 
 <!-- GSW-PARAM -->
 <Codeword name="GSW-PARAM">
-  <Data>
     <Data name="lparin1" value="2"/>
     <Data name="lparin2" value="1"/>
     <Data name="lparin3" value="3"/>

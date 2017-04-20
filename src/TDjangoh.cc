@@ -524,11 +524,11 @@ void TDjangoh::Initialize(const string pFilename)
     std::string cCWType = cCodeWord.attribute ( "name" ).value();
     if(!strcmp(cCWType.c_str(), "EL-BEAM" ))
     {
-      cout << "Codeword : EL-BEAM" << endl;
+      cout << "\nCodeword : EL-BEAM" << endl;
       for(pugi::xml_node cData = cCodeWord.child ( "Data" ); cData; cData = cData.next_sibling())
       {
         if(std::string(cData.attribute("name").value()) == "polari")
-          {hsparm_.polari = cData.attribute("value").as_double();cout<<"polari : "<<hsparm_.polari<<endl;}
+          {hsparm_.polari = cData.attribute("value").as_double();cout<<"polari : "<<hsparm_.polari<<"\t";}
         else if(std::string(cData.attribute("name").value()) == "beam")
         {
           cout<<"beam : "<<cData.attribute("value").value()<<endl;
@@ -551,23 +551,23 @@ void TDjangoh::Initialize(const string pFilename)
 
     if(!strcmp(cCWType.c_str(), "KINEM-CUTS" ))
     {
-      cout << "Codeword : KINEM-CUTS" << endl;
+      cout << "\nCodeword : KINEM-CUTS" << endl;
       for(pugi::xml_node cData = cCodeWord.child ( "Data" ); cData; cData = cData.next_sibling())
       {
         if(std::string(cData.attribute("name").value()) == "icut")
-          {hsoptn_.icut = cData.attribute("value").as_int();cout<<"icut : "<<hsoptn_.icut<<endl;}
+          {hsoptn_.icut = cData.attribute("value").as_int();cout<<"icut : "<<hsoptn_.icut<<"\t";}
         else if(std::string(cData.attribute("name").value()) == "ixmin")
-          {ihscut_.ixmin = cData.attribute("value").as_double();;cout<<"xmin : "<<ihscut_.ixmin<<endl;}
+          {ihscut_.ixmin = cData.attribute("value").as_double();;cout<<"xmin : "<<ihscut_.ixmin<<"\t";}
         else if(std::string(cData.attribute("name").value()) == "ixmax")
-          {ihscut_.ixmax = cData.attribute("value").as_double();;cout<<"xmax : "<<ihscut_.ixmax<<endl;}
+          {ihscut_.ixmax = cData.attribute("value").as_double();;cout<<"xmax : "<<ihscut_.ixmax<<"\t";}
         else if(std::string(cData.attribute("name").value()) == "iymin")
           {ihscut_.iymin = cData.attribute("value").as_double();;cout<<"ymin : "<<ihscut_.iymin<<endl;}
         else if(std::string(cData.attribute("name").value()) == "iymax")
-          {ihscut_.iymax = cData.attribute("value").as_double();;cout<<"ymax : "<<ihscut_.iymax<<endl;}
+          {ihscut_.iymax = cData.attribute("value").as_double();;cout<<"ymax : "<<ihscut_.iymax<<"\t";}
         else if(std::string(cData.attribute("name").value()) == "iq2min")
-          {ihscut_.iq2min = cData.attribute("value").as_double();;cout<<"q2min : "<<ihscut_.iq2min<<endl;}
+          {ihscut_.iq2min = cData.attribute("value").as_double();;cout<<"q2min : "<<ihscut_.iq2min<<"\t";}
         else if(std::string(cData.attribute("name").value()) == "iq2max")
-          {ihscut_.iq2max = cData.attribute("value").as_double();;cout<<"q2max : "<<ihscut_.iq2max<<endl;}
+          {ihscut_.iq2max = cData.attribute("value").as_double();;cout<<"q2max : "<<ihscut_.iq2max<<"\t";}
         else if(std::string(cData.attribute("name").value()) == "iwmin")
           {ihscut_.iwmin = cData.attribute("value").as_double();;cout<<"wmin : "<<ihscut_.iwmin<<endl;}
       }
@@ -575,13 +575,13 @@ void TDjangoh::Initialize(const string pFilename)
 
     if(!strcmp(cCWType.c_str(), "GD-OPT" ))
     {
-      cout << "Codeword : GD-OPT" << endl;
+      cout << "\nCodeword : GD-OPT" << endl;
       for(pugi::xml_node cData = cCodeWord.child ( "Data" ); cData; cData = cData.next_sibling())
       {
         if(std::string(cData.attribute("name").value()) == "gdmean")
-          {hsgrid_.gdmean = cData.attribute("value").as_double();cout<<"gdmean : "<<hsgrid_.gdmean<<endl;}
+          {hsgrid_.gdmean = cData.attribute("value").as_double();cout<<"gdmean : "<<hsgrid_.gdmean<<"\t";}
         else if(std::string(cData.attribute("name").value()) == "gdsddv")
-          {hsgrid_.gdsddv = cData.attribute("value").as_double();cout<<"gdsddv : "<<hsgrid_.gdsddv<<endl;}
+          {hsgrid_.gdsddv = cData.attribute("value").as_double();cout<<"gdsddv : "<<hsgrid_.gdsddv<<"\t";}
         else if(std::string(cData.attribute("name").value()) == "gdsize")
           {hsgrid_.gdsize = cData.attribute("value").as_int();cout<<"gdsize : "<<hsgrid_.gdsize<<endl;}
       }
@@ -589,309 +589,309 @@ void TDjangoh::Initialize(const string pFilename)
 
     if(!strcmp(cCWType.c_str(), "GSW-PARAM" ))
     {
-      cout << "Codeword : GSW-PARAM" << endl;
+      cout << "\nCodeword : GSW-PARAM" << endl;
       for(pugi::xml_node cData = cCodeWord.child ( "Data" ); cData; cData = cData.next_sibling())
       {
         if(std::string(cData.attribute("name").value()) == "lparin1")
-          {hsparl_.lparin[0] = cData.attribute("value").as_int();cout<<"gdmean : "<<hsparl_.lparin[0]<<endl;}
+          {hsparl_.lparin[0] = cData.attribute("value").as_int();cout<<"lparin[1] : "<<hsparl_.lparin[0]<<"\t";}
         else if(std::string(cData.attribute("name").value()) == "lparin2")
-          {hsparl_.lparin[1] = cData.attribute("value").as_int();cout<<"gdmean : "<<hsparl_.lparin[1]<<endl;}
+          {hsparl_.lparin[1] = cData.attribute("value").as_int();cout<<"lparin[2] : "<<hsparl_.lparin[1]<<"\t";}
         else if(std::string(cData.attribute("name").value()) == "lparin3")
-          {hsparl_.lparin[2] = cData.attribute("value").as_int();cout<<"gdmean : "<<hsparl_.lparin[2]<<endl;}
+          {hsparl_.lparin[2] = cData.attribute("value").as_int();cout<<"lparin[3] : "<<hsparl_.lparin[2]<<"\t";}
         else if(std::string(cData.attribute("name").value()) == "lparin4")
-          {hsparl_.lparin[3] = cData.attribute("value").as_int();cout<<"gdmean : "<<hsparl_.lparin[3]<<endl;}
+          {hsparl_.lparin[3] = cData.attribute("value").as_int();cout<<"lparin[4] : "<<hsparl_.lparin[3]<<"\t";}
         else if(std::string(cData.attribute("name").value()) == "lparin5")
-          {hsparl_.lparin[4] = cData.attribute("value").as_int();cout<<"gdmean : "<<hsparl_.lparin[4]<<endl;}
+          {hsparl_.lparin[4] = cData.attribute("value").as_int();cout<<"lparin[5] : "<<hsparl_.lparin[4]<<"\t";}
         else if(std::string(cData.attribute("name").value()) == "lparin6")
-          {hsparl_.lparin[5] = cData.attribute("value").as_int();cout<<"gdmean : "<<hsparl_.lparin[5]<<endl;}
+          {hsparl_.lparin[5] = cData.attribute("value").as_int();cout<<"lparin[6] : "<<hsparl_.lparin[5]<<endl;}
         else if(std::string(cData.attribute("name").value()) == "lparin7")
-          {hsparl_.lparin[6] = cData.attribute("value").as_int();cout<<"gdmean : "<<hsparl_.lparin[6]<<endl;}
+          {hsparl_.lparin[6] = cData.attribute("value").as_int();cout<<"lparin[7] : "<<hsparl_.lparin[6]<<"\t";}
         else if(std::string(cData.attribute("name").value()) == "lparin8")
-          {hsparl_.lparin[7] = cData.attribute("value").as_int();cout<<"gdmean : "<<hsparl_.lparin[7]<<endl;}
+          {hsparl_.lparin[7] = cData.attribute("value").as_int();cout<<"lparin[8] : "<<hsparl_.lparin[7]<<"\t";}
         else if(std::string(cData.attribute("name").value()) == "lparin9")
-          {hsparl_.lparin[8] = cData.attribute("value").as_int();cout<<"gdmean : "<<hsparl_.lparin[8]<<endl;}
+          {hsparl_.lparin[8] = cData.attribute("value").as_int();cout<<"lparin[9] : "<<hsparl_.lparin[8]<<"\t";}
         else if(std::string(cData.attribute("name").value()) == "lparin10")
-          {hsparl_.lparin[9] = cData.attribute("value").as_int();cout<<"gdmean : "<<hsparl_.lparin[9]<<endl;}
+          {hsparl_.lparin[9] = cData.attribute("value").as_int();cout<<"lparin[10] : "<<hsparl_.lparin[9]<<"\t";}
         else if(std::string(cData.attribute("name").value()) == "lparin11")
-          {hsparl_.lparin[10] = cData.attribute("value").as_int();cout<<"gdmean : "<<hsparl_.lparin[10]<<endl;}
+          {hsparl_.lparin[10] = cData.attribute("value").as_int();cout<<"lparin[11] : "<<hsparl_.lparin[10]<<endl;}
       }
     }
 
     if(!strcmp(cCWType.c_str(), "EGAM-MIN" ))
     {
-      cout << "Codeword : EGAM-MIN" << endl;
+      cout << "\nCodeword : EGAM-MIN" << endl;
       for(pugi::xml_node cData = cCodeWord.child ( "Data" ); cData; cData = cData.next_sibling())
       {
         if(std::string(cData.attribute("name").value()) == "egam")
-          {hsirct_.egmin = cData.attribute("value").as_double();cout<<"gdmean : "<<hsirct_.egmin<<endl;}
+          {hsirct_.egmin = cData.attribute("value").as_double();cout<<"egmin : "<<hsirct_.egmin<<endl;}
       }
     }
 
     if(!strcmp(cCWType.c_str(), "INT-OPT-NC" ))
     {
-      cout << "Codeword : INT-OPT-NC" << endl;
+      cout << "\nCodeword : INT-OPT-NC" << endl;
       for(pugi::xml_node cData = cCodeWord.child ( "Data" ); cData; cData = cData.next_sibling())
       {
         if(std::string(cData.attribute("name").value()) == "inc2")
-          {hsintnc_.inc2 = cData.attribute("value").as_int();cout<<"gdmean : "<<hsintnc_.inc2<<endl;}
+          {hsintnc_.inc2 = cData.attribute("value").as_int();cout<<"inc2 : "<<hsintnc_.inc2<<"\t";}
         else if(std::string(cData.attribute("name").value()) == "inc31")
-          {hsintnc_.inc31 = cData.attribute("value").as_int();cout<<"gdmean : "<<hsintnc_.inc31<<endl;}
+          {hsintnc_.inc31 = cData.attribute("value").as_int();cout<<"inc31 : "<<hsintnc_.inc31<<"\t";}
         else if(std::string(cData.attribute("name").value()) == "inc32")
-          {hsintnc_.inc32 = cData.attribute("value").as_int();cout<<"gdmean : "<<hsintnc_.inc32<<endl;}
+          {hsintnc_.inc32 = cData.attribute("value").as_int();cout<<"inc32 : "<<hsintnc_.inc32<<"\t";}
         else if(std::string(cData.attribute("name").value()) == "inc33")
-          {hsintnc_.inc33 = cData.attribute("value").as_int();cout<<"gdmean : "<<hsintnc_.inc33<<endl;}
+          {hsintnc_.inc33 = cData.attribute("value").as_int();cout<<"inc33 : "<<hsintnc_.inc33<<"\t";}
         else if(std::string(cData.attribute("name").value()) == "inc34")
-          {hsintnc_.inc34 = cData.attribute("value").as_int();cout<<"gdmean : "<<hsintnc_.inc34<<endl;}
+          {hsintnc_.inc34 = cData.attribute("value").as_int();cout<<"inc34 : "<<hsintnc_.inc34<<endl;}
         else if(std::string(cData.attribute("name").value()) == "iel2")
-          {hsintnc_.iel2 = cData.attribute("value").as_int();cout<<"gdmean : "<<hsintnc_.iel2<<endl;}
+          {hsintnc_.iel2 = cData.attribute("value").as_int();cout<<"iel2 : "<<hsintnc_.iel2<<"\t";}
         else if(std::string(cData.attribute("name").value()) == "iel31")
-          {hsintnc_.iel31 = cData.attribute("value").as_int();cout<<"gdmean : "<<hsintnc_.iel31<<endl;}
+          {hsintnc_.iel31 = cData.attribute("value").as_int();cout<<"iel31 : "<<hsintnc_.iel31<<"\t";}
         else if(std::string(cData.attribute("name").value()) == "iel32")
-          {hsintnc_.iel32 = cData.attribute("value").as_int();cout<<"gdmean : "<<hsintnc_.iel32<<endl;}
+          {hsintnc_.iel32 = cData.attribute("value").as_int();cout<<"iel32 : "<<hsintnc_.iel32<<"\t";}
         else if(std::string(cData.attribute("name").value()) == "iel33")
-          {hsintnc_.iel33 = cData.attribute("value").as_int();cout<<"gdmean : "<<hsintnc_.iel33<<endl;}
+          {hsintnc_.iel33 = cData.attribute("value").as_int();cout<<"iel33 : "<<hsintnc_.iel33<<endl;}
       }
     }
 
     if(!strcmp(cCWType.c_str(), "INT-OPT-CC" ))
     {
-      cout << "Codeword : INT-OPT-CC" << endl;
+      cout << "\nCodeword : INT-OPT-CC" << endl;
       for(pugi::xml_node cData = cCodeWord.child ( "Data" ); cData; cData = cData.next_sibling())
       {
         if(std::string(cData.attribute("name").value()) == "icc2")
-          {hsintcc_.icc2 = cData.attribute("value").as_int();cout<<"icc2 : "<<hsintcc_.icc2<<endl;}
+          {hsintcc_.icc2 = cData.attribute("value").as_int();cout<<"icc2 : "<<hsintcc_.icc2<<"\t";}
         else if(std::string(cData.attribute("name").value()) == "icc31")
-          {hsintcc_.icc31 = cData.attribute("value").as_int();cout<<"icc31 : "<<hsintcc_.icc31<<endl;}
+          {hsintcc_.icc31 = cData.attribute("value").as_int();cout<<"icc31 : "<<hsintcc_.icc31<<"\t";}
         else if(std::string(cData.attribute("name").value()) == "icc32")
-          {hsintcc_.icc32 = cData.attribute("value").as_int();cout<<"gdmean : "<<hsintcc_.icc32<<endl;}
+          {hsintcc_.icc32 = cData.attribute("value").as_int();cout<<"icc32 : "<<hsintcc_.icc32<<"\t";}
         else if(std::string(cData.attribute("name").value()) == "icc33")
-          {hsintcc_.icc33 = cData.attribute("value").as_int();cout<<"gdmean : "<<hsintcc_.icc33<<endl;}
+          {hsintcc_.icc33 = cData.attribute("value").as_int();cout<<"icc33 : "<<hsintcc_.icc33<<endl;}
       }
     }
 
     if(!strcmp(cCWType.c_str(), "INT-ONLY" ))
     {
-      cout << "Codeword : INT-ONLY" << endl;
+      cout << "\nCodeword : INT-ONLY" << endl;
       for(pugi::xml_node cData = cCodeWord.child ( "Data" ); cData; cData = cData.next_sibling())
       {
         if(std::string(cData.attribute("name").value()) == "ioplot")
-          {hsoptn_.ioplot = cData.attribute("value").as_int();cout<<"gdmean : "<<hsoptn_.ioplot<<endl;}
+          {hsoptn_.ioplot = cData.attribute("value").as_int();cout<<"ioplot : "<<hsoptn_.ioplot<<endl;}
       }
     }
 
     if(!strcmp(cCWType.c_str(), "INT-POINTS" ))
     {
-      cout << "Codeword : INT-POINTS" << endl;
+      cout << "\nCodeword : INT-POINTS" << endl;
       for(pugi::xml_node cData = cCodeWord.child ( "Data" ); cData; cData = cData.next_sibling())
       {
         if(std::string(cData.attribute("name").value()) == "npoveg")
-          {hsvglp_.npoveg = cData.attribute("value").as_int();cout<<"gdmean : "<<hsvglp_.npoveg<<endl;}
+          {hsvglp_.npoveg = cData.attribute("value").as_int();cout<<"npoveg : "<<hsvglp_.npoveg<<endl;}
       }
     }
 
     if(!strcmp(cCWType.c_str(), "SAM-OPT-NC" ))
     {
-      cout << "Codeword : SAM-OPT-NC" << endl;
+      cout << "\nCodeword : SAM-OPT-NC" << endl;
       for(pugi::xml_node cData = cCodeWord.child ( "Data" ); cData; cData = cData.next_sibling())
       {
         if(std::string(cData.attribute("name").value()) == "isnc2")
-          {hssamnc_.isnc2 = cData.attribute("value").as_int();cout<<"gdmean : "<<hssamnc_.isnc2<<endl;}
+          {hssamnc_.isnc2 = cData.attribute("value").as_int();cout<<"isnc2 : "<<hssamnc_.isnc2<<"\t";}
         else if(std::string(cData.attribute("name").value()) == "isnc31")
-          {hssamnc_.isnc31 = cData.attribute("value").as_int();cout<<"gdmean : "<<hssamnc_.isnc31<<endl;}
+          {hssamnc_.isnc31 = cData.attribute("value").as_int();cout<<"isnc31 : "<<hssamnc_.isnc31<<"\t";}
         else if(std::string(cData.attribute("name").value()) == "isnc32")
-          {hssamnc_.isnc32 = cData.attribute("value").as_int();cout<<"gdmean : "<<hssamnc_.isnc32<<endl;}
+          {hssamnc_.isnc32 = cData.attribute("value").as_int();cout<<"isnc32 : "<<hssamnc_.isnc32<<"\t";}
         else if(std::string(cData.attribute("name").value()) == "isnc33")
-          {hssamnc_.isnc33 = cData.attribute("value").as_int();cout<<"gdmean : "<<hssamnc_.isnc33<<endl;}
+          {hssamnc_.isnc33 = cData.attribute("value").as_int();cout<<"isnc33 : "<<hssamnc_.isnc33<<"\t";}
         else if(std::string(cData.attribute("name").value()) == "isnc34")
-          {hssamnc_.isnc34 = cData.attribute("value").as_int();cout<<"gdmean : "<<hssamnc_.isnc34<<endl;}
+          {hssamnc_.isnc34 = cData.attribute("value").as_int();cout<<"isnc34 : "<<hssamnc_.isnc34<<endl;}
         else if(std::string(cData.attribute("name").value()) == "isel2")
-          {hssamnc_.isel2 = cData.attribute("value").as_int();cout<<"gdmean : "<<hssamnc_.isel2<<endl;}
+          {hssamnc_.isel2 = cData.attribute("value").as_int();cout<<"isel2 : "<<hssamnc_.isel2<<"\t";}
         else if(std::string(cData.attribute("name").value()) == "isel31")
-          {hssamnc_.isel31 = cData.attribute("value").as_int();cout<<"gdmean : "<<hssamnc_.isel31<<endl;}
+          {hssamnc_.isel31 = cData.attribute("value").as_int();cout<<"isel31 : "<<hssamnc_.isel31<<"\t";}
         else if(std::string(cData.attribute("name").value()) == "isel32")
-          {hssamnc_.isel32 = cData.attribute("value").as_int();cout<<"gdmean : "<<hssamnc_.isel32<<endl;}
+          {hssamnc_.isel32 = cData.attribute("value").as_int();cout<<"isel33 : "<<hssamnc_.isel32<<"\t";}
         else if(std::string(cData.attribute("name").value()) == "isel33")
-          {hssamnc_.isel33 = cData.attribute("value").as_int();cout<<"gdmean : "<<hssamnc_.isel33<<endl;}
+          {hssamnc_.isel33 = cData.attribute("value").as_int();cout<<"isel34 : "<<hssamnc_.isel33<<endl;}
       }
     }
 
     if(!strcmp(cCWType.c_str(), "SAM-OPT-CC" ))
     {
-      cout << "Codeword : SAM-OPT-CC" << endl;
+      cout << "\nCodeword : SAM-OPT-CC" << endl;
       for(pugi::xml_node cData = cCodeWord.child ( "Data" ); cData; cData = cData.next_sibling())
       {
         if(std::string(cData.attribute("name").value()) == "iscc2")
-          {hssamcc_.iscc2 = cData.attribute("value").as_int();cout<<"gdmean : "<<hssamcc_.iscc2<<endl;}
+          {hssamcc_.iscc2 = cData.attribute("value").as_int();cout<<"iscc2 : "<<hssamcc_.iscc2<<"\t";}
         else if(std::string(cData.attribute("name").value()) == "iscc31")
-          {hssamcc_.iscc31 = cData.attribute("value").as_int();cout<<"gdmean : "<<hssamcc_.iscc31<<endl;}
+          {hssamcc_.iscc31 = cData.attribute("value").as_int();cout<<"iscc31 : "<<hssamcc_.iscc31<<"\t";}
         else if(std::string(cData.attribute("name").value()) == "iscc32")
-          {hssamcc_.iscc32 = cData.attribute("value").as_int();cout<<"gdmean : "<<hssamcc_.iscc32<<endl;}
+          {hssamcc_.iscc32 = cData.attribute("value").as_int();cout<<"iscc32 : "<<hssamcc_.iscc32<<"\t";}
         else if(std::string(cData.attribute("name").value()) == "iscc33")
-          {hssamcc_.iscc33 = cData.attribute("value").as_int();cout<<"gdmean : "<<hssamcc_.iscc33<<endl;}
+          {hssamcc_.iscc33 = cData.attribute("value").as_int();cout<<"iscc33 : "<<hssamcc_.iscc33<<endl;}
       }
     }
 
     if(!strcmp(cCWType.c_str(), "NUCLEUS" ))
     {
-      cout << "Codeword : NUCLEUS" << endl;
+      cout << "\nCodeword : NUCLEUS" << endl;
       for(pugi::xml_node cData = cCodeWord.child ( "Data" ); cData; cData = cData.next_sibling())
       {
         if(std::string(cData.attribute("name").value()) == "epro")
-          {hselab_.epro = cData.attribute("value").as_double();cout<<"gdmean : "<<hselab_.epro<<endl;}
+          {hselab_.epro = cData.attribute("value").as_double();cout<<"epro : "<<hselab_.epro<<"\t";}
         else if(std::string(cData.attribute("name").value()) == "hpolar")
-          {hsparm_.hpolar = cData.attribute("value").as_double();cout<<"gdmean : "<<hsparm_.hpolar<<endl;}
+          {hsparm_.hpolar = cData.attribute("value").as_double();cout<<"hpolar : "<<hsparm_.hpolar<<"\t";}
         else if(std::string(cData.attribute("name").value()) == "hna")
-          {hsnucl_.hna = cData.attribute("value").as_int();cout<<"gdmean : "<<hsnucl_.hna<<endl;}
+          {hsnucl_.hna = cData.attribute("value").as_int();cout<<"hna : "<<hsnucl_.hna<<"\t";}
         else if(std::string(cData.attribute("name").value()) == "hnz")
-          {hsnucl_.hnz = cData.attribute("value").as_int();cout<<"gdmean : "<<hsnucl_.hnz<<endl;}
+          {hsnucl_.hnz = cData.attribute("value").as_int();cout<<"hnz : "<<hsnucl_.hnz<<endl;}
       }
     }
 
     if(!strcmp(cCWType.c_str(), "STRUCTFUNC" ))
     {
-      cout << "Codeword : STRUCTFUNC" << endl;
+      cout << "\nCodeword : STRUCTFUNC" << endl;
       for(pugi::xml_node cData = cCodeWord.child ( "Data" ); cData; cData = cData.next_sibling())
       {
         if(std::string(cData.attribute("name").value()) == "ilqmod")
-          hsstrp_.ilqmod = cData.attribute("value").as_int();
+          {hsstrp_.ilqmod = cData.attribute("value").as_int();cout<<"ilqmod : "<<hsstrp_.ilqmod<<"\t";}
         else if(std::string(cData.attribute("name").value()) == "ilib")
-          hsstrp_.ilib = cData.attribute("value").as_int();
+          {hsstrp_.ilib = cData.attribute("value").as_int();cout<<"ilib : "<<hsstrp_.ilib<<"\t";}
         else if(std::string(cData.attribute("name").value()) == "icode")
-          hsstrp_.icode = cData.attribute("value").as_int();
+          {hsstrp_.icode = cData.attribute("value").as_int();cout<<"icode : "<<hsstrp_.icode<<endl;}
       }
     }
 
     if(!strcmp(cCWType.c_str(), "FLONG" ))
     {
-      cout << "Codeword : FLONG" << endl;
+      cout << "\nCodeword : FLONG" << endl;
       for(pugi::xml_node cData = cCodeWord.child ( "Data" ); cData; cData = cData.next_sibling())
       {
         if(std::string(cData.attribute("name").value()) == "iflopt")
-          hspdfo_.iflopt = cData.attribute("value").as_int();
+          {hspdfo_.iflopt = cData.attribute("value").as_int();cout<<"iflopt : "<<hspdfo_.iflopt<<"\t";}
         else if(std::string(cData.attribute("name").value()) == "parl11")
-          hsalfs_.parl11 = cData.attribute("value").as_double();
+          {hsalfs_.parl11 = cData.attribute("value").as_double();cout<<"parl11 : "<<hsalfs_.parl11<<"\t";}
         else if(std::string(cData.attribute("name").value()) == "parl19")
-          hsalfs_.parl19 = cData.attribute("value").as_double();
+          {hsalfs_.parl19 = cData.attribute("value").as_double();cout<<"parl19 : "<<hsalfs_.parl19<<endl;}
       }
     }
 
     if(!strcmp(cCWType.c_str(), "ALFAS" ))
     {
-      cout << "Codeword : ALFAS" << endl;
+      cout << "\nCodeword : ALFAS" << endl;
       for(pugi::xml_node cData = cCodeWord.child ( "Data" ); cData; cData = cData.next_sibling())
       {
         if(std::string(cData.attribute("name").value()) == "mst111")
-          hsalfs_.mst111 = cData.attribute("value").as_int();
+          {hsalfs_.mst111 = cData.attribute("value").as_int();cout<<"mst111 : "<<hsalfs_.mst111<<"\t";}
         else if(std::string(cData.attribute("name").value()) == "mst115")
-          hsalfs_.mst115 = cData.attribute("value").as_int();
+          {hsalfs_.mst115 = cData.attribute("value").as_int();cout<<"mst115 : "<<hsalfs_.mst115<<"\t";}
         else if(std::string(cData.attribute("name").value()) == "par111")
-          hsalfs_.par111 = cData.attribute("value").as_double();
+          {hsalfs_.par111 = cData.attribute("value").as_double();cout<<"par111 : "<<hsalfs_.par111<<"\t";}
         else if(std::string(cData.attribute("name").value()) == "par112")
-          hsalfs_.par112 = cData.attribute("value").as_double();
+          {hsalfs_.par112 = cData.attribute("value").as_double();cout<<"par112 : "<<hsalfs_.par112<<endl;}
       }
     }
 
     if(!strcmp(cCWType.c_str(), "NFLAVORS" ))
     {
-      cout << "Codeword : NFLAVORS" << endl;
+      cout <<"\nCodeword : NFLAVORS" << endl;
       for(pugi::xml_node cData = cCodeWord.child ( "Data" ); cData; cData = cData.next_sibling())
       {
         if(std::string(cData.attribute("name").value()) == "npymin")
-          hystfu_.npymin = cData.attribute("value").as_int();
+          {hystfu_.npymin = cData.attribute("value").as_int();cout<<"npymin : "<<hystfu_.npymin<<"\t";}
         else if(std::string(cData.attribute("name").value()) == "npymax")
-          hystfu_.npymax = cData.attribute("value").as_int();
+          {hystfu_.npymax = cData.attribute("value").as_int();cout<<"npymax : "<<hystfu_.npymax<<endl;}
       }
     }
 
     if(!strcmp(cCWType.c_str(), "RNDM-SEEDS" ))
     {
-      cout << "Codeword : RNDM-SEEDS" << endl;
+      cout << "\nCodeword : RNDM-SEEDS" << endl;
       for(pugi::xml_node cData = cCodeWord.child ( "Data" ); cData; cData = cData.next_sibling())
       {
         if(std::string(cData.attribute("name").value()) == "isdinp")
-          hsrdio_.isdinp = cData.attribute("value").as_int();
+          {hsrdio_.isdinp = cData.attribute("value").as_int();cout<<"isdinp : "<<hsrdio_.isdinp<<"\t";}
         else if(std::string(cData.attribute("name").value()) == "isdout")
-          hsrdio_.isdout = cData.attribute("value").as_int();
+          {hsrdio_.isdout = cData.attribute("value").as_int();cout<<"isdout : "<<hsrdio_.isdout<<endl;}
       }
     }
 
     if(!strcmp(cCWType.c_str(), "SOPHIA" ))
     {
-      cout << "Codeword : SOPHIA" << endl;
+      cout << "\nCodeword : SOPHIA" << endl;
       for(pugi::xml_node cData = cCodeWord.child ( "Data" ); cData; cData = cData.next_sibling())
       {
         if(std::string(cData.attribute("name").value()) == "wsophia")
-          sophct_.wsophia = cData.attribute("value").as_double();
+          {sophct_.wsophia = cData.attribute("value").as_double();cout<<"wsophia : "<<sophct_.wsophia<<endl;}
       }
     }
 
     if(!strcmp(cCWType.c_str(), "OUT-LEP" ))
     {
-      cout << "Codeword : OUT-LEP" << endl;
+      cout << "\nCodeword : OUT-LEP" << endl;
       for(pugi::xml_node cData = cCodeWord.child ( "Data" ); cData; cData = cData.next_sibling())
       {
         if(std::string(cData.attribute("name").value()) == "lst4")
-          hslptu_.hslst[4] = cData.attribute("value").as_int();
+          {hslptu_.hslst[4] = cData.attribute("value").as_int();cout<<"lst4 : "<<hslptu_.hslst[4]<<endl;}
       }
     }
 
     if(!strcmp(cCWType.c_str(), "FRAME" ))
     {
-      cout << "Codeword : FRAME" << endl;
+      cout << "\nCodeword : FRAME" << endl;
       for(pugi::xml_node cData = cCodeWord.child ( "Data" ); cData; cData = cData.next_sibling())
       {
         if(std::string(cData.attribute("name").value()) == "lst5")
-          hslptu_.hslst[5] = cData.attribute("value").as_int();
+          {hslptu_.hslst[5] = cData.attribute("value").as_int();cout<<"lst5 : "<<hslptu_.hslst[5]<<endl;}
       }
     }
 
     if(!strcmp(cCWType.c_str(), "FRAG" ))
     {
-      cout << "Codeword : FRAG" << endl;
+      cout << "\nCodeword : FRAG" << endl;
       for(pugi::xml_node cData = cCodeWord.child ( "Data" ); cData; cData = cData.next_sibling())
       {
         if(std::string(cData.attribute("name").value()) == "lst7")
-          hslptu_.hslst[7] = cData.attribute("value").as_int();
+          {hslptu_.hslst[7] = cData.attribute("value").as_int();cout<<"lst7 : "<<hslptu_.hslst[7]<<endl;}
       }
     }
 
     if(!strcmp(cCWType.c_str(), "CASCADES" ))
     {
-      cout << "Codeword : CASCADES" << endl;
+      cout << "\nCodeword : CASCADES" << endl;
       for(pugi::xml_node cData = cCodeWord.child ( "Data" ); cData; cData = cData.next_sibling())
       {
         if(std::string(cData.attribute("name").value()) == "lst8")
-          hslptu_.hslst[8] = cData.attribute("value").as_int();
+          {hslptu_.hslst[8] = cData.attribute("value").as_int();cout<<"lst8 : "<<hslptu_.hslst[8]<<endl;}
       }
     }
 
     if(!strcmp(cCWType.c_str(), "MAX-VIRT" ))
     {
-      cout << "Codeword : MAX-VIRT" << endl;
+      cout << "\nCodeword : MAX-VIRT" << endl;
       for(pugi::xml_node cData = cCodeWord.child ( "Data" ); cData; cData = cData.next_sibling())
       {
         if(std::string(cData.attribute("name").value()) == "lst9")
-          hslptu_.hslst[9] = cData.attribute("value").as_int();
+          {hslptu_.hslst[9] = cData.attribute("value").as_int();cout<<"lst7 : "<<hslptu_.hslst[9]<<endl;}
       }
     }
 
     if(!strcmp(cCWType.c_str(), "BARYON" ))
     {
-      cout << "Codeword : BARYON" << endl;
+      cout << "\nCodeword : BARYON" << endl;
       for(pugi::xml_node cData = cCodeWord.child ( "Data" ); cData; cData = cData.next_sibling())
       {
         if(std::string(cData.attribute("name").value()) == "lst14")
-          hslptu_.hslst[14] = cData.attribute("value").as_int();
+          {hslptu_.hslst[14] = cData.attribute("value").as_int();cout<<"lst14 : "<<hslptu_.hslst[14]<<endl;}
       }
     }
 
     if(!strcmp(cCWType.c_str(), "KT-PARTON" ))
     {
-      cout << "Codeword :KT-PARTON" << endl;
+      cout << "\nCodeword :KT-PARTON" << endl;
       for(pugi::xml_node cData = cCodeWord.child ( "Data" ); cData; cData = cData.next_sibling())
       {
         if(std::string(cData.attribute("name").value()) == "parl3")
-          hslptu_.hsparl[3] = cData.attribute("value").as_double();
+          {hslptu_.hsparl[3] = cData.attribute("value").as_double();cout<<"parl3 : "<<hslptu_.hsparl[3]<<endl;}
       }
     }
   }
@@ -1039,13 +1039,13 @@ void TDjangoh::Initialize(const string pFilename)
 
   // INT-ONLY
   hsoptn_.ioplot = 0;
-
+*/
   // START
   hsnume_.nevent = 1;
 
   // DEBUG_MODE
   isdebug_.isdbg = 1;
-*/
+
   hsinpt_();
 
   cout << ">>> TDJANGOH message : <<<" << endl;
