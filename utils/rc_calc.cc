@@ -10,6 +10,7 @@
 #include <TBranch.h>
 #include <TLeaf.h>
 #include <TGraph.h>
+#include <TGraphErrors.h>
 #include <TArrow.h>
 #include <TAxis.h>
 #include <TLine.h>
@@ -26,28 +27,44 @@ using namespace std;
 int main(int argc,char *argv[])
 {
 
-  if(argc != 3)
+  if(argc != 4)
   {
     cout << "ERROR : Wrong number of arguments" << endl;
-    cout << "Expected 3, received " << argc << " !" << endl;
-    cout << "USAGE : \n ./rc all_process_file born_file" << endl;
+    cout << "Expected 4, received " << argc << " !" << endl;
+    cout << "USAGE : \n ./rc_calc all_process_file born_file rc_table_file" << endl;
     return 1;
   }
 
   double dummy, x, y, Q2, xhad, yhad, Q2had;
+  string sdum;
   int id;
 
   double xtab[10] = {.004,.01,.02,.03,.04,.06,.1,.14,.18,.4};
+  double xmid[9] = {.007,.015,.025,.035,.05,.08,.12,.16,.29};
   double ytab[6] = {.1,.15,.20,.30,.50,.70};
+  double xtable[30] = {.000050,.000070,.000100,.000200,.000300,.000500,
+                       .000700,.001000,.002000,.004000,.006000,.008000,
+                       .010000,.013000,.016000,.020000,.030000,.040000,
+                       .060000,.080000,.100000,.150000,.200000,.300000,
+                       .400000,.500000,.600000,.700000,.800000,.900000};
+  double ytable[19] = {.050000,.100000,.150000,.200000,.250000,.300000,
+                       .350000,.400000,.450000,.500000,.550000,.600000,
+                       .650000,.700000,.750000,.800000,.850000,.900000,
+                       .950000};
+  int y_xch[6] = {1,2,3,5,9,13};
 
   double rc[5][9];
+  double rc_e[5][9];
+  double rc_table[19][30];
   int re[5][9];
   int born[5][9];
 
   TCanvas c1("RC_xy","RC_xy",3200,1600);
   c1.Divide(3,2);
 
-  TGraph* rc_g[5];
+  TGraphErrors* rc_g[5];
+  TGraph* rct_g_u[5];
+  TGraph* rct_g_d[5];
 
   for(int i=0;i<5;i++)
   {
@@ -79,7 +96,7 @@ int main(int argc,char *argv[])
 
     for(int i=1; i<10; i++)
     {
-      if(xhad < xtab[i])
+      if(xtab[i-1] < xhad && xhad < xtab[i])
       {
         xi = i-1;
         xflag = 1;
@@ -88,7 +105,7 @@ int main(int argc,char *argv[])
     }
     for(int i=1; i<6; i++)
     {
-      if(yhad < ytab[i])
+      if(ytab[i-1] < yhad && yhad < ytab[i])
       {
         yi = i-1;
         yflag = 1;
@@ -124,7 +141,7 @@ int main(int argc,char *argv[])
 
     for(int i=1; i<10; i++)
     {
-      if(x < xtab[i])
+      if(xtab[i-1] < x && x < xtab[i])
       {
         xi = i-1;
         xflag = 1;
@@ -133,7 +150,7 @@ int main(int argc,char *argv[])
     }
     for(int i=1; i<6; i++)
     {
-      if(y < ytab[i])
+      if(ytab[i-1] < y && y < ytab[i])
       {
         yi = i-1;
         yflag = 1;
@@ -147,7 +164,26 @@ int main(int argc,char *argv[])
 
   bevt.close();
 
-  TLine l(0,1,0.2,1);
+  ifstream table(argv[3]);
+  for(int i=0; i<19; i++)
+  {
+    for(int j=0; j<5; j++)
+    {
+      table >> sdum;
+      cout << sdum << "\t";
+
+      for(int k=0; k<6; k++)
+      {
+        table >> rc_table[i][k+j*6] >> sdum;
+        cout << " " << rc_table[i][k+j*6] << sdum;
+      }
+
+      cout << endl;
+    }
+  }
+  table.close();
+
+  TLine l(0,1,0.32,1);
 
   ofstream outfile(OUTFILE);
 
@@ -155,12 +191,21 @@ int main(int argc,char *argv[])
   {
     for(int j=0;j<9;j++)
     {
-      if(re[i][j])
-	rc[i][j] = double(born[i][j])/double(re[i][j]);
+      if(born[i][j] && re[i][j])
+      {
+	      rc[i][j] = double(born[i][j])/double(re[i][j]);
+        rc_e[i][j] = double(1/sqrt(born[i][j]))+double(1/sqrt(re[i][j]));
+        cout << "rc_e[i][j] = " << rc_e[i][j] << endl;
+      }
       else
-	rc[i][j] = 0;
+      {
+	      rc[i][j] = 0;
+        rc_e[i][j] = 0;
+      }
     }
-    rc_g[i] = new TGraph(9,xtab,rc[i]);
+    rc_g[i] = new TGraphErrors(9,xmid,rc[i],0,rc_e[i]);
+    rct_g_u[i] = new TGraph(30,xtable,rc_table[y_xch[i+1]]);
+    rct_g_d[i] = new TGraph(30,xtable,rc_table[y_xch[i]]);
 
     c1.cd(i+1);
     rc_g[i]->GetXaxis()->SetTitle("x_{Bj}");
@@ -171,7 +216,14 @@ int main(int argc,char *argv[])
     rc_g[i]->SetMarkerColor(601);
     rc_g[i]->SetMarkerSize(3);
     rc_g[i]->GetYaxis()->SetRangeUser(0.,1.3);
-    rc_g[i]->Draw("AP");
+    rc_g[i]->SetFillColor(601);
+    rc_g[i]->SetFillStyle(3001);
+    rc_g[i]->Draw("A3");
+    rc_g[i]->Draw("P");
+    rct_g_u[i]->SetLineColor(3);
+    rct_g_d[i]->SetLineColor(2);
+    rct_g_u[i]->Draw("SAME");
+    rct_g_d[i]->Draw("SAME");
     l.Draw("SAME");
     c1.Update();
   }

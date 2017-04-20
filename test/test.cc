@@ -13,7 +13,7 @@ using namespace std;
 
 void printProgress (int event, int total)
 {
-    string points[4] = {"   ",".  ",".. ","..."};
+    string points[6] = {"   ",".  ",".. ","..."," ..","  ."};
     double percentage = double(event)/double(total);
     int val = (int) (percentage * 100);
     int lpad = (int) (percentage * PBWIDTH);
@@ -35,14 +35,14 @@ int main()
   cout << "Instance created !" << endl;
 
   cout << "Initialization.." << endl;
-  tDjangoh->Initialize("mu-", 1.0, 1.0, 160.0, 0.0);
+  tDjangoh->Initialize("utils/djangohsettings_dvcs2016.xml");
   cout << "Initialized !" << endl;
 
   cout << "\n\nEvents Generation (" << NEVENTS << " events).." << endl;
   for(int i=0; i<NEVENTS; i++)
   {
 
-    tDjangoh->Configure("mu-", 1.0, 1.0, 140+rand()%40, 0.0);
+    tDjangoh->Configure(160.0/*+rand()%40*/,0);
 
     printProgress (i+1,NEVENTS);
     tDjangoh->GenerateEvent();
@@ -78,7 +78,7 @@ int main()
 
   }
 
-  cout << "Events Generated !" << endl;
+  cout << "\n\nEvents Generated !" << endl;
 
   tDjangoh->EndRecap();
 

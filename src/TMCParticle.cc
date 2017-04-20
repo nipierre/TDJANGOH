@@ -11,7 +11,7 @@ which is done by interface class TDjangoh.
 */
 
 #include "../include/TMCParticle.h"
-#include "TPrimary.h"
+#include "../include/TPrimary.h"
 
 # define pyname PYNAME
 extern "C" void pyname(const Int_t &kf, const char *name, const Int_t len);

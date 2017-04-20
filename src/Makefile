@@ -1,5 +1,5 @@
 OBJSF						= TDjangoh.o TMCParticle.o djangoh_h.o djangoh_l.o djangoh_u.o djangoh_t.o \
-	sophia.o pythia-6.4.24.o jetset7409.o polpdf.o gmc_random.o lhaglue.o
+	sophia.o pythia-6.4.24.o jetset7409.o polpdf.o gmc_random.o lhaglue.o pugixml.o
 OBJSC						= TDjangoh.o TMCParticle.o
 CC              = gcc
 CXX             = g++
@@ -8,7 +8,7 @@ LHAPDF5_LIB=$(LHAPDF5)/lib
 CCFlags         = -g -O1 -fPIC -w
 FFFlags					= -fno-automatic
 ROOTFLAGS 	= `root-config --cflags`
-INCDIR		= -I`root-config --incdir`
+INCDIR		= -I`root-config --incdir` -I../include/
 LDFLAGS		= `root-config --libs --evelibs --glibs` -L$(LHAPDF5_LIB) -lLHAPDF -L/usr/lib/gcc/x86_64-redhat-linux/3.4.6/ -lg2c $(shell cernlib) -Wl,-lmathlib -lpacklib -lkernlib -Wl,-dy -lm -lnsl -lcrypt -ldl
 #DevFlags	=
 
@@ -20,6 +20,9 @@ libDjangoh: $(OBJSF)
 
 modules: xSectionModule.f90
 	$(GFF) -c xSectionModule.f90
+
+pugixml.o:
+	$(CC) $(CCFlags) $(ROOTFLAGS) $(INCDIR) -o pugixml.o -c pugixml.cpp $(LDFLAGS)
 
 TDjangoh.o: ../include/TDjangoh.h ../include/TDjangohCalls.h ../include/TMCParticle.h
 	$(CC) $(CCFlags) $(ROOTFLAGS) $(INCDIR) -o TDjangoh.o -c TDjangoh.cc $(LDFLAGS)

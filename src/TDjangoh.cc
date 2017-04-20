@@ -22,6 +22,7 @@
 #include "../include/TMCParticle.h"
 #include "TParticle.h"
 #include "TString.h"
+#include "pugixml.hpp"
 
 TDjangoh*  TDjangoh::fgInstance = 0;
 
@@ -29,9 +30,13 @@ TDjangoh*  TDjangoh::fgInstance = 0;
 # define VERSION 1
 # define SUBVERSION 0
 
+using namespace std;
+
+
+//******************************************************************************
+// Dumping of Fortran COMMON Blocks
+
 Lujets_t lujets_;
-// Ludat1_t ludat1_;
-// Ludat2_t ludat2_;
 Djkin_t djkin_;
 
 extern "C"
@@ -71,13 +76,13 @@ extern "C" struct hselab
 
 extern "C" struct ihscut
 {
-  float ixmin;
-  float ixmax;
-  float iq2min;
-  float iq2max;
-  float iymin;
-  float iymax;
-  float iwmin;
+  double ixmin;
+  double ixmax;
+  double iq2min;
+  double iq2max;
+  double iymin;
+  double iymax;
+  double iwmin;
 } ihscut_;
 
 extern "C" struct hstcut
@@ -160,10 +165,10 @@ extern "C" struct hsirct
 
 extern "C" struct hsalfs
 {
-  float par111;
-  float par112;
-  float parl11;
-  float parl19;
+  double par111;
+  double par112;
+  double parl11;
+  double parl19;
   int mst111;
   int mst115;
 } hsalfs_;
@@ -210,6 +215,12 @@ extern "C" struct hssamcc
   int iscc33;
 } hssamcc_;
 
+extern "C" struct hslptu
+{
+  int hslst[40];
+  double hsparl[30];
+} hslptu_;
+
 extern "C" struct hsrdio
 {
   int isdinp;
@@ -225,8 +236,8 @@ extern "C" struct hsvglp
 
 extern "C" struct hystfu
 {
-  float pystop;
-  float pyslam;
+  double pystop;
+  double pyslam;
   int npymax;
   int npymin;
 } hystfu_;
@@ -261,6 +272,11 @@ extern "C" struct hsgrid
   double gdscle;
 } hsgrid_;
 
+extern "C" struct sophct
+{
+  double wsophia;
+} sophct_;
+
 extern "C" struct lhapdfc
 {
   char lhapath[232];
@@ -271,8 +287,8 @@ extern "C" struct hsoutf
   char outfilenam[80];
 } hsoutf_;
 
-
-using namespace std;
+//******************************************************************************
+// Function to convert string to Fortran char
 
 void ConvertToFortran(char* fstring, std::size_t fstring_len,
                       const char* cstring)
@@ -289,6 +305,7 @@ void ConvertToFortran(char* fstring, std::size_t fstring_len,
     fill(fstring + cpylen, fstring + fstring_len, ' ');
 }
 
+//******************************************************************************
 
 TDjangoh::TDjangohCleaner::TDjangohCleaner() {}
 
@@ -306,7 +323,6 @@ TDjangoh::TDjangoh() : TGenerator("TDjangoh","TDjangoh")
 {
   if (fgInstance)
      Fatal("TDjangoh", "There's already an instance of TDjangoh");
-
 
   // LOGO display.
   cout
@@ -358,10 +374,7 @@ TDjangoh* TDjangoh::Instance()
 void TDjangoh::GenerateEvent()
 {
   hsegen_();
-  //cout << lujets_.N << endl;
   fLujets = &lujets_;
-  // fLudat1 = &ludat1_;
-  // fLudat2 = &ludat2_;
   fDjkin = &djkin_;
   ImportParticles();
 }
@@ -461,23 +474,21 @@ Int_t TDjangoh::ImportParticles(TClonesArray *particles, Option_t *option)
   return nparts;
 }
 
-
-void TDjangoh::Initialize(const char *beam, int nuc_A, int nuc_Z, float beam_e, float nuc_e, float pol)
+void TDjangoh::Initialize(const string pFilename)
 {
   int PID;
+  string cbeam;
   char* inputcw[46];
+  pugi::xml_document doc;
 
-  // Djangoh accept only e and mu
-  if      (!strcmp(beam, "e-" )) PID = -1;
-  else if (!strcmp(beam, "e+" )) PID = 1;
-  else if (!strcmp(beam, "mu-")) PID = -3;
-  else if (!strcmp(beam, "mu+")) PID = 3;
+  if(pFilename.find ( ".xml" ) != std::string::npos)
+  {
+    pugi::xml_parse_result result = doc.load_file(pFilename.c_str());
+  }
   else
   {
-     printf("WARNING! In TDjangoh:Initialize():\n");
-     printf("Specified beam=%s is unrecognized .\n",beam);
-     printf("Resetting to \"e+\" .");
-     PID = 11;
+    cout << "Could not parse settings file " << pFilename << " - it is not an .xml file !" ;
+    return;
   }
 
   inputcw[0] = "OUTFILENAM";
@@ -508,13 +519,390 @@ void TDjangoh::Initialize(const char *beam, int nuc_A, int nuc_Z, float beam_e, 
   inputcw[25] = "MAX-VIRT  ";
   inputcw[26] = "CONTINUE  ";
 
+  for ( pugi::xml_node cCodeWord = doc.child ( "Codeword" ); cCodeWord; cCodeWord = cCodeWord.next_sibling() )
+  {
+    std::string cCWType = cCodeWord.attribute ( "name" ).value();
+    if(!strcmp(cCWType.c_str(), "EL-BEAM" ))
+    {
+      cout << "Codeword : EL-BEAM" << endl;
+      for(pugi::xml_node cData = cCodeWord.child ( "Data" ); cData; cData = cData.next_sibling())
+      {
+        if(std::string(cData.attribute("name").value()) == "polari")
+          {hsparm_.polari = cData.attribute("value").as_double();cout<<"polari : "<<hsparm_.polari<<endl;}
+        else if(std::string(cData.attribute("name").value()) == "beam")
+        {
+          cout<<"beam : "<<cData.attribute("value").value()<<endl;
+          // Djangoh accept only e and mu
+          if      (string(cData.attribute("value").value()) == "e-" ) PID = -1;
+          else if (string(cData.attribute("value").value()) == "e+" ) PID = 1;
+          else if (string(cData.attribute("value").value()) == "mu-") PID = -3;
+          else if (string(cData.attribute("value").value()) == "mu+") PID = 3;
+          else
+          {
+            cout<<"WARNING! In TDjangoh:Initialize():"<<endl;
+            cout<<"Specified beam="<<cData.attribute("value").value()<<" is unrecognized."<<endl;
+            cout<<"Resetting to \"e+\" ."<<endl;
+            PID = 11;
+          }
+          hsparm_.llept = PID;
+        }
+      }
+    }
+
+    if(!strcmp(cCWType.c_str(), "KINEM-CUTS" ))
+    {
+      cout << "Codeword : KINEM-CUTS" << endl;
+      for(pugi::xml_node cData = cCodeWord.child ( "Data" ); cData; cData = cData.next_sibling())
+      {
+        if(std::string(cData.attribute("name").value()) == "icut")
+          {hsoptn_.icut = cData.attribute("value").as_int();cout<<"icut : "<<hsoptn_.icut<<endl;}
+        else if(std::string(cData.attribute("name").value()) == "ixmin")
+          {ihscut_.ixmin = cData.attribute("value").as_double();;cout<<"xmin : "<<ihscut_.ixmin<<endl;}
+        else if(std::string(cData.attribute("name").value()) == "ixmax")
+          {ihscut_.ixmax = cData.attribute("value").as_double();;cout<<"xmax : "<<ihscut_.ixmax<<endl;}
+        else if(std::string(cData.attribute("name").value()) == "iymin")
+          {ihscut_.iymin = cData.attribute("value").as_double();;cout<<"ymin : "<<ihscut_.iymin<<endl;}
+        else if(std::string(cData.attribute("name").value()) == "iymax")
+          {ihscut_.iymax = cData.attribute("value").as_double();;cout<<"ymax : "<<ihscut_.iymax<<endl;}
+        else if(std::string(cData.attribute("name").value()) == "iq2min")
+          {ihscut_.iq2min = cData.attribute("value").as_double();;cout<<"q2min : "<<ihscut_.iq2min<<endl;}
+        else if(std::string(cData.attribute("name").value()) == "iq2max")
+          {ihscut_.iq2max = cData.attribute("value").as_double();;cout<<"q2max : "<<ihscut_.iq2max<<endl;}
+        else if(std::string(cData.attribute("name").value()) == "iwmin")
+          {ihscut_.iwmin = cData.attribute("value").as_double();;cout<<"wmin : "<<ihscut_.iwmin<<endl;}
+      }
+    }
+
+    if(!strcmp(cCWType.c_str(), "GD-OPT" ))
+    {
+      cout << "Codeword : GD-OPT" << endl;
+      for(pugi::xml_node cData = cCodeWord.child ( "Data" ); cData; cData = cData.next_sibling())
+      {
+        if(std::string(cData.attribute("name").value()) == "gdmean")
+          {hsgrid_.gdmean = cData.attribute("value").as_double();cout<<"gdmean : "<<hsgrid_.gdmean<<endl;}
+        else if(std::string(cData.attribute("name").value()) == "gdsddv")
+          {hsgrid_.gdsddv = cData.attribute("value").as_double();cout<<"gdsddv : "<<hsgrid_.gdsddv<<endl;}
+        else if(std::string(cData.attribute("name").value()) == "gdsize")
+          {hsgrid_.gdsize = cData.attribute("value").as_int();cout<<"gdsize : "<<hsgrid_.gdsize<<endl;}
+      }
+    }
+
+    if(!strcmp(cCWType.c_str(), "GSW-PARAM" ))
+    {
+      cout << "Codeword : GSW-PARAM" << endl;
+      for(pugi::xml_node cData = cCodeWord.child ( "Data" ); cData; cData = cData.next_sibling())
+      {
+        if(std::string(cData.attribute("name").value()) == "lparin1")
+          {hsparl_.lparin[0] = cData.attribute("value").as_int();cout<<"gdmean : "<<hsparl_.lparin[0]<<endl;}
+        else if(std::string(cData.attribute("name").value()) == "lparin2")
+          {hsparl_.lparin[1] = cData.attribute("value").as_int();cout<<"gdmean : "<<hsparl_.lparin[1]<<endl;}
+        else if(std::string(cData.attribute("name").value()) == "lparin3")
+          {hsparl_.lparin[2] = cData.attribute("value").as_int();cout<<"gdmean : "<<hsparl_.lparin[2]<<endl;}
+        else if(std::string(cData.attribute("name").value()) == "lparin4")
+          {hsparl_.lparin[3] = cData.attribute("value").as_int();cout<<"gdmean : "<<hsparl_.lparin[3]<<endl;}
+        else if(std::string(cData.attribute("name").value()) == "lparin5")
+          {hsparl_.lparin[4] = cData.attribute("value").as_int();cout<<"gdmean : "<<hsparl_.lparin[4]<<endl;}
+        else if(std::string(cData.attribute("name").value()) == "lparin6")
+          {hsparl_.lparin[5] = cData.attribute("value").as_int();cout<<"gdmean : "<<hsparl_.lparin[5]<<endl;}
+        else if(std::string(cData.attribute("name").value()) == "lparin7")
+          {hsparl_.lparin[6] = cData.attribute("value").as_int();cout<<"gdmean : "<<hsparl_.lparin[6]<<endl;}
+        else if(std::string(cData.attribute("name").value()) == "lparin8")
+          {hsparl_.lparin[7] = cData.attribute("value").as_int();cout<<"gdmean : "<<hsparl_.lparin[7]<<endl;}
+        else if(std::string(cData.attribute("name").value()) == "lparin9")
+          {hsparl_.lparin[8] = cData.attribute("value").as_int();cout<<"gdmean : "<<hsparl_.lparin[8]<<endl;}
+        else if(std::string(cData.attribute("name").value()) == "lparin10")
+          {hsparl_.lparin[9] = cData.attribute("value").as_int();cout<<"gdmean : "<<hsparl_.lparin[9]<<endl;}
+        else if(std::string(cData.attribute("name").value()) == "lparin11")
+          {hsparl_.lparin[10] = cData.attribute("value").as_int();cout<<"gdmean : "<<hsparl_.lparin[10]<<endl;}
+      }
+    }
+
+    if(!strcmp(cCWType.c_str(), "EGAM-MIN" ))
+    {
+      cout << "Codeword : EGAM-MIN" << endl;
+      for(pugi::xml_node cData = cCodeWord.child ( "Data" ); cData; cData = cData.next_sibling())
+      {
+        if(std::string(cData.attribute("name").value()) == "egam")
+          {hsirct_.egmin = cData.attribute("value").as_double();cout<<"gdmean : "<<hsirct_.egmin<<endl;}
+      }
+    }
+
+    if(!strcmp(cCWType.c_str(), "INT-OPT-NC" ))
+    {
+      cout << "Codeword : INT-OPT-NC" << endl;
+      for(pugi::xml_node cData = cCodeWord.child ( "Data" ); cData; cData = cData.next_sibling())
+      {
+        if(std::string(cData.attribute("name").value()) == "inc2")
+          {hsintnc_.inc2 = cData.attribute("value").as_int();cout<<"gdmean : "<<hsintnc_.inc2<<endl;}
+        else if(std::string(cData.attribute("name").value()) == "inc31")
+          {hsintnc_.inc31 = cData.attribute("value").as_int();cout<<"gdmean : "<<hsintnc_.inc31<<endl;}
+        else if(std::string(cData.attribute("name").value()) == "inc32")
+          {hsintnc_.inc32 = cData.attribute("value").as_int();cout<<"gdmean : "<<hsintnc_.inc32<<endl;}
+        else if(std::string(cData.attribute("name").value()) == "inc33")
+          {hsintnc_.inc33 = cData.attribute("value").as_int();cout<<"gdmean : "<<hsintnc_.inc33<<endl;}
+        else if(std::string(cData.attribute("name").value()) == "inc34")
+          {hsintnc_.inc34 = cData.attribute("value").as_int();cout<<"gdmean : "<<hsintnc_.inc34<<endl;}
+        else if(std::string(cData.attribute("name").value()) == "iel2")
+          {hsintnc_.iel2 = cData.attribute("value").as_int();cout<<"gdmean : "<<hsintnc_.iel2<<endl;}
+        else if(std::string(cData.attribute("name").value()) == "iel31")
+          {hsintnc_.iel31 = cData.attribute("value").as_int();cout<<"gdmean : "<<hsintnc_.iel31<<endl;}
+        else if(std::string(cData.attribute("name").value()) == "iel32")
+          {hsintnc_.iel32 = cData.attribute("value").as_int();cout<<"gdmean : "<<hsintnc_.iel32<<endl;}
+        else if(std::string(cData.attribute("name").value()) == "iel33")
+          {hsintnc_.iel33 = cData.attribute("value").as_int();cout<<"gdmean : "<<hsintnc_.iel33<<endl;}
+      }
+    }
+
+    if(!strcmp(cCWType.c_str(), "INT-OPT-CC" ))
+    {
+      cout << "Codeword : INT-OPT-CC" << endl;
+      for(pugi::xml_node cData = cCodeWord.child ( "Data" ); cData; cData = cData.next_sibling())
+      {
+        if(std::string(cData.attribute("name").value()) == "icc2")
+          {hsintcc_.icc2 = cData.attribute("value").as_int();cout<<"icc2 : "<<hsintcc_.icc2<<endl;}
+        else if(std::string(cData.attribute("name").value()) == "icc31")
+          {hsintcc_.icc31 = cData.attribute("value").as_int();cout<<"icc31 : "<<hsintcc_.icc31<<endl;}
+        else if(std::string(cData.attribute("name").value()) == "icc32")
+          {hsintcc_.icc32 = cData.attribute("value").as_int();cout<<"gdmean : "<<hsintcc_.icc32<<endl;}
+        else if(std::string(cData.attribute("name").value()) == "icc33")
+          {hsintcc_.icc33 = cData.attribute("value").as_int();cout<<"gdmean : "<<hsintcc_.icc33<<endl;}
+      }
+    }
+
+    if(!strcmp(cCWType.c_str(), "INT-ONLY" ))
+    {
+      cout << "Codeword : INT-ONLY" << endl;
+      for(pugi::xml_node cData = cCodeWord.child ( "Data" ); cData; cData = cData.next_sibling())
+      {
+        if(std::string(cData.attribute("name").value()) == "ioplot")
+          {hsoptn_.ioplot = cData.attribute("value").as_int();cout<<"gdmean : "<<hsoptn_.ioplot<<endl;}
+      }
+    }
+
+    if(!strcmp(cCWType.c_str(), "INT-POINTS" ))
+    {
+      cout << "Codeword : INT-POINTS" << endl;
+      for(pugi::xml_node cData = cCodeWord.child ( "Data" ); cData; cData = cData.next_sibling())
+      {
+        if(std::string(cData.attribute("name").value()) == "npoveg")
+          {hsvglp_.npoveg = cData.attribute("value").as_int();cout<<"gdmean : "<<hsvglp_.npoveg<<endl;}
+      }
+    }
+
+    if(!strcmp(cCWType.c_str(), "SAM-OPT-NC" ))
+    {
+      cout << "Codeword : SAM-OPT-NC" << endl;
+      for(pugi::xml_node cData = cCodeWord.child ( "Data" ); cData; cData = cData.next_sibling())
+      {
+        if(std::string(cData.attribute("name").value()) == "isnc2")
+          {hssamnc_.isnc2 = cData.attribute("value").as_int();cout<<"gdmean : "<<hssamnc_.isnc2<<endl;}
+        else if(std::string(cData.attribute("name").value()) == "isnc31")
+          {hssamnc_.isnc31 = cData.attribute("value").as_int();cout<<"gdmean : "<<hssamnc_.isnc31<<endl;}
+        else if(std::string(cData.attribute("name").value()) == "isnc32")
+          {hssamnc_.isnc32 = cData.attribute("value").as_int();cout<<"gdmean : "<<hssamnc_.isnc32<<endl;}
+        else if(std::string(cData.attribute("name").value()) == "isnc33")
+          {hssamnc_.isnc33 = cData.attribute("value").as_int();cout<<"gdmean : "<<hssamnc_.isnc33<<endl;}
+        else if(std::string(cData.attribute("name").value()) == "isnc34")
+          {hssamnc_.isnc34 = cData.attribute("value").as_int();cout<<"gdmean : "<<hssamnc_.isnc34<<endl;}
+        else if(std::string(cData.attribute("name").value()) == "isel2")
+          {hssamnc_.isel2 = cData.attribute("value").as_int();cout<<"gdmean : "<<hssamnc_.isel2<<endl;}
+        else if(std::string(cData.attribute("name").value()) == "isel31")
+          {hssamnc_.isel31 = cData.attribute("value").as_int();cout<<"gdmean : "<<hssamnc_.isel31<<endl;}
+        else if(std::string(cData.attribute("name").value()) == "isel32")
+          {hssamnc_.isel32 = cData.attribute("value").as_int();cout<<"gdmean : "<<hssamnc_.isel32<<endl;}
+        else if(std::string(cData.attribute("name").value()) == "isel33")
+          {hssamnc_.isel33 = cData.attribute("value").as_int();cout<<"gdmean : "<<hssamnc_.isel33<<endl;}
+      }
+    }
+
+    if(!strcmp(cCWType.c_str(), "SAM-OPT-CC" ))
+    {
+      cout << "Codeword : SAM-OPT-CC" << endl;
+      for(pugi::xml_node cData = cCodeWord.child ( "Data" ); cData; cData = cData.next_sibling())
+      {
+        if(std::string(cData.attribute("name").value()) == "iscc2")
+          {hssamcc_.iscc2 = cData.attribute("value").as_int();cout<<"gdmean : "<<hssamcc_.iscc2<<endl;}
+        else if(std::string(cData.attribute("name").value()) == "iscc31")
+          {hssamcc_.iscc31 = cData.attribute("value").as_int();cout<<"gdmean : "<<hssamcc_.iscc31<<endl;}
+        else if(std::string(cData.attribute("name").value()) == "iscc32")
+          {hssamcc_.iscc32 = cData.attribute("value").as_int();cout<<"gdmean : "<<hssamcc_.iscc32<<endl;}
+        else if(std::string(cData.attribute("name").value()) == "iscc33")
+          {hssamcc_.iscc33 = cData.attribute("value").as_int();cout<<"gdmean : "<<hssamcc_.iscc33<<endl;}
+      }
+    }
+
+    if(!strcmp(cCWType.c_str(), "NUCLEUS" ))
+    {
+      cout << "Codeword : NUCLEUS" << endl;
+      for(pugi::xml_node cData = cCodeWord.child ( "Data" ); cData; cData = cData.next_sibling())
+      {
+        if(std::string(cData.attribute("name").value()) == "epro")
+          {hselab_.epro = cData.attribute("value").as_double();cout<<"gdmean : "<<hselab_.epro<<endl;}
+        else if(std::string(cData.attribute("name").value()) == "hpolar")
+          {hsparm_.hpolar = cData.attribute("value").as_double();cout<<"gdmean : "<<hsparm_.hpolar<<endl;}
+        else if(std::string(cData.attribute("name").value()) == "hna")
+          {hsnucl_.hna = cData.attribute("value").as_int();cout<<"gdmean : "<<hsnucl_.hna<<endl;}
+        else if(std::string(cData.attribute("name").value()) == "hnz")
+          {hsnucl_.hnz = cData.attribute("value").as_int();cout<<"gdmean : "<<hsnucl_.hnz<<endl;}
+      }
+    }
+
+    if(!strcmp(cCWType.c_str(), "STRUCTFUNC" ))
+    {
+      cout << "Codeword : STRUCTFUNC" << endl;
+      for(pugi::xml_node cData = cCodeWord.child ( "Data" ); cData; cData = cData.next_sibling())
+      {
+        if(std::string(cData.attribute("name").value()) == "ilqmod")
+          hsstrp_.ilqmod = cData.attribute("value").as_int();
+        else if(std::string(cData.attribute("name").value()) == "ilib")
+          hsstrp_.ilib = cData.attribute("value").as_int();
+        else if(std::string(cData.attribute("name").value()) == "icode")
+          hsstrp_.icode = cData.attribute("value").as_int();
+      }
+    }
+
+    if(!strcmp(cCWType.c_str(), "FLONG" ))
+    {
+      cout << "Codeword : FLONG" << endl;
+      for(pugi::xml_node cData = cCodeWord.child ( "Data" ); cData; cData = cData.next_sibling())
+      {
+        if(std::string(cData.attribute("name").value()) == "iflopt")
+          hspdfo_.iflopt = cData.attribute("value").as_int();
+        else if(std::string(cData.attribute("name").value()) == "parl11")
+          hsalfs_.parl11 = cData.attribute("value").as_double();
+        else if(std::string(cData.attribute("name").value()) == "parl19")
+          hsalfs_.parl19 = cData.attribute("value").as_double();
+      }
+    }
+
+    if(!strcmp(cCWType.c_str(), "ALFAS" ))
+    {
+      cout << "Codeword : ALFAS" << endl;
+      for(pugi::xml_node cData = cCodeWord.child ( "Data" ); cData; cData = cData.next_sibling())
+      {
+        if(std::string(cData.attribute("name").value()) == "mst111")
+          hsalfs_.mst111 = cData.attribute("value").as_int();
+        else if(std::string(cData.attribute("name").value()) == "mst115")
+          hsalfs_.mst115 = cData.attribute("value").as_int();
+        else if(std::string(cData.attribute("name").value()) == "par111")
+          hsalfs_.par111 = cData.attribute("value").as_double();
+        else if(std::string(cData.attribute("name").value()) == "par112")
+          hsalfs_.par112 = cData.attribute("value").as_double();
+      }
+    }
+
+    if(!strcmp(cCWType.c_str(), "NFLAVORS" ))
+    {
+      cout << "Codeword : NFLAVORS" << endl;
+      for(pugi::xml_node cData = cCodeWord.child ( "Data" ); cData; cData = cData.next_sibling())
+      {
+        if(std::string(cData.attribute("name").value()) == "npymin")
+          hystfu_.npymin = cData.attribute("value").as_int();
+        else if(std::string(cData.attribute("name").value()) == "npymax")
+          hystfu_.npymax = cData.attribute("value").as_int();
+      }
+    }
+
+    if(!strcmp(cCWType.c_str(), "RNDM-SEEDS" ))
+    {
+      cout << "Codeword : RNDM-SEEDS" << endl;
+      for(pugi::xml_node cData = cCodeWord.child ( "Data" ); cData; cData = cData.next_sibling())
+      {
+        if(std::string(cData.attribute("name").value()) == "isdinp")
+          hsrdio_.isdinp = cData.attribute("value").as_int();
+        else if(std::string(cData.attribute("name").value()) == "isdout")
+          hsrdio_.isdout = cData.attribute("value").as_int();
+      }
+    }
+
+    if(!strcmp(cCWType.c_str(), "SOPHIA" ))
+    {
+      cout << "Codeword : SOPHIA" << endl;
+      for(pugi::xml_node cData = cCodeWord.child ( "Data" ); cData; cData = cData.next_sibling())
+      {
+        if(std::string(cData.attribute("name").value()) == "wsophia")
+          sophct_.wsophia = cData.attribute("value").as_double();
+      }
+    }
+
+    if(!strcmp(cCWType.c_str(), "OUT-LEP" ))
+    {
+      cout << "Codeword : OUT-LEP" << endl;
+      for(pugi::xml_node cData = cCodeWord.child ( "Data" ); cData; cData = cData.next_sibling())
+      {
+        if(std::string(cData.attribute("name").value()) == "lst4")
+          hslptu_.hslst[4] = cData.attribute("value").as_int();
+      }
+    }
+
+    if(!strcmp(cCWType.c_str(), "FRAME" ))
+    {
+      cout << "Codeword : FRAME" << endl;
+      for(pugi::xml_node cData = cCodeWord.child ( "Data" ); cData; cData = cData.next_sibling())
+      {
+        if(std::string(cData.attribute("name").value()) == "lst5")
+          hslptu_.hslst[5] = cData.attribute("value").as_int();
+      }
+    }
+
+    if(!strcmp(cCWType.c_str(), "FRAG" ))
+    {
+      cout << "Codeword : FRAG" << endl;
+      for(pugi::xml_node cData = cCodeWord.child ( "Data" ); cData; cData = cData.next_sibling())
+      {
+        if(std::string(cData.attribute("name").value()) == "lst7")
+          hslptu_.hslst[7] = cData.attribute("value").as_int();
+      }
+    }
+
+    if(!strcmp(cCWType.c_str(), "CASCADES" ))
+    {
+      cout << "Codeword : CASCADES" << endl;
+      for(pugi::xml_node cData = cCodeWord.child ( "Data" ); cData; cData = cData.next_sibling())
+      {
+        if(std::string(cData.attribute("name").value()) == "lst8")
+          hslptu_.hslst[8] = cData.attribute("value").as_int();
+      }
+    }
+
+    if(!strcmp(cCWType.c_str(), "MAX-VIRT" ))
+    {
+      cout << "Codeword : MAX-VIRT" << endl;
+      for(pugi::xml_node cData = cCodeWord.child ( "Data" ); cData; cData = cData.next_sibling())
+      {
+        if(std::string(cData.attribute("name").value()) == "lst9")
+          hslptu_.hslst[9] = cData.attribute("value").as_int();
+      }
+    }
+
+    if(!strcmp(cCWType.c_str(), "BARYON" ))
+    {
+      cout << "Codeword : BARYON" << endl;
+      for(pugi::xml_node cData = cCodeWord.child ( "Data" ); cData; cData = cData.next_sibling())
+      {
+        if(std::string(cData.attribute("name").value()) == "lst14")
+          hslptu_.hslst[14] = cData.attribute("value").as_int();
+      }
+    }
+
+    if(!strcmp(cCWType.c_str(), "KT-PARTON" ))
+    {
+      cout << "Codeword :KT-PARTON" << endl;
+      for(pugi::xml_node cData = cCodeWord.child ( "Data" ); cData; cData = cData.next_sibling())
+      {
+        if(std::string(cData.attribute("name").value()) == "parl3")
+          hslptu_.hsparl[3] = cData.attribute("value").as_double();
+      }
+    }
+  }
+
   for(int i=0; i<27; i++)
     ConvertToFortran(ihscw_.inputcodewd[i], sizeof ihscw_.inputcodewd[i], inputcw[i]);
 
   // OUTFILENAME
   char* outfilenamei = "TDjangoh";
   ConvertToFortran(hsoutf_.outfilenam, sizeof hsoutf_.outfilenam, outfilenamei);
-
+/*
   // EL-BEAM
   hselab_.eele = beam_e;
   hsparm_.polari = pol;
@@ -563,7 +951,7 @@ void TDjangoh::Initialize(const char *beam, int nuc_A, int nuc_Z, float beam_e, 
 
   // GSW-PARAM
   hsparl_.lparin[0] = 2;
-  hsparl_.lparin[1] = 1;
+  hsparl_.lparin[1] = 0;
   hsparl_.lparin[2] = 3;
   hsparl_.lparin[3] = 1;
   hsparl_.lparin[4] = 0;
@@ -575,7 +963,7 @@ void TDjangoh::Initialize(const char *beam, int nuc_A, int nuc_Z, float beam_e, 
   hsparl_.lparin[10] = 1;
 
   // STRUCTFUNC
-  hsstrp_.ilqmod = 1;
+  hsstrp_.ilqmod = 0;
   hsstrp_.ilib = 2;
   hsstrp_.icode = 10150;
 
@@ -630,12 +1018,12 @@ void TDjangoh::Initialize(const char *beam, int nuc_A, int nuc_Z, float beam_e, 
 
   // NUCL-MOD
   hsnucl_.inumod = 0;
-
+*/
   // LHAPATH
   char* lhapathi;
   lhapathi = getenv("LHAPATH");
   ConvertToFortran(lhapdfc_.lhapath, sizeof lhapdfc_.lhapath, lhapathi);
-
+/*
   // THETA-CUT
   hstcut_.themin = 0.0;
   hstcut_.themax = 180.0;
@@ -657,7 +1045,7 @@ void TDjangoh::Initialize(const char *beam, int nuc_A, int nuc_Z, float beam_e, 
 
   // DEBUG_MODE
   isdebug_.isdbg = 1;
-
+*/
   hsinpt_();
 
   cout << ">>> TDJANGOH message : <<<" << endl;
@@ -667,32 +1055,12 @@ void TDjangoh::Initialize(const char *beam, int nuc_A, int nuc_Z, float beam_e, 
 }
 
 
-void TDjangoh::Configure(const char *beam, int nuc_A, int nuc_Z, float beam_e, float nuc_e, float pol)
+void TDjangoh::Configure(float beam_e, float pol)
 {
-  int PID;
-
-  // Djangoh accept only e and mu
-  if      (!strcmp(beam, "e-" )) PID = -1;
-  else if (!strcmp(beam, "e+" )) PID = 1;
-  else if (!strcmp(beam, "mu-")) PID = -3;
-  else if (!strcmp(beam, "mu+")) PID = 3;
-  else
-  {
-     printf("WARNING! In TDjangoh:Initialize():\n");
-     printf("Specified beam = %s is unrecognized .\n",beam);
-     printf("Resetting to \"e+\" .");
-     PID = 11;
-  }
 
 // EL-BEAM
   hselab_.eele = beam_e;
   hsparm_.polari = pol;
-  hsparm_.llept = PID;
-
-// NUCLEUS
-  hselab_.epro = nuc_e;
-  hsnucl_.hna = nuc_A;
-  hsnucl_.hnz = nuc_Z;
 
 }
 
