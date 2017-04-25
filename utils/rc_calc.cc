@@ -19,7 +19,8 @@
 
 #define _USE_MATH_DEFINES
 
-#define RC_pdf "RC.pdf"
+#define RCx_pdf "RCx.pdf"
+#define RCy_pdf "RCy.pdf"
 #define OUTFILE "rc.txt"
 
 using namespace std;
@@ -42,6 +43,7 @@ int main(int argc,char *argv[])
   double xtab[10] = {.004,.01,.02,.03,.04,.06,.1,.14,.18,.4};
   double xmid[9] = {.007,.015,.025,.035,.05,.08,.12,.16,.29};
   double ytab[6] = {.1,.15,.20,.30,.50,.70};
+  double ymid[5] = {.125,.175,.25,.40,.60};
   double xtable[30] = {.000050,.000070,.000100,.000200,.000300,.000500,
                        .000700,.001000,.002000,.004000,.006000,.008000,
                        .010000,.013000,.016000,.020000,.030000,.040000,
@@ -52,19 +54,35 @@ int main(int argc,char *argv[])
                        .650000,.700000,.750000,.800000,.850000,.900000,
                        .950000};
   int y_xch[6] = {1,2,3,5,9,13};
+  int x_ych[10] = {9,12,15,16,17,18,20,21,22,24};
 
-  double rc[5][9];
-  double rc_e[5][9];
+  double rcx[5][9];
+  double rcx_e[5][9];
+  double rcy[9][5];
+  double rcy_e[9][5];
   double rc_table[19][30];
+  double rc_table_y[30][19];
   int re[5][9];
   int born[5][9];
+  int evtotre;
+  int evtotborn;
+  double sigtotre;
+  double sigtotborn;
+  double sigre[5][9];
+  double sigborn[5][9];
 
-  TCanvas c1("RC_xy","RC_xy",3200,1600);
+  TCanvas c1("RC_xy_f(x)","RC_xy_f(x)",3200,1600);
   c1.Divide(3,2);
+  TCanvas c2("RC_xy_f(y)","RC_xy_f(y)",3200,1600);
+  c2.Divide(3,3);
 
-  TGraphErrors* rc_g[5];
-  TGraph* rct_g_u[5];
-  TGraph* rct_g_d[5];
+  TGraphErrors* rcx_g[5];
+  TGraph* rcxt_g_u[5];
+  TGraph* rcxt_g_d[5];
+
+  TGraphErrors* rcy_g[5];
+  TGraph* rcyt_g_u[5];
+  TGraph* rcyt_g_d[5];
 
   for(int i=0;i<5;i++)
   {
@@ -75,6 +93,9 @@ int main(int argc,char *argv[])
    }
 
   ifstream revt(argv[1]);
+
+  revt >> evtotre;
+  revt >> sigtotre;
 
   while(revt >> dummy)
   {
@@ -120,6 +141,9 @@ int main(int argc,char *argv[])
   revt.close();
 
   ifstream bevt(argv[2]);
+
+  bevt >> evtotborn;
+  bevt >> sigtotborn;
 
   while(bevt >> dummy)
   {
@@ -170,20 +194,22 @@ int main(int argc,char *argv[])
     for(int j=0; j<5; j++)
     {
       table >> sdum;
-      cout << sdum << "\t";
+      // cout << sdum << "\t";
 
       for(int k=0; k<6; k++)
       {
         table >> rc_table[i][k+j*6] >> sdum;
-        cout << " " << rc_table[i][k+j*6] << sdum;
+        // cout << " " << rc_table[i][k+j*6] << sdum;
+        rc_table_y[k+j*6][i]=rc_table[i][k+j*6];
       }
 
-      cout << endl;
+      // cout << endl;
     }
   }
   table.close();
 
   TLine l(0,1,0.32,1);
+  TLine l2(0.08,1,0.645,1);
 
   ofstream outfile(OUTFILE);
 
@@ -193,40 +219,86 @@ int main(int argc,char *argv[])
     {
       if(born[i][j] && re[i][j])
       {
-	      rc[i][j] = double(born[i][j])/double(re[i][j]);
-        rc_e[i][j] = double(1/sqrt(born[i][j]))+double(1/sqrt(re[i][j]));
-        cout << "rc_e[i][j] = " << rc_e[i][j] << endl;
+	      sigre[i][j] = double(re[i][j]*double(sigtotre))/double(evtotre);
+        sigborn[i][j] = double(born[i][j]*double(sigtotborn))/double(evtotborn);
+	      rcx[i][j] = double(sigre[i][j])/double(sigborn[i][j]);
+        rcx_e[i][j] = double(1/sqrt(born[i][j]))+double(1/sqrt(re[i][j]));
+        // cout << "rcx_e["<<i<<"]["<<j<<"] = " << rcx_e[i][j] << endl;
       }
       else
       {
-	      rc[i][j] = 0;
-        rc_e[i][j] = 0;
+	      rcx[i][j] = 0;
+        rcx_e[i][j] = 0;
       }
     }
-    rc_g[i] = new TGraphErrors(9,xmid,rc[i],0,rc_e[i]);
-    rct_g_u[i] = new TGraph(30,xtable,rc_table[y_xch[i+1]]);
-    rct_g_d[i] = new TGraph(30,xtable,rc_table[y_xch[i]]);
+    rcx_g[i] = new TGraphErrors(9,xmid,rcx[i],0,rcx_e[i]);
+    rcxt_g_u[i] = new TGraph(30,xtable,rc_table[y_xch[i+1]]);
+    rcxt_g_d[i] = new TGraph(30,xtable,rc_table[y_xch[i]]);
 
     c1.cd(i+1);
-    rc_g[i]->GetXaxis()->SetTitle("x_{Bj}");
-    rc_g[i]->GetYaxis()->SetTitle("RC");
-    rc_g[i]->GetYaxis()->SetTitleOffset(1.5);
-    rc_g[i]->SetTitle(Form("RC @ %f < y < %f",ytab[i],ytab[i+1]));
-    rc_g[i]->SetMarkerStyle(22);
-    rc_g[i]->SetMarkerColor(601);
-    rc_g[i]->SetMarkerSize(3);
-    rc_g[i]->GetYaxis()->SetRangeUser(0.,1.3);
-    rc_g[i]->SetFillColor(601);
-    rc_g[i]->SetFillStyle(3001);
-    rc_g[i]->Draw("A3");
-    rc_g[i]->Draw("P");
-    rct_g_u[i]->SetLineColor(3);
-    rct_g_d[i]->SetLineColor(2);
-    rct_g_u[i]->Draw("SAME");
-    rct_g_d[i]->Draw("SAME");
+    rcx_g[i]->GetXaxis()->SetTitle("x_{Bj}");
+    rcx_g[i]->GetYaxis()->SetTitle("RC");
+    rcx_g[i]->GetYaxis()->SetTitleOffset(1.5);
+    rcx_g[i]->SetTitle(Form("RC @ %f < y < %f",ytab[i],ytab[i+1]));
+    rcx_g[i]->SetMarkerStyle(22);
+    rcx_g[i]->SetMarkerColor(601);
+    rcx_g[i]->SetMarkerSize(3);
+    rcx_g[i]->GetYaxis()->SetRangeUser(0.,1.3);
+    rcx_g[i]->SetFillColor(601);
+    rcx_g[i]->SetFillStyle(3001);
+    rcx_g[i]->Draw("A3");
+    rcx_g[i]->Draw("P");
+    rcxt_g_u[i]->SetLineColor(3);
+    rcxt_g_d[i]->SetLineColor(2);
+    rcxt_g_u[i]->Draw("SAME");
+    rcxt_g_d[i]->Draw("SAME");
     l.Draw("SAME");
     c1.Update();
   }
+
+  for(int i=0;i<9;i++)
+  {
+    for(int j=0;j<5;j++)
+    {
+      if(born[j][i] && re[j][i])
+      {
+	      sigre[j][i] = double(re[j][i]*double(sigtotre))/double(evtotre);
+        sigborn[j][i] = double(born[j][i]*double(sigtotborn))/double(evtotborn);
+	      rcy[i][j] = double(sigre[j][i])/double(sigborn[j][i]);
+        rcy_e[i][j] = double(1/sqrt(born[j][i]))+double(1/sqrt(re[j][i]));
+        // cout << "rcy_e["<<i<<"]["<<j<<"] = " << rcy_e[i][j] << endl;
+      }
+      else
+      {
+	      rcy[i][j] = 0;
+        rcy_e[i][j] = 0;
+      }
+    }
+    rcy_g[i] = new TGraphErrors(5,ymid,rcy[i],0,rcy_e[i]);
+    rcyt_g_u[i] = new TGraph(19,ytable,rc_table_y[x_ych[i+1]]);
+    rcyt_g_d[i] = new TGraph(19,ytable,rc_table_y[x_ych[i]]);
+
+    c2.cd(i+1);
+    rcy_g[i]->GetXaxis()->SetTitle("y");
+    rcy_g[i]->GetYaxis()->SetTitle("RC");
+    rcy_g[i]->GetYaxis()->SetTitleOffset(1.5);
+    rcy_g[i]->SetTitle(Form("RC @ %f < x < %f",xtab[i],xtab[i+1]));
+    rcy_g[i]->SetMarkerStyle(22);
+    rcy_g[i]->SetMarkerColor(601);
+    rcy_g[i]->SetMarkerSize(3);
+    rcy_g[i]->GetYaxis()->SetRangeUser(0.,1.3);
+    rcy_g[i]->SetFillColor(601);
+    rcy_g[i]->SetFillStyle(3001);
+    rcy_g[i]->Draw("A3");
+    rcy_g[i]->Draw("P");
+    rcyt_g_u[i]->SetLineColor(3);
+    rcyt_g_d[i]->SetLineColor(2);
+    rcyt_g_u[i]->Draw("SAME");
+    rcyt_g_d[i]->Draw("SAME");
+    l2.Draw("SAME");
+    c2.Update();
+  }
+
 
   cout << "x/y";
 
@@ -276,12 +348,13 @@ int main(int argc,char *argv[])
     outfile << xtab[j];
     for(int i=0;i<5;i++)
     {
-      outfile << "\t" << rc[i][j];
+      outfile << "\t" << rcx[i][j];
     }
     outfile << endl;
   }
 
-  c1.Print(RC_pdf);
+  c1.Print(RCx_pdf);
+  c2.Print(RCy_pdf);
 
   outfile.close();
 

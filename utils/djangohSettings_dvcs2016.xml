@@ -37,8 +37,8 @@
 <!-- GD-OPT -->
 <Codeword name="GD-OPT">
     <Data name="gdmean" value="160.0"/>
-    <Data name="gdsddv" value="20.0"/>
-    <Data name="gdsize" value="20"/>
+    <Data name="gdsddv" value="0"/>
+    <Data name="gdsize" value="1"/>
 </Codeword>
 
 <!-- EGAM-MIN -->
@@ -178,4 +178,9 @@
 <!-- KT-PARTON -->
 <Codeword name="KT-PARTON">
   <Data name="parl3" value="0.44"/>
+</Codeword>
+
+<!-- KT-PARTON -->
+<Codeword name="VERBOZE">
+  <Data name="verboz" value="1"/>
 </Codeword>

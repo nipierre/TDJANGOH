@@ -60,10 +60,10 @@ extern "C" struct ihscw
   int itcw;
 } ihscw_;
 
-extern "C" struct isdebug
+extern "C" struct hsvrbz
 {
-  int isdbg;
-} isdebug_;
+  int verboz;
+} hsvrbz_;
 
 extern "C" struct hselab
 {
@@ -165,10 +165,10 @@ extern "C" struct hsirct
 
 extern "C" struct hsalfs
 {
-  double par111;
-  double par112;
-  double parl11;
-  double parl19;
+  float par111;
+  float par112;
+  float parl11;
+  float parl19;
   int mst111;
   int mst115;
 } hsalfs_;
@@ -557,19 +557,19 @@ void TDjangoh::Initialize(const string pFilename)
         if(std::string(cData.attribute("name").value()) == "icut")
           {hsoptn_.icut = cData.attribute("value").as_int();cout<<"icut : "<<hsoptn_.icut<<"\t";}
         else if(std::string(cData.attribute("name").value()) == "ixmin")
-          {ihscut_.ixmin = cData.attribute("value").as_double();;cout<<"xmin : "<<ihscut_.ixmin<<"\t";}
+          {ihscut_.ixmin = cData.attribute("value").as_double();cout<<"xmin : "<<ihscut_.ixmin<<"\t";}
         else if(std::string(cData.attribute("name").value()) == "ixmax")
-          {ihscut_.ixmax = cData.attribute("value").as_double();;cout<<"xmax : "<<ihscut_.ixmax<<"\t";}
+          {ihscut_.ixmax = cData.attribute("value").as_float();cout<<"xmax : "<<ihscut_.ixmax<<"\t";}
         else if(std::string(cData.attribute("name").value()) == "iymin")
-          {ihscut_.iymin = cData.attribute("value").as_double();;cout<<"ymin : "<<ihscut_.iymin<<endl;}
+          {ihscut_.iymin = cData.attribute("value").as_float();cout<<"ymin : "<<ihscut_.iymin<<endl;}
         else if(std::string(cData.attribute("name").value()) == "iymax")
-          {ihscut_.iymax = cData.attribute("value").as_double();;cout<<"ymax : "<<ihscut_.iymax<<"\t";}
+          {ihscut_.iymax = cData.attribute("value").as_float();cout<<"ymax : "<<ihscut_.iymax<<"\t";}
         else if(std::string(cData.attribute("name").value()) == "iq2min")
-          {ihscut_.iq2min = cData.attribute("value").as_double();;cout<<"q2min : "<<ihscut_.iq2min<<"\t";}
+          {ihscut_.iq2min = cData.attribute("value").as_float();cout<<"q2min : "<<ihscut_.iq2min<<"\t";}
         else if(std::string(cData.attribute("name").value()) == "iq2max")
-          {ihscut_.iq2max = cData.attribute("value").as_double();;cout<<"q2max : "<<ihscut_.iq2max<<"\t";}
+          {ihscut_.iq2max = cData.attribute("value").as_float();cout<<"q2max : "<<ihscut_.iq2max<<"\t";}
         else if(std::string(cData.attribute("name").value()) == "iwmin")
-          {ihscut_.iwmin = cData.attribute("value").as_double();;cout<<"wmin : "<<ihscut_.iwmin<<endl;}
+          {ihscut_.iwmin = cData.attribute("value").as_float();cout<<"wmin : "<<ihscut_.iwmin<<endl;}
       }
     }
 
@@ -769,9 +769,9 @@ void TDjangoh::Initialize(const string pFilename)
         if(std::string(cData.attribute("name").value()) == "iflopt")
           {hspdfo_.iflopt = cData.attribute("value").as_int();cout<<"iflopt : "<<hspdfo_.iflopt<<"\t";}
         else if(std::string(cData.attribute("name").value()) == "parl11")
-          {hsalfs_.parl11 = cData.attribute("value").as_double();cout<<"parl11 : "<<hsalfs_.parl11<<"\t";}
+          {hsalfs_.parl11 = cData.attribute("value").as_float();cout<<"parl11 : "<<hsalfs_.parl11<<"\t";}
         else if(std::string(cData.attribute("name").value()) == "parl19")
-          {hsalfs_.parl19 = cData.attribute("value").as_double();cout<<"parl19 : "<<hsalfs_.parl19<<endl;}
+          {hsalfs_.parl19 = cData.attribute("value").as_float();cout<<"parl19 : "<<hsalfs_.parl19<<endl;}
       }
     }
 
@@ -785,9 +785,9 @@ void TDjangoh::Initialize(const string pFilename)
         else if(std::string(cData.attribute("name").value()) == "mst115")
           {hsalfs_.mst115 = cData.attribute("value").as_int();cout<<"mst115 : "<<hsalfs_.mst115<<"\t";}
         else if(std::string(cData.attribute("name").value()) == "par111")
-          {hsalfs_.par111 = cData.attribute("value").as_double();cout<<"par111 : "<<hsalfs_.par111<<"\t";}
+          {hsalfs_.par111 = cData.attribute("value").as_float();cout<<"par111 : "<<hsalfs_.par111<<"\t";}
         else if(std::string(cData.attribute("name").value()) == "par112")
-          {hsalfs_.par112 = cData.attribute("value").as_double();cout<<"par112 : "<<hsalfs_.par112<<endl;}
+          {hsalfs_.par112 = cData.attribute("value").as_float();cout<<"par112 : "<<hsalfs_.par112<<endl;}
       }
     }
 
@@ -894,6 +894,16 @@ void TDjangoh::Initialize(const string pFilename)
           {hslptu_.hsparl[3] = cData.attribute("value").as_double();cout<<"parl3 : "<<hslptu_.hsparl[3]<<endl;}
       }
     }
+
+    if(!strcmp(cCWType.c_str(), "VERBOZE" ))
+    {
+      cout << "\nCodeword : VERBOZE" << endl;
+      for(pugi::xml_node cData = cCodeWord.child ( "Data" ); cData; cData = cData.next_sibling())
+      {
+        if(std::string(cData.attribute("name").value()) == "verboz")
+          {hsvrbz_.verboz = cData.attribute("value").as_int();cout<<"vrboz : "<<hsvrbz_.verboz<<endl;}
+      }
+    }
   }
 
   for(int i=0; i<27; i++)
@@ -902,149 +912,14 @@ void TDjangoh::Initialize(const string pFilename)
   // OUTFILENAME
   char* outfilenamei = "TDjangoh";
   ConvertToFortran(hsoutf_.outfilenam, sizeof hsoutf_.outfilenam, outfilenamei);
-/*
-  // EL-BEAM
-  hselab_.eele = beam_e;
-  hsparm_.polari = pol;
-  hsparm_.llept = PID;
 
-  // KINEM-CUTS
-  hsoptn_.icut = 3;
-  ihscut_.ixmin = 0.004;
-  ihscut_.ixmax = 0.4;
-  ihscut_.iymin = 0.1;
-  ihscut_.iymax = 0.7;
-  ihscut_.iq2min = 1.0;
-  ihscut_.iq2max = 1e5;
-  ihscut_.iwmin = 1.40;
-
-  // EGAM-MIN
-  hsirct_.egmin = 0.0;
-
-  // GD-OPT
-  hsgrid_.gdmean=160.0;
-  hsgrid_.gdsddv=20.0;
-  hsgrid_.gdsize=20;
-
-  // INT-OPT-NC
-  hsintnc_.inc2 = 1;
-  hsintnc_.inc31 = 0;
-  hsintnc_.inc32 = 0;
-  hsintnc_.inc33 = 0;
-  hsintnc_.inc34 = 0;
-  hsintnc_.iel2 = 0;
-  hsintnc_.iel31 = 0;
-  hsintnc_.iel32 = 0;
-  hsintnc_.iel33 = 0;
-
-  // INT-OPT-CC
-  hsintcc_.icc2 = 0;
-  hsintcc_.icc31 = 0;
-  hsintcc_.icc32 = 0;
-  hsintcc_.icc33 = 0;
-
-  // INT-POINTS
-  hsvglp_.npoveg = 3000;
-
-  // HYP-CUBES
-  hsvglp_.nphyp = 20;
-
-  // GSW-PARAM
-  hsparl_.lparin[0] = 2;
-  hsparl_.lparin[1] = 0;
-  hsparl_.lparin[2] = 3;
-  hsparl_.lparin[3] = 1;
-  hsparl_.lparin[4] = 0;
-  hsparl_.lparin[5] = 0;
-  hsparl_.lparin[6] = 2;
-  hsparl_.lparin[7] = 1;
-  hsparl_.lparin[8] = 1;
-  hsparl_.lparin[9] = 1;
-  hsparl_.lparin[10] = 1;
-
-  // STRUCTFUNC
-  hsstrp_.ilqmod = 0;
-  hsstrp_.ilib = 2;
-  hsstrp_.icode = 10150;
-
-  // NFLAVORS
-  hystfu_.npymin = 1;
-  hystfu_.npymax = 3;
-
-  // SAM-OPT-NC
-  hssamnc_.isnc2 = 1;
-  hssamnc_.isnc31 = 0;
-  hssamnc_.isnc32 = 0;
-  hssamnc_.isnc33 = 0;
-  hssamnc_.isnc34 = 0;
-  hssamnc_.isel2 = 0;
-  hssamnc_.isel31 = 0;
-  hssamnc_.isel32 = 0;
-  hssamnc_.isel33 = 0;
-
-  // SAM-OPT-CC
-  hssamcc_.iscc2 = 0;
-  hssamcc_.iscc31 = 0;
-  hssamcc_.iscc32 = 0;
-  hssamcc_.iscc33 = 0;
-
-  // RNDM-SEEDS
-  hsrdio_.isdinp = -1;
-  hsrdio_.isdout = -1;
-
-  // THMIN-QRAD
-  hsisgm_.tcutq = 0.25;
-  hsisgm_.tcutqs = 0.25;
-
-  // FLONG
-  hspdfo_.iflopt = 111;
-  hsalfs_.parl11 = 0.01;
-  hsalfs_.parl19 = 0.03;
-
-  // ALFAS
-  hsalfs_.mst111 = 1;
-  hsalfs_.mst115 = 1;
-  hsalfs_.par111 = 0.20;
-  hsalfs_.par112 = 0.235;
-
-  // EP-DIPOLE
-  hselep_.idipol = 0;
-
-  // NUCLEUS
-  hselab_.epro = nuc_e;
-  hsparm_.hpolar = 0;
-  hsnucl_.hna = nuc_A;
-  hsnucl_.hnz = nuc_Z;
-
-  // NUCL-MOD
-  hsnucl_.inumod = 0;
-*/
   // LHAPATH
   char* lhapathi;
   lhapathi = getenv("LHAPATH");
   ConvertToFortran(lhapdfc_.lhapath, sizeof lhapdfc_.lhapath, lhapathi);
-/*
-  // THETA-CUT
-  hstcut_.themin = 0.0;
-  hstcut_.themax = 180.0;
 
-  // PT-CUT
-  hspcut_.ptmin = 0.0;
-
-  // POLPDF
-  hsstrp_.idpvr = 100;
-
-  // WEIGHTS
-  hswgtc_.iweigr = 0;
-
-  // INT-ONLY
-  hsoptn_.ioplot = 0;
-*/
   // START
   hsnume_.nevent = 1;
-
-  // DEBUG_MODE
-  isdebug_.isdbg = 1;
 
   hsinpt_();
 
