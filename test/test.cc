@@ -18,7 +18,7 @@ void printProgress (int event, int total)
     int val = (int) (percentage * 100);
     int lpad = (int) (percentage * PBWIDTH);
     int rpad = PBWIDTH - lpad;
-    printf ("\r Progress%s %3d%% [%.*s%*s] (%d/%d)", points[int(event/16)%4].c_str(), val, lpad, PBSTR, rpad, "", event, total);
+    printf ("\r Progress%s %3d%% [%.*s%*s]", points[int(event/16)%6].c_str(), val, lpad, PBSTR, rpad, "");
     fflush (stdout);
 }
 
@@ -35,7 +35,7 @@ int main()
   cout << "Instance created !" << endl;
 
   cout << "Initialization.." << endl;
-  tDjangoh->Initialize("utils/djangohsettings_dvcs2016.xml");
+  tDjangoh->Initialize("utils/djangohSettings_dvcs2016.xml");
   cout << "Initialized !" << endl;
 
   cout << "\n\nEvents Generation (" << NEVENTS << " events).." << endl;
