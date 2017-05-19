@@ -7,7 +7,6 @@
 # define VERBOSE 0
 # define PBSTR "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||"
 # define PBWIDTH 60
-# define NEVENTS 50000
 
 using namespace std;
 
@@ -22,20 +21,30 @@ void printProgress (int event, int total)
     fflush (stdout);
 }
 
-int main()
+int main(int argc,char *argv[])
 {
+
+  if(argc != 3)
+  {
+    cout << "ERROR : Wrong number of arguments" << endl;
+    cout << "Expected 3, received " << argc << " !" << endl;
+    cout << "USAGE : \n ./rc_calc input_file nb_evts" << endl;
+    return 1;
+  }
+
   TDjangoh* tDjangoh;
   int nb;
   float x;
   float y;
   float Q2;
+  int NEVENTS = atoi(argv[2]);
 
   cout << "Instance creation.." << endl;
   tDjangoh = new TDjangoh();
   cout << "Instance created !" << endl;
 
   cout << "Initialization.." << endl;
-  tDjangoh->Initialize("utils/djangohSettings_dvcs2016.xml");
+  tDjangoh->Initialize(argv[1]);
   cout << "Initialized !" << endl;
 
   cout << "\n\nEvents Generation (" << NEVENTS << " events).." << endl;
