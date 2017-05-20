@@ -78,11 +78,38 @@ int main(int argc,char *argv[])
   double sigtotborn;
   double sigre[16][20];
   double sigborn[16][20];
+<<<<<<< HEAD
+=======
+  int qel;
+
+  for (int i = 1; i < argc; i++)
+  {
+    if (i + 1 != argc)
+    {
+      if (argv[i] == "-l")
+      {
+        myFile = argv[i + 1];
+      }
+      else if (argv[i] == "-f")
+      {
+        myPath = argv[i+1];
+      }
+      else if (argv[i] == "-qel")
+      {
+        qel = argv[i+1];
+      }
+    }
+  }
+>>>>>>> 45f282ed39204b6ea57cdfb60ac2ffb8ec6fced4
 
   TCanvas c1("RC_xy_f(x)","RC_xy_f(x)",3200,1600);
-  c1.Divide(3,2);
+  c1.Divide(4,4);
   TCanvas c2("RC_xy_f(y)","RC_xy_f(y)",3200,1600);
+<<<<<<< HEAD
   c2.Divide(3,3);
+=======
+  c2.Divide(5,4);
+>>>>>>> 45f282ed39204b6ea57cdfb60ac2ffb8ec6fced4
   TCanvas c3("ER_xy_f(x)","ER_xy_f(x)",3200,1600);
   c3.Divide(1,1);
   TCanvas c4("ER_xy_f(y)","ER_xy_f(y)",3200,1600);
@@ -219,7 +246,11 @@ int main(int argc,char *argv[])
 
   bevt.close();
 
+<<<<<<< HEAD
   if(atoi(argv[3])==1)
+=======
+  if(qel==1)
+>>>>>>> 45f282ed39204b6ea57cdfb60ac2ffb8ec6fced4
   {
     ifstream table("data/hh160_r1998_f2tulay_compass_grv.asy_hcorr.txt");
     for(int i=0; i<19; i++)
@@ -242,7 +273,11 @@ int main(int argc,char *argv[])
     }
     table.close();
   }
+<<<<<<< HEAD
   else if(atoi(argv[3])==2)
+=======
+  else if(qel==0)
+>>>>>>> 45f282ed39204b6ea57cdfb60ac2ffb8ec6fced4
   {
     ifstream table("data/hh160_r1998_f2tulay_compass_grv.new_table.txt");
     for(int i=0; i<30; i++)
@@ -304,10 +339,17 @@ int main(int argc,char *argv[])
         erx[i][j] = 0;
       }
     }
+<<<<<<< HEAD
     rcx_g[i] = new TGraphErrors(9,xmid,rcx[i],0,rcx_e[i]);
     rcxt_g_u[i] = new TGraph(30,xtable,rc_table[y_xch[i+1]]);
     rcxt_g_d[i] = new TGraph(30,xtable,rc_table[y_xch[i]]);
     erx_g[i] = new TGraph(9,xmid,erx[i]);
+=======
+    rcx_g[i] = new TGraphErrors(20,xmid,rcx[i],0,rcx_e[i]);
+    rcxt_g_u[i] = new TGraph(30,xtable,rc_table[1+i+1]);
+    rcxt_g_d[i] = new TGraph(30,xtable,rc_table[1+i]);
+    erx_g[i] = new TGraph(20,xmid,erx[i]);
+>>>>>>> 45f282ed39204b6ea57cdfb60ac2ffb8ec6fced4
 
     c1.cd(i+1);
     rcx_g[i]->GetXaxis()->SetTitle("x_{Bj}");
@@ -328,6 +370,26 @@ int main(int argc,char *argv[])
     rcxt_g_d[i]->Draw("SAME");
     l.Draw("SAME");
     c1.Update();
+<<<<<<< HEAD
+
+    erx_g[i]->SetMarkerStyle(22);
+    erx_g[i]->SetMarkerColor(601);
+    erx_g[i]->SetMarkerSize(3);
+    erx_g[i]->SetFillColor(601);
+    erx_g[i]->SetFillStyle(3001);
+    erx_g[i]->GetYaxis()->SetRangeUser(-.05,.05);
+    erx_g[i]->GetXaxis()->SetTitle("x_{Bj}");
+    erx_g[i]->GetYaxis()->SetTitle("ER[|DJANGOH-TERAD|/DJANGOH]");
+    mg_x->Add(erx_g[i],"AP");
+  }
+  c3.cd(1);
+  mg_x->SetMinimum(-.05);
+  mg_x->SetMaximum(.05);
+  mg_x->SetTitle("ER");
+  mg_x->Draw("AP");
+  c3.Update();
+=======
+>>>>>>> 45f282ed39204b6ea57cdfb60ac2ffb8ec6fced4
 
     erx_g[i]->SetMarkerStyle(22);
     erx_g[i]->SetMarkerColor(601);
@@ -346,18 +408,25 @@ int main(int argc,char *argv[])
   mg_x->Draw("AP");
   c3.Update();
 
-  for(int i=0;i<9;i++)
+  for(int i=0;i<20;i++)
   {
-    for(int j=0;j<5;j++)
+    for(int j=0;j<16;j++)
     {
       if(born[j][i] && re[j][i])
       {
 	      rcy[i][j] = double(sigre[j][i])/double(sigborn[j][i]);
         rcy_e[i][j] = double(1/sqrt(born[j][i]))+double(1/sqrt(re[j][i]));
+<<<<<<< HEAD
         ery[i][j] = (rcy[i][j]-(rc_table_y[x_ych[i]][y_xch[j]]
                                   +rc_table_y[x_ych[i+1]][y_xch[j+1]]
                                   +rc_table_y[x_ych[i]][y_xch[j+1]]
                                   +rc_table_y[x_ych[i+1]][y_xch[j]])/4);
+=======
+        ery[i][j] = (rcy[i][j]-(rc_table_y[9+i][1+j]
+                                  +rc_table_y[9+i+1][1+j+1]
+                                  +rc_table_y[9+i][1+j+1]
+                                  +rc_table_y[9+i+1][1+j])/4);
+>>>>>>> 45f282ed39204b6ea57cdfb60ac2ffb8ec6fced4
         // cout << "rcy_e["<<i<<"]["<<j<<"] = " << rcy_e[i][j] << endl;
       }
       else
@@ -367,10 +436,17 @@ int main(int argc,char *argv[])
         ery[i][j] = 0;
       }
     }
+<<<<<<< HEAD
     rcy_g[i] = new TGraphErrors(5,ymid,rcy[i],0,rcy_e[i]);
     rcyt_g_u[i] = new TGraph(19,ytable,rc_table_y[x_ych[i+1]]);
     rcyt_g_d[i] = new TGraph(19,ytable,rc_table_y[x_ych[i]]);
     ery_g[i] = new TGraph(5,ymid,ery[i]);
+=======
+    rcy_g[i] = new TGraphErrors(16,ymid,rcy[i],0,rcy_e[i]);
+    rcyt_g_u[i] = new TGraph(19,ytable,rc_table_y[9+i+1]);
+    rcyt_g_d[i] = new TGraph(19,ytable,rc_table_y[9+i]);
+    ery_g[i] = new TGraph(16,ymid,ery[i]);
+>>>>>>> 45f282ed39204b6ea57cdfb60ac2ffb8ec6fced4
 
     c2.cd(i+1);
     rcy_g[i]->GetXaxis()->SetTitle("y");
@@ -412,15 +488,15 @@ int main(int argc,char *argv[])
 
   cout << "x/y";
 
-  for(int i=0;i<5;i++)
+  for(int i=0;i<16;i++)
     cout << "\t" << ytab[i];
 
   cout << endl;
 
-  for(int j=0;j<9;j++)
+  for(int j=0;j<20;j++)
   {
     cout << xtab[j];
-    for(int i=0;i<5;i++)
+    for(int i=0;i<16;i++)
     {
       cout << "\t" << born[i][j];
     }
@@ -429,15 +505,15 @@ int main(int argc,char *argv[])
 
   cout << "x/y";
 
-  for(int i=0;i<5;i++)
+  for(int i=0;i<16;i++)
     cout << "\t" << ytab[i];
 
   cout << endl;
 
-  for(int j=0;j<9;j++)
+  for(int j=0;j<20;j++)
   {
     cout << xtab[j];
-    for(int i=0;i<5;i++)
+    for(int i=0;i<16;i++)
     {
       cout << "\t" << re[i][j];
     }
@@ -448,15 +524,15 @@ int main(int argc,char *argv[])
 
   outfile << "x/y";
 
-  for(int i=0;i<5;i++)
+  for(int i=0;i<16;i++)
     outfile << "\t" << ytab[i];
 
   outfile << endl;
 
-  for(int j=0;j<9;j++)
+  for(int j=0;j<20;j++)
   {
     outfile << xtab[j];
-    for(int i=0;i<5;i++)
+    for(int i=0;i<16;i++)
     {
       outfile << "\t" << rcx[i][j];
     }

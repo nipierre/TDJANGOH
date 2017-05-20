@@ -7,7 +7,6 @@
 # define VERBOSE 0
 # define PBSTR "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||"
 # define PBWIDTH 60
-# define NEVENTS 50000
 
 using namespace std;
 
@@ -18,24 +17,34 @@ void printProgress (int event, int total)
     int val = (int) (percentage * 100);
     int lpad = (int) (percentage * PBWIDTH);
     int rpad = PBWIDTH - lpad;
-    printf ("\r Progress%s %3d%% [%.*s%*s] (%d/%d)", points[int(event/16)%4].c_str(), val, lpad, PBSTR, rpad, "", event, total);
+    printf ("\r Progress%s %3d%% [%.*s%*s]", points[int(event/16)%6].c_str(), val, lpad, PBSTR, rpad, "");
     fflush (stdout);
 }
 
-int main()
+int main(int argc,char *argv[])
 {
+
+  if(argc != 3)
+  {
+    cout << "ERROR : Wrong number of arguments" << endl;
+    cout << "Expected 3, received " << argc << " !" << endl;
+    cout << "USAGE : \n ./rc_calc input_file nb_evts" << endl;
+    return 1;
+  }
+
   TDjangoh* tDjangoh;
   int nb;
   float x;
   float y;
   float Q2;
+  int NEVENTS = atoi(argv[2]);
 
   cout << "Instance creation.." << endl;
   tDjangoh = new TDjangoh();
   cout << "Instance created !" << endl;
 
   cout << "Initialization.." << endl;
-  tDjangoh->Initialize("utils/djangohsettings_dvcs2016.xml");
+  tDjangoh->Initialize(argv[1]);
   cout << "Initialized !" << endl;
 
   cout << "\n\nEvents Generation (" << NEVENTS << " events).." << endl;
