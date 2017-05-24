@@ -4,7 +4,6 @@
 
 #include "TDjangoh.h"
 
-# define VERBOSE 0
 # define PBSTR "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||"
 # define PBWIDTH 60
 
@@ -24,12 +23,41 @@ void printProgress (int event, int total)
 int main(int argc,char *argv[])
 {
 
-  if(argc != 3)
+  if(argc < 3)
   {
     cout << "ERROR : Wrong number of arguments" << endl;
-    cout << "Expected 3, received " << argc << " !" << endl;
-    cout << "USAGE : \n ./rc_calc input_file nb_evts" << endl;
+    cout << "At least expected 3, received " << argc << " !" << endl;
+    cout << "USAGE : \n ./rc_calc input_file nb_evts + flags" << endl;
     return 1;
+  }
+
+  int VERBOSE=1;
+  float base_energy=160;
+  float rnd=0;
+
+  for (int i = 1; i < argc; i++)
+  {
+    if (i+1 != argc)
+    {
+      if (string(argv[i]) == "-verbose")
+      {
+        VERBOSE = atoi(argv[i + 1]);
+      }
+    }
+    if (i+1 != argc)
+    {
+      if (string(argv[i]) == "-rand")
+      {
+        rnd = atof(argv[i + 1]);
+      }
+    }
+    if (i+1 != argc)
+    {
+      if (string(argv[i]) == "-energy")
+      {
+        base_energy = atof(argv[i + 1]);
+      }
+    }
   }
 
   TDjangoh* tDjangoh;
@@ -51,12 +79,20 @@ int main(int argc,char *argv[])
   for(int i=0; i<NEVENTS; i++)
   {
 
-    tDjangoh->Configure(160.0/*+rand()%40*/,0);
+    if(rnd)
+      tDjangoh->Configure(base_energy+rand()%40,0);
+    else
+      tDjangoh->Configure(base_energy,0);
 
-    printProgress (i+1,NEVENTS);
+
+    if(VERBOSE>0)
+    {
+      printProgress (i+1,NEVENTS);
+    }
+
     tDjangoh->GenerateEvent();
 
-    if(VERBOSE)
+    if(VERBOSE>2)
     {
        nb = tDjangoh->GetN();
        cout << "Total number of particles : " << nb << endl;
