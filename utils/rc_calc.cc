@@ -18,6 +18,7 @@
 #include <vector>
 #include <math.h>
 
+
 #define _USE_MATH_DEFINES
 
 #define RCx_pdf "RCx.pdf"
@@ -26,22 +27,52 @@
 #define ERy_pdf "ERy.pdf"
 #define OUTFILE "rc.txt"
 
+// COLORS
+
+#define RST  "\x1B[0m"
+#define KRED  "\x1B[31m"
+#define KGRN  "\x1B[32m"
+#define KYEL  "\x1B[33m"
+#define KBLU  "\x1B[34m"
+#define KMAG  "\x1B[35m"
+#define KCYN  "\x1B[36m"
+#define KWHT  "\x1B[37m"
+
+#define FRED(x) KRED x RST
+#define FGRN(x) KGRN x RST
+#define FYEL(x) KYEL x RST
+#define FBLU(x) KBLU x RST
+#define FMAG(x) KMAG x RST
+#define FCYN(x) KCYN x RST
+#define FWHT(x) KWHT x RST
+
+#define BOLD(x) "\x1B[1m" x RST
+#define UNDL(x) "\x1B[4m" x RST
+
+// LOADING BAR
+
+# define PBSTR "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||"
+# define PBWIDTH 60
+
 using namespace std;
+
+void printProgress (int event, int total)
+{
+    string points[6] = {"   ",".  ",".. ","..."," ..","  ."};
+    double percentage = double(event)/double(total);
+    int val = (int) (percentage * 100);
+    int lpad = (int) (percentage * PBWIDTH);
+    int rpad = PBWIDTH - lpad;
+    printf (FGRN("\r Progress%s %3d%% [%.*s%*s]"), points[int(event/16)%6].c_str(), val, lpad, PBSTR, rpad, "");
+    fflush (stdout);
+}
 
 int main(int argc,char *argv[])
 {
 
-  if(argc != 4)
-  {
-    cout << "ERROR : Wrong number of arguments" << endl;
-    cout << "Expected 4, received " << argc << " !" << endl;
-    cout << "USAGE : \n ./rc_calc all_process_file born_file rc_table_number" << endl;
-    return 1;
-  }
-
   double dummy, x, y, Q2, xhad, yhad, Q2had;
   string sdum;
-  double qel;
+  double quasiel;
   int id;
 
   double xtab[21] = {.004,.006,.008,.01,.013,.016,.02,.03,.04,.06,
@@ -76,40 +107,63 @@ int main(int argc,char *argv[])
   int evtotborn;
   double sigtotre;
   double sigtotborn;
+  int evtotre_t[20];
+  int evtotborn_t[20];
+  double sigtotre_t[20];
+  double sigtotborn_t[20];
   double sigre[16][20];
   double sigborn[16][20];
-<<<<<<< HEAD
-=======
-  int qel;
+
+  int qel=0;
+  string TempFile, FileRC, FileBorn, fileFlag;
 
   for (int i = 1; i < argc; i++)
   {
-    if (i + 1 != argc)
+    if (string(argv[i]) == "-h")
     {
-      if (argv[i] == "-l")
+      cout << FCYN("HELP : available flags :") << endl;
+      cout << FCYN("-f [RC_file] [Born_file] : specific files") << endl;
+      cout << FCYN("-l [filename_template] : a list of files in xbins (RC//or//Born_[filename_template]_xbin_i_i+1.dat)\n xbins = [.004,.006,.008,.01,.013,.016,.02,.03,.04,.06,.08,.1,.15,.2,.3,.4,.5,.6,.7,.8,.9]") << endl;
+      cout << FCYN("-qel : include quasi-elastic contribution for TERAD RC") << endl;
+      return 0;
+    }
+    if (string(argv[i]) == "-qel")
+    {
+      cout << FBLU("NOTICE : Quasi-elastic included.") << endl;
+      qel = 1;
+    }
+    if (i+1 < argc)
+    {
+      if (string(argv[i]) == "-l" && fileFlag != "-f")
       {
-        myFile = argv[i + 1];
+        TempFile = argv[i + 1];
+        fileFlag = "-l";
       }
-      else if (argv[i] == "-f")
+    }
+    if(i+2 < argc)
+    {
+      if (string(argv[i]) == "-f" && fileFlag != "-l")
       {
-        myPath = argv[i+1];
-      }
-      else if (argv[i] == "-qel")
-      {
-        qel = argv[i+1];
+        FileRC = argv[i+1];
+        FileBorn = argv[i+2];
+        fileFlag = "-f";
       }
     }
   }
->>>>>>> 45f282ed39204b6ea57cdfb60ac2ffb8ec6fced4
+
+  if(fileFlag != "-l" && fileFlag != "-f")
+  {
+    cout << BOLD(FRED("ERROR : expected some flags")) << endl;
+    cout << BOLD(FRED("Expected -f or -l for input files !")) << endl;
+    cout << BOLD(FRED("USAGE : \n ./rc_calc -f [RC_file] [Born_file] \nOR\n ./rc_calc -l [filename_template]")) << endl;
+    cout << BOLD(FRED("[-h for further help]")) << endl;
+    return 1;
+  }
 
   TCanvas c1("RC_xy_f(x)","RC_xy_f(x)",3200,1600);
   c1.Divide(4,4);
   TCanvas c2("RC_xy_f(y)","RC_xy_f(y)",3200,1600);
-<<<<<<< HEAD
-  c2.Divide(3,3);
-=======
   c2.Divide(5,4);
->>>>>>> 45f282ed39204b6ea57cdfb60ac2ffb8ec6fced4
   TCanvas c3("ER_xy_f(x)","ER_xy_f(x)",3200,1600);
   c3.Divide(1,1);
   TCanvas c4("ER_xy_f(y)","ER_xy_f(y)",3200,1600);
@@ -135,122 +189,239 @@ int main(int argc,char *argv[])
   	}
   }
 
-  ifstream revt(argv[1]);
-
-  revt >> evtotre;
-  revt >> sigtotre;
-
-  while(revt >> dummy)
+  if(fileFlag == "-f")
   {
-    revt >> x >> y >> Q2 >> xhad >> yhad >> Q2had;
-    // cout << x << " " << y << " " << Q2 << " " << xhad << " " << yhad << " " << Q2had << endl;
+    ifstream revt(FileRC);
 
-    for(int j=0; j<3; j++)
+    revt >> evtotre;
+    revt >> sigtotre;
+
+    while(revt >> dummy)
     {
-      revt >> id;
-      for(int i=0; i<5; i++)
+      revt >> x >> y >> Q2 >> xhad >> yhad >> Q2had;
+      // cout << x << " " << y << " " << Q2 << " " << xhad << " " << yhad << " " << Q2had << endl;
+
+      for(int j=0; j<3; j++)
       {
-        revt >> dummy;
+        revt >> id;
+        for(int i=0; i<5; i++)
+        {
+          revt >> dummy;
+        }
+      }
+
+      int xi = 0;
+      int yi = 0;
+      int xflag = 0;
+      int yflag = 0;
+
+      for(int i=1; i<21; i++)
+      {
+        if(xtab[i-1] < x && x < xtab[i])
+        {
+          xi = i-1;
+          xflag = 1;
+          break;
+        }
+      }
+      for(int i=1; i<17; i++)
+      {
+        if(ytab[i-1] < y && y < ytab[i])
+        {
+          yi = i-1;
+          yflag = 1;
+          break;
+        }
+      }
+
+      if(xflag && yflag)
+      {
+        // cout << "x = " << x << ", y = " << y << endl;
+        re[yi][xi]++;
+      }
+      else
+      {
+        // cout << "x = " << x << ", y = " << y << endl;
       }
     }
 
-    int xi = 0;
-    int yi = 0;
-    int xflag = 0;
-    int yflag = 0;
+    revt.close();
 
-    for(int i=1; i<21; i++)
+    ifstream bevt(FileBorn);
+
+    bevt >> evtotborn;
+    bevt >> sigtotborn;
+
+    while(bevt >> dummy)
     {
-      if(xtab[i-1] < x && x < xtab[i])
+      bevt >> x >> y >> Q2 >> xhad >> yhad >> Q2had;
+
+      for(int j=0; j<3; j++)
       {
-        xi = i-1;
-        xflag = 1;
-        break;
+        bevt >> id;
+        for(int i=0; i<5; i++)
+        {
+          bevt >> dummy;
+        }
+      }
+
+      int xi = 0;
+      int yi = 0;
+      int xflag = 0;
+      int yflag = 0;
+
+      for(int i=1; i<21; i++)
+      {
+        if(xtab[i-1] < x && x < xtab[i])
+        {
+          xi = i-1;
+          xflag = 1;
+          break;
+        }
+      }
+      for(int i=1; i<17; i++)
+      {
+        if(ytab[i-1] < y && y < ytab[i])
+        {
+          yi = i-1;
+          yflag = 1;
+          break;
+        }
+      }
+
+      if(xflag && yflag)
+      {
+        // cout << "x = " << x << ", y = " << y << endl;
+        born[yi][xi]++;
+      }
+      else
+      {
+        // cout << "x = " << x << ", y = " << y << endl;
       }
     }
-    for(int i=1; i<17; i++)
+    bevt.close();
+  }
+  else if(fileFlag == "-l")
+  {
+    for(int i=0; i<20; i++)
     {
-      if(ytab[i-1] < y && y < ytab[i])
-      {
-        yi = i-1;
-        yflag = 1;
-        break;
-      }
-    }
+      printProgress (2*i+1,40);
 
-    if(xflag && yflag)
-    {
-      // cout << "x = " << x << ", y = " << y << endl;
-      re[yi][xi]++;
-    }
-    else
-    {
-      // cout << "x = " << x << ", y = " << y << endl;
+      ifstream revt(Form("data/RC_%s_xbin_%d_%d.dat",TempFile.c_str(),i,i+1));
+
+      revt >> evtotre_t[i];
+      revt >> sigtotre_t[i];
+
+      while(revt >> dummy)
+      {
+        revt >> x >> y >> Q2 >> xhad >> yhad >> Q2had;
+        // cout << x << " " << y << " " << Q2 << " " << xhad << " " << yhad << " " << Q2had << endl;
+
+        for(int j=0; j<3; j++)
+        {
+          revt >> id;
+          for(int i=0; i<5; i++)
+          {
+            revt >> dummy;
+          }
+        }
+
+        int xi = 0;
+        int yi = 0;
+        int xflag = 0;
+        int yflag = 0;
+
+        for(int i=1; i<21; i++)
+        {
+          if(xtab[i-1] < x && x < xtab[i])
+          {
+            xi = i-1;
+            xflag = 1;
+            break;
+          }
+        }
+        for(int i=1; i<17; i++)
+        {
+          if(ytab[i-1] < y && y < ytab[i])
+          {
+            yi = i-1;
+            yflag = 1;
+            break;
+          }
+        }
+
+        if(xflag && yflag)
+        {
+          // cout << "x = " << x << ", y = " << y << endl;
+          re[yi][xi]++;
+        }
+        else
+        {
+          // cout << "x = " << x << ", y = " << y << endl;
+        }
+      }
+
+      revt.close();
+
+      printProgress (2*i+2,40);
+
+      ifstream bevt(Form("data/Born_%s_xbin_%d_%d.dat",TempFile.c_str(),i,i+1));
+
+      bevt >> evtotborn_t[i];
+      bevt >> sigtotborn_t[i];
+
+      while(bevt >> dummy)
+      {
+        bevt >> x >> y >> Q2 >> xhad >> yhad >> Q2had;
+
+        for(int j=0; j<3; j++)
+        {
+          bevt >> id;
+          for(int i=0; i<5; i++)
+          {
+            bevt >> dummy;
+          }
+        }
+
+        int xi = 0;
+        int yi = 0;
+        int xflag = 0;
+        int yflag = 0;
+
+        for(int i=1; i<21; i++)
+        {
+          if(xtab[i-1] < x && x < xtab[i])
+          {
+            xi = i-1;
+            xflag = 1;
+            break;
+          }
+        }
+        for(int i=1; i<17; i++)
+        {
+          if(ytab[i-1] < y && y < ytab[i])
+          {
+            yi = i-1;
+            yflag = 1;
+            break;
+          }
+        }
+
+        if(xflag && yflag)
+        {
+          // cout << "x = " << x << ", y = " << y << endl;
+          born[yi][xi]++;
+        }
+        else
+        {
+          // cout << "x = " << x << ", y = " << y << endl;
+        }
+      }
+      bevt.close();
     }
   }
 
-  revt.close();
-
-  ifstream bevt(argv[2]);
-
-  bevt >> evtotborn;
-  bevt >> sigtotborn;
-
-  while(bevt >> dummy)
-  {
-    bevt >> x >> y >> Q2 >> xhad >> yhad >> Q2had;
-
-    for(int j=0; j<3; j++)
-    {
-      bevt >> id;
-      for(int i=0; i<5; i++)
-      {
-        bevt >> dummy;
-      }
-    }
-
-    int xi = 0;
-    int yi = 0;
-    int xflag = 0;
-    int yflag = 0;
-
-    for(int i=1; i<21; i++)
-    {
-      if(xtab[i-1] < x && x < xtab[i])
-      {
-        xi = i-1;
-        xflag = 1;
-        break;
-      }
-    }
-    for(int i=1; i<17; i++)
-    {
-      if(ytab[i-1] < y && y < ytab[i])
-      {
-        yi = i-1;
-        yflag = 1;
-        break;
-      }
-    }
-
-    if(xflag && yflag)
-    {
-      // cout << "x = " << x << ", y = " << y << endl;
-      born[yi][xi]++;
-    }
-    else
-    {
-      // cout << "x = " << x << ", y = " << y << endl;
-    }
-  }
-
-  bevt.close();
-
-<<<<<<< HEAD
-  if(atoi(argv[3])==1)
-=======
   if(qel==1)
->>>>>>> 45f282ed39204b6ea57cdfb60ac2ffb8ec6fced4
   {
     ifstream table("data/hh160_r1998_f2tulay_compass_grv.asy_hcorr.txt");
     for(int i=0; i<19; i++)
@@ -273,11 +444,7 @@ int main(int argc,char *argv[])
     }
     table.close();
   }
-<<<<<<< HEAD
-  else if(atoi(argv[3])==2)
-=======
   else if(qel==0)
->>>>>>> 45f282ed39204b6ea57cdfb60ac2ffb8ec6fced4
   {
     ifstream table("data/hh160_r1998_f2tulay_compass_grv.new_table.txt");
     for(int i=0; i<30; i++)
@@ -289,26 +456,26 @@ int main(int argc,char *argv[])
           table >> sdum;
           // cout << sdum << "\t";
         }
-        table >> qel >> sdum >> sdum >> sdum >> rc_table[j][i] >> sdum;
-        cout << "\t" << qel
+        table >> quasiel >> sdum >> sdum >> sdum >> rc_table[j][i] >> sdum;
+        /*cout << "\t" << quasiel
         << "\t" << sdum
         << "\t" << sdum
         << "\t" << sdum
         << "\t" << rc_table[j][i]
-        << "\t" << sdum;
-        rc_table[j][i] -= qel;
+        << "\t" << sdum;*/
+        rc_table[j][i] -= quasiel;
         rc_table[j][i] = 1+rc_table[j][i]/100;
         // rc_table[j][i] = 1/rc_table[j][i];
         rc_table_y[i][j]=rc_table[j][i];
 
-        cout << endl;
+        //cout << endl;
       }
     }
     table.close();
   }
 
-  TLine l(0,1,0.4,1);
-  TLine l2(0.08,1,0.645,1);
+  TLine l(0,1,0.94,1);
+  TLine l2(0.08,1,0.95,1);
 
   ofstream outfile(OUTFILE);
 
@@ -318,8 +485,16 @@ int main(int argc,char *argv[])
     {
       if(born[i][j] && re[i][j])
       {
-	      sigre[i][j] = double(re[i][j])*double(sigtotre)/double(evtotre);
-        sigborn[i][j] = double(born[i][j])*double(sigtotborn)/double(evtotborn);
+        if(fileFlag == "-f")
+        {
+  	      sigre[i][j] = double(re[i][j])*double(sigtotre)/double(evtotre);
+          sigborn[i][j] = double(born[i][j])*double(sigtotborn)/double(evtotborn);
+        }
+        else
+        {
+          sigre[i][j] = double(re[i][j])*double(sigtotre_t[j])/double(evtotre_t[j]);
+          sigborn[i][j] = double(born[i][j])*double(sigtotborn_t[j])/double(evtotborn_t[j]);
+        }
 	      rcx[i][j] = double(sigre[i][j])/double(sigborn[i][j]);
         rcx_e[i][j] = double(1/sqrt(born[i][j]))+double(1/sqrt(re[i][j]));
         erx[i][j] = (rcx[i][j]-(rc_table[1+i][9+j]
@@ -339,17 +514,11 @@ int main(int argc,char *argv[])
         erx[i][j] = 0;
       }
     }
-<<<<<<< HEAD
-    rcx_g[i] = new TGraphErrors(9,xmid,rcx[i],0,rcx_e[i]);
-    rcxt_g_u[i] = new TGraph(30,xtable,rc_table[y_xch[i+1]]);
-    rcxt_g_d[i] = new TGraph(30,xtable,rc_table[y_xch[i]]);
-    erx_g[i] = new TGraph(9,xmid,erx[i]);
-=======
+
     rcx_g[i] = new TGraphErrors(20,xmid,rcx[i],0,rcx_e[i]);
     rcxt_g_u[i] = new TGraph(30,xtable,rc_table[1+i+1]);
     rcxt_g_d[i] = new TGraph(30,xtable,rc_table[1+i]);
     erx_g[i] = new TGraph(20,xmid,erx[i]);
->>>>>>> 45f282ed39204b6ea57cdfb60ac2ffb8ec6fced4
 
     c1.cd(i+1);
     rcx_g[i]->GetXaxis()->SetTitle("x_{Bj}");
@@ -359,7 +528,7 @@ int main(int argc,char *argv[])
     rcx_g[i]->SetMarkerStyle(22);
     rcx_g[i]->SetMarkerColor(601);
     rcx_g[i]->SetMarkerSize(3);
-    rcx_g[i]->GetYaxis()->SetRangeUser(0.8,1.3);
+    rcx_g[i]->GetYaxis()->SetRangeUser(0.8,1.5);
     rcx_g[i]->SetFillColor(601);
     rcx_g[i]->SetFillStyle(3001);
     rcx_g[i]->Draw("A3");
@@ -370,40 +539,21 @@ int main(int argc,char *argv[])
     rcxt_g_d[i]->Draw("SAME");
     l.Draw("SAME");
     c1.Update();
-<<<<<<< HEAD
 
     erx_g[i]->SetMarkerStyle(22);
     erx_g[i]->SetMarkerColor(601);
     erx_g[i]->SetMarkerSize(3);
     erx_g[i]->SetFillColor(601);
     erx_g[i]->SetFillStyle(3001);
-    erx_g[i]->GetYaxis()->SetRangeUser(-.05,.05);
+    //erx_g[i]->GetYaxis()->SetRangeUser(-.05,.05);
     erx_g[i]->GetXaxis()->SetTitle("x_{Bj}");
     erx_g[i]->GetYaxis()->SetTitle("ER[|DJANGOH-TERAD|/DJANGOH]");
     mg_x->Add(erx_g[i],"AP");
   }
-  c3.cd(1);
-  mg_x->SetMinimum(-.05);
-  mg_x->SetMaximum(.05);
-  mg_x->SetTitle("ER");
-  mg_x->Draw("AP");
-  c3.Update();
-=======
->>>>>>> 45f282ed39204b6ea57cdfb60ac2ffb8ec6fced4
 
-    erx_g[i]->SetMarkerStyle(22);
-    erx_g[i]->SetMarkerColor(601);
-    erx_g[i]->SetMarkerSize(3);
-    erx_g[i]->SetFillColor(601);
-    erx_g[i]->SetFillStyle(3001);
-    erx_g[i]->GetYaxis()->SetRangeUser(-.05,.05);
-    erx_g[i]->GetXaxis()->SetTitle("x_{Bj}");
-    erx_g[i]->GetYaxis()->SetTitle("ER[|DJANGOH-TERAD|/DJANGOH]");
-    mg_x->Add(erx_g[i],"AP");
-  }
   c3.cd(1);
-  mg_x->SetMinimum(-.05);
-  mg_x->SetMaximum(.05);
+  // mg_x->SetMinimum(-.05);
+  // mg_x->SetMaximum(.05);
   mg_x->SetTitle("ER");
   mg_x->Draw("AP");
   c3.Update();
@@ -416,17 +566,10 @@ int main(int argc,char *argv[])
       {
 	      rcy[i][j] = double(sigre[j][i])/double(sigborn[j][i]);
         rcy_e[i][j] = double(1/sqrt(born[j][i]))+double(1/sqrt(re[j][i]));
-<<<<<<< HEAD
-        ery[i][j] = (rcy[i][j]-(rc_table_y[x_ych[i]][y_xch[j]]
-                                  +rc_table_y[x_ych[i+1]][y_xch[j+1]]
-                                  +rc_table_y[x_ych[i]][y_xch[j+1]]
-                                  +rc_table_y[x_ych[i+1]][y_xch[j]])/4);
-=======
         ery[i][j] = (rcy[i][j]-(rc_table_y[9+i][1+j]
                                   +rc_table_y[9+i+1][1+j+1]
                                   +rc_table_y[9+i][1+j+1]
                                   +rc_table_y[9+i+1][1+j])/4);
->>>>>>> 45f282ed39204b6ea57cdfb60ac2ffb8ec6fced4
         // cout << "rcy_e["<<i<<"]["<<j<<"] = " << rcy_e[i][j] << endl;
       }
       else
@@ -436,17 +579,11 @@ int main(int argc,char *argv[])
         ery[i][j] = 0;
       }
     }
-<<<<<<< HEAD
-    rcy_g[i] = new TGraphErrors(5,ymid,rcy[i],0,rcy_e[i]);
-    rcyt_g_u[i] = new TGraph(19,ytable,rc_table_y[x_ych[i+1]]);
-    rcyt_g_d[i] = new TGraph(19,ytable,rc_table_y[x_ych[i]]);
-    ery_g[i] = new TGraph(5,ymid,ery[i]);
-=======
     rcy_g[i] = new TGraphErrors(16,ymid,rcy[i],0,rcy_e[i]);
     rcyt_g_u[i] = new TGraph(19,ytable,rc_table_y[9+i+1]);
     rcyt_g_d[i] = new TGraph(19,ytable,rc_table_y[9+i]);
     ery_g[i] = new TGraph(16,ymid,ery[i]);
->>>>>>> 45f282ed39204b6ea57cdfb60ac2ffb8ec6fced4
+
 
     c2.cd(i+1);
     rcy_g[i]->GetXaxis()->SetTitle("y");
@@ -456,7 +593,7 @@ int main(int argc,char *argv[])
     rcy_g[i]->SetMarkerStyle(22);
     rcy_g[i]->SetMarkerColor(601);
     rcy_g[i]->SetMarkerSize(3);
-    rcy_g[i]->GetYaxis()->SetRangeUser(0.8,1.3);
+    rcy_g[i]->GetYaxis()->SetRangeUser(0.8,1.5);
     rcy_g[i]->SetFillColor(601);
     rcy_g[i]->SetFillStyle(3001);
     rcy_g[i]->Draw("A3");
@@ -473,14 +610,15 @@ int main(int argc,char *argv[])
     ery_g[i]->SetMarkerSize(3);
     ery_g[i]->SetFillColor(601);
     ery_g[i]->SetFillStyle(3001);
-    ery_g[i]->GetYaxis()->SetRangeUser(-.05,.05);
+    //ery_g[i]->GetYaxis()->SetRangeUser(-.05,.05);
     ery_g[i]->GetXaxis()->SetTitle("y");
     ery_g[i]->GetYaxis()->SetTitle("ER[|DJANGOH-TERAD|/DJANGOH]");
     mg_y->Add(ery_g[i],"AP");
   }
+
   c4.cd(1);
-  mg_y->SetMinimum(-.05);
-  mg_y->SetMaximum(.05);
+  // mg_y->SetMinimum(-.05);
+  // mg_y->SetMaximum(.05);
   mg_y->SetTitle("ER");
   mg_y->Draw("AP");
   c4.Update();
