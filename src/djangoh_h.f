@@ -14754,6 +14754,35 @@ C
 C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 C
 C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C-- NMC PARAMETRISATION ADDED BY N. PIERRE (24/05/17) FOR TEST PURPOSE
+
+      SUBROUTINE NMC(X,Q2,ZF1,ZF2)
+      IMPLICIT DOUBLE PRECISION (A-H,M,O-Z)
+      ZF1=0D0
+      ZF2=0D0
+
+
+C--->
+      call rfitpar(16)
+      call inijkb
+
+c------and now getting F2_p (marked: df2)
+
+      if (Q2 .lt. 0.2d0) then
+        call getjkb(X,Q2,ZF2)
+      else
+        call df2p15(X,Q2,ZF2)
+      endif
+
+      call R1990fun(X,Q2,DR,DDR)
+
+C--->
+      RETURN
+      END
+C
+C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 C
       SUBROUTINE FIUSER(X,Q2,ZF1,ZF2,IPDFR)
       IMPLICIT DOUBLE PRECISION (A-H,M,O-Z)
@@ -14925,6 +14954,18 @@ C---DONNACHIE LANDSHOFF with pdf's
           GOTO 2000
          ELSE
           GOTO 1000
+        ENDIF
+      ELSEIF (ILQMOD.EQ.6) THEN
+C---NMC OLD (ADDED BY N. PIERRE 24/05/17 FOR TEST PURPOSE)
+        DO 5 IB1=1,2
+        DO 5 IB2=1,2
+        F1(IB1,IB2)=0D0
+        F2(IB1,IB2)=0D0
+    5   F3(IB1,IB2)=0D0
+        CALL NMC(X,Q2,ZF1,ZF2)
+        F1(1,1)=ZF1
+        F2(1,1)=ZF2
+        GOTO 2000
         ENDIF
       ELSEIF (ILQMOD.EQ.10) THEN
 C---STRUCTURE FUNCTIONS FROM USER ROUTINE
