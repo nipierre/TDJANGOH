@@ -102,14 +102,40 @@ public:
   void             GenerateEvent();
   /*!
   * \brief Initialization of DJANGOH
-  * \param beam : Type of particle for the beam
-  * \param nuc_A : A number of the target nucleus
-  * \param nuc_Z : Z number of the target nucleus
-  * \param beam_e : Energy of the beam (in GeV)
-  * \param nuc_e : Energy of the target (in GeV, 0 for fixed target)
-  * \param pol : Polarization of the target
   */
-  void             Initialize(const string pFilename);
+  void             Initialize();
+  /*!
+  * \brief Reading of parameters in XML file
+  * \param pFilename : XML file path
+  */
+  void             ReadXMLFile(const string pFilename);
+  /*!
+  * \brief Modification of kinematical cuts
+  * \param pcut : types of cut (see djangoh manual for further infos)
+  * \param pxmin : x lower cut
+  * \param pxmax : x higher cut
+  * \param pymin : y lower cut
+  * \param pymax : y higher cut
+  * \param pq2min : Q2 lower cut
+  * \param pq2max : Q2 higher cut
+  * \param pwmin : W lower cut
+  */
+  void             ModKineCuts(int pcut, double pxmin, double pxmax,
+                               double pymin, double pymax, double pq2min,
+                               double pq2max, double pwmin);
+  /*!
+  * \brief Configuration for Born w/o quasielastic contribution generation
+  */
+  void             BornWOqelNC();
+  /*!
+  * \brief Configuration for leptonic RC w/o quasielastic contribution generation
+  */
+  void             RClepWOqelNC();
+  /*!
+  * \brief Choice of beam particle
+  * \param pname : particle (e+/e-/mu+/mu-)
+  */
+  void             SetParticle(const char* pname);
   /*!
   * \brief Configuration of DJANGOH
   * \param beam_e : Energy of the beam (in GeV)
@@ -371,6 +397,13 @@ public:
   void        SetYHAD(double y) { fDjkin->DJYHAD = y; }
 
   void        SetQ2HAD(double q) { fDjkin->DJQ2HAD = q; }
+
+  // ---------------------------------------------------------------------------
+  // Cross-Section
+
+  double      GetSigtot();
+
+  double      GetSigtrr();
 };
 
 #endif

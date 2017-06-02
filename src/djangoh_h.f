@@ -274,7 +274,9 @@ C-------------------------
       COMMON /HSALFS/ PAR111,PAR112,PARL11,PARL19,MST111,MST115
       REAL PAR111,PAR112,PARL11,PARL19
       INTEGER                                     MST111,MST115
-      COMMON /HSLPTU/ HSLST(40)
+      COMMON /HSLPTU/ HSLST(40), HSPARL(30)
+      INTEGER         HSLST
+      DOUBLE PRECISION           HSPARL
       COMMON /HSVRBZ/ VERBOZ
       INTEGER         VERBOZ
       CHARACTER*80 LHAPATHI
@@ -945,7 +947,7 @@ C***********************************************************************
         WRITE(6,'(5X,A,A)') OUTFILENAM(1:ICH)//'_out.dat'
         WRITE(6,'(5X,A)') '***** from now on '
       ENDIF
-      OPEN(LUNOUT,FILE=OUTFILENAM(1:ICH)//'_out.dat',STATUS='REPLACE')
+C      OPEN(LUNOUT,FILE=OUTFILENAM(1:ICH)//'_out.dat',STATUS='REPLACE')
       GOTO 1
  2600 CONTINUE
 C
@@ -1105,13 +1107,14 @@ C---Now we can open output files
       OPEN(LUNRND,FILE=OUTFILENAM(1:ICH)//'_rnd.dat'
      *     ,STATUS='REPLACE', FORM='FORMATTED')
       OPEN(31,FILE=OUTFILENAM(1:ICH)//'_evt.dat',STATUS='UNKNOWN')
+      OPEN(19,FILE=OUTFILENAM(1:ICH)//'_sigtot.dat',STATUS='UNKNOWN')
 C---PRINT THE TITLE ALSO TO FILE
       IF(VERBOZ.EQ.1) THEN
         WRITE(LUNOUT,9)
       ENDIF
 
 C---DO THE NECESSARY INITIALIZATION / PRINT PARAMETERS
-      CALL HSPRLG
+C      CALL HSPRLG
 C
 C---CHECK CONSISTENCY OF INPUT DATA FILE
 C      IF(INFOCA.EQ.1) THEN
@@ -1164,6 +1167,10 @@ C---LOOPY-LOOP OVER XSECTION GRID
       DO 3980 I = 1, GDSIZE
         INFOSA=0
         EELE=GDMEAN-GDSDDV+(I-1)*GDSCLE+GDSCLE/2
+
+C---PUTTING VARIABLE BACK TO ZERO (COZ IF SUBROUTINE USED SEVERAL TIMES)
+        SIGTOT(I)=0
+        SIGTRR(I)=0
 
 C---DO THE NECESSARY INITIALIZATION / PRINT PARAMETERS
         CALL HSPRLG
@@ -1882,6 +1889,8 @@ C---DETERMINE TOTAL CROSS SECTIONS AND ERRORS
  3908     CONTINUE
           SIGTRR(I)=SQRT(SIGTRR(I))
 
+          WRITE(19,*) SIGTOT(I)
+
 3980  CONTINUE
 
 C---READ INPUT FOR DJANGO6
@@ -1958,6 +1967,9 @@ C***********************************************************************
       COMMON /HSWGTC/ IWEIGS
       COMMON /HSONLY/ IHSONL
       COMMON /HSLTYP/ LEPIN1
+      COMMON /HSLPTU/ HSLST(40), HSPARL(30)
+      INTEGER         HSLST
+      DOUBLE PRECISION           HSPARL
       COMMON /LUJETS/ N,K(4000,5),P(4000,5),V(4000,5)
       COMMON /HSINTNC/ INC2,INC31,INC32,INC33,INC34,IEL2,IEL31,IEL32,
      +                 IEL33
@@ -2161,6 +2173,7 @@ C-------------------------
       SAVE /LHAPDFC/
       COMMON /LEPTOU/ CUTDJ(14),LST(40),PARL(30),XDJ,YDJ,W2DJ,Q2DJ,UDJ
       REAL            CUTDJ,            PARL,    XDJ,YDJ,W2DJ,Q2DJ,UDJ
+      INTEGER                   LST
       COMMON /DJKIN/ DJX,DJY,DJW2,DJQ2,DJU
       SAVE /DJKIN/
       COMMON /ISDEBUG/ ISDBG
@@ -2213,7 +2226,8 @@ C---INITIALIZATION OF USER ROUTINES---------
           ICC33=0
           ISCC33=0
         ENDIF
-        IF (ILQMOD.GT.1) THEN
+
+        IF (ILQMOD.GT.1.AND.HSLST(7+1).NE.-1) THEN
           WRITE(LUNOUT,'(A/A/A)')
      &    ' *** INCONSISTENT INPUT DATA: ILQMOD and FRAG ***',
      &    ' *** ILQMOD > 1 not allowed for FRAG .ne. -1  ***',
@@ -14794,18 +14808,20 @@ C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 C
 C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 C-- NMC PARAMETRISATION ADDED BY N. PIERRE (24/05/17) FOR TEST PURPOSE
+c-- Only for proton target
 
       SUBROUTINE NMC(X,Q2,ZF1,ZF2)
       IMPLICIT DOUBLE PRECISION (A-H,M,O-Z)
+      COMMON /NMCINI/ FT
       ZF1=0D0
       ZF2=0D0
 
-
-C--->
-      call rfitpar(16)
-      call inijkb
-
-c------and now getting F2_p (marked: df2)
+      IF(FT.NE.1) THEN
+        WRITE(6,*) 'INITIALISATION NMC PARAMETRISATION'
+        call rfitpar()
+        call inijkb
+        FT=1
+      ENDIF
 
       if (Q2 .lt. 0.2d0) then
         call getjkb(X,Q2,ZF2)
@@ -14815,12 +14831,1289 @@ c------and now getting F2_p (marked: df2)
 
       call R1990fun(X,Q2,DR,DDR)
 
-C--->
+      ZF1 = ((1+(0.938272*0.938272)*4*X*X/Q2)*ZF2)/(2*X*(1+DR))
+
       RETURN
       END
 C
 C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C FOLLOWS THE NECESSARY CODE FOR NMC PARAMETRISATION
+
+c===================================
+c-----F2 parameterisation parameters
+c-----parameters are put to the common block "fitpar", array "dpf2(15)"
+
+      subroutine rfitpar()
+      implicit double precision (a-h,o-z)
+      common /fitpar/ dpf2(15),if2typ,nf2p
+
+      IMAT = 1
+      IF2TYP = 4
+      NF2P = 15
+      DPF2(1) = -0.2499713175097D+00
+      DPF2(2) = 0.2396344728724D+01
+      DPF2(3) = 0.2289630236346D+00
+      DPF2(4) = 0.8498360257578D-01
+      DPF2(5) = 0.3860797992943D+01
+      DPF2(6) = -0.7414275585348D+01
+      DPF2(7) = 0.3434223579597D+01
+      DPF2(8) = 0.1141083888210D+00
+      DPF2(9) = -0.2235597858569D+01
+      DPF2(10) = 0.3115195484229D-01
+      DPF2(11) = 0.2135222381130D-01
+      DPF2(12) = -0.1451744104784D+01
+      DPF2(13) = 0.8474547402342D+01
+      DPF2(14) = -0.3437914208393D+02
+      DPF2(15) = 0.4588805973036D+02
+
+      return
+
+      end
+
+c===================================
+c===================================
+
+
+      SUBROUTINE df2p15(DX,DQ2,df2)
+      IMPLICIT DOUBLE PRECISION (a-h,o-z)
+      common /fitpar/ dpf2(15),if2typ,nf2p
 C
+      dimension dph2(15),dpd2(15)
+      DATA dph2 /-0.1011,2.562,0.4121,-0.518,5.967,-10.197,4.685,
+     &  0.364,-2.764,0.015,0.0186,-1.179,8.24,-36.36,47.76/
+c-----BB 4.V.2017      DATA dpd2 /-0.0996,2.489,0.4684,-1.924,8.159,-10.893,4.535,
+c-----BB 4.V.2017     &  0.252,-2.713,0.0254,0.0299,-1.221,7.50,-30.49,40.23/
+c
+c-----BB 4.V.2017      if(f2hh92a.eq.1) call ucopy(dph2,dpf2,30)
+c-----BB 4.V.2017      if(f2dd92a.eq.1) call ucopy(dpd2,dpf2,30)
+
+      DATA W2A,W2B/ 2.0, 1.9 /
+c
+      DXX = DMAX1( DMIN1( DX, 0.99D0 ) , 0.05D0 )
+      DFX = 1.D0 / DXX - 1.D0
+      DQ2A = W2A / DFX
+      IF(DQ2.GE.DQ2A) THEN
+         CALL df2aaa(DX,DQ2,df2)
+      ELSE
+         DQ2B = W2B / DFX
+         CALL df2aaa(DX,DQ2a,df2a)
+         CALL df2aaa(DX,DQ2b,df2b)
+         dTA = DLOG( (DQ2A+0.1D0) / 0.1D0 )
+         dTB = DLOG( (DQ2B+0.1D0) / 0.1D0 )
+         dTT = DLOG( (DQ2 +0.1D0) / 0.1D0 )
+         df2 = dTT*((dF2A*dTB-dF2B*dTA)*dTT+dF2B*dTA**2-dF2A*dTB**2 )
+     +            /dTA /dTB / (dTA - dTB)
+      ENDIF
+
+      if (df2. gt. 0.d0) return
+      df2 = 1.d-30
+
+      RETURN
+      END
+
+c
+c
+c
+      SUBROUTINE df2aaa(dx,dq2,df2)
+      IMPLICIT DOUBLE PRECISION (a-h,o-z)
+      common /fitpar/ dpf2(15),if2typ,nf2p
+
+C
+      PARAMETER (ALAMB=0.250, Q2ZERO=20.)
+C
+      dalamb=alamb
+      dq2zer=q2zero
+      dz = 1.d0 - dx
+      dAA =dx**dpf2(1)*dz**dpf2(2)*(dpf2(3)+dpf2(4)*dz+dpf2(5)*dz**2
+     +                               + dpf2(6)*dz**3+dpf2(7)*dz**4)
+      dBB = dpf2(8) + dpf2(9)*dx + dpf2(10) / ( dx + dpf2(11) )
+      dCC = dx*(dpf2(12)+dpf2(13)*dx+dpf2(14)*dx**2+dpf2(15)*dx**3 )
+      df2 = dAA * ( (dLOG(dQ2)    -dLOG(dALAMB**2))
+     +        /(dLOG(dQ2ZER)-dLOG(dALAMB**2)) )**dBB * (1.d0+dCC/dQ2)
+C
+      RETURN
+      END
+
+c================================================================
+c-----now comes the looooooong part of the F2 at Q2<0.2
+
+c-----observe that function "fint" is an interpolation function,
+c-----taken from CERNLIB
+
+
+      SUBROUTINE GETJKB (X,Q2,F2LXQ2)
+      implicit double precision (a-h,o-z)
+      PARAMETER (NXM=50,NQM=50)
+      PARAMETER (NXQM=NXM+NQM)
+      real xqlogm,f2mod
+      COMMON /JKBCOM/ XQLOGM(NXQM),F2MOD(NXM,NQM),H(2,20,20)
+      common /jkbini/ ijkbb
+      INTEGER NXQ2(2)
+      REAL XQ2(2)
+      real fint
+      if (x.lt.0.0000001d0.or.q2.lt.0.0000001d0)
+     +   print *,'============ x,q2 in GETJKB ===== ',x,q2
+      XQ2(1)=log10(X)
+      XQ2(2)=log10(Q2)
+      NXQ2(1)=NXM
+      NXQ2(2)=NQM
+      f2lxq2=fint(2,xq2,nxq2,xqlogm,f2mod)
+      END
+
+      SUBROUTINE INIJKB
+      implicit double precision (a-h,o-z)
+      PARAMETER (NXM=50,NQM=50)
+      PARAMETER (NXQM=NXM+NQM)
+      real xqlogm,f2mod
+      COMMON /JKBCOM/ XQLOGM(NXQM),F2MOD(NXM,NQM),H(2,20,20)
+      common /jkbini/ ijkbb
+      DATA XLOGMIN/-5.5/,XLOGMAX/0.0/
+      DATA QLOGMIN/-5.0/,QLOGMAX/-0.3/
+      character tab*7, targett*5, f2para*7, iter*7, nucleonff*8
+      common /parameters1/ tab, targett, f2para, iter, nucleonff
+      common /parameters2/ ene, realene,
+     +               f2isocor, semicuts, f2hh92a, f2dd92a,
+     +               fixf2p, fixf2d, f2np, muon, isupfactor
+
+
+      ijkbb = 0
+      mode = 72
+cc
+cc
+      DO IX=1,NXM
+        XQLOGM(IX)=XLOGMIN+(XLOGMAX-XLOGMIN)*IX/NXM
+        XX=10**(XQLOGM(IX))
+        DO IQ=1,NQM
+          XQLOGM(NQM+IQ)=QLOGMIN+(QLOGMAX-QLOGMIN)*IQ/NQM
+          Q2=10**(XQLOGM(NQM+IQ))
+          if(q2.lt.0.2d0) then
+            mode = 72
+            xbefore = xx
+            q2before = q2
+            call f2pd(mode,xx,q2,f2p,f2d,fv)
+c----BB 4.V.2017           if (ix.lt.5.and.iq.lt.5) print *, xbefore,xx,q2before,q2,f2d
+
+c----BB 4.V.2017       if (targett.eq.'nuchh') then
+c----BB 4.V.2017        if(fixf2d.eq.1) then
+c----BB 4.V.2017            f2mod(ix,iq) = f2d
+c----BB 4.V.2017        else
+            f2mod(ix,iq) = f2p
+c----BB 4.V.2017        end if
+c----BB 4.V.2017       end if
+c----BB 4.V.2017      if(targett.eq.'nucdd') then
+c----BB 4.V.2017         if (fixf2p.eq.1) then
+c----BB 4.V.2017            f2mod(ix,iq) = f2p
+c----BB 4.V.2017         else
+c----BB 4.V.2017            f2mod(ix,iq) = f2d
+c----BB 4.V.2017         end if
+c----BB 4.V.2017      end if
+
+c----BB 4.V.2017      if(targett.ne.'nuchh') then
+c----BB 4.V.2017      if(targett.ne.'nucdd') then
+c----BB 4.V.2017      if (fixf2p.ne.1) f2mod(ix,iq) = f2d
+c----BB 4.V.2017      end if
+c----BB 4.V.2017      end if
+
+          else
+            if (q2.lt.0.0000001d0)
+C     +         print '======== q2 in INIJKB ======= ',q2
+C 2015-06-10 the above removed and corrected as below
+     +         print *, '======== q2 in INIJKB ======= ',q2
+            xqlogm(nqm+iq)=log10(q2)
+            call df2p15(xx,q2,f2)
+            f2mod(ix,iq) = f2
+          endif
+        ENDDO
+      ENDDO
+      ijkbb = 1
+      END
+
+
+
+      subroutine f2pd(mode,x,q2,f2p,f2d,fv)
+c
+c --- A code to calculate the nucleon structure function F2 in the
+c --- low q2 and low x region within the GVMD inspired model described in
+c --- B.Badelek and J.Kwiecinski, Phys. Lett. B295 (1992) 263.
+c --- The structure functions F2 corresponding to the QCD improved
+c --- parton model are obtained from the interpolation formula based on
+c --- Tchebyshev polynomials. The vector meson contributions are calculated
+c --- directly. Parton model contributions are based on the MRS and GRV94
+c --- parton distributions: (MRS: A.D.Martin, W.J.Stirling and R.G.Roberts,
+c --- Phys. Rev. D47(1993) 145, Phys.Lett B306(1993) 145,
+c     Phys. Rev. D50(1994) 6734
+c --- and GRV94: M.Gluck, E.Reya and A.Vogt, Z. Phys. C67 (1995) 433).
+c
+c >>>>>>  Model is valid for
+c                             nu > 10 GeV,
+c                             10**(-5) < x < 0.1,
+c                             Q2< 1000 GeV2                  <<<<<<
+c
+c --- The following asymptotic str. functions (data files)  exist:
+c --- mode=1 (f2mod1.dat), corresponds to the unshadowed MRS D- parametrisation;
+c --- mode=2 (f2mod2.dat), to the shadowed D- parametrisation and R=2GeV**(-1);
+c --- mode=3 (f2mod3.dat), to the shadowed D- parametrisation and R=5GeV**(-1);
+c --- mode=4 (f2mod4.dat), to the unshadowed D0 set of partons;
+c --- mode=5 (f2mod5.dat), to the D-';
+c --- mode=6 (f2mod6.dat), to the MRSH(A);
+c --- mode=71/72, GRV94, NLO MS(bar), no charm/with charm
+c --- mode=73/74, GRV94, NLO DIS,     no charm/with charm
+c --- mode=75/76, GRV94,  LO,         no charm/with charm
+c
+c
+c --- OBS 1:  modes 1-4 are calculated in the LO and modes 5,6 in the NLO of QCD
+c --- OBS 2:  mode=1,2,3,4 have a narrower validity range: 10**(-4) < x < 0.1
+c --- OBS 3:  x validity range applies in fact to the {\bar x} variable,
+c             cf.the publication for the definition; validity in the Bjorken x
+c             extends to even lower x values (e.g. to x=0 for photoproduction).
+c
+c --- Subroutine parameters:
+c        mode:     an integer defining the asymptotic part of the str. function;
+c                  if mode < 70 it also defines the respective input file
+c                  (e.g.mode=2 for file f2mod2.dat),
+c        q2,x:     the usual kinematic variables,
+c        f2p,f2d   str. functions for the proton and for the deuteron
+c                  (returned values);
+c !!!    deteron here is (proton+neutron)/2 ie no shadowing effects.  !!!!!!!!!!
+c        fv:       contribution of GVMD in the final F2 (return value)
+c
+c --- Example of the usage of the subroutine is given above.
+c --- For mode x< 70 user has to attach a data file, f2modx.dat,
+c                    containing the interpolation coefficients
+c                    for a chosen F_2^{AS}.
+c
+c --- History:
+c     Oct. 25th, 1993; introduced mode=5 which corresponds to the MRS D-'
+c                      parametrisation; NLO evolution (LO before);
+c                      extension of model validity down to x=1.E-5
+c                      (old limit: x=1.E-4).
+c     Sept.27th, 1994: introduced mode=6 which corresponds to the MRSH(A)
+c                      parametrisation; NLO evolution.
+c     Oct. 10th, 1995: introduced modes 71 - 76 corresponding to GRV94
+c                      proton...
+c     Sept.29th, 1997:          ... and deuteron
+c
+c     June 2000      : checked that GRV98 instead of GRV94 gives negligible
+c                      differences in F2
+c
+c
+
+c
+c
+c
+c...BB, 15.XII.2005....introduced double prec. in this routine to comply
+c......................with the rest of TERAD; certain old declarations
+c......................were thus commented by "ccc"
+c
+      implicit double precision (a-h,o-z)
+c
+      character inucl*4
+ccc      double precision dx,dq2,dxbar, dqbar, df2, df2d, df2l, df2bh
+      PARAMETER (NXM=50,NQM=50)
+      PARAMETER (NXQM=NXM+NQM)
+      real xqlogm,f2mod
+      COMMON /JKBCOM/ XQLOGM(NXQM),F2MOD(NXM,NQM),H(2,20,20)
+      common /jkbini/ ijkbb
+      dimension alama(6),ftwo(2)
+      data nmax, pmass / 20, 0.938272/
+      data w02, ymax, q20, q2f / 1.2, 9.2103, 1., 1000./
+      data alama/3*0.2304, 0.1732, 0.2304, 0.23/
+c
+      viu=q2/x
+      viug=viu/(2.*pmass)
+      viubar=viu+w02
+      qbar=q2+w02
+      cbar=q2/qbar
+      xbar=qbar/viubar
+      dqbar=qbar
+      dxbar=xbar
+      dx=x
+      dq2=q2
+c
+      if (mode.gt.70) go to 2
+c
+c --- if mode < 70 then MRS
+c
+c
+c...BB, 15.XII.2005....introduced double prec. in this routine to comply
+c......................with the rest of TERAD; thus "alog" changed into
+c......................"dlog" in 4 places below
+c
+      alam=alama(mode)*alama(mode)
+ccc      ql0=alog(q20/alam)
+ccc      qlf=alog(q2f/alam)
+      ql0=dlog(q20/alam)
+      qlf=dlog(q2f/alam)
+      qlp=ql0+qlf
+      qlm=qlf-ql0
+ccc      aq=acos((2.*alog(qbar/alam)-qlp)/qlm)
+      aq=acos((2.*dlog(qbar/alam)-qlp)/qlm)
+      if (mode.gt.4) ymax=11.5129
+ccc      ax=acos((2.*alog(1./xbar)-ymax)/ymax)
+      ax=acos((2.*dlog(1./xbar)-ymax)/ymax)
+c
+c
+      do 500 j=1,2
+      f2=0.
+      do 400 nx=1,nmax
+      anx=float(nx)-1.
+      tx=cos(anx*ax)
+      do 300 nq=1,nmax
+      anq=float(nq)-1.
+      tq=cos(anq*aq)
+      f2=f2+tx*tq*h(j,nq,nx)
+300   continue
+400   continue
+      ftwo(j)=4./float(nmax)/float(nmax)*f2
+500   continue
+      go to 3
+c
+  2   continue
+c
+c --- if mode > 70 then GRV94 (in=1,2 corresponds to proton, deuteron)
+c
+c      call  grv(dx,   dq2,  df2p,df2pd,df2pl,df2bh)
+c      f2as=df2pl
+c      aux=df2bh
+      do in=1,2
+          inucl='deut'
+          if(in.eq.1) inucl='prot'
+          call  grv(dxbar,dqbar,df2,df2d,df2l,df2bh,inucl)
+          if (mode.eq.71) ftwo(in) = df2
+          if (mode.eq.72) ftwo(in) = df2  + df2bh
+          if (mode.eq.73) ftwo(in) = df2d
+          if (mode.eq.74) ftwo(in) = df2d + df2bh
+          if (mode.eq.75) ftwo(in) = df2l
+          if (mode.eq.76) ftwo(in) = df2l + df2bh
+      enddo
+c
+ 3    continue
+c
+c --- vector meson contribution
+c
+      call sigvmes(viug,sigro,sigfi)
+      call vmesnuc(q2,sigro,sigfi,fv)
+c
+      f2p=cbar*ftwo(1)+fv
+      f2d=cbar*ftwo(2)+fv
+c
+      return
+      end
+
+c=====================================================================
+*
+*From avogt@x4u2.desy.de Wed Oct  4 14:05:45 1995
+*
+*Dear Collegue,
+*please find appended the code for the F2 etc. calculation from the new
+*GRV parametrization. It has originally not been designed for wide dis-
+*tribution, but I hope it is clear enough to be useful for you.
+*                                       Best regards      Andreas
+*
+*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+*From avogt@physik.uni-wuerzburg.de Mon Sep 29 18:12:27 1997
+*the code you sent is ok, just remove the comments on f2dl, qdx, ... in the
+*main subroutine, then it runs as deuteron also. The only point to comment
+*them out was saving time on the integrations for the convolutions.
+
+*You can just use the DIS scheme version, they are equivalent on the level
+*of the accuracy of the parametrization, then you have no integral at all.
+*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+*...CALCULATION OF NUCLEON STRUCTURE FUNCTIONS FROM THE GRV('94)
+*   PARAMETRIZATION :
+*
+*...THE PARAMETRIZATION SUBROUTINES ARE READ IN VIA "INCLUDE" FROM THE
+*   FILE "grv94par.f", THE OUTPUT IS WRITTEN ON THE FILE "grv94str.erg".
+*
+*bbb      subroutine grv(xxx,qqq2,f2p,f2pd,f2pl,f2bh)
+          subroutine grv(xxx,qqq2,f2, f2d, f2l, f2bh, inucl)
+*bb       PROGRAM MAIN
+       IMPLICIT DOUBLE PRECISION (A - Z)
+          character inucl*4
+*bb       INTEGER K1, K2, i10
+*bb       DIMENSION QS(21), XB(25)
+       EXTERNAL F2PI, F2DI, F3DI, FLPI
+       COMMON / PAR / X, Q2, QPX, QDX, QNX
+*...X AND Q^2 TABLES :
+*bb       DATA QS / 0.5, 0.7, 1.0, 1.5, 2.0, 3.0, 5.0, 7.0, 10., 15.,
+*bb     1           20., 30., 50., 70., 100., 150., 200., 300., 500.,
+*bb     2           700., 1000. /
+*bb
+*bb
+*bb
+*bb       DATA XB / 1.D-4, 1.5D-4, 2.D-4, 3.D-4, 5.D-4, 7.D-4,
+*bb     1           0.001, 0.0015, 0.002, 0.003, 0.005, 0.007,
+*bb     2           0.01,  0.015,  0.02,  0.03,  0.05,  0.07,
+*bb     3           0.10,  0.15,   0.2,   0.3,   0.5,   0.7,   0.9 /
+*bb
+*bb
+*bb
+*...CONVOLUTION PARAMETERS (UPPER LIMIT, RELATIVE ACCURACY) :
+       DATA UP, EPS / 1.0 D0, 1.0 D-3 /
+*...OUTPUT FILE :
+*bb       OPEN (6, FILE = 'grv94str.erg')
+*...X AND Q^2 VALUES, ALPHA(S) :
+*bb
+       x = xxx
+       q2 = qqq2
+*bb
+*bb       DO 1 K1 =  4, 13, 3
+*bb       Q2 = QS(K1)
+*bb       WRITE (6,15) Q2
+  15   FORMAT (/,10X,' Q ** 2 = ',F6.1,1X,' GEV ** 2',/)
+       ALPH = ALPHAS (Q2,2)     ! alpha(s)_HO/(4 pi) at Q^2
+*bb       DO 2 K2 = 1, 25, 2
+*bb       X = XB (K2)
+*...X VALUES FOR LOG-PLOTS :
+C        DO 2 K2 = 0, 196, 2
+C        AX = -9.2103404 + K2 / 21.714724
+C        X = DEXP (AX)
+*...STRUCTURE FUNCION CALCULATION, PRESENTLY ACTIVE: F2(PROTON)
+*bb  +++++++++++++++++++++++ change of the above +++++++++++++++++++
+*   LO :
+       CALL GRV94LO (X, Q2, UVL, DVL, DELL, UDBL, SBL, GLL)
+       UBL  = (UDBL - DELL) /2.
+       DBL  = (UDBL + DELL) /2.
+*bb       F2PL = (4.* UVL + DVL + 8.* UBL + 2.* DBL + 2.* SBL) /9.
+c
+c ---
+       if(inucl.eq.'prot') then
+          F2L  = (4.* UVL + DVL + 8.* UBL + 2.* DBL + 2.* SBL) /9.
+       else
+C      F2DL = (5./2.* (UVL+DVL) + 5.* UDBL + 2.* SBL) /9.
+          F2L  = (5./2.* (UVL+DVL) + 5.* UDBL + 2.* SBL) /9.
+       endif
+c
+c ---
+C      F3DL = UDVL
+*...NLO MS(BAR) :
+       CALL GRV94HO (X, Q2, UVX, DVX, DELX, UDBX, SBX, GLX)
+       UBX  = (UDBX - DELX) /2.
+       DBX  = (UDBX + DELX) /2.
+       QPX = (4.* UVX + DVX + 8.* UBX + 2.* DBX + 2.* SBX) /9.
+      QDX = (5./2.* (UVX+DVX) + 5.* UDBX + 2.* SBX) /9.
+C      QNX = UDVX
+       L1X = DLOG (1.- X)
+       PI = 3.141592654
+       E2Q1 = 4./3. * (-9.- 2./3.* PI*PI + L1X * (2.* L1X - 3.))
+*bb       F2P = QPX + ALPH * (DINTEG (F2PI, X, UP, EPS) + E2Q1 * QPX)
+c ---
+c
+       if(inucl.eq.'prot') then
+          F2  = QPX + ALPH * (DINTEG (F2PI, X, UP, EPS) + E2Q1 * QPX)
+       else
+C      F2D = QDX + ALPH * (DINTEG (F2DI, X, UP, EPS) + E2Q1 * QDX)
+          F2  = QDX + ALPH * (DINTEG (F2DI, X, UP, EPS) + E2Q1 * QDX)
+       endif
+c
+c ---
+C      F3D = QNX + ALPH * (DINTEG (F3DI, X, UP, EPS) + E2Q1 * QNX)
+C      FLP = ALPH * DINTEG (FLPI, X, UP, EPS)
+*...NLO DIS :
+       CALL GRV94DI (X, Q2, UVD, DVD, DELD, UDBD, SBD, GLD)
+       UBD  = (UDBD - DELD) /2.
+       DBD  = (UDBD + DELD) /2.
+*bb       F2PD = (4.* UVD + DVD + 8.* UBD + 2.* DBD + 2.* SBD) /9.
+c
+c ---
+       if(inucl.eq.'prot') then
+          F2D  = (4.* UVD + DVD + 8.* UBD + 2.* DBD + 2.* SBD) /9.
+       else
+C      F2DD = (5./2.* (UVD+DVD) + 5.* UDBD + 2.* SBD) /9.
+          F2D  = (5./2.* (UVD+DVD) + 5.* UDBD + 2.* SBD) /9.
+       endif
+c
+c ---
+*...LOWEST ORDER BETHE-HEITLER CHARM CONTRIBUTIONS :
+*   (THEY WERE USED ALSO IN THE NLO ANALYSIS SINCE NO FAST NEXT ORDER
+*    BETHE-HEITLER PROGRAM WAS AVAILABLE, NOTE THAT NOW THE NLO VERSION
+*    IS AVAILABLE FROM S. RIEMERSMA)
+       MC = 1.5    !  CHARM MASS
+c
+c...BB...15.XII.2005 changed the name of F2C --> F2CBB (4 places
+c                                                       altogether)
+c                                                       altogether)
+c
+       F2BH = F2CBB (X, Q2, MC)
+C      FLBH = FLC   (X, Q2, MC)
+*...OUTPUT :
+*bb       WRITE (6,10) X, F2P, F2BH, F2P+F2BH
+C      WRITE (6,10) X, FLP, FLBH, FLP+FLBH
+  10   FORMAT (3X,1(1PE11.3),1X,5(1PE11.3),1X)
+   2   CONTINUE
+   1   CONTINUE
+*bb       STOP
+       return
+       END
+
+*
+*...CONVOLUTION INTEGRANDS :
+*   F2(PROTON) :
+*
+       FUNCTION F2PI (Z)
+       IMPLICIT DOUBLE PRECISION (A - Z)
+       COMMON / PAR / X, Q2, QPX, QDX, QNX
+       CALL COEFF (E2Q2, E2Q3, E3Q2, E3Q3, ELQ2, E2G2, ELG2, Z)
+       CALL GRV94HO (X/Z, Q2, UV, DV, DEL, UDB, SB, GL)
+       UB  = (UDB - DEL) /2.
+       DB  = (UDB + DEL) /2.
+       QPXZ = (4.* UV + DV + 8.* UB + 2.* DB + 2.* SB) / 9.
+       F2PI = E2Q2 * QPXZ + E2Q3 * (QPXZ - QPX) + E2G2 *  6./9. * GL
+       RETURN
+       END
+*
+*
+*...F2(DEUTERON) :
+*
+       FUNCTION F2DI (Z)
+       IMPLICIT DOUBLE PRECISION (A - Z)
+       COMMON / PAR / X, Q2, QPX, QDX, QNX
+       CALL COEFF (E2Q2, E2Q3, E3Q2, E3Q3, ELQ2, E2G2, ELG2, Z)
+       CALL GRV94HO (X/Z, Q2, UV, DV, DEL, UDB, SB, GL)
+       QDXZ = (5./2.* (UV+DV) + 5.* UDB + 2.* SB) / 9.
+       F2DI = E2Q2 * QDXZ + E2Q3 * (QDXZ - QDX) + E2G2 *  6./9. * GL
+       RETURN
+       END
+*
+*...F3(DEUTERON) :
+*
+       FUNCTION F3DI (Z)
+       IMPLICIT DOUBLE PRECISION (A - Z)
+       COMMON / PAR / X, Q2, QPX, QDX, QNX
+       CALL COEFF (E2Q2, E2Q3, E3Q2, E3Q3, ELQ2, E2G2, ELG2, Z)
+       CALL GRV94HO (X/Z, Q2, UV, DV, DEL, UDB, SB, GL)
+       QNXZ = UV + DV
+       F3DI = E3Q2 * QNXZ + E3Q3 * (QNXZ - QNX)
+       RETURN
+       END
+*
+*   FL(PROTON) :
+*
+       FUNCTION FLPI (Z)
+       IMPLICIT DOUBLE PRECISION (A - Z)
+       COMMON / PAR / X, Q2, QPX, QDX, QNX
+       CALL COEFF (E2Q2, E2Q3, E3Q2, E3Q3, ELQ2, E2G2, ELG2, Z)
+       CALL GRV94HO (X/Z, Q2, UV, DV, DEL, UDB, SB, GL)
+       UB  = (UDB - DEL) /2.
+       DB  = (UDB + DEL) /2.
+       QPXZ = (4.* UV + DV + 8.* UB + 2.* DB + 2.* SB) / 9.
+       FLPI = ELQ2 * QPXZ + ELG2 * 6./9.* GL
+       RETURN
+       END
+
+*
+*...COEFFICIENT FUNCTIONS FOR F2, F3 (IN MS(BAR)) and FL :
+*    (THE NOTATION IS AS IN FLORATOS ET. AL. (1981))
+*
+       SUBROUTINE COEFF (E2Q2, E2Q3, E3Q2, E3Q3, ELQ2, E2G2, ELG2, Z)
+       IMPLICIT DOUBLE PRECISION (A - Z)
+       CF = 4./3.
+       TR = 0.5
+       L1Z = DLOG (1.- Z)
+       LZ = DLOG (Z)
+       E2Q2 = CF * (6.+ 4.* Z - 2.* (1.+ Z*Z) * LZ / (1.- Z)
+     1              - 2.* (1.+ Z) * L1Z)
+       E2Q3 = CF * (-3.+ 4.* L1Z) / (1.- Z)
+       E3Q2 = CF * (4.+ 2.* Z - 2.* (1.+ Z*Z) * LZ / (1.- Z)
+     1              - 2.* (1.+ Z) * L1Z)
+       E3Q3 = E2Q3
+       ELQ2 = 2.* CF * Z  * 2.
+       E2G2 = -4.* TR * (-3.+ (1.- 2.* Z + 2.* Z*Z)
+     1                   * (4.- L1Z + LZ))
+       ELG2 = 8.* TR * Z * (1.- Z) * 2.
+       RETURN
+       END
+*
+*...CALCULATION OF ALPHA STRONG (Q**2) DIVIDED BY 4*PI IN LO (FOR
+*    FLAG = 1) AND IN NLO (FOR FLAG = 2) :
+*
+       FUNCTION ALPHAS (Q2,FLAG)
+       IMPLICIT DOUBLE PRECISION (A - Z)
+       INTEGER NF, K, FLAG
+       DIMENSION LAMBDAL (3:6), LAMBDAH (3:6), Q2THR (3)
+       DATA LAMBDAH / 0.248, 0.200, 0.131, 0.053 /
+       DATA LAMBDAL / 0.232, 0.200, 0.153, 0.082 /
+       DATA Q2THR / 2.25, 20.25, 1.E4 /
+       NF = 3
+       DO 10 K = 1, 3
+       IF (Q2 .GT. Q2THR (K)) THEN
+          NF = NF + 1
+       ELSE
+          GO TO 20
+       END IF
+  10   CONTINUE
+  20   B0 = 11.- 2./3.* NF
+       B0S = B0 * B0
+       IF (FLAG .EQ. 1) THEN
+          B1 = 0.0
+          LAM2 = LAMBDAL (NF) * LAMBDAL (NF)
+       ELSE IF (FLAG .EQ. 2) THEN
+          B1 = 102.- 38./3.* NF
+          LAM2 = LAMBDAH (NF) * LAMBDAH (NF)
+       ELSE
+          ALPHAS = 0.0
+          WRITE (6,15)
+  15      FORMAT (1X,'ALPHAS: WRONG ORDER SPECIFICATION')
+       END IF
+       LQ2 = DLOG (Q2 / LAM2)
+       ALPHAS = 1./ (B0 * LQ2) * (1.- B1 / B0S * DLOG (LQ2) / LQ2)
+       RETURN
+       END
+
+*
+*...DOUBLE PRECISE ADAPTIVE GAUSS INTEGRATION :
+*
+       FUNCTION DINTEG (F, ALFA, BETA, EPS)
+       IMPLICIT DOUBLE PRECISION (A-H, O-Z)
+       EXTERNAL F
+       DIMENSION W(12), X(12)
+       DATA CONST /1.0 D-12/
+       DATA W
+     1  /0.10122 85362 90376, 0.22238 10344 53374, 0.31370 66458 77887,
+     2   0.36268 37833 78362, 0.02715 24594 11754, 0.06225 35239 38647,
+     3   0.09515 85116 82492, 0.12462 89712 55533, 0.14959 59888 16576,
+     4   0.16915 65193 95002, 0.18260 34150 44923, 0.18945 06104 55068/
+       DATA X
+     1  /0.96028 98564 97536, 0.79666 64774 13627, 0.52553 24099 16329,
+     2   0.18343 46424 95650, 0.98940 09349 91649, 0.94457 50230 73232,
+     3   0.86563 12023 87831, 0.75540 44083 55003, 0.61787 62444 02643,
+     4   0.45801 67776 57227, 0.28160 35507 79258, 0.09501 25098 37637/
+       DINTEG = 0.0 D0
+       IF ( ALFA . EQ. BETA ) RETURN
+       A = ALFA
+       B = BETA
+       DELTA = CONST * (DABS(A-B))
+       AA = A
+    1  Y = B - AA
+       IF( DABS(Y) .LE. DELTA) RETURN
+    2  BB = AA + Y
+       C1 = 0.5 D0 * (AA + BB)
+       C2 = C1 - AA
+       S8 = 0.0 D0
+       S16 = 0.0 D0
+       DO 15 I = 1, 4
+         C3 = X(I) * C2
+         S8 = S8 + W(I) * (F(C1+C3) + F(C1-C3))
+   15  CONTINUE
+       DO 16 I = 5, 12
+         C3 = X(I) * C2
+         S16 = S16 + W(I) * (F(C1+C3) + F(C1-C3))
+   16  CONTINUE
+       S8 = S8 * C2
+       S16= S16 * C2
+       IF( DABS(S16-S8) .GT. EPS*DABS(S8)) THEN
+         Y = 0.5 D0 * Y
+         IF ( DABS(Y) .LE. DELTA ) THEN
+           DINTEG = 0.0
+           WRITE (*,10)
+   10      FORMAT (1X,' DINTEG : TOO HIGH ACCURACY REQUIRED')
+         ELSE
+           GOTO 2
+         END IF
+       ELSE
+         DINTEG = DINTEG + S16
+         AA = BB
+         GOTO 1
+       END IF
+       RETURN
+       END
+
+*
+*...BETHE-HEITLER LOWEST ORDER CHARM CONTRIBUTION TO F2 AND FL :
+*   (LO GLUON AND ALPHA(S), SCALE 4.* MC**2)
+*
+c
+c...BB...15.XII.2005 changed the name of F2C --> F2CBB (4 places
+c                                                       altogether)
+c
+       FUNCTION F2CBB (XB, QS, MC)
+       IMPLICIT DOUBLE PRECISION (A - Z)
+       EXTERNAL F2CI
+       COMMON /PAR2/ X, Q2, XM2
+       X  = XB
+       Q2 = QS
+       XM2 = MC * MC
+       A  = 1.+ 4.* XM2 / Q2
+       AX = A * X
+       IF ( AX .GE. 1.D0 ) THEN
+       F2CBB = 0.0
+       ELSE
+       F2CBB = 4./9.* DINTEG (F2CI, AX, 1.D0, 1.D-3)
+       END IF
+       RETURN
+       END
+*
+       FUNCTION F2CI (E)
+       IMPLICIT DOUBLE PRECISION (A - Z)
+       COMMON /PAR2/ X, Q2, XM2
+       Z = X/E
+       SC = 4.* XM2
+       CALL GGRVLO (E, SC, GL)
+       ALS = 0.02216
+*...als = alpha(s)_LO/(4 pi) at 9 GeV^2
+       V = DSQRT (1.-4.* XM2/Q2 * Z/(1.-Z))
+       Z2 = Z * Z
+       MR = XM2 / Q2
+       F2S = V * (8.* Z2 * (1.-Z) - Z - 4.* MR * Z2 * (1.-Z))
+     1   + DLOG ((1.+V)/(1.-V)) * (Z - 2.* Z2 * (1.-Z) + 4.* MR * Z2
+     2   * (1.-3.*Z) - 8.* Z * Z2 * MR * MR)
+       F2CI = 2.* ALS * GL * F2S / E
+       RETURN
+       END
+*
+       FUNCTION FLC (XB, QS, MC)
+       IMPLICIT DOUBLE PRECISION (A - Z)
+       EXTERNAL FLCI
+       COMMON /PAR2/ X, Q2, XM2
+       X  = XB
+       Q2 = QS
+       XM2 = MC * MC
+       A  = 1.+ 4.* XM2 / Q2
+       AX = A * X
+       IF ( AX .GE. 1.D0 ) THEN
+       FLC = 0.0
+       ELSE
+       FLC = 4./9.* DINTEG (FLCI, AX, 1.D0, 1.D-3)
+       END IF
+       RETURN
+       END
+*
+       FUNCTION FLCI (E)
+       IMPLICIT DOUBLE PRECISION (A - Z)
+       COMMON /PAR2/ X, Q2, XM2
+       Z = X/E
+       SC = 4.* XM2
+       CALL GGRVLO (E, SC, GL)
+       ALS = 0.02216
+*...als = alpha(s)_LO/(4 pi) at 9 GeV^2
+       V = DSQRT (1.- 4.* XM2/Q2 * Z/(1.-Z))
+       Z2 = Z * Z
+       MR = XM2 / Q2
+       F2S = V * (8.* Z2 * (1.-Z) - Z - 4.* MR * Z2 * (1.-Z))
+     1   + DLOG ((1.+V)/(1.-V)) * (Z - 2.* Z2 * (1.-Z) + 4.* MR * Z2
+     2   * (1.-3.*Z) - 8.* Z * Z2 * MR * MR)
+       FLS = 2.* Z2*(1.-Z) * V - 4.* MR * Z2*Z * DLOG((1.+V)/(1.-V))
+       FLCI = 4.* ALS * GL * FLS / E
+       RETURN
+       END
+*
+*...LO GLUON PARAMETRIZATION (FOR THE BETHE-HEITLER CALCULATIONS) :
+*
+       SUBROUTINE GGRVLO (X, Q2, GL)
+       IMPLICIT DOUBLE PRECISION (A - Z)
+       MU2  = 0.23
+       LAM2 = 0.2322 * 0.2322
+       S  = DLOG (DLOG(Q2/LAM2) / DLOG(MU2/LAM2))
+       DS = DSQRT (S)
+       S2 = S * S
+       S3 = S2 * S
+       ALG =  0.524
+       BEG =  1.088
+       AKG =  1.742 - 0.930 * S
+       BKG =        - 0.399 * S2
+       AG  =  7.486 - 2.185 * S
+       BG  =  16.69 - 22.74 * S  + 5.779 * S2
+       CG  = -25.59 + 29.71 * S  - 7.296 * S2
+       DG  =  2.792 + 2.215 * S  + 0.422 * S2 - 0.104 * S3
+       EG  =  0.807 + 2.005 * S
+       ESG =  3.841 + 0.316 * S
+       GL  = FW (X, S, ALG, BEG, AKG, BKG, AG, BG, CG, DG, EG, ESG)
+       RETURN
+       END
+
+*
+*From avogt@x4u2.desy.de Wed Oct  4 14:03:41 1995
+*
+*
+* Dear Collegue,
+* please find appended the GRV(94) parametrization as requested.
+* Note that an additional program doing the NLO MS(bar) convolu-
+* tions for F_2, F_L is also available, as well as additional
+* parton sets for different values of Lambda_MS(bar) by one of
+* the authors (A.V.).
+*                              Best regards      Andreas Vogt
+*
+* file: grv94par.f
+*
+*
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+*                                                                 *
+*    G R V  -  P R O T O N  - P A R A M E T R I Z A T I O N S     *
+*                                                                 *
+*                         1994 UPDATE                             *
+*                                                                 *
+*                 FOR A DETAILED EXPLANATION SEE                  *
+*                   M. GLUECK, E.REYA, A.VOGT :                   *
+*                   DO-TH 94/24  =  DESY 94-206                   *
+*              (PUBLISHED IN Z. PHYS. C67 (1995) 433)             *
+*                                                                 *
+*   THE PARAMETRIZATIONS ARE FITTED TO THE EVOLVED PARTONS FOR    *
+*        Q**2 / GEV**2  BETWEEN   0.4   AND  1.E6                 *
+*             X         BETWEEN  1.E-5  AND   1.                  *
+*   LARGE-X REGIONS, WHERE THE DISTRIBUTION UNDER CONSIDERATION   *
+*   IS NEGLIGIBLY SMALL, WERE EXCLUDED FROM THE FIT.              *
+*                                                                 *
+*   HEAVY QUARK THRESHOLDS  Q(H) = M(H)  IN THE BETA FUNCTION :   *
+*                   M(C)  =  1.5,  M(B)  =  4.5                   *
+*   CORRESPONDING LAMBDA(F) VALUES IN GEV FOR  Q**2 > M(H)**2 :   *
+*      LO :   LAMBDA(3)  =  0.232,   LAMBDA(4)  =  0.200,         *
+*             LAMBDA(5)  =  0.153,                                *
+*      NLO :  LAMBDA(3)  =  0.248,   LAMBDA(4)  =  0.200,         *
+*             LAMBDA(5)  =  0.131.                                *
+*   THE NUMBER OF ACTIVE QUARK FLAVOURS IS  NF = 3  EVERYWHERE    *
+*   EXCEPT IN THE BETA FUNCTION, I.E. THE HEAVY QUARKS C,B,...    *
+*   ARE NOT PRESENT AS PARTONS IN THE Q2-EVOLUTION.               *
+*   IF NEEDED, HEAVY QUARK DENSITIES CAN BE TAKEN FROM THE 1991   *
+*   GRV PARAMETRIZATION.                                          *
+*                                                                 *
+*   NLO DISTRIBUTIONS ARE GIVEN IN MS-BAR FACTORIZATION SCHEME    *
+*   (SUBROUTINE GRV94HO) AS WELL AS IN THE DIS SCHEME (GRV94DI),  *
+*   THE LEADING ORDER PARAMETRIZATION IS PROVIDED BY "GRV94LO".   *
+*                                                                 *
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+*
+*...INPUT PARAMETERS :
+*
+*    X   = MOMENTUM FRACTION
+*    Q2  = SCALE Q**2 IN GEV**2
+*
+*...OUTPUT (ALWAYS X TIMES THE DISTRIBUTION) :
+*
+*    UV  = U(VAL) = U - U(BAR)
+*    DV  = D(VAL) = D - D(BAR)
+*    DEL = D(BAR) - U(BAR)
+*    UDB = U(BAR) + D(BAR)
+*    SB  = S = S(BAR)
+*    GL  = GLUON
+*
+*...LO PARAMETRIZATION :
+*
+       SUBROUTINE GRV94LO (X, Q2, UV, DV, DEL, UDB, SB, GL)
+       IMPLICIT DOUBLE PRECISION (A - Z)
+       MU2  = 0.23
+       LAM2 = 0.2322 * 0.2322
+       S  = DLOG (DLOG(Q2/LAM2) / DLOG(MU2/LAM2))
+       DS = DSQRT (S)
+       S2 = S * S
+       S3 = S2 * S
+*...UV :
+       NU  =  2.284 + 0.802 * S + 0.055 * S2
+       AKU =  0.590 - 0.024 * S
+       BKU =  0.131 + 0.063 * S
+       AU  = -0.449 - 0.138 * S - 0.076 * S2
+       BU  =  0.213 + 2.669 * S - 0.728 * S2
+       CU  =  8.854 - 9.135 * S + 1.979 * S2
+       DU  =  2.997 + 0.753 * S - 0.076 * S2
+       UV  = FV (X, NU, AKU, BKU, AU, BU, CU, DU)
+*...DV :
+       ND  =  0.371 + 0.083 * S + 0.039 * S2
+       AKD =  0.376
+       BKD =  0.486 + 0.062 * S
+       AD  = -0.509 + 3.310 * S - 1.248 * S2
+       BD  =  12.41 - 10.52 * S + 2.267 * S2
+       CD  =  6.373 - 6.208 * S + 1.418 * S2
+       DD  =  3.691 + 0.799 * S - 0.071 * S2
+       DV  = FV (X, ND, AKD, BKD, AD, BD, CD, DD)
+*...DEL :
+       NE  =  0.082 + 0.014 * S + 0.008 * S2
+       AKE =  0.409 - 0.005 * S
+       BKE =  0.799 + 0.071 * S
+       AE  = -38.07 + 36.13 * S - 0.656 * S2
+       BE  =  90.31 - 74.15 * S + 7.645 * S2
+       CE  =  0.0
+       DE  =  7.486 + 1.217 * S - 0.159 * S2
+       DEL = FV (X, NE, AKE, BKE, AE, BE, CE, DE)
+*...UDB :
+       ALX =  1.451
+       BEX =  0.271
+       AKX =  0.410 - 0.232 * S
+       BKX =  0.534 - 0.457 * S
+       AGX =  0.890 - 0.140 * S
+       BGX = -0.981
+       CX  =  0.320 + 0.683 * S
+       DX  =  4.752 + 1.164 * S + 0.286 * S2
+       EX  =  4.119 + 1.713 * S
+       ESX =  0.682 + 2.978 * S
+       UDB = FW (X, S, ALX, BEX, AKX, BKX, AGX, BGX, CX, DX, EX, ESX)
+*...SB :
+       ALS =  0.914
+       BES =  0.577
+       AKS =  1.798 - 0.596 * S
+       AS  = -5.548 + 3.669 * DS - 0.616 * S
+       BS  =  18.92 - 16.73 * DS + 5.168 * S
+       DST =  6.379 - 0.350 * S  + 0.142 * S2
+       EST =  3.981 + 1.638 * S
+       ESS =  6.402
+       SB  = FWS (X, S, ALS, BES, AKS, AS, BS, DST, EST, ESS)
+*...GL :
+       ALG =  0.524
+       BEG =  1.088
+       AKG =  1.742 - 0.930 * S
+       BKG =        - 0.399 * S2
+       AG  =  7.486 - 2.185 * S
+       BG  =  16.69 - 22.74 * S  + 5.779 * S2
+       CG  = -25.59 + 29.71 * S  - 7.296 * S2
+       DG  =  2.792 + 2.215 * S  + 0.422 * S2 - 0.104 * S3
+       EG  =  0.807 + 2.005 * S
+       ESG =  3.841 + 0.316 * S
+       GL  = FW (X, S, ALG, BEG, AKG, BKG, AG, BG, CG, DG, EG, ESG)
+       RETURN
+       END
+*
+*...NLO PARAMETRIZATION (MS(BAR)) :
+*
+       SUBROUTINE GRV94HO (X, Q2, UV, DV, DEL, UDB, SB, GL)
+       IMPLICIT DOUBLE PRECISION (A - Z)
+       MU2  = 0.34
+       LAM2 = 0.248 * 0.248
+       S  = DLOG (DLOG(Q2/LAM2) / DLOG(MU2/LAM2))
+       DS = DSQRT (S)
+       S2 = S * S
+       S3 = S2 * S
+*...UV :
+       NU  =  1.304 + 0.863 * S
+       AKU =  0.558 - 0.020 * S
+       BKU =          0.183 * S
+       AU  = -0.113 + 0.283 * S - 0.321 * S2
+       BU  =  6.843 - 5.089 * S + 2.647 * S2 - 0.527 * S3
+       CU  =  7.771 - 10.09 * S + 2.630 * S2
+       DU  =  3.315 + 1.145 * S - 0.583 * S2 + 0.154 * S3
+       UV  = FV (X, NU, AKU, BKU, AU, BU, CU, DU)
+*...DV :
+       ND  =  0.102 - 0.017 * S + 0.005 * S2
+       AKD =  0.270 - 0.019 * S
+       BKD =  0.260
+       AD  =  2.393 + 6.228 * S - 0.881 * S2
+       BD  =  46.06 + 4.673 * S - 14.98 * S2 + 1.331 * S3
+       CD  =  17.83 - 53.47 * S + 21.24 * S2
+       DD  =  4.081 + 0.976 * S - 0.485 * S2 + 0.152 * S3
+       DV  = FV (X, ND, AKD, BKD, AD, BD, CD, DD)
+*...DEL :
+       NE  =  0.070 + 0.042 * S - 0.011 * S2 + 0.004 * S3
+       AKE =  0.409 - 0.007 * S
+       BKE =  0.782 + 0.082 * S
+       AE  = -29.65 + 26.49 * S + 5.429 * S2
+       BE  =  90.20 - 74.97 * S + 4.526 * S2
+       CE  =  0.0
+       DE  =  8.122 + 2.120 * S - 1.088 * S2 + 0.231 * S3
+       DEL = FV (X, NE, AKE, BKE, AE, BE, CE, DE)
+*...UDB :
+       ALX =  0.877
+       BEX =  0.561
+       AKX =  0.275
+       BKX =  0.0
+       AGX =  0.997
+       BGX =  3.210 - 1.866 * S
+       CX  =  7.300
+       DX  =  9.010 + 0.896 * DS + 0.222 * S2
+       EX  =  3.077 + 1.446 * S
+       ESX =  3.173 - 2.445 * DS + 2.207 * S
+       UDB = FW (X, S, ALX, BEX, AKX, BKX, AGX, BGX, CX, DX, EX, ESX)
+*...SB :
+       ALS =  0.756
+       BES =  0.216
+       AKS =  1.690 + 0.650 * DS - 0.922 * S
+       AS  = -4.329 + 1.131 * S
+       BS  =  9.568 - 1.744 * S
+       DST =  9.377 + 1.088 * DS - 1.320 * S + 0.130 * S2
+       EST =  3.031 + 1.639 * S
+       ESS =  5.837 + 0.815 * S
+       SB  = FWS (X, S, ALS, BES, AKS, AS, BS, DST, EST, ESS)
+*...GL :
+       ALG =  1.014
+       BEG =  1.738
+       AKG =  1.724 + 0.157 * S
+       BKG =  0.800 + 1.016 * S
+       AG  =  7.517 - 2.547 * S
+       BG  =  34.09 - 52.21 * DS + 17.47 * S
+       CG  =  4.039 + 1.491 * S
+       DG  =  3.404 + 0.830 * S
+       EG  = -1.112 + 3.438 * S  - 0.302 * S2
+       ESG =  3.256 - 0.436 * S
+       GL  = FW (X, S, ALG, BEG, AKG, BKG, AG, BG, CG, DG, EG, ESG)
+       RETURN
+       END
+*
+*...NLO PARAMETRIZATION (DIS) :
+*
+       SUBROUTINE GRV94DI (X, Q2, UV, DV, DEL, UDB, SB, GL)
+       IMPLICIT DOUBLE PRECISION (A - Z)
+       MU2  = 0.34
+       LAM2 = 0.248 * 0.248
+       S  = DLOG (DLOG(Q2/LAM2) / DLOG(MU2/LAM2))
+       DS = DSQRT (S)
+       S2 = S * S
+       S3 = S2 * S
+*...UV :
+       NU  =  2.484 + 0.116 * S + 0.093 * S2
+       AKU =  0.563 - 0.025 * S
+       BKU =  0.054 + 0.154 * S
+       AU  = -0.326 - 0.058 * S - 0.135 * S2
+       BU  = -3.322 + 8.259 * S - 3.119 * S2 + 0.291 * S3
+       CU  =  11.52 - 12.99 * S + 3.161 * S2
+       DU  =  2.808 + 1.400 * S - 0.557 * S2 + 0.119 * S3
+       UV  = FV (X, NU, AKU, BKU, AU, BU, CU, DU)
+*...DV :
+       ND  =  0.156 - 0.017 * S
+       AKD =  0.299 - 0.022 * S
+       BKD =  0.259 - 0.015 * S
+       AD  =  3.445 + 1.278 * S + 0.326 * S2
+       BD  = -6.934 + 37.45 * S - 18.95 * S2 + 1.463 * S3
+       CD  =  55.45 - 69.92 * S + 20.78 * S2
+       DD  =  3.577 + 1.441 * S - 0.683 * S2 + 0.179 * S3
+       DV  = FV (X, ND, AKD, BKD, AD, BD, CD, DD)
+*...DEL :
+       NE  =  0.099 + 0.019 * S + 0.002 * S2
+       AKE =  0.419 - 0.013 * S
+       BKE =  1.064 - 0.038 * S
+       AE  = -44.00 + 98.70 * S - 14.79 * S2
+       BE  =  28.59 - 40.94 * S - 13.66 * S2 + 2.523 * S3
+       CE  =  84.57 - 108.8 * S + 31.52 * S2
+       DE  =  7.469 + 2.480 * S - 0.866 * S2
+       DEL = FV (X, NE, AKE, BKE, AE, BE, CE, DE)
+*...UDB :
+       ALX =  1.215
+       BEX =  0.466
+       AKX =  0.326 + 0.150 * S
+       BKX =  0.956 + 0.405 * S
+       AGX =  0.272
+       BGX =  3.794 - 2.359 * DS
+       CX  =  2.014
+       DX  =  7.941 + 0.534 * DS - 0.940 * S + 0.410 * S2
+       EX  =  3.049 + 1.597 * S
+       ESX =  4.396 - 4.594 * DS + 3.268 * S
+       UDB = FW (X, S, ALX, BEX, AKX, BKX, AGX, BGX, CX, DX, EX, ESX)
+*...SB :
+       ALS =  0.175
+       BES =  0.344
+       AKS =  1.415 - 0.641 * DS
+       AS  =  0.580 - 9.763 * DS + 6.795 * S  - 0.558 * S2
+       BS  =  5.617 + 5.709 * DS - 3.972 * S
+       DST =  13.78 - 9.581 * S  + 5.370 * S2 - 0.996 * S3
+       EST =  4.546 + 0.372 * S2
+       ESS =  5.053 - 1.070 * S  + 0.805 * S2
+       SB  = FWS (X, S, ALS, BES, AKS, AS, BS, DST, EST, ESS)
+*...GL :
+       ALG =  1.258
+       BEG =  1.846
+       AKG =  2.423
+       BKG =  2.427 + 1.311 * S  - 0.153 * S2
+       AG  =  25.09 - 7.935 * S
+       BG  = -14.84 - 124.3 * DS + 72.18 * S
+       CG  =  590.3 - 173.8 * S
+       DG  =  5.196 + 1.857 * S
+       EG  = -1.648 + 3.988 * S  - 0.432 * S2
+       ESG =  3.232 - 0.542 * S
+       GL  = FW (X, S, ALG, BEG, AKG, BKG, AG, BG, CG, DG, EG, ESG)
+       RETURN
+       END
+*
+*...FUNCTIONAL FORMS OF THE PARAMETRIZATIONS :
+*
+       FUNCTION FV (X, N, AK, BK, A, B, C, D)
+       IMPLICIT DOUBLE PRECISION (A - Z)
+       DX = DSQRT (X)
+       FV = N * X**AK * (1.+ A*X**BK + X * (B + C*DX)) * (1.- X)**D
+       RETURN
+       END
+*
+       FUNCTION FW (X, S, AL, BE, AK, BK, A, B, C, D, E, ES)
+       IMPLICIT DOUBLE PRECISION (A - Z)
+       LX = DLOG (1./X)
+       FW = (X**AK * (A + X * (B + X*C)) * LX**BK + S**AL
+     1      * DEXP (-E + DSQRT (ES * S**BE * LX))) * (1.- X)**D
+       RETURN
+       END
+*
+       FUNCTION FWS (X, S, AL, BE, AK, AG, B, D, E, ES)
+       IMPLICIT DOUBLE PRECISION (A - Z)
+       DX = DSQRT (X)
+       LX = DLOG (1./X)
+       FWS = S**AL / LX**AK * (1.+ AG*DX + B*X) * (1.- X)**D
+     1       * DEXP (-E + DSQRT (ES * S**BE * LX))
+       RETURN
+       END
+
+
+c=====================================================================
+
+
+
+
+c=========================================================================
+c
+c-----function R
+c
+c
+      SUBROUTINE R1990fun(dddX,dddaQ2,dddR,dddDR)
+c
+c...BB...22.XII.2005 body of R1990 replaced by body of R1998
+c...BB...22.XII.2005 from the COMPASS soft page (comments omitted)
+c
+cms SUBROUTINE thanks to:  Cynthia Keppel <keppel@jlab.org>,
+cbb    (look at the end of the code for excerpts from Cynthia's mail with comments)
+cms the orginal code has been changed in order to get
+cms continues values of the R and dR/dQ^2 at Q^2 = 0.4,
+
+
+cms      goodfit variable removed from the orginal subroutine
+cms      SUBROUTINE R1998(X,Q2,R,DR,GOODFIT)
+
+c...BB...had to remove this:       SUBROUTINE R1998(X,Q2,R,DR)
+
+
+!    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+      IMPLICIT NONE
+      REAL QP2,FAC,RLOG,Q2THR,R_A,R_B,R_C,R, D1,D2,D3,DR,DR1998,X,Q2
+      REAL Q2_SAVE
+
+c...BB...
+      double precision dddX,dddaQ2,dddR,dddDR
+c...BB...
+cms  Q2 limit changed from 0.2 -> 0.5
+cms  do not change the limit without changes in:  'low q2 behaviour'
+
+      REAL Q2_LIMIT /0.5/
+      REAL A(6) /4.8520E-02,  5.4704E-01,  2.0621E+00,
+     >          -3.8036E-01,  5.0896E-01, -2.8548E-02/
+      REAL B(6) /4.8051E-02,  6.1130E-01, -3.5081E-01,
+     >          -4.6076E-01,  7.1697E-01, -3.1726E-02/
+      REAL C(6) /5.7654E-02,  4.6441E-01,  1.8288E+00,
+     >           1.2371E+01, -4.3104E+01,  4.1741E+01/
+
+
+cms      LOGICAL GOODFIT
+!    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+c...BB...the next 2 lines added:
+      x = dddx
+      q2 = dddaq2
+
+cms   the next line was added
+
+      Q2_SAVE=Q2_LIMIT
+
+      IF(Q2.LT.Q2_LIMIT) THEN   ! added 11/15 to avoid low Q2 problems caused by RLOG
+       Q2_SAVE = Q2
+       Q2 = Q2_LIMIT
+      ENDIF
+
+
+      FAC = 1.+12.*Q2/(Q2+1.)*(.125**2 /(.125**2+X**2))
+      RLOG  = FAC/LOG(Q2/.04)!   <--- we use natural logarithms only!
+
+
+!Model A
+      QP2 = (A(2)/(Q2**4+A(3)**4)**.25) * (1.+A(4)*X +A(5)*X**2) !1.07   .030
+      R_A   = A(1)*RLOG +QP2*X**A(6)
+!Model B
+      QP2 = (1.+B(4)*X+B(5)*X**2)*(B(2)/Q2 +B(3)/(Q2**2+.09)) !1.06   .042
+      R_B   =  B(1)*RLOG+QP2*X**B(6)
+!Model C
+      Q2thr =C(4)*(X) +c(5)*x**2 +c(6)*X**3
+      QP2 =  C(2)/SQRT((Q2-Q2thr)**2+C(3)**2)
+      R_C   =  C(1)*RLOG+QP2
+
+      R     = (R_A+R_B+R_C)/3.
+
+cms      IF(Q2.LT.Q2_LIMIT) THEN   ! added 11/15 to avoid low Q2 problems caused by RLOG
+cms        R = Q2/Q2_LIMIT * R
+cms      ENDIF
+cms    a bug in the orginal code, should be Q2_SAVE.LT.Q2_LIMIT
+
+C N. PIERRE : D# variables here but not used, DR1998 causes crash at linking so quoted ? No harm ?
+
+C      D1    = DR1998(X,Q2)
+
+C      D2    = SQRT(((R_A-R)**2+(R_B-R)**2+(R_C-R)**2)/2.)
+C      D3    = .023*(1.+.5*R)
+C              IF (Q2.LT.1.OR.X.LT..1) D3 = 1.5*D3
+
+
+
+cms   'low q2 behaviour'
+cms   the forula gives continues R values at Q2 = 0.5 GeV^2
+cms   and continues 1st derivative at x=0.003 <-- COMPASS kinematical range
+cms ---------------------------------------------------------------------
+cms   0.2156 <---- gives correct derivative at Q2=0.4
+cms   1.1854 = 1.0 /(1-exp(-0.4/0.2156) <-- to correct value at Q2=0.4
+cms----------------------------------------------------------------------
+cms   0.2712 <---- gives correct derivative at Q2=0.5
+cms   1.1880 = 1.0 /(1-exp(-0.4/0.2712) <-- to correct value at Q2=0.5
+cms----------------------------------------------------------------------
+cms  note that for Q2=0.4 the variable Q2_LIMIT has to be changed!
+
+
+      IF(Q2_SAVE.LT.Q2_LIMIT) THEN
+        R= 1.1880*R*(1-exp(-Q2_SAVE/0.2712))
+        DR=0.2
+      ENDIF
+
+cms      GOODFIT = .TRUE.
+cms      IF ((X.LT.0.02).OR.(Q2.LT.0.3)) GOODFIT = .FALSE.
+
+
+c...BB...had to add the 2 lines below
+      dddr = dble(r)
+      ddddr = dble(dr)
+
+      RETURN
+      END
+
+c=====================================================================
+
+
+C---------------------------------------------------------
+      SUBROUTINE GARI(Q2,GEP,GMP,GEN,GMN)
+C
+C *** NUCLEON FORM FACTOR OF GARI AND KRUEMPELMANN, Z.PHYS A322 (1985) 689
+C ***
+C *** Michele Arneodo, Oct. 1990
+C ***
+      implicit double precision (a-h,o-z)
+
+      DATA GOFO,AKO,AKS,GRFR,AKR,AKV/0.411,0.163,-0.12,0.377,6.62,3.706/
+      DATA ALQCD,AL1,AL2 /0.0841,0.632025,5.1529/
+      DATA AM2O,AM2R /0.61465,0.602176/
+C
+C     divide by 4*proton mass squared
+      ETAPRO=Q2/3.5214174
+
+C
+C *** FORMULA 7, PAGE 691
+C
+      Q2H =Q2*DLOG((AL2+Q2)/ALQCD)/DLOG(AL2/ALQCD)
+      Z   = (AL2/(AL2+Q2H))
+      F1GK=(AL1/(AL1+Q2H)) * Z
+      F2GK=F1GK * Z
+
+      F1SGK=(AM2O/(AM2O+Q2)) * (GOFO) + (1.0-GOFO)
+      F1SGK=F1SGK*F1GK
+      F2SGK=(AM2O/(AM2O+Q2)) * (GOFO*AKO) + (AKS-AKO*GOFO)
+      F2SGK=F2SGK*F2GK
+      F1VGK=(AM2R/(AM2R+Q2)) * (GRFR) + (1.0-GRFR)
+      F1VGK=F1VGK*F1GK
+      F2VGK=(AM2R/(AM2R+Q2)) * (GRFR*AKR) + (AKV-AKR*GRFR)
+      F2VGK=F2VGK*F2GK
+C
+C *** FORMULA 4, PAGE 690
+C
+      F1P=0.5*(F1SGK+F1VGK)
+      F1N=0.5*(F1SGK-F1VGK)
+      F2P=0.5*(F2SGK+F2VGK)
+      F2N=0.5*(F2SGK-F2VGK)
+C
+C *** FORMULA 3, PAGE 690
+C
+      GEP=F1P-ETAPRO*F2P
+      GMP=F1P+F2P
+C
+      GEN=F1N-ETAPRO*F2N
+      GMN=F1N+F2N
+C
+      RETURN
+      END
+
 C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 C
       SUBROUTINE FIUSER(X,Q2,ZF1,ZF2,IPDFR)
@@ -14996,23 +16289,26 @@ C---DONNACHIE LANDSHOFF with pdf's
         ENDIF
       ELSEIF (ILQMOD.EQ.6) THEN
 C---NMC OLD (ADDED BY N. PIERRE 24/05/17 FOR TEST PURPOSE)
-        DO 5 IB1=1,2
-        DO 5 IB2=1,2
-        F1(IB1,IB2)=0D0
-        F2(IB1,IB2)=0D0
-    5   F3(IB1,IB2)=0D0
-        CALL NMC(X,Q2,ZF1,ZF2)
-        F1(1,1)=ZF1
-        F2(1,1)=ZF2
-        GOTO 2000
-        ENDIF
-      ELSEIF (ILQMOD.EQ.10) THEN
-C---STRUCTURE FUNCTIONS FROM USER ROUTINE
         DO 6 IB1=1,2
         DO 6 IB2=1,2
         F1(IB1,IB2)=0D0
         F2(IB1,IB2)=0D0
- 6      F3(IB1,IB2)=0D0
+    6   F3(IB1,IB2)=0D0
+        IF (Q2.GT.0.2D0) THEN
+          CALL NMC(X,Q2,ZF1,ZF2)
+          F1(1,1)=ZF1
+          F2(1,1)=ZF2
+          GOTO 2000
+        ELSE
+          GOTO 1000
+        ENDIF
+      ELSEIF (ILQMOD.EQ.10) THEN
+C---STRUCTURE FUNCTIONS FROM USER ROUTINE
+        DO 7 IB1=1,2
+        DO 7 IB2=1,2
+        F1(IB1,IB2)=0D0
+        F2(IB1,IB2)=0D0
+ 7      F3(IB1,IB2)=0D0
         CALL FIUSER(X,Q2,ZF1,ZF2,IPDFR)
         IF (IPDFR.EQ.1) GOTO 1000
         F1(1,1)=ZF1
@@ -15391,15 +16687,54 @@ C
         ENDIF
         F2EM=F2(1,1)
         GOTO 2000
-      ELSEIF (ILQMOD.EQ.10) THEN
-C---FOR LOW Q2 ONLY GAMMA EXCHANGE,
-C   STRUCTURE FUNCTIONS FROM USER ROUTINE
-C   PARAMETRIZATION BY DONNACHIE AND LANDSHOFF
+      ELSEIF (ILQMOD.EQ.6) THEN
+C---NMC ADDED BY N. PIERRE 25/05/17
         DO 10 IB1=1,2
         DO 10 IB2=1,2
         F1(IB1,IB2)=0D0
         F2(IB1,IB2)=0D0
  10     F3(IB1,IB2)=0D0
+        CALL NMC(X,Q2,ZF1,ZF2)
+        F1(1,1)=ZF1
+        F2(1,1)=ZF2
+C..PHOTON SELF ENERGY
+        IF (LPAR(7).GE.1) THEN
+          CG=HSSRGG(T)
+          PIGGG=DREAL(CG)/T
+        ELSE
+          PIGGG=0D0
+        ENDIF
+        DVACGG=1D0/(1D0+PIGGG)
+C..LEPTONIC QED VERTEX CORRECTIONS INCLUDING SOFT BREMSSTRAHLUNG
+        IF (LPAR(12).GE.1) THEN
+          DVRTXV=HSDQDV(X,Q2)*ALP2PI
+          DVRTXS=HSDQDS(X,Q2)*ALP2PI
+          DVRTX1=DVRTXV-(Q2+4D0*MEI2)/(Q2-2D0*MEI2)*DVRTXS
+          DVRTX2=DVRTXV+
+     *          (2D0*(1D0-Y)+Y*Y/2D0)/(1D0-Y-MPRO2*Q2/SHAT/SHAT)*DVRTXS
+        ELSE
+          DVRTX1=0D0
+          DVRTX2=0D0
+        ENDIF
+C
+        IF (LPAR(3).LT.3) THEN
+        F1(1,1)=F1(1,1)*(DVRTX1+DVACGG*DVACGG)
+        F2(1,1)=F2(1,1)*(DVRTX2+DVACGG*DVACGG)
+        ELSE
+        F1(1,1)=F1(1,1)*(1D0+DVRTX1)*DVACGG*DVACGG
+        F2(1,1)=F2(1,1)*(1D0+DVRTX2)*DVACGG*DVACGG
+        ENDIF
+        F2EM=F2(1,1)
+        GOTO 2000
+      ELSEIF (ILQMOD.EQ.10) THEN
+C---FOR LOW Q2 ONLY GAMMA EXCHANGE,
+C   STRUCTURE FUNCTIONS FROM USER ROUTINE
+C   PARAMETRIZATION BY DONNACHIE AND LANDSHOFF
+        DO 11 IB1=1,2
+        DO 11 IB2=1,2
+        F1(IB1,IB2)=0D0
+        F2(IB1,IB2)=0D0
+ 11     F3(IB1,IB2)=0D0
         CALL FIUSER(X,Q2,ZF1,ZF2,IPDFR)
         IF (IPDFR.EQ.1) GOTO 1000
         F1(1,1)=ZF1
@@ -18328,7 +19663,9 @@ C
     1 BUPC(I)=BUP(I)
       ACC=ACCREQ
       INCCC=IFUN
+
       RESULT=GAUSK1(DFNCII,BLOWC(2),BUPC(2),ACCREQ)
+
       ACCFIN=ACCREQ
       IFAIL=0
       RETURN

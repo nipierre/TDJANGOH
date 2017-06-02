@@ -637,6 +637,7 @@ c
       CHARACTER*10 CODE,CODEWD
       DIMENSION CODE(20)
       COMMON /LEPTOU/ CUT(14),LST(40),PARL(30),X,Y,W2,Q2,U
+      COMMON /HSLPTU/ HSLST(40), HSPARL(30)
       COMMON /HSUNTS/ LUNTES,LUNDAT,LUNIN,LUNOUT,LUNRND
       COMMON /IHSCW/ INPUTCODEWD(46), ITCW
       CHARACTER*10   INPUTCODEWD
@@ -745,6 +746,7 @@ C               I_lepton = 0/1 inactive/active scattered electron
 C               I_shower = 0/1 excluded/included interm. partons
 C***********************************************************************
  200  CONTINUE
+      LST(4)=HSLST(4+1)
       IF(VERBOZ.EQ.1) THEN
         WRITE(LUNOUT,'(5X,A,I3)')
      *        ' LST(4)=',LST(4)
@@ -761,6 +763,7 @@ C                =4 : as 3 but z-axis along exchanged boson
 C
 C***********************************************************************
  300  CONTINUE
+      LST(5)=HSLST(5+1)
       IF(VERBOZ.EQ.1) THEN
         WRITE(LUNOUT,'(5X,A,I3)')
      *        ' LST(5)=',LST(5)
@@ -774,6 +777,7 @@ C     LST(7)  = 0 : only parton level
 C             = 1 : as 0 + hadronization and decays
 C***********************************************************************
  400  CONTINUE
+      LST(7)=HSLST(7+1)
       IF(VERBOZ.EQ.1) THEN
         WRITE(LUNOUT,'(5X,A,I3)')
      *        ' LST(7)=',LST(7)
@@ -803,6 +807,7 @@ C     =12-15: ME+PS (as 2-5)
 C
 C***********************************************************************
  500  CONTINUE
+      LST(8)=HSLST(8+1)
       IF(VERBOZ.EQ.1) THEN
         WRITE(LUNOUT,'(5X,A,I3)')
      *        ' LST(8)=',LST(8)
@@ -826,6 +831,7 @@ C          = 1 : into baryon
 C          = 2 & 3 : as 1 but with different probability distributions
 C***********************************************************************
  600  CONTINUE
+      LST(14)=HSLST(14+1)
       IF(VERBOZ.EQ.1) THEN
         WRITE(LUNOUT,'(5X,A,I3)')
      *        ' LST(14)=',LST(14)
@@ -843,7 +849,7 @@ C             =5: Q^2*(1-x)*max(1,ln1/x)
 C             =9: W^4/3, i.e. similar as in dipole model
 C***********************************************************************
  700  CONTINUE
-C      READ(19,*) LST(9)
+      LST(9)=HSLST(9+1)
       WRITE(LUNOUT,'(5X,A,I3)')
      *        ' LST(9)=',LST(9)
       GO TO 1
@@ -855,6 +861,7 @@ C
 C     PARL(3) = 0.44 GeV (Default)
 C***********************************************************************
  800  CONTINUE
+      PARL(3)=HSPARL(3+1)
       IF(VERBOZ.EQ.1) THEN
         WRITE(LUNOUT,'(5X,A,1PE13.4)')
      *        ' PARL(3)=',PARL(3)
@@ -868,6 +875,7 @@ C               spin and isospin equal zero, i.e. I=S=0
 C     PARL(4) = 0.75 (Default)
 C***********************************************************************
  900  CONTINUE
+      PARL(4)=HSPARL(4+1)
       IF(VERBOZ.EQ.1) THEN
         WRITE(LUNOUT,'(5X,A,1PE13.4)')
      *        ' PARL(4)=',PARL(4)
@@ -881,6 +889,7 @@ C               split into a particle and a jet
 C    PARL(14) = 0.44 GeV (Default)
 C***********************************************************************
 1000  CONTINUE
+      PARL(14)=HSPARL(14+1)
       IF(VERBOZ.EQ.1) THEN
         WRITE(LUNOUT,'(5X,A,1PE13.4)')
      *        ' PARL(14)=',PARL(14)

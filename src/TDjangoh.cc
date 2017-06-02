@@ -256,7 +256,7 @@ extern "C" struct hsoptn
 extern "C" struct hsnume
 {
   double sigtot[100];
-  double sigerr[100];
+  double sigtrr[100];
   double sigg[100][20];
   double siggrr[100][20];
   int nevent;
@@ -474,7 +474,7 @@ Int_t TDjangoh::ImportParticles(TClonesArray *particles, Option_t *option)
   return nparts;
 }
 
-void TDjangoh::Initialize(const string pFilename)
+void TDjangoh::ReadXMLFile(const string pFilename)
 {
   int PID;
   string cbeam;
@@ -921,14 +921,98 @@ void TDjangoh::Initialize(const string pFilename)
   // START
   hsnume_.nevent = 1;
 
+}
+
+void TDjangoh::Initialize()
+{
   hsinpt_();
 
   cout << ">>> TDJANGOH message : <<<" << endl;
   cout << "*** DJANGOH initialized ! ***" << endl;
   cout << ">>>         ***        <<<" << endl;
+}
+
+void TDjangoh::ModKineCuts(int pcut, double pxmin, double pxmax, double pymin, double pymax, double pq2min, double pq2max, double pwmin)
+{
+
+    hsoptn_.icut=pcut;
+    ihscut_.ixmin=pxmin;
+    ihscut_.ixmax=pxmax;
+    ihscut_.iymin=pymin;
+    ihscut_.iymax=pymax;
+    ihscut_.iq2min=pq2min;
+    ihscut_.iq2max=pq2max;
+    ihscut_.iwmin=pwmin;
 
 }
 
+void TDjangoh::BornWOqelNC()
+{
+
+    hsparl_.lparin[1]=0;
+    hsintnc_.inc2=1;
+    hsintnc_.inc31=0;
+    hsintnc_.inc32=0;
+    hsintnc_.inc33=0;
+    hsintnc_.inc34=0;
+    hsintnc_.iel2=0;
+    hsintnc_.iel31=0;
+    hsintnc_.iel32=0;
+    hsintnc_.iel33=0;
+    hssamnc_.isnc2=1;
+    hssamnc_.isnc31=0;
+    hssamnc_.isnc32=0;
+    hssamnc_.isnc33=0;
+    hssamnc_.isnc34=0;
+    hssamnc_.isel2=0;
+    hssamnc_.isel31=0;
+    hssamnc_.isel32=0;
+    hssamnc_.isel33=0;
+
+}
+
+void TDjangoh::RClepWOqelNC()
+{
+
+    hsparl_.lparin[1]=1;
+    hsintnc_.inc2=1;
+    hsintnc_.inc31=18;
+    hsintnc_.inc32=18;
+    hsintnc_.inc33=18;
+    hsintnc_.inc34=0;
+    hsintnc_.iel2=0;
+    hsintnc_.iel31=0;
+    hsintnc_.iel32=0;
+    hsintnc_.iel33=0;
+    hssamnc_.isnc2=1;
+    hssamnc_.isnc31=1;
+    hssamnc_.isnc32=1;
+    hssamnc_.isnc33=1;
+    hssamnc_.isnc34=0;
+    hssamnc_.isel2=0;
+    hssamnc_.isel31=0;
+    hssamnc_.isel32=0;
+    hssamnc_.isel33=0;
+
+}
+
+void TDjangoh::SetParticle(const char* pname)
+{
+  int PID;
+
+  if      (string(pname) == "e-" ) PID = -1;
+  else if (string(pname) == "e+" ) PID = 1;
+  else if (string(pname) == "mu-") PID = -3;
+  else if (string(pname) == "mu+") PID = 3;
+  else
+  {
+    cout<<"WARNING! In TDjangoh:Initialize():"<<endl;
+    cout<<"Specified beam="<<pname<<" is unrecognized."<<endl;
+    cout<<"Resetting to \"e+\" ."<<endl;
+    PID = 11;
+  }
+  hsparm_.llept = PID;
+}
 
 void TDjangoh::Configure(float beam_e, float pol)
 {
@@ -939,10 +1023,21 @@ void TDjangoh::Configure(float beam_e, float pol)
 
 }
 
+double TDjangoh::GetSigtot()
+{
+  return hsnume_.sigtot[0];
+}
+
+double TDjangoh::GetSigtrr()
+{
+  return hsnume_.sigtrr[0];
+}
+
 void TDjangoh::Clean_File()
 {
   remove("TDjangoh_evt.dat");
   remove("TDjangoh_out.dat");
   remove("TDjangoh_rnd.dat");
   remove("TDjangoh_smp.dat");
+  remove("TDjangoh_sigtot.dat");
 }
