@@ -103,6 +103,8 @@ int main(int argc,char *argv[])
   double rc_table_y[30][19];
   int re[16][20];
   int born[16][20];
+  double erre[16][20];
+  double erborn[16][20];
   int evtotre;
   int evtotborn;
   double sigtotre;
@@ -124,6 +126,7 @@ int main(int argc,char *argv[])
       cout << FCYN("HELP : available flags :") << endl;
       cout << FCYN("-f [RC_file] [Born_file] : specific files") << endl;
       cout << FCYN("-l [filename_template] : a list of files in xbins (RC//or//Born_[filename_template]_xbin_i_i+1.dat)\n xbins = [.004,.006,.008,.01,.013,.016,.02,.03,.04,.06,.08,.1,.15,.2,.3,.4,.5,.6,.7,.8,.9]") << endl;
+      cout << FCYN("-sigf [RC_file] [Born_file] : specific cross-section files") << endl;
       cout << FCYN("-qel : include quasi-elastic contribution for TERAD RC") << endl;
       return 0;
     }
@@ -134,7 +137,7 @@ int main(int argc,char *argv[])
     }
     if (i+1 < argc)
     {
-      if (string(argv[i]) == "-l" && fileFlag != "-f")
+      if (string(argv[i]) == "-l" && fileFlag != "-f" && fileFlag != "-sigf")
       {
         TempFile = argv[i + 1];
         fileFlag = "-l";
@@ -142,20 +145,26 @@ int main(int argc,char *argv[])
     }
     if(i+2 < argc)
     {
-      if (string(argv[i]) == "-f" && fileFlag != "-l")
+      if (string(argv[i]) == "-f" && fileFlag != "-l" && fileFlag != "-sigf")
       {
         FileRC = argv[i+1];
         FileBorn = argv[i+2];
         fileFlag = "-f";
       }
+      if (string(argv[i]) == "-sigf" && fileFlag != "-l" && fileFlag != "-f")
+      {
+        FileRC = argv[i+1];
+        FileBorn = argv[i+2];
+        fileFlag = "-sigf";
+      }
     }
   }
 
-  if(fileFlag != "-l" && fileFlag != "-f")
+  if(fileFlag != "-l" && fileFlag != "-f" && fileFlag != "-sigf")
   {
     cout << BOLD(FRED("ERROR : expected some flags")) << endl;
     cout << BOLD(FRED("Expected -f or -l for input files !")) << endl;
-    cout << BOLD(FRED("USAGE : \n ./rc_calc -f [RC_file] [Born_file] \nOR\n ./rc_calc -l [filename_template]")) << endl;
+    cout << BOLD(FRED("USAGE : \n ./rc_calc -f [RC_file] [Born_file] \nOR\n ./rc_calc -l [filename_template] \nOR\n ./rc_calc -sigf [RC_file] [Born_file]")) << endl;
     cout << BOLD(FRED("[-h for further help]")) << endl;
     return 1;
   }
@@ -420,6 +429,36 @@ int main(int argc,char *argv[])
       bevt.close();
     }
   }
+  else if(fileFlag == "-sigf")
+  {
+    ifstream revt(FileRC);
+
+    for(int j=2; j<20; j++)
+    {
+      for(int i=0; i<16; i++)
+      {
+        revt >> sigre[i][j];
+        revt >> erre[i][j]; //here we stock the error
+      	cout << "(" << j << "," << i << ") : " << sigre[i][j] << "\t" << erre[i][j] << endl;
+      }
+    }
+
+    revt.close();
+
+    ifstream bevt(FileBorn);
+
+    for(int j=2; j<20; j++)
+    {
+      for(int i=0; i<16; i++)
+      {
+        bevt >> sigborn[i][j];
+        bevt >> erborn[i][j];
+	cout << "(" << j << "," << i << ") : " << sigborn[i][j] << "\t" << erborn[i][j] << endl;
+      }
+    }
+
+    bevt.close();
+  }
 
   if(qel==1)
   {
@@ -483,20 +522,21 @@ int main(int argc,char *argv[])
   {
     for(int j=0;j<20;j++)
     {
-      if(born[i][j] && re[i][j])
+      if((born[i][j] && re[i][j]) || fileFlag == "-sigf")
       {
         if(fileFlag == "-f")
         {
   	      sigre[i][j] = double(re[i][j])*double(sigtotre)/double(evtotre);
           sigborn[i][j] = double(born[i][j])*double(sigtotborn)/double(evtotborn);
         }
-        else
+        else if(fileFlag == "-l")
         {
           sigre[i][j] = double(re[i][j])*double(sigtotre_t[j])/double(evtotre_t[j]);
           sigborn[i][j] = double(born[i][j])*double(sigtotborn_t[j])/double(evtotborn_t[j]);
         }
-	      rcx[i][j] = double(sigre[i][j])/double(sigborn[i][j]);
-        rcx_e[i][j] = double(1/sqrt(born[i][j]))+double(1/sqrt(re[i][j]));
+	rcx[i][j] = double(sigre[i][j])/double(sigborn[i][j]);
+        if(fileFlag == "-f" || fileFlag == "-l") rcx_e[i][j] = double(1/sqrt(born[i][j]))+double(1/sqrt(re[i][j]));
+        else if(fileFlag == "-sigf") rcx_e[i][j] = double(erborn[i][j])+double(erre[i][j]);
         erx[i][j] = (rcx[i][j]-(rc_table[1+i][9+j]
                                   +rc_table[1+i+1][9+j+1]
                                   +rc_table[1+i][9+j+1]
@@ -562,10 +602,11 @@ int main(int argc,char *argv[])
   {
     for(int j=0;j<16;j++)
     {
-      if(born[j][i] && re[j][i])
+      if((born[j][i] && re[j][i]) || fileFlag == "-sigf")
       {
 	      rcy[i][j] = double(sigre[j][i])/double(sigborn[j][i]);
-        rcy_e[i][j] = double(1/sqrt(born[j][i]))+double(1/sqrt(re[j][i]));
+        if(fileFlag == "-f" || fileFlag == "-l") rcy_e[i][j] = double(1/sqrt(born[j][i]))+double(1/sqrt(re[j][i]));
+        else if(fileFlag == "-sigf") rcx_e[i][j] = double(erborn[i][j])+double(erre[i][j]);
         ery[i][j] = (rcy[i][j]-(rc_table_y[9+i][1+j]
                                   +rc_table_y[9+i+1][1+j+1]
                                   +rc_table_y[9+i][1+j+1]
