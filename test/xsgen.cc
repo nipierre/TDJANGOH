@@ -60,14 +60,15 @@ int main(int argc,char *argv[])
     else tDjangoh->RClepWOqelNC();
     ofstream outfile(Form("sigtot_%s.dat",ext[atoi(argv[2])].c_str()));
 
-    for(int j=2; j<20; j++)
+    for(int j=0; j<20; j++)
     {
       for(int k=0; k<16; k++)
       {
 
         cout << FBLU("\nBin : (") << j << FBLU(",") << k << FBLU(")..") << endl;
 
-        tDjangoh->ModKineCuts(3,xtab[j],xtab[j+1],ytab[k],ytab[k+1],.1,1E5,1.4);
+        if(j<6 && k<10) tDjangoh->ModKineCuts(3,xtab[j],xtab[j+1],ytab[k],ytab[k+1],0.1,1E5,1.4);
+        else tDjangoh->ModKineCuts(3,xtab[j],xtab[j+1],ytab[k],ytab[k+1],1.0,1E5,1.4);
         tDjangoh->SetParticle("mu+");
 
         tDjangoh->Initialize();
