@@ -14941,25 +14941,6 @@ c-----observe that function "fint" is an interpolation function,
 c-----taken from CERNLIB
 
 
-      SUBROUTINE GETJKB (X,Q2,F2LXQ2)
-      implicit double precision (a-h,o-z)
-      PARAMETER (NXM=50,NQM=50)
-      PARAMETER (NXQM=NXM+NQM)
-      real xqlogm,f2mod
-      COMMON /JKBCOM/ XQLOGM(NXQM),F2MOD(NXM,NQM),H(2,20,20)
-      common /jkbini/ ijkbb
-      INTEGER NXQ2(2)
-      REAL XQ2(2)
-      real fint
-      if (x.lt.0.0000001d0.or.q2.lt.0.0000001d0)
-     +   print *,'============ x,q2 in GETJKB ===== ',x,q2
-      XQ2(1)=log10(X)
-      XQ2(2)=log10(Q2)
-      NXQ2(1)=NXM
-      NXQ2(2)=NQM
-      f2lxq2=fint(2,xq2,nxq2,xqlogm,f2mod)
-      END
-
       SUBROUTINE INIJKB
       implicit double precision (a-h,o-z)
       PARAMETER (NXM=50,NQM=50)
@@ -14969,67 +14950,58 @@ c-----taken from CERNLIB
       common /jkbini/ ijkbb
       DATA XLOGMIN/-5.5/,XLOGMAX/0.0/
       DATA QLOGMIN/-5.0/,QLOGMAX/-0.3/
-      character tab*7, targett*5, f2para*7, iter*7, nucleonff*8
-      common /parameters1/ tab, targett, f2para, iter, nucleonff
-      common /parameters2/ ene, realene,
-     +               f2isocor, semicuts, f2hh92a, f2dd92a,
-     +               fixf2p, fixf2d, f2np, muon, isupfactor
-
-
       ijkbb = 0
       mode = 72
 cc
 cc
       DO IX=1,NXM
-        XQLOGM(IX)=XLOGMIN+(XLOGMAX-XLOGMIN)*IX/NXM
-        XX=10**(XQLOGM(IX))
-        DO IQ=1,NQM
-          XQLOGM(NQM+IQ)=QLOGMIN+(QLOGMAX-QLOGMIN)*IQ/NQM
-          Q2=10**(XQLOGM(NQM+IQ))
-          if(q2.lt.0.2d0) then
-            mode = 72
-            xbefore = xx
-            q2before = q2
-            call f2pd(mode,xx,q2,f2p,f2d,fv)
-c----BB 4.V.2017           if (ix.lt.5.and.iq.lt.5) print *, xbefore,xx,q2before,q2,f2d
-
-c----BB 4.V.2017       if (targett.eq.'nuchh') then
-c----BB 4.V.2017        if(fixf2d.eq.1) then
-c----BB 4.V.2017            f2mod(ix,iq) = f2d
-c----BB 4.V.2017        else
-            f2mod(ix,iq) = f2p
-c----BB 4.V.2017        end if
-c----BB 4.V.2017       end if
-c----BB 4.V.2017      if(targett.eq.'nucdd') then
-c----BB 4.V.2017         if (fixf2p.eq.1) then
-c----BB 4.V.2017            f2mod(ix,iq) = f2p
-c----BB 4.V.2017         else
-c----BB 4.V.2017            f2mod(ix,iq) = f2d
-c----BB 4.V.2017         end if
-c----BB 4.V.2017      end if
-
-c----BB 4.V.2017      if(targett.ne.'nuchh') then
-c----BB 4.V.2017      if(targett.ne.'nucdd') then
-c----BB 4.V.2017      if (fixf2p.ne.1) f2mod(ix,iq) = f2d
-c----BB 4.V.2017      end if
-c----BB 4.V.2017      end if
-
-          else
-            if (q2.lt.0.0000001d0)
-C     +         print '======== q2 in INIJKB ======= ',q2
-C 2015-06-10 the above removed and corrected as below
-     +         print *, '======== q2 in INIJKB ======= ',q2
-            xqlogm(nqm+iq)=log10(q2)
-            call df2p15(xx,q2,f2)
-            f2mod(ix,iq) = f2
-          endif
-        ENDDO
+       XQLOGM(IX)=XLOGMIN+(XLOGMAX-XLOGMIN)*IX/NXM
+       XX=10**(XQLOGM(IX))
+       DO IQ=1,NQM
+         XQLOGM(NQM+IQ)=QLOGMIN+(QLOGMAX-QLOGMIN)*IQ/NQM
+         Q2=10**(XQLOGM(NQM+IQ))
+         if(q2.lt.0.2d0) then
+           mode = 72
+           xbefore = xx
+           q2before = q2
+           call f2pd(mode,xx,q2,f2p,f2d,fv)
+C     if (ix.lt.5.and.iq.lt.5) print *, xbefore,xx,q2before,q2,f2d
+C           print *, mode, xx, q2, f2p, f2d, fv
+           f2mod(ix,iq) = f2p
+         else
+c           if (q2.lt.0.0000001d0)
+cbbb...2015     +         print '======== q2 in INIJKB ======= ',q2
+c          +         print *, '======== q2 in INIJKB ======= ',q2
+           xqlogm(nqm+iq)=log10(q2)
+           call df2p15(xx,q2,f2)
+           f2mod(ix,iq) = f2
+         endif
+       ENDDO
       ENDDO
       ijkbb = 1
       END
+c==================================================================
 
+      SUBROUTINE GETJKB (X,Q2,F2LXQ2)
+      implicit double precision (a-h,o-z)
+      PARAMETER (NXM=50,NQM=50)
+      PARAMETER (NXQM=NXM+NQM)
+      real xqlogm,f2mod
+      COMMON /JKBCOM/ XQLOGM(NXQM),F2MOD(NXM,NQM),H(2,20,20)
+      common /jkbini/ ijkbb
+      INTEGER NXQ2(2)
+      REAL XQ2(2)
+      print *,'============ x,q2 in GETJKB ===== ',x,q2
+      XQ2(1)=log10(X)
+      XQ2(2)=log10(Q2)
+      NXQ2(1)=NXM
+      NXQ2(2)=NQM
+      f2lxq2=fint(2,xq2,nxq2,xqlogm,f2mod)
+      END
+c
+c=====================================================================
 
-
+c
       subroutine f2pd(mode,x,q2,f2p,f2d,fv)
 c
 c --- A code to calculate the nucleon structure function F2 in the
@@ -15060,7 +15032,6 @@ c --- mode=71/72, GRV94, NLO MS(bar), no charm/with charm
 c --- mode=73/74, GRV94, NLO DIS,     no charm/with charm
 c --- mode=75/76, GRV94,  LO,         no charm/with charm
 c
-c
 c --- OBS 1:  modes 1-4 are calculated in the LO and modes 5,6 in the NLO of QCD
 c --- OBS 2:  mode=1,2,3,4 have a narrower validity range: 10**(-4) < x < 0.1
 c --- OBS 3:  x validity range applies in fact to the {\bar x} variable,
@@ -15074,7 +15045,7 @@ c                  (e.g.mode=2 for file f2mod2.dat),
 c        q2,x:     the usual kinematic variables,
 c        f2p,f2d   str. functions for the proton and for the deuteron
 c                  (returned values);
-c !!!    deteron here is (proton+neutron)/2 ie no shadowing effects.  !!!!!!!!!!
+c !!!    deteron here is (proton+neutron)/2 ie no shadowing effects. !!!!!!!!!!
 c        fv:       contribution of GVMD in the final F2 (return value)
 c
 c --- Example of the usage of the subroutine is given above.
@@ -15107,7 +15078,6 @@ c......................were thus commented by "ccc"
 c
       implicit double precision (a-h,o-z)
 c
-      character inucl*4
 ccc      double precision dx,dq2,dxbar, dqbar, df2, df2d, df2l, df2bh
       PARAMETER (NXM=50,NQM=50)
       PARAMETER (NXQM=NXM+NQM)
@@ -15118,6 +15088,8 @@ ccc      double precision dx,dq2,dxbar, dqbar, df2, df2d, df2l, df2bh
       data nmax, pmass / 20, 0.938272/
       data w02, ymax, q20, q2f / 1.2, 9.2103, 1., 1000./
       data alama/3*0.2304, 0.1732, 0.2304, 0.23/
+      CHARACTER inucl*4
+
 c
       viu=q2/x
       viug=viu/(2.*pmass)
@@ -15134,40 +15106,41 @@ c
 c
 c --- if mode < 70 then MRS
 c
-c
+c...NP commented out as not useful
 c...BB, 15.XII.2005....introduced double prec. in this routine to comply
 c......................with the rest of TERAD; thus "alog" changed into
 c......................"dlog" in 4 places below
 c
-      alam=alama(mode)*alama(mode)
-ccc      ql0=alog(q20/alam)
-ccc      qlf=alog(q2f/alam)
-      ql0=dlog(q20/alam)
-      qlf=dlog(q2f/alam)
-      qlp=ql0+qlf
-      qlm=qlf-ql0
-ccc      aq=acos((2.*alog(qbar/alam)-qlp)/qlm)
-      aq=acos((2.*dlog(qbar/alam)-qlp)/qlm)
-      if (mode.gt.4) ymax=11.5129
-ccc      ax=acos((2.*alog(1./xbar)-ymax)/ymax)
-      ax=acos((2.*dlog(1./xbar)-ymax)/ymax)
-c
-c
-      do 500 j=1,2
-      f2=0.
-      do 400 nx=1,nmax
-      anx=float(nx)-1.
-      tx=cos(anx*ax)
-      do 300 nq=1,nmax
-      anq=float(nq)-1.
-      tq=cos(anq*aq)
-      f2=f2+tx*tq*h(j,nq,nx)
-300   continue
-400   continue
-      ftwo(j)=4./float(nmax)/float(nmax)*f2
-500   continue
-      go to 3
-c
+
+C      alam=alama(mode)*alama(mode)
+cc      ql0=alog(q20/alam)
+cc      qlf=alog(q2f/alam)
+C      ql0=dlog(q20/alam)
+C      qlf=dlog(q2f/alam)
+C      qlp=ql0+qlf
+C      qlm=qlf-ql0
+cc      aq=acos((2.*alog(qbar/alam)-qlp)/qlm)
+C      aq=acos((2.*dlog(qbar/alam)-qlp)/qlm)
+C      if (mode.gt.4) ymax=11.5129
+cc      ax=acos((2.*alog(1./xbar)-ymax)/ymax)
+C      ax=acos((2.*dlog(1./xbar)-ymax)/ymax)
+
+
+C      do 500 j=1,2
+C      f2=0.
+C      do 400 nx=1,nmax
+C      anx=float(nx)-1.
+C      tx=cos(anx*ax)
+C      do 300 nq=1,nmax
+C      anq=float(nq)-1.
+C      tq=cos(anq*aq)
+C      f2=f2+tx*tq*h(j,nq,nx)
+C  300 continue
+C  400 continue
+C      ftwo(j)=4./float(nmax)/float(nmax)*f2
+C  500 continue
+C      go to 3
+
   2   continue
 c
 c --- if mode > 70 then GRV94 (in=1,2 corresponds to proton, deuteron)
@@ -15176,23 +15149,24 @@ c      call  grv(dx,   dq2,  df2p,df2pd,df2pl,df2bh)
 c      f2as=df2pl
 c      aux=df2bh
       do in=1,2
-          inucl='deut'
-          if(in.eq.1) inucl='prot'
-          call  grv(dxbar,dqbar,df2,df2d,df2l,df2bh,inucl)
-          if (mode.eq.71) ftwo(in) = df2
-          if (mode.eq.72) ftwo(in) = df2  + df2bh
-          if (mode.eq.73) ftwo(in) = df2d
-          if (mode.eq.74) ftwo(in) = df2d + df2bh
-          if (mode.eq.75) ftwo(in) = df2l
-          if (mode.eq.76) ftwo(in) = df2l + df2bh
+         inucl='deut'
+         if(in.eq.1) inucl='prot'
+         call  grv(dxbar,dqbar,df2,df2d,df2l,df2bh,inucl)
+C         print *, dxbar, dqbar, df2, df2d, df2l, df2bh, inucl
+         if (mode.eq.71) ftwo(in) = df2
+         if (mode.eq.72) ftwo(in) = df2  + df2bh
+         if (mode.eq.73) ftwo(in) = df2d
+         if (mode.eq.74) ftwo(in) = df2d + df2bh
+         if (mode.eq.75) ftwo(in) = df2l
+         if (mode.eq.76) ftwo(in) = df2l + df2bh
       enddo
 c
- 3    continue
+  3   continue
 c
 c --- vector meson contribution
 c
-      call sigvmes(viug,sigro,sigfi)
-      call vmesnuc(q2,sigro,sigfi,fv)
+call sigvmes(viug,sigro,sigfi)
+call vmesnuc(q2,sigro,sigfi,fv)
 c
       f2p=cbar*ftwo(1)+fv
       f2d=cbar*ftwo(2)+fv
@@ -16294,14 +16268,16 @@ C---NMC OLD (ADDED BY N. PIERRE 24/05/17 FOR TEST PURPOSE)
         F1(IB1,IB2)=0D0
         F2(IB1,IB2)=0D0
     6   F3(IB1,IB2)=0D0
-        IF (Q2.GT.0.2D0) THEN
+        SHAT=SP-MPRO2-MEI2
+        Y=Q2/SHAT/X
+C        IF (Q2.LT.0.2D0) THEN
+C          GOTO 1000
+C        ELSE
           CALL NMC(X,Q2,ZF1,ZF2)
           F1(1,1)=ZF1
           F2(1,1)=ZF2
           GOTO 2000
-        ELSE
-          GOTO 1000
-        ENDIF
+C        ENDIF
       ELSEIF (ILQMOD.EQ.10) THEN
 C---STRUCTURE FUNCTIONS FROM USER ROUTINE
         DO 7 IB1=1,2
@@ -16694,9 +16670,15 @@ C---NMC ADDED BY N. PIERRE 25/05/17
         F1(IB1,IB2)=0D0
         F2(IB1,IB2)=0D0
  10     F3(IB1,IB2)=0D0
-        CALL NMC(X,Q2,ZF1,ZF2)
-        F1(1,1)=ZF1
-        F2(1,1)=ZF2
+        SHAT=SP-MPRO2-MEI2
+        Y=Q2/SHAT/X
+C        IF (Q2.LT.0.2D0) THEN
+C          GOTO 1000
+C        ELSE
+          CALL NMC(X,Q2,ZF1,ZF2)
+          F1(1,1)=ZF1
+          F2(1,1)=ZF2
+C        ENDIF
 C..PHOTON SELF ENERGY
         IF (LPAR(7).GE.1) THEN
           CG=HSSRGG(T)
