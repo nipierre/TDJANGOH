@@ -4,8 +4,8 @@
     \file                         TDjangoh.h
     \brief                        Interface class to Djangoh generator
     \author                       Nicolas PIERRE
-    \version                      0.1
-    \date                         28/10/16
+    \version                      1.1
+    \date                         14/06/16
     Support :                     mail to : nicolas.pierre@cern.ch
 
     TDjangoh is an interface class to DJANGOH
@@ -50,8 +50,6 @@ protected:
   static  TDjangoh* fgInstance; /*!< Instance of TDjangoh. Only one at a time permitted */
 
   Lujets_t*  fLujets; /*!< Container of the lujets_ common block */
-  Ludat1_t*  fLudat1; /*!< Container of the ludat1_ common block. For the moment not used due to 32/64 incomp */
-  Ludat2_t*  fLudat2; /*!< Container of the ludat2_ common block. For the moment not used due to 32/64 incomp */
   Djkin_t*   fDjkin;
 
   /*!
@@ -242,126 +240,6 @@ public:
 
 
   // ---------------------------------------------------------------------------
-  // /LUDAT1/ (NOT USED)
-  /*!
-  * \brief Recover the actual Ludat1_t structure
-  * \return fLudat1
-  */
-  Ludat1_t*   GetLudat1   () { return fLudat1; }
-  /*!
-  * \brief Recover the i element of MSTU
-  * \param i : element index
-  * \return MSTU[i-1]
-  */
-  int         GetMSTU(int i) { return fLudat1->MSTU[i-1]; }
-  /*!
-  * \brief Recover the i element of PARU
-  * \param i : element index
-  * \return PARU[i-1]
-  */
-  double      GetPARU(int i) { return fLudat1->PARU[i-1]; }
-  /*!
-  * \brief Recover the i element of MSTJ
-  * \param i : element index
-  * \return MSTJ[i-1]
-  */
-  int         GetMSTJ(int i) { return fLudat1->MSTJ[i-1]; }
-  /*!
-  * \brief Recover the i element of PARJ
-  * \param i : element index
-  * \return PARJ[i-1]
-  */
-  double      GetPARJ(int i) { return fLudat1->PARJ[i-1]; }
-  /*!
-  * \brief Set the i element of MSTU
-  * \param i : element index
-  * \param m : value of MSTU[i-1]
-  */
-  void        SetMSTU(int i, int m   ) { fLudat1->MSTU[i-1] = m; }
-  /*!
-  * \brief Set the i element of PARU
-  * \param i : element index
-  * \param p : value of PARU[i-1]
-  */
-  void        SetPARU(int i, double p) { fLudat1->PARU[i-1] = p; }
-  /*!
-  * \brief Set the i element of MSTJ
-  * \param i : element index
-  * \param m : value of MSTJ[i-1]
-  */
-  void        SetMSTJ(int i, int m   ) { fLudat1->MSTJ[i-1] = m; }
-  /*!
-  * \brief Set the i element of PARJ
-  * \param i : element index
-  * \param p : value of PARJ[i-1]
-  */
-  void        SetPARJ(int i, double p) { fLudat1->PARJ[i-1] = p; }
-
-
-  // ---------------------------------------------------------------------------
-  // /LUDAT2/ (NOT USED)
-  /*!
-  * \brief Recover the actual Ludat1_t structure
-  * \return fLudat2
-  */
-  Ludat2_t*   GetLudat2           () { return fLudat2; }
-  /*!
-  * \brief Recover the KCHG[i-1][ip-1] element
-  * \param ip : column index
-  * \param i : line index
-  * \return KCHG[i-1][ip-1]
-  */
-  int         GetKCHG(int ip, int i) { return fLudat2->KCHG[i-1][ip-1]; }
-  /*!
-  * \brief Recover the PMAS[i-1][ip-1] element
-  * \param ip : column index
-  * \param i : line index
-  * \return PMAS[i-1][ip-1]
-  */
-  double      GetPMAS(int ip, int i) { return fLudat2->PMAS[i-1][ip-1]; }
-  /*!
-  * \brief Recover the i element of PARF
-  * \param i : element index
-  * \return PARF[i-1]
-  */
-  double      GetPARF        (int i) { return fLudat2->PARF[i-1]; }
-  /*!
-  * \brief Recover the VCKM[i-1][j-1] element
-  * \param j : column index
-  * \param i : line index
-  * \return VCKM[i-1][j-1]
-  */
-  double      GetVCKM(int i,  int j) { return fLudat2->VCKM[j-1][i-1]; }
-  /*!
-  * \brief Set the KCHG[i-1][ip-1] element
-  * \param ip : column index
-  * \param i : line index
-  * \param k : value of KCHG[i-1][ip-1]
-  */
-  void        SetKCHG(int ip, int i, int k   ) { fLudat2->KCHG[i-1][ip-1] = k; }
-  /*!
-  * \brief Set the PMAS[i-1][ip-1] element
-  * \param ip : column index
-  * \param i : line index
-  * \param m : value of PMAS[i-1][ip-1]
-  */
-  void        SetPMAS(int ip, int i, double m) { fLudat2->PMAS[i-1][ip-1] = m; }
-  /*!
-  * \brief Set the i element of PARF
-  * \param i : element index
-  * \param p : value of PARF[i-1]
-  */
-  void        SetPARF        (int i, double p) { fLudat2->PARF[i-1]       = p; }
-  /*!
-  * \brief Set the VCKM[i-1][j-1] element
-  * \param j : column index
-  * \param i : line index
-  * \param v : value of VCKM[i-1][j-1]
-  */
-  void        SetVCKM (int i, int j, double v) { fLudat2->VCKM[j-1][i-1]  = v; }
-
-
-  // ---------------------------------------------------------------------------
   // /DJKIN/
 
   Djkin_t*    GetDjkin           () { return fDjkin; }
@@ -401,9 +279,31 @@ public:
   // ---------------------------------------------------------------------------
   // Cross-Section
 
+  // Total Cross-Section
   double      GetSigtot();
 
+  // Error on total Cross-Section
   double      GetSigtrr();
+
+  // ---------------------------------------------------------------------------
+  // Djangoh inputs modifiers
+
+  void        SetBeam(double pBeamE, double pPol);
+  void        SetGridOpt(double pGdMean, double pGdStdDev, int pGdSize);
+  void        SetGSWParam(int pLparin1, int pLparin2, int pLparin3, int pLparin4,
+                          int pLparin5, int pLparin6, int pLparin7, int pLparin8,
+                          int pLparin9, int pLparin10, int pLparin11);
+  void        SetEgamMin(double pEgamMin);
+  void        SetIntOptNC(int pInc2, int pInc31, int pInc32, int pInc33, int pInc34,
+                          int pIel2, int pIel31, int pIel32, int pIel33);
+  void        SetIntOptCC(int pIcc2, int pIcc31, int pIcc32, int pIcc33);
+  void        SetSamOptNC(int pIsnc2, int pIsnc31, int pIsnc32, int pIsnc33, int pIsnc34,
+                          int pIsel2, int pIsel31, int pIsel32, int pIsel33);
+  void        SetSamOptCC(int pIscc2, int pIscc31, int pIscc32, int pIscc33);
+  void        SetNucleus(double pEpro, double pHpolar, int pHna, int pHnz);
+  void        SetStructFunc(int pIlqmod, int pIlib, int pIcode);
+  void        SetVerboze(int pVerboz);
+
 };
 
 #endif
