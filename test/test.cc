@@ -103,9 +103,9 @@ int main(int argc,char *argv[])
   {
 
     if(rnd)
-      tDjangoh->Configure(base_energy+rand()%40,0);
+      tDjangoh->SetBeam(base_energy+rand()%40,0);
     else
-      tDjangoh->Configure(base_energy,0);
+      tDjangoh->SetBeam(base_energy,0);
 
 
     if(VERBOSE>0)
