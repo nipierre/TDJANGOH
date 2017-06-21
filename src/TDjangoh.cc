@@ -4,8 +4,8 @@
     \file                         TDjangoh.cc
     \brief                        Interface class to Djangoh generator
     \author                       Nicolas PIERRE
-    \version                      0.1
-    \date                         28/10/16
+    \version                      1.1
+    \date                         14/06/16
     Support :                     mail to : nicolas.pierre@cern.ch
 
 \class TDjangoh
@@ -28,13 +28,37 @@ TDjangoh*  TDjangoh::fgInstance = 0;
 
 # define type_of_call _stdcall
 # define VERSION 1
-# define SUBVERSION 0
+# define SUBVERSION 1
+
+// COLORS
+
+#define RST  "\x1B[0m"
+#define KRED  "\x1B[31m"
+#define KGRN  "\x1B[32m"
+#define KYEL  "\x1B[33m"
+#define KBLU  "\x1B[34m"
+#define KMAG  "\x1B[35m"
+#define KCYN  "\x1B[36m"
+#define KWHT  "\x1B[37m"
+
+#define FRED(x) KRED x RST
+#define FGRN(x) KGRN x RST
+#define FYEL(x) KYEL x RST
+#define FBLU(x) KBLU x RST
+#define FMAG(x) KMAG x RST
+#define FCYN(x) KCYN x RST
+#define FWHT(x) KWHT x RST
+
+#define BOLD(x) "\x1B[1m" x RST
+#define UNDL(x) "\x1B[4m" x RST
+
 
 using namespace std;
 
 
-//******************************************************************************
+//------------------------------------------------------------------------------
 // Dumping of Fortran COMMON Blocks
+//------------------------------------------------------------------------------
 
 Lujets_t lujets_;
 Djkin_t djkin_;
@@ -287,8 +311,12 @@ extern "C" struct hsoutf
   char outfilenam[80];
 } hsoutf_;
 
-//******************************************************************************
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
 // Function to convert string to Fortran char
+//------------------------------------------------------------------------------
 
 void ConvertToFortran(char* fstring, std::size_t fstring_len,
                       const char* cstring)
@@ -305,7 +333,9 @@ void ConvertToFortran(char* fstring, std::size_t fstring_len,
     fill(fstring + cpylen, fstring + fstring_len, ' ');
 }
 
-//******************************************************************************
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+
 
 TDjangoh::TDjangohCleaner::TDjangohCleaner() {}
 
@@ -327,17 +357,23 @@ TDjangoh::TDjangoh() : TGenerator("TDjangoh","TDjangoh")
   // LOGO display.
   cout
   << "\n\n\n"
-  << "             *//---------------------------------------------------------------------------------------//*\n"
-  << "            *// ___________ _____  ___________ _______ _____      ___ _______   _______   ___   ___  //*\n"
-  << "           *// /____    __/  __  \\/____   ___/  ___   |     |    /  /*******/  /*******\\ /  /  /**/ //*\n"
-  << "          *//      /  /  /  /  \\  \\   /  /  /  /   |  | /|  |   /  /*/        /**/   \\**\\  /__/**/ //*\n"
-  << "         *//      /  /  /  /   /  /  /  /  /  /____|  |/ |  |  /  /*/    ____/**/     \\**\\___ **/ //*\n"
-  << "        *//      /  /  /  /   /  /  /  /  /  ______   |  |  | /  /\\**\\  |****\\**\\     /**/  /**/ //*\n"
-  << "       *//      /  /  /  /___/  /__/  /  /  /      |  |  |  |/  /  \\**\\___/**/\\**\\___/**/  ___  //*\n"
-  << "      *//      /__/  /_________/_____/  /__/       |__|  |_____/    \\*******/  \\*******/  /**/ //*\n"
-  << "     *//----------------------------------------------------------------------------- v. " << VERSION << "." << SUBVERSION << " -//*\n"
-  << "    *//----- TDjangoh : An Interface to Djangoh ----- N. PIERRE, nicolas.pierre@cern.ch -----//*\n"
-  << "   *//--------------------------------------------------------------------------------------//*\n\n\n";
+  << BOLD(FBLU("             *//---------------------------------------------------------------------------------------//*\n"))
+  << BOLD(FBLU("            *//"))<<BOLD(FMAG(" ___________ _____  ___________ _______ _____      ___ _______   _______   ___   ___"))<<BOLD(FBLU("  //*\n"))
+  << BOLD(FBLU("           *// "))<<BOLD(FMAG("/____    __/  __  \\/____   ___/  ___   |     |    /  /"))<<BOLD(FCYN("*******"))<<BOLD(FMAG("/  /"))
+  << BOLD(FCYN("*******"))<<BOLD(FMAG("\\ /  /  /"))<<BOLD(FCYN("**"))<<BOLD(FBLU("/ //*\n"))
+  << BOLD(FBLU("          *//      "))<<BOLD(FMAG("/  /  /  /  \\  \\   /  /  /  /   |  | /|  |   /  /"))<<BOLD(FCYN("*"))<<BOLD(FMAG("/        /"))
+  << BOLD(FCYN("**"))<<BOLD(FMAG("/   \\"))<<BOLD(FCYN("**"))<<BOLD(FMAG("\\  /__/"))<<BOLD(FCYN("**"))<<BOLD(FBLU("/ //*\n"))
+  << BOLD(FBLU("         *//      "))<<BOLD(FMAG("/  /  /  /   /  /  /  /  /  /____|  |/ |  |  /  /"))<<BOLD(FCYN("*"))<<BOLD(FMAG("/    ____/"))
+  << BOLD(FCYN("**"))<<BOLD(FMAG("/     \\"))<<BOLD(FCYN("**"))<<BOLD(FMAG("\\___ "))<<BOLD(FCYN("**"))<<BOLD(FBLU("/ //*\n"))
+  << BOLD(FBLU("        *//      "))<<BOLD(FMAG("/  /  /  /   /  /  /  /  /  ______   |  |  | /  /\\"))<<BOLD(FCYN("**"))<<BOLD(FMAG("\\  |"))
+  << BOLD(FCYN("****"))<<BOLD(FMAG("\\"))<<BOLD(FCYN("**"))<<BOLD(FMAG("\\     /"))<<BOLD(FCYN("**"))<<BOLD(FMAG("/  /"))<<BOLD(FCYN("**"))<<BOLD(FBLU("/ //*\n"))
+  << BOLD(FBLU("       *//      "))<<BOLD(FMAG("/  /  /  /___/  /__/  /  /  /      |  |  |  |/  /  \\"))<<BOLD(FCYN("**"))<<BOLD(FMAG("\\___/"))
+  << BOLD(FCYN("**"))<<BOLD(FMAG("/\\"))<<BOLD(FCYN("**"))<<BOLD(FMAG("\\___/"))<<BOLD(FCYN("**"))<<BOLD(FBLU("/  ___  //*\n"))
+  << BOLD(FBLU("      *//      "))<<BOLD(FMAG("/__/  /_________/_____/  /__/       |__|  |_____/    \\"))<<BOLD(FCYN("*******"))
+  << BOLD(FMAG("/  \\"))<<BOLD(FCYN("*******"))<<BOLD(FMAG("/  /"))<<BOLD(FCYN("**"))<<BOLD(FBLU("/ //*\n"))
+  << BOLD(FBLU("     *//-----------------------------------------------------------------------------"))<< FCYN(" v. ") << VERSION << FWHT(".") << SUBVERSION << BOLD(FBLU(" -//*\n"))
+  << BOLD(FBLU("    *//-----"))<<BOLD(FCYN(" TDjangoh : An Interface to Djangoh"))<<BOLD(FBLU(" ----- "))<<BOLD(FCYN("N. PIERRE, nicolas.pierre@cern.ch"))<<BOLD(FBLU(" -----//*\n"))
+  << BOLD(FBLU("   *//--------------------------------------------------------------------------------------//*\n\n\n"));
 
   delete fParticles;
 
@@ -348,8 +384,6 @@ TDjangoh::TDjangoh() : TGenerator("TDjangoh","TDjangoh")
 TDjangoh::TDjangoh(const TDjangoh& dj) :
  TGenerator(dj),
  fLujets(dj.fLujets),
- fLudat1(dj.fLudat1),
- fLudat2(dj.fLudat2),
  fDjkin(dj.fDjkin)
 
 {}
@@ -1014,15 +1048,6 @@ void TDjangoh::SetParticle(const char* pname)
   hsparm_.llept = PID;
 }
 
-void TDjangoh::Configure(float beam_e, float pol)
-{
-
-// EL-BEAM
-  hselab_.eele = beam_e;
-  hsparm_.polari = pol;
-
-}
-
 double TDjangoh::GetSigtot()
 {
   return hsnume_.sigtot[0];
@@ -1031,6 +1056,105 @@ double TDjangoh::GetSigtot()
 double TDjangoh::GetSigtrr()
 {
   return hsnume_.sigtrr[0];
+}
+
+void TDjangoh::SetBeam(double pBeamE, double pPol)
+{
+  hselab_.eele = pBeamE;
+  hsparm_.polari = pPol;
+}
+
+void TDjangoh::SetGridOpt(double pGdMean, double pGdStdDev, int pGdSize)
+{
+  hsgrid_.gdmean = pGdMean;
+  hsgrid_.gdsddv = pGdStdDev;
+  hsgrid_.gdsize = pGdSize;
+}
+
+void TDjangoh::SetGSWParam(int pLparin1, int pLparin2, int pLparin3, int pLparin4,
+                           int pLparin5, int pLparin6, int pLparin7, int pLparin8,
+                           int pLparin9, int pLparin10, int pLparin11)
+{
+  hsparl_.lparin[0] = pLparin1;
+  hsparl_.lparin[1] = pLparin2;
+  hsparl_.lparin[2] = pLparin3;
+  hsparl_.lparin[3] = pLparin4;
+  hsparl_.lparin[4] = pLparin5;
+  hsparl_.lparin[5] = pLparin6;
+  hsparl_.lparin[6] = pLparin7;
+  hsparl_.lparin[7] = pLparin8;
+  hsparl_.lparin[8] = pLparin9;
+  hsparl_.lparin[9] = pLparin10;
+  hsparl_.lparin[10] = pLparin11;
+}
+
+void TDjangoh::SetEgamMin(double pEgamMin)
+{
+  hsirct_.egmin = pEgamMin;
+}
+
+void TDjangoh::SetIntOptNC(int pInc2, int pInc31, int pInc32, int pInc33, int pInc34,
+                           int pIel2, int pIel31, int pIel32, int pIel33)
+{
+  hsintnc_.inc2 = pInc2;
+  hsintnc_.inc31 = pInc31;
+  hsintnc_.inc32 = pInc32;
+  hsintnc_.inc33 = pInc33;
+  hsintnc_.inc34 = pInc34;
+  hsintnc_.iel2 = pIel2;
+  hsintnc_.iel31 = pIel31;
+  hsintnc_.iel32 = pIel32;
+  hsintnc_.iel33 = pIel33;
+}
+
+void TDjangoh::SetIntOptCC(int pIcc2, int pIcc31, int pIcc32, int pIcc33)
+{
+  hsintcc_.icc2 = pIcc2;
+  hsintcc_.icc31 = pIcc31;
+  hsintcc_.icc32 = pIcc32;
+  hsintcc_.icc33 = pIcc33;
+}
+
+void TDjangoh::SetSamOptNC(int pIsnc2, int pIsnc31, int pIsnc32, int pIsnc33, int pIsnc34,
+                           int pIsel2, int pIsel31, int pIsel32, int pIsel33)
+{
+  hssamnc_.isnc2 = pIsnc2;
+  hssamnc_.isnc31 = pIsnc31;
+  hssamnc_.isnc32 = pIsnc32;
+  hssamnc_.isnc33 = pIsnc33;
+  hssamnc_.isnc34 = pIsnc34;
+  hssamnc_.isel2 = pIsel2;
+  hssamnc_.isel31 = pIsel31;
+  hssamnc_.isel32 = pIsel32;
+  hssamnc_.isel33 = pIsel33;
+}
+
+void TDjangoh::SetSamOptCC(int pIscc2, int pIscc31, int pIscc32, int pIscc33)
+{
+  hssamcc_.iscc2 = pIscc2;
+  hssamcc_.iscc31 = pIscc31;
+  hssamcc_.iscc32 = pIscc32;
+  hssamcc_.iscc33 = pIscc33;
+}
+
+void TDjangoh::SetNucleus(double pEpro, double pHpolar, int pHna, int pHnz)
+{
+  hselab_.epro = pEpro;
+  hsparm_.hpolar = pHpolar;
+  hsnucl_.hna = pHna;
+  hsnucl_.hnz = pHnz;
+}
+
+void TDjangoh::SetStructFunc(int pIlqmod, int pIlib, int pIcode)
+{
+  hsstrp_.ilqmod = pIlqmod;
+  hsstrp_.ilib = pIlib;
+  hsstrp_.icode = pIcode;
+}
+
+void TDjangoh::SetVerboze(int pVerboz)
+{
+  hsvrbz_.verboz = pVerboz;
 }
 
 void TDjangoh::Clean_File()
