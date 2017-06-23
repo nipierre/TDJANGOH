@@ -433,7 +433,7 @@ int main(int argc,char *argv[])
   {
     ifstream revt(FileRC);
 
-    for(int j=2; j<20; j++)
+    for(int j=0; j<20; j++)
     {
       for(int i=0; i<16; i++)
       {
@@ -447,7 +447,7 @@ int main(int argc,char *argv[])
 
     ifstream bevt(FileBorn);
 
-    for(int j=2; j<20; j++)
+    for(int j=0; j<20; j++)
     {
       for(int i=0; i<16; i++)
       {
@@ -485,33 +485,57 @@ int main(int argc,char *argv[])
   }
   else if(qel==0)
   {
-    ifstream table("data/hh160_r1998_f2tulay_compass_grv.new_table.txt");
-    for(int i=0; i<30; i++)
+    ifstream table("data/hh160_r1998_f2tulay_compass_grv_had.asy_hcorr.txt");
+    for(int i=0; i<19; i++)
     {
-      for(int j=0; j<19; j++)
+      for(int j=0; j<5; j++)
       {
-        for(int k=0; k<8; k++)
-        {
-          table >> sdum;
-          // cout << sdum << "\t";
-        }
-        table >> quasiel >> sdum >> sdum >> sdum >> rc_table[j][i] >> sdum;
-        /*cout << "\t" << quasiel
-        << "\t" << sdum
-        << "\t" << sdum
-        << "\t" << sdum
-        << "\t" << rc_table[j][i]
-        << "\t" << sdum;*/
-        rc_table[j][i] -= quasiel;
-        rc_table[j][i] = 1+rc_table[j][i]/100;
-        // rc_table[j][i] = 1/rc_table[j][i];
-        rc_table_y[i][j]=rc_table[j][i];
+        table >> sdum;
+        cout << sdum << "\t";
 
-        //cout << endl;
+        for(int k=0; k<6; k++)
+        {
+          table >> rc_table[i][k+j*6] >> sdum;
+          cout << " " << rc_table[i][k+j*6] << sdum;
+          // rc_table[i][k+j*6] = 1/rc_table[i][k+j*6];
+          rc_table_y[k+j*6][i]=rc_table[i][k+j*6];
+        }
+
+        cout << endl;
+
       }
     }
     table.close();
   }
+  // else if(qel==0)
+  // {
+  //   ifstream table("data/hh160_r1998_f2tulay_compass_grv.new_table.txt");
+  //   for(int i=0; i<30; i++)
+  //   {
+  //     for(int j=0; j<19; j++)
+  //     {
+  //       for(int k=0; k<8; k++)
+  //       {
+  //         table >> sdum;
+  //         // cout << sdum << "\t";
+  //       }
+  //       table >> quasiel >> sdum >> sdum >> sdum >> rc_table[j][i] >> sdum;
+  //       /*cout << "\t" << quasiel
+  //       << "\t" << sdum
+  //       << "\t" << sdum
+  //       << "\t" << sdum
+  //       << "\t" << rc_table[j][i]
+  //       << "\t" << sdum;*/
+  //       rc_table[j][i] -= quasiel;
+  //       rc_table[j][i] = 1+rc_table[j][i]/100;
+  //       // rc_table[j][i] = 1/rc_table[j][i];
+  //       rc_table_y[i][j]=rc_table[j][i];
+  //
+  //       //cout << endl;
+  //     }
+  //   }
+  //   table.close();
+  // }
 
   TLine l(0,1,0.94,1);
   TLine l2(0.08,1,0.95,1);
@@ -534,7 +558,7 @@ int main(int argc,char *argv[])
           sigre[i][j] = double(re[i][j])*double(sigtotre_t[j])/double(evtotre_t[j]);
           sigborn[i][j] = double(born[i][j])*double(sigtotborn_t[j])/double(evtotborn_t[j]);
         }
-	rcx[i][j] = double(sigre[i][j])/double(sigborn[i][j]);
+	      rcx[i][j] = double(sigre[i][j])/double(sigborn[i][j]);
         if(fileFlag == "-f" || fileFlag == "-l") rcx_e[i][j] = double(1/sqrt(born[i][j]))+double(1/sqrt(re[i][j]));
         else if(fileFlag == "-sigf") rcx_e[i][j] = double(erborn[i][j])+double(erre[i][j]);
         erx[i][j] = (rcx[i][j]-(rc_table[1+i][9+j]
