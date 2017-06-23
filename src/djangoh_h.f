@@ -14991,7 +14991,7 @@ c==================================================================
       common /jkbini/ ijkbb
       INTEGER NXQ2(2)
       REAL XQ2(2)
-      print *,'============ x,q2 in GETJKB ===== ',x,q2
+C      print *,'============ x,q2 in GETJKB ===== ',x,q2
       XQ2(1)=log10(X)
       XQ2(2)=log10(Q2)
       NXQ2(1)=NXM
@@ -15165,9 +15165,10 @@ c
 c
 c --- vector meson contribution
 c
-call sigvmes(viug,sigro,sigfi)
-call vmesnuc(q2,sigro,sigfi,fv)
+      call sigvmes(viug,sigro,sigfi)
+      call vmesnuc(q2,sigro,sigfi,fv)
 c
+
       f2p=cbar*ftwo(1)+fv
       f2d=cbar*ftwo(2)+fv
 c
