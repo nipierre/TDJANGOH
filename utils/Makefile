@@ -4,10 +4,10 @@ CCFLAGS = -g -O1 -W -Wall #-pedantic -fPIC
 ROOTFLAGS = `root-config --cflags --glibs`
 ROOTVERSION = -D ROOT5
 
-all: pdist rc_calc lowQ2
+all: pdist rc_calc lowQ2 sirc
 
 pdist:: pdist.cc
-	$(CX) $(CCFLAGS) $(ROOTFLAGS) $(ROOTVERSION) -o $@ $< 
+	$(CX) $(CCFLAGS) $(ROOTFLAGS) $(ROOTVERSION) -o $@ $<
 	mv pdist ../bin
 
 rc_calc:: rc_calc.cc
@@ -18,6 +18,9 @@ lowQ2:: lowQ2.cc
 	$(CX) $(CCFLAGS) $(ROOTFLAGS) $(ROOTVERSION) -o $@ $<
 	mv lowQ2 ../bin
 
+sirc:: sirc.cc
+	$(CX) $(CCFLAGS) $(ROOTFLAGS) $(ROOTVERSION) -o $@ $<
+	mv sirc ../bin
+
 clean:
 	rm -rf *.o
-
