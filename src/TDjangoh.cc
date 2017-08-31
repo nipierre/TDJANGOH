@@ -1167,23 +1167,23 @@ void TDjangoh::WriteFSInFile()
   finalState << numpart << endl;
   finalState << hselab_.eele << "\t" << fDjkin->DJX << "\t" << fDjkin->DJY << "\t" << fDjkin->DJQ2 << endl;
 
-  for (Int_t i = -1; i<numpart; i++)
+  for (Int_t i = 0; i<numpart; i++)
   {
     if (fLujets->K[0][i] == 1)
     {
-      finalState << fLujets->K[0][i] << "\t"
-                 << fLujets->K[1][i] << "\t" //ID
-                 << fLujets->K[2][i] << "\t"
-                 << fLujets->K[3][i] << "\t"
-                 << fLujets->K[4][i] << "\t"
-                 << fLujets->P[0][i] << "\t" //Px
-                 << fLujets->P[1][i] << "\t" //Py
-                 << fLujets->P[2][i] << "\t" //Pz
-                 << fLujets->P[3][i] << "\t" //max(kinE,mass)
-                 << fLujets->V[0][i] << "\t"
-                 << fLujets->V[1][i] << "\t"
-                 << fLujets->V[2][i] << "\t"
-                 << fLujets->V[3][i] << endl;
+      finalState << fLujets->K[0][i-1] << "\t"
+                 << fLujets->K[1][i-1] << "\t" //ID
+                 << fLujets->K[2][i-1] << "\t"
+                 << fLujets->K[3][i-1] << "\t"
+                 << fLujets->K[4][i-1] << "\t"
+                 << fLujets->P[0][i-1] << "\t" //Px
+                 << fLujets->P[1][i-1] << "\t" //Py
+                 << fLujets->P[2][i-1] << "\t" //Pz
+                 << fLujets->P[3][i-1] << "\t" //max(kinE,mass)
+                 << fLujets->V[0][i-1] << "\t"
+                 << fLujets->V[1][i-1] << "\t"
+                 << fLujets->V[2][i-1] << "\t"
+                 << fLujets->V[3][i-1] << endl;
     }
   }
 

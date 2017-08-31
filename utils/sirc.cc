@@ -154,11 +154,15 @@ int main(int argc,char *argv[])
     while(revt >> npart)
     {
       revt >> E >> xbj >> y >> Q2;
+      cout << E << "\t" << xbj << "\t" << y << "\t" << Q2 << endl;
       for(int i=0; i<npart; i++)
       {
         revt >> dummy >> id >> dummy >> dummy >> dummy;
+        cout << dummy << "\t" << id << "\t" << dummy << "\t" << dummy << "\t" << dummy << "\t";
         revt >> px >> py >> pz >> Eh;
+        cout << px << "\t" << py << "\t" << pz << "\t" << Eh << "\t";
         revt >> dummy >> dummy >> dummy >> dummy;
+        cout << dummy << "\t" << dummy << "\t" << dummy << "\t" << dummy << endl;
 
         if(abs(id)==13) E_prime = Eh;
         if(id!=22 && abs(id)!=13 && id>0)
