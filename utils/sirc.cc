@@ -145,6 +145,7 @@ int main(int argc,char *argv[])
 
   evtotre = 0;
   evtotborn = 0;
+  E_prime = 0;
 
   if(fileFlag == "-f")
   {
