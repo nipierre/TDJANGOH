@@ -356,12 +356,17 @@ int main(int argc,char *argv[])
 
     while(bevt >> npart)
     {
+      bevt >> npart;
       bevt >> E >> xbj >> y >> Q2;
+      cout << E << "\txbj : " << xbj << "\ty : " << y << "\tQ2 : " << Q2 << endl;
       for(int i=0; i<npart; i++)
       {
         bevt >> dummy >> id >> dummy >> dummy >> dummy;
+        cout << dummy << "\tid : " << id << "\t" << dummy << "\t" << dummy << "\t" << dummy << "\t";
         bevt >> px >> py >> pz >> Eh;
+        cout << px << "\t" << py << "\t" << pz << "\t" << Eh << "\t";
         bevt >> dummy >> dummy >> dummy >> dummy;
+        cout << dummy << "\t" << dummy << "\t" << dummy << "\t" << dummy << endl;
 
         if(abs(id)==13) E_prime = Eh;
         if(id!=22 && abs(id)!=13 && id>0)
