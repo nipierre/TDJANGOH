@@ -1183,7 +1183,7 @@ void TDjangoh::WriteFSInFile()
                  << fLujets->V[0][i] << "\t"
                  << fLujets->V[1][i] << "\t"
                  << fLujets->V[2][i] << "\t"
-                 << fLujets->V[3][i]) << endl;
+                 << fLujets->V[3][i] << endl;
     }
   }
 
