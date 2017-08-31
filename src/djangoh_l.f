@@ -229,8 +229,12 @@ ckc..HERACLES
      *              ,MW2,MZ2,MH2,ME2,MMY2,MTAU2,MU2,MD2,MS2,MC2,MB2,MT2
       COMMON /HSKNST/ PI,ALPHA,ALP1PI,ALP2PI,ALP4PI,E,GF,SXNORM,SX1NRM
       COMMON /HSDELR/ DELTAR,AGF0,DRHOT,DALPMZ,XGMT,ALPQCD,BTOP4,DRPIW2
-      COMMON /HSNUME/ SIGTOT,SIGTRR,SIGG(20),SIGGRR(20),NEVENT,NEVE(20)
+      COMMON /HSNUME/ SIGTOT(100),SIGTRR(100),
+     +                SIGG(100,20),SIGGRR(100,20),
+     +                NEVENT,NEVE(20)
       COMMON /HSPDFO/ IPDFOP,IFLOPT,LQCD,LTM,LHT
+      COMMON /HSGRID/ GDSIZE, GDINDX, GDMEAN, GDSDDV, GDSCLE
+      INTEGER         GDSIZE, GDINDX
 chs-20.02.2016: Do not initialize for nucleon
 c      COMMON /HSNUCL/ HNA,HNZ,INUMOD
 c      DOUBLE PRECISION HNA,HNZ
@@ -278,10 +282,10 @@ C...G_F
 C...\Delta r
       PARL(18)=DELTAR
 C...Cross section within user defined cuts (in picobarn)
-      PARL(23)=SIGTOT*1E3
-      PARL(24)=SIGTOT*1E3
+      PARL(23)=SIGTOT(GDINDX)*1E3
+      PARL(24)=SIGTOT(GDINDX)*1E3
 C...Relative accuracy of cross section
-      ACCUR=SIGTRR/SIGTOT
+      ACCUR=SIGTRR(GDINDX)/SIGTOT(GDINDX)
 
 ckc..LEPTO
       NCALL=NCALL+1
@@ -559,9 +563,9 @@ C...Calculate weights if 1st order QCD requested.
       ENDIF
 
 C...Reset counters
-      NFAILL=0
-      NPASS=0
-      NTOT=0
+C      NFAILL=0
+C      NPASS=0
+C      NTOT=0
 C...Reset counters to zero for Monte Carlo estimate of cross section.
       LST(32)=0
       RETURN
@@ -633,11 +637,17 @@ c
       CHARACTER*10 CODE,CODEWD
       DIMENSION CODE(20)
       COMMON /LEPTOU/ CUT(14),LST(40),PARL(30),X,Y,W2,Q2,U
+      COMMON /HSLPTU/ HSLST(40), HSPARL(30)
+      INTEGER	      HSLST
+      SAVE /HSLPTU/
       COMMON /HSUNTS/ LUNTES,LUNDAT,LUNIN,LUNOUT,LUNRND
       COMMON /IHSCW/ INPUTCODEWD(46), ITCW
       CHARACTER*10   INPUTCODEWD
       INTEGER                         ITCW
-      SAVE   /IHSCW/
+      SAVE /IHSCW/
+      COMMON /HSVRBZ/ VERBOZ
+      INTEGER         VERBOZ
+      SAVE /HSVRBZ/
 ck..Ariadne
       COMMON /ARDAT1/ PARA(40),MSTA(40)
 cs..Sophia
@@ -684,8 +694,6 @@ C
  1    CONTINUE
 C      READ(19,90,END=4) CODEWD
       ITCW=ITCW+1
-C      WRITE(6,*) INPUTCODEWD(ITCW)
-C      WRITE(6,*) ITCW
       DO 2 ISW=1,20
       IF(INPUTCODEWD(ITCW).EQ.CODE(ISW))GO TO 3
  2    CONTINUE
@@ -726,8 +734,9 @@ C               CONTROL CARD: CODEWD = TITLE
 C               DEFINES THE TITLE OF THE JOB
 C***********************************************************************
  100  CONTINUE
-C      READ(19,190) TITLE
-      WRITE(6,191) TITLE
+      IF(VERBOZ.EQ.1) THEN
+        WRITE(6,191) TITLE
+      ENDIF
       GO TO 1
  190  FORMAT(A80)
  191  FORMAT(//,5X,A80,//)
@@ -740,9 +749,11 @@ C               I_lepton = 0/1 inactive/active scattered electron
 C               I_shower = 0/1 excluded/included interm. partons
 C***********************************************************************
  200  CONTINUE
-C      READ(19,*) LST(4)
-      WRITE(LUNOUT,'(5X,A,I3)')
+      LST(4)=HSLST(4+1)
+      IF(VERBOZ.EQ.1) THEN
+        WRITE(LUNOUT,'(5X,A,I3)')
      *        ' LST(4)=',LST(4)
+      ENDIF
       GO TO 1
 C
 C***********************************************************************
@@ -755,9 +766,11 @@ C                =4 : as 3 but z-axis along exchanged boson
 C
 C***********************************************************************
  300  CONTINUE
-C      READ(19,*) LST(5)
-      WRITE(LUNOUT,'(5X,A,I3)')
+      LST(5)=HSLST(5+1)
+      IF(VERBOZ.EQ.1) THEN
+        WRITE(LUNOUT,'(5X,A,I3)')
      *        ' LST(5)=',LST(5)
+      ENDIF
       GO TO 1
 C
 C***********************************************************************
@@ -767,9 +780,11 @@ C     LST(7)  = 0 : only parton level
 C             = 1 : as 0 + hadronization and decays
 C***********************************************************************
  400  CONTINUE
-C      READ(19,*) LST(7)
-      WRITE(LUNOUT,'(5X,A,I3)')
+      LST(7)=HSLST(7+1)
+      IF(VERBOZ.EQ.1) THEN
+        WRITE(LUNOUT,'(5X,A,I3)')
      *        ' LST(7)=',LST(7)
+      ENDIF
       IF (LST(7).LT.0) THEN
         IHSONL=1
         WRITE(LUNOUT,'(5X,A,I3)')
@@ -795,9 +810,11 @@ C     =12-15: ME+PS (as 2-5)
 C
 C***********************************************************************
  500  CONTINUE
-C      READ(19,*) LST(8)
-      WRITE(LUNOUT,'(5X,A,I3)')
+      LST(8)=HSLST(8+1)
+      IF(VERBOZ.EQ.1) THEN
+        WRITE(LUNOUT,'(5X,A,I3)')
      *        ' LST(8)=',LST(8)
+      ENDIF
       IF(LST(8).NE.0.AND.LST(8).NE.1.AND.
      & LST(8).NE.2.AND.LST(8).NE.3.AND.LST(8).NE.4.AND.LST(8).NE.5
      &.AND.LST(8).NE.9.AND.
@@ -817,9 +834,11 @@ C          = 1 : into baryon
 C          = 2 & 3 : as 1 but with different probability distributions
 C***********************************************************************
  600  CONTINUE
-C      READ(19,*) LST(14)
-      WRITE(LUNOUT,'(5X,A,I3)')
+      LST(14)=HSLST(14+1)
+      IF(VERBOZ.EQ.1) THEN
+        WRITE(LUNOUT,'(5X,A,I3)')
      *        ' LST(14)=',LST(14)
+      ENDIF
       GO TO 1
 C
 C***********************************************************************
@@ -833,9 +852,11 @@ C             =5: Q^2*(1-x)*max(1,ln1/x)
 C             =9: W^4/3, i.e. similar as in dipole model
 C***********************************************************************
  700  CONTINUE
-C      READ(19,*) LST(9)
-      WRITE(LUNOUT,'(5X,A,I3)')
-     *        ' LST(9)=',LST(9)
+      LST(9)=HSLST(9+1)
+      IF(VERBOZ.EQ.1) THEN
+        WRITE(LUNOUT,'(5X,A,I3)')
+     *          ' LST(9)=',LST(9)
+      ENDIF
       GO TO 1
 C
 C***********************************************************************
@@ -845,9 +866,11 @@ C
 C     PARL(3) = 0.44 GeV (Default)
 C***********************************************************************
  800  CONTINUE
-C      READ(19,*) PARL(3)
-      WRITE(LUNOUT,'(5X,A,1PE13.4)')
+      PARL(3)=HSPARL(3+1)
+      IF(VERBOZ.EQ.1) THEN
+        WRITE(LUNOUT,'(5X,A,1PE13.4)')
      *        ' PARL(3)=',PARL(3)
+      ENDIF
       GO TO 1
 C
 C***********************************************************************
@@ -857,9 +880,11 @@ C               spin and isospin equal zero, i.e. I=S=0
 C     PARL(4) = 0.75 (Default)
 C***********************************************************************
  900  CONTINUE
-C      READ(19,*) PARL(4)
-      WRITE(LUNOUT,'(5X,A,1PE13.4)')
+      PARL(4)=HSPARL(4+1)
+      IF(VERBOZ.EQ.1) THEN
+        WRITE(LUNOUT,'(5X,A,1PE13.4)')
      *        ' PARL(4)=',PARL(4)
+      ENDIF
       GO TO 1
 C
 C***********************************************************************
@@ -869,9 +894,11 @@ C               split into a particle and a jet
 C    PARL(14) = 0.44 GeV (Default)
 C***********************************************************************
 1000  CONTINUE
-C      READ(19,*) PARL(14)
-      WRITE(LUNOUT,'(5X,A,1PE13.4)')
+      PARL(14)=HSPARL(14+1)
+      IF(VERBOZ.EQ.1) THEN
+        WRITE(LUNOUT,'(5X,A,1PE13.4)')
      *        ' PARL(14)=',PARL(14)
+      ENDIF
       GO TO 1
 C
 C***********************************************************************
@@ -882,9 +909,10 @@ C             = 1 : as 1                    mu=PARA(11)/(1-x)
 C             = 2 : as 1                  , mu=Q
 C***********************************************************************
 1100  CONTINUE
-C      READ(19,*) MSTA(30)
-      WRITE(LUNOUT,'(5X,A,I3)')
+      IF(VERBOZ.EQ.1) THEN
+        WRITE(LUNOUT,'(5X,A,I3)')
      *        ' MSTA(30)=',MSTA(30)
+      ENDIF
       GO TO 1
  1200 CONTINUE
  1300 CONTINUE
@@ -898,9 +926,10 @@ C               the hadronic final state is generated by Sophia
 C    WSOPHIA = 1.5 GeV (Default)
 C***********************************************************************
  1600 CONTINUE
-C      READ(19,*) WSOPHIA
-      WRITE(LUNOUT,'(5X,A,1PE13.4)')
+      IF(VERBOZ.EQ.1) THEN
+        WRITE(LUNOUT,'(5X,A,1PE13.4)')
      *        ' WSOPHIA=',WSOPHIA
+      ENDIF
       GO TO 1
  1700 CONTINUE
  1800 CONTINUE
@@ -921,7 +950,9 @@ ckc..from DJANGO; modified
 ckc..IQF in old quark convention; should be modified
       IMPLICIT double precision (A-H,M,O-Z)
 ckc..from HS
-      COMMON /HSNUME/ SIGTOT,SIGTRR,SIGG(20),SIGGRR(20),NEVENT,NEVE(20)
+      COMMON /HSNUME/ SIGTOT(100),SIGTRR(100),
+     +                SIGG(100,20),SIGGRR(100,20),
+     +                NEVENT,NEVE(20)
       LOGICAL LFIRST
       DATA LFIRST/.TRUE./
 ckc..from L61

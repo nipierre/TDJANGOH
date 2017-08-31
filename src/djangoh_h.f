@@ -1,14 +1,11 @@
 C
-      SUBROUTINE HSMAIN()
-C
-C
 C***********************************************************************
 C
 C
 C                     H E R A C L E S
 C
 C
-C     EVENT GENERATOR FOR DEEP-INELASTIC E-P SCATTERING
+C     EVENT GENERATOR FOR DEEP-INELASTIC E/M-P SCATTERING
 C     INCLUDING RADIATIVE CORRECTIONS
 C
 C***********************************************************************
@@ -25,12 +22,30 @@ C                               UNIVERSITAET LEIPZIG
 C                               FRG
 C
 C     with extensions by T. Martini (for hadron polarization, 2012+13)
-C     Last modification for muon scattering at Compass
+C     with modifications by N. Pierre (C-Interface, cross-section grid,
+C                                     multiple input energies,
+C                                     muon scattering at COMPASS)
 C
-C     VERSION 4.6.13,  May, 27, 2016
+C     VERSION 4.7.0I,  February, XX, 2017
 C
 C***********************************************************************
 C
+
+C*********************************************************************
+C   List of new principal routines of HERACLES
+C
+C  List of subprograms in order of appearance, with main purpose
+C  (S = subroutine, F = function, B = block data)
+C                                                                    *
+C  S   HSINPT   read input from C-counterpart TDJANGOH & initialize  *
+C               & calculate cross section grid w/ respect to energy  *
+C  S   HSEGEN   prepare event generation                             *
+C  S   HSEVTG   generate event                                       *
+C*********************************************************************
+
+      SUBROUTINE HSINPT()
+C
+      USE xSectionModule
       IMPLICIT DOUBLE PRECISION (A-H,M,O-Z)
       EXTERNAL HSNCG1,HSNCG2,HSTSK1,HSTSK2,HSK1TS,HSK1K3
       EXTERNAL HSCCG1,HSCCG2,HSCCKL,HSCCQI,HSCCQF
@@ -49,7 +64,7 @@ C
       COMMON /HSELAB/ SP,EELE,PELE,EPRO,PPRO
       COMMON /HSCUTS/ XMIN,XMAX,Q2MIN,Q2MAX,YMIN,YMAX,WMIN,GMIN
       COMMON /IHSCUT/ IXMIN,IXMAX,IQ2MIN,IQ2MAX,IYMIN,IYMAX,IWMIN
-      REAL            IXMIN,IXMAX,IQ2MIN,IQ2MAX,IYMIN,IYMAX,IWMIN
+      DOUBLE PRECISION IXMIN,IXMAX,IQ2MIN,IQ2MAX,IYMIN,IYMAX,IWMIN
       COMMON /HSTCUT/ THEMIN,THEMAX,CTHMIN,CTHCON
       COMMON /HSPCUT/ PTMIN,PTXM0
       COMMON /HSISGM/ TCUTQ,TCUTQS
@@ -63,12 +78,16 @@ C
       COMMON /HSWGTC/ IWEIGS
       COMMON /HSONLY/ IHSONL
       COMMON /HSLTYP/ LEPIN1
-      COMMON /HSINTNC/ INC2,INC31,INC32,INC33,INC34,IEL2,IEL31,IEL32,IEL33
-      INTEGER          INC2,INC31,INC32,INC33,INC34,IEL2,IEL31,IEL32,IEL33
+      COMMON /HSINTNC/ INC2,INC31,INC32,INC33,INC34,IEL2,IEL31,IEL32,
+     +                 IEL33
+      INTEGER          INC2,INC31,INC32,INC33,INC34,IEL2,IEL31,IEL32,
+     +                 IEL33
       COMMON /HSINTCC/ ICC2,ICC31,ICC32,ICC33
       INTEGER          ICC2,ICC31,ICC32,ICC33
-      COMMON /HSSAMNC/ ISNC2,ISNC31,ISNC32,ISNC33,ISNC34,ISEL2,ISEL31,ISEL32,ISEL33
-      INTEGER          ISNC2,ISNC31,ISNC32,ISNC33,ISNC34,ISEL2,ISEL31,ISEL32,ISEL33
+      COMMON /HSSAMNC/ ISNC2,ISNC31,ISNC32,ISNC33,ISNC34,ISEL2,ISEL31,
+     +                 ISEL32,ISEL33
+      INTEGER          ISNC2,ISNC31,ISNC32,ISNC33,ISNC34,ISEL2,ISEL31,
+     +                 ISEL32,ISEL33
       COMMON /HSSAMCC/ ISCC2,ISCC31,ISCC32,ISCC33
       INTEGER          ISCC2,ISCC31,ISCC32,ISCC33
 C---
@@ -217,9 +236,33 @@ C---                     NRG33E=NBN33E**NDM3EL
      +                NTT33E,NCL33E,NC133E,NC233E,IBM33E,JCR33E,
      +                LGL33E,LLC33E
 C-------------------------
+      TYPE(xSection2) :: HSXNC2
+      TYPE(xSection2C) :: HSXCC2
+      TYPE(xSection2E) :: HSXEL2
+      TYPE(xSection31) :: HSXN31
+      TYPE(xSection32) :: HSXN32
+      TYPE(xSection33) :: HSXN33
+      TYPE(xSection34) :: HSXN34
+      TYPE(xSection31C) :: HSXC31
+      TYPE(xSection32C) :: HSXC32
+      TYPE(xSection33C) :: HSXC33
+      TYPE(xSection31E) :: HSXE31
+      TYPE(xSection32E) :: HSXE32
+      TYPE(xSection33E) :: HSXE33
+      COMMON /HSXSEC/ HSXNC2(100),HSXCC2(100),HSXEL2(100),
+     +                HSXN31(100),HSXN32(100),HSXN33(100),HSXN34(100),
+     +                HSXC31(100),HSXC32(100),HSXC33(100),
+     +                HSXE31(100),HSXE32(100),HSXE33(100)
+      COMMON /HSGRID/ GDSIZE, GDINDX, GDMEAN, GDSDDV, GDSCLE
+      INTEGER         GDSIZE, GDINDX
+C-------------------------
       CHARACTER*45 CHNAME
       COMMON /HSNAMC/ CHNAME(20)
-      COMMON /HSNUME/ SIGTOT,SIGTRR,SIGG(20),SIGGRR(20),NEVENT,NEVE(20)
+      COMMON /HSNUME/ SIGTOT(100),SIGTRR(100),
+     +                SIGG(100,20),SIGGRR(100,20),
+     +                NEVENT,NEVE(20)
+      INTEGER         NEVENT
+      SAVE /HSNUME/
       COMMON /SPPASS/ NSOPH,NSPOUT,NFAILP,NSPACC
       COMMON /DJPASS/ NTOTDJ,NPASDJ,NFAILL
       COMMON /HSVGLP/ NPOVEG,NUMINT,NPHYP
@@ -227,13 +270,17 @@ C-------------------------
       COMMON /VGRES/  S1,S2,S3,S4
       COMMON /HSIRCT/ DELEPS,DELTA,EGMIN,IOPEGM
       COMMON /HYSTFU/ PYSTOP,PYSLAM,NPYMAX,NPYMIN
-      REAL            PYSTOP,PYSLAM
+      REAL PYSTOP,PYSLAM
       COMMON /HSALFS/ PAR111,PAR112,PARL11,PARL19,MST111,MST115
-      REAL            PAR111,PAR112,PARL11,PARL19
+      REAL PAR111,PAR112,PARL11,PARL19
       INTEGER                                     MST111,MST115
-      COMMON /IHSALF/ IPAR111,IPAR112,IPARL11,IPARL19,IMST111,IMST115
-      REAL            IPAR111,IPAR112,IPARL11,IPARL19
-      INTEGER                                         IMST111,IMST115
+      COMMON /HSLPTU/ HSLST(40), HSPARL(30)
+      INTEGER         HSLST
+      SAVE /HSLPTU/
+      DOUBLE PRECISION           HSPARL
+      COMMON /HSVRBZ/ VERBOZ
+      INTEGER         VERBOZ
+      SAVE /HSVRBZ/
       CHARACTER*80 LHAPATHI
       CHARACTER*232 LHAPATH
       COMMON /LHAPDFC/ LHAPATH
@@ -271,7 +318,7 @@ C---AND SET STARTING VALUES FOR VARIOUS COUNTERS
      4'GSW-MASS  ','THMIN-QRAD','FLONG     ','ALFAS     ','          ',
      5'EP-DIPOLE ','NUCLEUS   ','NUCL-MOD  ','LHAPATH   ','OUTFILENAM',
      6'THETA-CUT ','PT-CUT    ','POLPDF    ','          ','          ',
-     7'WEIGHTS   ','          ','          ','          ','          ',
+     7'WEIGHTS   ','GD-OPT    ','          ','          ','          ',
      8'INT-ONLY  ','TEST-OPT  ','IOUNITS   ','START     ','STOP      '/
       DATA TITLE/' '/
 C
@@ -283,6 +330,7 @@ C---DEFINE VEGAS PARAMETERS
       DATA NPOIN /20/
       DATA IWEIGR/0D0/
 C
+
 C---INITIALIZE AND TEST THE RANDOM NUMBER GENERATOR
       CALL HSRNST(12,34,56,78)
 C     CALL HSRNTE(1)
@@ -295,63 +343,11 @@ C   and changed to avoid conflict with output units used in polpdf.f
 C---for version 4.6.10: move output file definitions to where
 C   file name is known, only set default name here,
 C   see code word OUTFILENAM
-C      OPEN(LUNDAT,FILE='djh.dat',STATUS='UNKNOWN',FORM='UNFORMATTED')
-C      OPEN(LUNRND,FILE='djhrnd.dat',STATUS='UNKNOWN',FORM='FORMATTED')
-C      OUTFILENAM='djangoh-default-output'
-C      ICH=INDEX(OUTFILENAM,' ')-1
+
       IODEF=0
       ITCW=0
-
-C---for Interface version 4.6.13i : initialization of cross-section recipient
-C   or they should increment after each call of event generation from the
-C   interface and maybe lead to crashes.
-C     --- /HSSNC2/ INIT ---
-      SIG2=0
-      SIG2E=0
-C     --- /HSSCC2/ INIT ---
-      SIG2C=0
-      SIG2EC=0
-C     --- /HSSEL2/ INIT ---
-      SIG2L=0
-      SIG2EE=0
-C     --- /HSSN31/ INIT ---
-      SIG31=0
-      SIG31E=0
-C     --- /HSSN32/ INIT ---
-      SIG32=0
-      SIG32E=0
-C     --- /HSSN33/ INIT ---
-      SIG33=0
-      SIG33E=0
-C     --- /HSSN34/ INIT ---
-      SIG34=0
-      SIG34E=0
-C     --- /HSSC31/ INIT ---
-      SIG31C=0
-      SIG31EC=0
-C     --- /HSSC32/ INIT ---
-      SIG32C=0
-      SIG32EC=0
-C     --- /HSSC33/ INIT ---
-      SIG33C=0
-      SIG33EC=0
-C     --- /HSSE31/ INIT ---
-      SIG31L=0
-      SIG31EE=0
-C     --- /HSSE32/ INIT ---
-      SIG32L=0
-      SIG32EE=0
-C     --- /HSSE33/ INIT ---
-      SIG33L=0
-      SIG33EE=0
-C     --- /HSNUME/ INIT ---
-      SIGTOT=0
-      SIGTRR=0
-      DO I=1,20
-        SIGG(I)=0
-        SIGGRR(I)=0
-        NEVE(I)=0
-      END DO
+      NTOT=0
+      NPASS=0
 
 C---PRINT THE TITLE
       WRITE(6,9)
@@ -359,15 +355,15 @@ C---PRINT THE TITLE
      1'**************************************************',
      2'*****************************',
      3//,10X,'                         HERACLES '
-     4//,10X,'     Event generator for deep-inelastic e-P collisions '
+     4//,10X,'     Event generator for deep-inelastic l-P collisions '
      5 /,10X,'              including radiative corrections  '
-     6//,10X,'                 VERSION 4.6.13i, 30.11.2016 '//
-     8//,10X,'                      H. Spiesberger '//
+     6//,10X,'                 VERSION 4.7.0I, XX.02.2017 '//
+     8//,10X,'                       H. Spiesberger '//
      9' **************************************************',
      1'****************************',//)
 C
 C***********************************************************************
-C               READ INPUT DATA
+C               ACCESS INPUT DATA FROM C-INTERFACE
 C
 C     STRUCTURE OF INPUT:
 C                         1)  CODEWD  (A10)
@@ -407,7 +403,7 @@ C       THETA-CUT , PT-CUT    , POLPDF    ,           ,           ,
      6  2600      , 2700      , 2800      , 2900      , 3000      ,
 C
 C------------------------------------------------------------------
-C       WEIGHTS   ,           ,           ,           ,           ,
+C       WEIGHTS   , GD-OPT    ,           ,           ,           ,
      7  3100      , 3200      , 3300      , 3400      , 3500      ,
 C
 C------------------------------------------------------------------
@@ -431,8 +427,9 @@ C               CONTROL CARD: CODEWD = TITLE
 C               DEFINES THE TITLE OF THE JOB
 C***********************************************************************
  100  CONTINUE
-C      READ(NBF,190) TITLE
-      WRITE(LUNOUT,191) TITLE
+      IF(VERBOZ.EQ.1) THEN
+        WRITE(6,191) TITLE
+      ENDIF
       GO TO 1
  190  FORMAT(A80)
  191  FORMAT(/,6X,A80,/)
@@ -441,17 +438,21 @@ C***********************************************************************
 C               CONTROL CARD: CODEWD = EL-BEAM
 C               DEFINES THE PROPERTIES OF THE ELECTRON BEAM
 C
-C     EELE    =  ENERGY OF THE ELECTRON BEAM
 C     POLARI  =  DEGREE OF ELECTRON BEAM POLARIZATION
 C     LLEPT   =  -1  ELECTRON BEAM
 C             =  +1  POSITRON BEAM
 C     LLEPT   =  -3  muon- BEAM
 C             =  +4  muon+ BEAM
+C
+C     03/02/17 : Modification by NP, removed EELE, handled in
+C                subroutine HSEGEN.
+C
 C***********************************************************************
  200  CONTINUE
-C      READ(NBF,*) EELE, POLARI, LLEPT
-      WRITE(LUNOUT,'(5X,2(A,1PE12.3,5X),A,I3)')
-     *        ' EELE=',EELE,'POLARI=',POLARI,'LLEPT=',LLEPT
+      IF(VERBOZ.EQ.1) THEN
+        WRITE(LUNOUT,'(5X,A,1PE12.3,5X,A,I3)')
+     *        'POLARI=',POLARI,'LLEPT=',LLEPT
+      ENDIF
 C...27.05.2016: new option for muon scattering via this input
       IF (LLEPT.EQ.-1) THEN
         LEPIN1=11
@@ -475,9 +476,10 @@ C     EPRO    =  ENERGY OF THE PROTON BEAM
 C     HPOLAR  =  DEGREE OF PROTON BEAM POLARIZATION
 C***********************************************************************
  300  CONTINUE
-C      READ(NBF,*) EPRO,HPOLAR
-      WRITE(LUNOUT,'(5X,2(A,1PE12.3,5X))')
+      IF(VERBOZ.EQ.1) THEN
+        WRITE(LUNOUT,'(5X,2(A,1PE12.3,5X))')
      *        ' EPRO=',EPRO,'HPOLAR=',HPOLAR
+      ENDIF
       GO TO 1
 C
 C***********************************************************************
@@ -493,7 +495,6 @@ C             ACCORDING TO THE MOST RESTRICTIVE CONDITIONS
 C             IN SUBROUTINE HSPRLG
 C***********************************************************************
  400  CONTINUE
-C      READ(NBF,*) ICUT, XMIN,XMAX, YMIN,YMAX, Q2MIN,Q2MAX, WMIN
       XMIN=IXMIN
       XMAX=IXMAX
       YMIN=IYMIN
@@ -501,12 +502,14 @@ C      READ(NBF,*) ICUT, XMIN,XMAX, YMIN,YMAX, Q2MIN,Q2MAX, WMIN
       Q2MIN=IQ2MIN
       Q2MAX=IQ2MAX
       WMIN=IWMIN
-      WRITE(LUNOUT,'(5X,A/4X,I3,2X,4(1PE13.4))')
+      IF(VERBOZ.EQ.1) THEN
+        WRITE(LUNOUT,'(5X,A/4X,I3,2X,4(1PE13.4))')
      &       ' ICUT, XMIN,        XMAX,        YMIN,        YMAX ',
      &         ICUT, XMIN,XMAX, YMIN,YMAX
-      WRITE(LUNOUT,'(11X,A/9X,3(1PE13.4))')
+        WRITE(LUNOUT,'(11X,A/9X,3(1PE13.4))')
      &             ' Q2MIN,       Q2MAX,       WMIN ',
      &               Q2MIN,Q2MAX, WMIN
+      ENDIF
       IF (XMIN.GT.XMAX) THEN
         WRITE(LUNOUT,'(5X,A)') ' ****** XMIN > XMAX: EXECUTION STOPPED'
         STOP
@@ -526,8 +529,9 @@ C***********************************************************************
 C               CONTROL CARD: CODEWD = EGAM-MIN
 C***********************************************************************
   500 CONTINUE
-C      READ(NBF,*) EGMIN
-      WRITE(LUNOUT,'(5X,A,3X,1PE13.4)') ' EGMIN = ',EGMIN
+      IF(VERBOZ.EQ.1) THEN
+        WRITE(LUNOUT,'(5X,A,3X,1PE13.4)') ' EGMIN = ',EGMIN
+      ENDIF
       IF(EGMIN.GT.0D0) IOPEGM=1
       GO TO 1
 C
@@ -554,20 +558,20 @@ C                        STATE RADIATION)
 C               IEL33 :  ELASTIC TAIL, CHANNEL 17 (COMPTON PART)
 C***********************************************************************
  600  CONTINUE
-C      READ(NBF,*) INC2,INC31,INC32,INC33,INC34,
-C     +              IEL2,IEL31,IEL32,IEL33
-      WRITE(LUNOUT,'(5X,A,3X,I5)')
+      IF(VERBOZ.EQ.1) THEN
+        WRITE(LUNOUT,'(5X,A,3X,I5)')
      +               ' INC2  = ' ,INC2
-      WRITE(LUNOUT,'(2(5X,A,3X,I5))')
+        WRITE(LUNOUT,'(2(5X,A,3X,I5))')
      +               ' INC31 = ',INC31,' INC32 = ',INC32
-      WRITE(LUNOUT,'(2(5X,A,3X,I5))')
+        WRITE(LUNOUT,'(2(5X,A,3X,I5))')
      +               ' INC33 = ',INC33,' INC34 = ' ,INC34
-      WRITE(LUNOUT,'(5X,A,3X,I5)')
+        WRITE(LUNOUT,'(5X,A,3X,I5)')
      +               ' IEL2  = ' ,IEL2
-      WRITE(LUNOUT,'(2(5X,A,3X,I5))')
+        WRITE(LUNOUT,'(2(5X,A,3X,I5))')
      +               ' IEL31 = ',IEL31,' IEL32 = ',IEL32
-      WRITE(LUNOUT,'(5X,A,3X,I5)')
+        WRITE(LUNOUT,'(5X,A,3X,I5)')
      +               ' IEL33 = ',IEL33
+      ENDIF
       INT2(1)=INC2
       INT2(3)=IEL2
       INT3(1)=INC31
@@ -593,10 +597,11 @@ C               ICC32 :  CHARGED CURRENT CHANNEL 2 (KQ)
 C               ICC33 :  CHARGED CURRENT CHANNEL 3 (KQS)
 C***********************************************************************
  700  CONTINUE
-C      READ(NBF,*) ICC2,ICC31,ICC32,ICC33
-      WRITE(LUNOUT,'(2(5X,A,3X,I5))')
+      IF(VERBOZ.EQ.1) THEN
+        WRITE(LUNOUT,'(2(5X,A,3X,I5))')
      +               ' ICC2  = ' ,ICC2,  ' ICC31 = ',ICC31
      +             , ' ICC32 = ' ,ICC32, ' ICC33 = ',ICC33
+      ENDIF
       INT2(2)=ICC2
       INT3(7)=ICC31
       INT3(8)=ICC32
@@ -610,8 +615,9 @@ C   NUMBER OF INTEGRATION POINTS FOR VEGAS
 C   DEFAULT: 1000
 C***********************************************************************
  800  CONTINUE
-C      READ(NBF,*) NPOVEG
-      WRITE(LUNOUT,'(5X,A,5X,4I6)') ' NPOVEG', NPOVEG
+      IF(VERBOZ.EQ.1) THEN
+        WRITE(LUNOUT,'(5X,A,5X,4I6)') ' NPOVEG', NPOVEG
+      ENDIF
       GO TO 1
 C
 C***********************************************************************
@@ -621,9 +627,10 @@ C       NPHYP  =  NUMBER OF POINTS TO BE SAMPLED PER HYPERCUBE
 C                 FOR ESTIMATION OF THE LOCAL MAXIMA
 C***********************************************************************
  900  CONTINUE
-C      READ(NBF,*) NPHYP
       IF(NPHYP.LT.3) NPHYP=3
-      WRITE(LUNOUT,'(5X,A/5X,4I6)') ' NPHYP', NPHYP
+      IF(VERBOZ.EQ.1) THEN
+        WRITE(LUNOUT,'(5X,A/5X,4I6)') ' NPHYP', NPHYP
+      ENDIF
       NPOIN=NPHYP
       GO TO 1
 C
@@ -658,8 +665,9 @@ C                    VERTEX CORRECTIONS AND BOXES
 C      LPARIN(12) :  Z-EXCHANGE INCLUDED
 C***********************************************************************
  1000 CONTINUE
-C      READ(NBF,*) (LPARIN(I),I=1,11)
-      WRITE(LUNOUT,'(5X,20I2)') (LPARIN(I),I=1,11)
+      IF(VERBOZ.EQ.1) THEN
+        WRITE(LUNOUT,'(5X,20I2)') (LPARIN(I),I=1,11)
+      ENDIF
       LPARIN(12)=1
 C---REDEFINITION FOR INTERNAL USE
       LPAR(1)=1
@@ -690,24 +698,26 @@ C               APPLIED IN THE ACTUAL CALCULATION
 C
 C***********************************************************************
  1100 CONTINUE
-C      READ(NBF,*) ILQMOD,ILIB,ICODE
       IPDFOP=0
       IF (ILQMOD.LE.1) IPDFOP=1
-      WRITE(LUNOUT,'(5X,A,I7)') ' ILQMOD = ',ILQMOD
-      WRITE(LUNOUT,'(5X,A,I7)') ' ILIB   = ',ILIB
-      WRITE(LUNOUT,'(5X,A,I7)') ' ICODE  = ',ICODE
+      IF(VERBOZ.EQ.1) THEN
+        WRITE(LUNOUT,'(5X,A,I7)') ' ILQMOD = ',ILQMOD
+        WRITE(LUNOUT,'(5X,A,I7)') ' ILIB   = ',ILIB
+        WRITE(LUNOUT,'(5X,A,I7)') ' ICODE  = ',ICODE
+      ENDIF
       GO TO 1
 C
 C***********************************************************************
 C               CONTROL CARD: CODEWD = NFLAVORS
 C***********************************************************************
  1200 CONTINUE
-C      READ(NBF,*) NPYMIN,NPYMAX
       IF(NPYMIN.GT.6) NPYMIN=6
       IF(NPYMAX.LT.NPYMIN) NPYMAX=NPYMIN
       IF(NPYMAX.LE.0) NPYMAX=6
-      WRITE(LUNOUT,'(5X,A,I6)') ' NPYMIN = ',NPYMIN
-      WRITE(LUNOUT,'(5X,A,I6)') ' NPYMAX = ',NPYMAX
+      IF(VERBOZ.EQ.1) THEN
+        WRITE(LUNOUT,'(5X,A,I6)') ' NPYMIN = ',NPYMIN
+        WRITE(LUNOUT,'(5X,A,I6)') ' NPYMAX = ',NPYMAX
+      ENDIF
       GO TO 1
 C
 C***********************************************************************
@@ -730,20 +740,20 @@ C                        STATE RADIATION)
 C               ISEL33:  ELASTIC TAIL, CHANNEL 3 (COMPTON PART)
 C***********************************************************************
 1300  CONTINUE
-C      READ(NBF,*) ISNC2,ISNC31,ISNC32,ISNC33,ISNC34
-C     +             ,ISEL2,ISEL31,ISEL32,ISEL33
-      WRITE(LUNOUT,'(5X,A,3X,I5)')
+      IF(VERBOZ.EQ.1) THEN
+        WRITE(LUNOUT,'(5X,A,3X,I5)')
      +               ' ISNC2  = ' ,ISNC2
-      WRITE(LUNOUT,'(2(5X,A,3X,I5))')
+        WRITE(LUNOUT,'(2(5X,A,3X,I5))')
      +               ' ISNC31 = ',ISNC31,' ISNC32 = ' ,ISNC32
-      WRITE(LUNOUT,'(2(5X,A,3X,I5))')
+        WRITE(LUNOUT,'(2(5X,A,3X,I5))')
      +               ' ISNC33 = ',ISNC33,' ISNC34 = ' ,ISNC34
-      WRITE(LUNOUT,'(5X,A,3X,I5)')
+        WRITE(LUNOUT,'(5X,A,3X,I5)')
      +               ' ISEL2  = ' ,ISEL2
-      WRITE(LUNOUT,'(2(5X,A,3X,I5))')
+        WRITE(LUNOUT,'(2(5X,A,3X,I5))')
      +               ' ISEL31 = ',ISEL31,' ISEL32 = ' ,ISEL32
-      WRITE(LUNOUT,'(5X,A,3X,I5)')
+        WRITE(LUNOUT,'(5X,A,3X,I5)')
      +               ' ISEL33 = ',ISEL33
+      ENDIF
       ISAM2(1)=ISNC2
       ISAM2(3)=ISEL2
       ISAM3(1)=ISNC31
@@ -767,10 +777,11 @@ C              ISCC32 :  CHARGED CURRENT CHANNEL 2 (KQ)
 C              ISCC33 :  CHARGED CURRENT CHANNEL 3 (KQS)
 C***********************************************************************
 1400  CONTINUE
-C      READ(NBF,*) ISCC2,ISCC31,ISCC32,ISCC33
-      WRITE(LUNOUT,'(2(5X,A,3X,I5))')
+      IF(VERBOZ.EQ.1) THEN
+        WRITE(LUNOUT,'(2(5X,A,3X,I5))')
      +               ' ISCC2  = ' ,ISCC2,  ' ISCC31 = ',ISCC31
      +             , ' ISCC32 = ' ,ISCC32, ' ISCC33 = ',ISCC33
+      ENDIF
       ISAM2(2)=ISCC2
       ISAM3(7)=ISCC31
       ISAM3(8)=ISCC32
@@ -785,20 +796,25 @@ C
 C   INPUT / OUTPUT OF ACTUAL RANDOM NUMBER SEEDS
 C***********************************************************************
  1500 CONTINUE
-C      READ(NBF,*) ISDINP,ISDOUT
-      WRITE(LUNOUT,'(5X,A,I6)') ' ISDINP = ',ISDINP
-      WRITE(LUNOUT,'(5X,A,I6)') ' ISDOUT = ',ISDOUT
+      IF(VERBOZ.EQ.1) THEN
+        WRITE(LUNOUT,'(5X,A,I6)') ' ISDINP = ',ISDINP
+        WRITE(LUNOUT,'(5X,A,I6)') ' ISDOUT = ',ISDOUT
+      ENDIF
       IF(ISDINP.GT.0) THEN
         READ(LUNRND,*) UIO
         READ(LUNRND,*) CIO,CDIO,CMIO,IIO,JIO
         CALL HSRNIN(UIO,CIO,CDIO,CMIO,IIO,JIO)
-      elseif (isdinp.lt.0) then
-        write(lunout,'(5x,A)') ' Use ranlux with date and time as seed'
-        call idate(today)   ! today(1)=day, (2)=month, (3)=year
-        call itime(now)     ! now(1)=hour, (2)=minute, (3)=second
-        initseed = today(1)+10*today(2)+today(3)+now(1)+5*now(3)
-        write(lunout,'(5X,A,I12)') ' SEED = ', initseed
-        call rndmq (idum1,idum2,initseed,' ')
+      ELSEIF (ISDINP.LT.0) THEN
+        IF(VERBOZ.EQ.1) THEN
+          WRITE(LUNOUT,'(5X,A)') 'USE RANLUX W/ DATE AND TIME AS SEED'
+        ENDIF
+        CALL IDATE(TODAY)   ! today(1)=day, (2)=month, (3)=year
+        CALL ITIME(NOW)     ! now(1)=hour, (2)=minute, (3)=second
+        INITSEED = TODAY(1)+10*TODAY(2)+TODAY(3)+NOW(1)+5*NOW(3)
+        IF(VERBOZ.EQ.1) THEN
+          WRITE(LUNOUT,'(5X,A,I12)') ' SEED = ', INITSEED
+        ENDIF
+        CALL RNDMQ (IDUM1,IDUM2,INITSEED,' ')
       ENDIF
       GO TO 1
 C
@@ -808,9 +824,10 @@ C
 C   ELECTROWEAK MASS PARAMETERS
 C***********************************************************************
  1600 CONTINUE
-C      READ(NBF,*) MW,MZ,MH,MT
       LPAR(5)=1
-      WRITE(LUNOUT,'(5X,A,4F12.4)') ' MW, MZ, MH, MT = ',MW,MZ,MH,MT
+      IF(VERBOZ.EQ.1) THEN
+        WRITE(LUNOUT,'(5X,A,4F12.4)') ' MW, MZ, MH, MT = ',MW,MZ,MH,MT
+      ENDIF
       GOTO 1
 C
 C***********************************************************************
@@ -823,10 +840,11 @@ C              TCUTQS :  FINAL STATE RADIATION
 C
 C***********************************************************************
 1700  CONTINUE
-C      READ(NBF,*) TCUTQ,TCUTQS
-      WRITE(LUNOUT,'(2(5X,A,F10.4,A))')
+      IF(VERBOZ.EQ.1) THEN
+        WRITE(LUNOUT,'(2(5X,A,F10.4,A))')
      &               ' TCUTQ =  ', TCUTQ, ' RAD',
      &               ' TCUTQS =  ', TCUTQS, ' RAD'
+      ENDIF
       GO TO 1
 C
 C***********************************************************************
@@ -836,13 +854,12 @@ C    INCLUDE THE LONGITUDINAL STRUCTURE FUNCTION (FOR IPART < 1000)
 C
 C***********************************************************************
  1800 CONTINUE
-C      READ(NBF,*) IFLOPT,PARL11,PARL19
-C      PARL11=IPARL11
-C      PARL19=IPARL19
-      WRITE(LUNOUT,'(5X,A,I5,A,F10.4,A,F10.4)')
+      IF(VERBOZ.EQ.1) THEN
+        WRITE(LUNOUT,'(5X,A,I5,A,F10.4,A,F10.4)')
      &               ' IFLOPT =  ', IFLOPT,
      &               '   PARL11 =', PARL11,
      &               '   PARL19 =', PARL19
+      ENDIF
       CALL DIFLOP
       GO TO 1
  1900 CONTINUE
@@ -854,15 +871,12 @@ C    DEFINITION OF ALPHA_S IN THE CALCULATION OF THE LONGITUDINAL
 C    STRUCTURE FUNCTION
 C
 C***********************************************************************
-C      READ(NBF,*) MST111,MST115,PAR111,PAR112
-C      MST111=IMST111
-C      MST115=IMST115
-C      PAR111=IPAR111
-C      PAR112=IPAR112
-      WRITE(LUNOUT,'(5X,A,I5)') ' MST111 =  ', MST111
-      WRITE(LUNOUT,'(5X,A,I5)') ' MST115 =  ', MST115
-      WRITE(LUNOUT,'(5X,A,F10.4)') ' PAR111 = ', PAR111
-      WRITE(LUNOUT,'(5X,A,F10.4)') ' PAR112 = ', PAR112
+      IF(VERBOZ.EQ.1) THEN
+        WRITE(LUNOUT,'(5X,A,I5)') ' MST111 =  ', MST111
+        WRITE(LUNOUT,'(5X,A,I5)') ' MST115 =  ', MST115
+        WRITE(LUNOUT,'(5X,A,F10.4)') ' PAR111 = ', PAR111
+        WRITE(LUNOUT,'(5X,A,F10.4)') ' PAR112 = ', PAR112
+      ENDIF
       CALL DIALFS
       GO TO 1
  2000 CONTINUE
@@ -875,8 +889,9 @@ C    INCLUDE PARAMETRIZATION OF STEIN ET AL. FOR THE DEVIATION
 C    OF THE DIPOLE FORM FACTOR FOR ELASTIC EP SCATTERING
 C
 C***********************************************************************
-C      READ(NBF,*) IDIPOL
-      WRITE(LUNOUT,'(5X,A,I5)') ' IDIPOL =  ', IDIPOL
+      IF(VERBOZ.EQ.1) THEN
+        WRITE(LUNOUT,'(5X,A,I5)') ' IDIPOL =  ', IDIPOL
+      ENDIF
       GO TO 1
  2200 CONTINUE
 C
@@ -886,10 +901,11 @@ C
 C    SCATTERING OFF HEAVY NUCLEI
 C
 C***********************************************************************
-C      READ(NBF,*) EPRO,HNA,HNZ
-      WRITE(LUNOUT,'(5X,A,1PE13.3)') ' E PER NUCLEON=',EPRO
-      WRITE(LUNOUT,'(5X,A,I5)')    ' A-NUCLEUS=',HNA
-      WRITE(LUNOUT,'(5X,A,I5)')    ' Z-NUCLEUS=',HNZ
+      IF(VERBOZ.EQ.1) THEN
+        WRITE(LUNOUT,'(5X,A,1PE13.3)') ' E PER NUCLEON=',EPRO
+        WRITE(LUNOUT,'(5X,A,I5)')    ' A-NUCLEUS=',HNA
+        WRITE(LUNOUT,'(5X,A,I5)')    ' Z-NUCLEUS=',HNZ
+      ENDIF
       GO TO 1
  2300 CONTINUE
 C
@@ -899,8 +915,9 @@ C
 C    MODEL FOR NUCLEAR PARTON DISTRIBUTIONS
 C
 C***********************************************************************
-C      READ(NBF,*) INUMOD
-      WRITE(LUNOUT,'(5X,A,I5)')    ' INUMOD=',INUMOD
+      IF(VERBOZ.EQ.1) THEN
+        WRITE(LUNOUT,'(5X,A,I5)')    ' INUMOD=',INUMOD
+      ENDIF
       GO TO 1
  2400 CONTINUE
 C
@@ -910,10 +927,9 @@ C
 C    PATH NAME FOR GRID FILES OF LHAPDF LIBRARY
 C
 C***********************************************************************
-C      READ(NBF,2590) LHAPATHI
-      LHAPATHI='/sps/compass/npierre/lhapdf5/share/lhapdf'
-C      LHAPATH=LHAPATHI
-      WRITE(LUNOUT,'(5X,A,A)')    ' LHAPATH=',LHAPATH
+      IF(VERBOZ.EQ.1) THEN
+        WRITE(LUNOUT,'(5X,A,A)')    ' LHAPATH=',LHAPATH
+      ENDIF
       GOTO 1
  2590 FORMAT(A80)
  2500 CONTINUE
@@ -924,11 +940,16 @@ C
 C    FILE NAME TO REDIRECT STANDARD OUTPUT VIA LUNOUT (D=6)
 C
 C***********************************************************************
-C      READ(NBF,2590) OUTFILENAM
+
       ICH=INDEX(OUTFILENAM,' ')-1
       IODEF=1
-      WRITE(LUNOUT,'(5X,A,A)')    ' OUTFILENAM=',OUTFILENAM
-C...Open files when reading input is finished
+      IF(VERBOZ.EQ.1) THEN
+        WRITE(LUNOUT,'(5X,A,A)')    ' OUTFILENAM=',OUTFILENAM
+        WRITE(6,'(5X,A)') '***** All output is redirected to file '
+        WRITE(6,'(5X,A,A)') OUTFILENAM(1:ICH)//'_out.dat'
+        WRITE(6,'(5X,A)') '***** from now on '
+      ENDIF
+      OPEN(LUNOUT,FILE=OUTFILENAM(1:ICH)//'_out.dat',STATUS='REPLACE')
       GOTO 1
  2600 CONTINUE
 C
@@ -938,9 +959,10 @@ C
 C    CUT ON MINIMUM ELECTRON SCATTERING ANGLE (MASSES NEGLECTED)
 C
 C***********************************************************************
-C      READ(NBF,*) THEMIN,THEMAX
-      WRITE(LUNOUT,'(5X,A,F12.4)') ' THETA-MIN =  ', THEMIN
-      WRITE(LUNOUT,'(5X,A,F12.4)') ' THETA-MAX =  ', THEMAX
+      IF(VERBOZ.EQ.1) THEN
+        WRITE(LUNOUT,'(5X,A,F12.4)') ' THETA-MIN =  ', THEMIN
+        WRITE(LUNOUT,'(5X,A,F12.4)') ' THETA-MAX =  ', THEMAX
+      ENDIF
       GO TO 1
  2700 CONTINUE
 C
@@ -950,8 +972,9 @@ C
 C    CUT ON MINIMUM ELECTRON SCATTERING ANGLE (MASSES NEGLECTED)
 C
 C***********************************************************************
-C      READ(NBF,*) PTMIN
-      WRITE(LUNOUT,'(5X,A,F12.4)') ' PT-MIN =  ', PTMIN
+      IF(VERBOZ.EQ.1) THEN
+        WRITE(LUNOUT,'(5X,A,F12.4)') ' PT-MIN =  ', PTMIN
+      ENDIF
       GO TO 1
  2800 CONTINUE
 C
@@ -961,8 +984,9 @@ C
 C    CODE FOR PARAMETRIZATION OF POLARIZED PARTON DISTRIBUTIONS
 C
 C***********************************************************************
-C      READ(NBF,*) IDPVR
-      WRITE(LUNOUT,'(5X,A,I8)') ' IDPVR =  ', IDPVR
+      IF(VERBOZ.EQ.1) THEN
+        WRITE(LUNOUT,'(5X,A,I8)') ' IDPVR =  ', IDPVR
+      ENDIF
       GO TO 1
  2900 CONTINUE
  3000 CONTINUE
@@ -974,12 +998,27 @@ C
 C    USE EXTERNALLY DEFINED WEIGHT IN EVENT GENERATION
 C
 C***********************************************************************
-C      READ(NBF,*) IWEIGR
-      WRITE(LUNOUT,'(5X,A,I5)') ' IWEIGS =  ', IWEIGR
+      IF(VERBOZ.EQ.1) THEN
+        WRITE(LUNOUT,'(5X,A,I5)') ' IWEIGS =  ', IWEIGR
+      ENDIF
 C...for initialization keep
       IWEIGS=0
       GO TO 1
  3200 CONTINUE
+C
+C
+C***********************************************************************
+C               CONTROL CARD: CODEWD = GD-OPT
+C
+C       GDSIZE  =  SIZE OF THE ENERGY GRID
+C       GDMEAN  =  ENERGY OF THE BEAM (GeV)
+C       GDSDDV  =  STANDARD DEVIATION OF BEAM ENERGY (GeV)
+C***********************************************************************
+      IF(VERBOZ.EQ.1) THEN
+        WRITE(LUNOUT,'(5X,A,I12)') ' GDSIZE =  ', GDSIZE
+        WRITE(LUNOUT,'(5X,A,F12.4)') ' GDMEAN =  ', GDMEAN
+        WRITE(LUNOUT,'(5X,A,F12.4)') ' GDSDDV =  ', GDSDDV
+      ENDIF
  3300 CONTINUE
  3400 CONTINUE
  3500 CONTINUE
@@ -992,8 +1031,9 @@ C               IOPLOT < 0: NO CALL TO HSESTM
 C               IOPLOT >= 0: CALL TO HSESTM
 C***********************************************************************
  3600 CONTINUE
-C      READ(NBF,*) IOPLOT
-      WRITE(LUNOUT,'(5X,A,5X,I3)') ' INTOPT', IOPLOT
+      IF(VERBOZ.EQ.1) THEN
+        WRITE(LUNOUT,'(5X,A,5X,I3)') ' INTOPT', IOPLOT
+      ENDIF
       GO TO 1
 C
 C***********************************************************************
@@ -1005,9 +1045,10 @@ C     IPRINT :  DIFFERENT QUANTITY OF TEST OUTPUT FOR IPRINT GT. 0
 C
 C***********************************************************************
  3700 CONTINUE
-C      READ(NBF,*) IPRINT
-      WRITE(LUNOUT,'(5X,A,5X,I3)') ' IPRINT',
+      IF(VERBOZ.EQ.1) THEN
+        WRITE(LUNOUT,'(5X,A,5X,I3)') ' IPRINT',
      *                               IPRINT
+      ENDIF
       GO TO 1
 C
 C***********************************************************************
@@ -1023,19 +1064,6 @@ C     disabled as of version 4.6.9 onwards
 C
 C***********************************************************************
  3800 CONTINUE
-c      LUOOLD=LUNOUT
-C      READ(NBF,*) LDUMY1,LDUMY2,LDUMY3
-c      IF (LUNOUT.NE.LUOOLD) THEN
-c        WRITE(LUOOLD,'(5X,A,I3,A)')
-c     *  ' ******* WARNING: LOGICAL UNIT FOR STANDARD OUTPUT CHANGED TO '
-c     * ,LUNOUT
-c     * ,'         THE FOLLOWING OUTPUT IS WRITTEN TO THIS UNIT'
-c      ENDIF
-c      WRITE(LUNOUT,'(5X,A,5X,5I3)')
-c     *            ' LUNOUT,LUNRND,LUNDAT'
-c     *             ,LUNOUT,LUNRND,LUNDAT
-c      OPEN(LUNDAT,FILE='djh.dat',STATUS='UNKNOWN',FORM='UNFORMATTED')
-c      OPEN(LUNRND,FILE='djhrnd.dat',STATUS='UNKNOWN',FORM='FORMATTED')
         WRITE(LUNOUT,'(5X,A)')
      *  ' ******* WARNING: CODEWORD IOUNITS IS DISABLED '
       GO TO 1
@@ -1048,8 +1076,9 @@ C
 C     NEVENT :  NUMBER OF EVENTS TO BE SAMPLED
 C***********************************************************************
  3900 CONTINUE
-C      READ(NBF,*) NEVENT
-      WRITE(LUNOUT,'(5X,A,I12,/)') ' NEVENT =',NEVENT
+      IF(VERBOZ.EQ.1) THEN
+        WRITE(LUNOUT,'(5X,A,I12,/)') ' NEVENT =',NEVENT
+      ENDIF
       INFOCA=0
       DO 3921 I=1,5
         IF(NEVENT.LE.0) ISAM2(I)=0
@@ -1059,548 +1088,740 @@ C      READ(NBF,*) NEVENT
         IF(NEVENT.LE.0) ISAM3(I)=0
         IF(INT3(I).GT.0) INFOCA=1
  3922 CONTINUE
-C
-C---Now we can open output files
-      IF (IODEF.EQ.1) THEN
-        WRITE(6,'(5X,A)')
-     *   '***** All output is redirected to file '
-        WRITE(6,'(5X,A,A)')    '      OUTFILENAM = '
-     *        ,OUTFILENAM(1:ICH)//'_out.dat'
-        WRITE(6,'(5X,A)')
-     *   '***** from now on '
-        OPEN(LUNOUT,FILE=OUTFILENAM(1:ICH)//'_out.dat',STATUS='REPLACE')
+      IF(VERBOZ.EQ.1) THEN
+        WRITE(LUNOUT,'(5X,A,3X,I5)')
+     +               ' ISAM2(1)  = ' ,ISAM2(1)
+        WRITE(LUNOUT,'(2(5X,A,3X,I5))')
+     +               ' ISAM3(1) = ',ISAM3(1),' ISAM3(2) = ' ,ISAM3(2)
+        WRITE(LUNOUT,'(2(5X,A,3X,I5))')
+     +               ' ISAM3(3) = ',ISAM3(3),' ISAM3(4) = ' ,ISAM3(4)
+        WRITE(LUNOUT,'(5X,A,3X,I5)')
+     +               ' ISAM2(3)  = ' ,ISAM2(3)
+        WRITE(LUNOUT,'(2(5X,A,3X,I5))')
+     +               ' ISAM3(10) = ',ISAM3(10),' ISAM3(11) = ',ISAM3(11)
+        WRITE(LUNOUT,'(5X,A,3X,I5)')
+     +               ' ISAM3(12) = ',ISAM3(12)
       ENDIF
+
+C---Now we can open output files
       OPEN(LUNDAT,FILE=OUTFILENAM(1:ICH)//'_smp.dat',STATUS='REPLACE',
      *     FORM='UNFORMATTED')
       OPEN(LUNRND,FILE=OUTFILENAM(1:ICH)//'_rnd.dat'
      *     ,STATUS='REPLACE', FORM='FORMATTED')
       OPEN(31,FILE=OUTFILENAM(1:ICH)//'_evt.dat',STATUS='UNKNOWN')
+      OPEN(19,FILE=OUTFILENAM(1:ICH)//'_sigtot.dat',STATUS='UNKNOWN')
 C---PRINT THE TITLE ALSO TO FILE
-      WRITE(LUNOUT,9)
+      IF(VERBOZ.EQ.1) THEN
+        WRITE(LUNOUT,9)
+      ENDIF
 
 C---DO THE NECESSARY INITIALIZATION / PRINT PARAMETERS
-      CALL HSPRLG
+C      CALL HSPRLG
 C
 C---CHECK CONSISTENCY OF INPUT DATA FILE
-      IF(INFOCA.EQ.1) THEN
-        READ(LUNDAT,ERR=3999,END=3999,IOSTAT=IOS) FNAMET
-        IF(FNAME.EQ.FNAMET) THEN
-          READ(LUNDAT,ERR=3999,END=3999,IOSTAT=IOS)
-     &         INT2C,INT3C,ISAM2C,ISAM3C
-          CALL HSDTIN
-          GOTO 3998
-        ENDIF
- 3999   CONTINUE
-        WRITE(LUNOUT,'(/A,I3/A)')
-     &  ' *** NO STANDARD HERACLES INPUT FILE ASSIGNED TO UNIT',LUNDAT,
-     &  ' *** COLD START OF HERACLES ASSUMED'
-        DO 3901 I=1,5
-          INT2C(I)=0
-          ISAM2C(I)=0
- 3901   CONTINUE
-        DO 3902 I=1,15
-          ISAM3C(I)=0
-          INT3C(I)=0
- 3902   CONTINUE
+C      IF(INFOCA.EQ.1) THEN
+C        READ(LUNDAT,ERR=3999,END=3999,IOSTAT=IOS) FNAMET
+C        IF(FNAME.EQ.FNAMET) THEN
+C          READ(LUNDAT,ERR=3999,END=3999,IOSTAT=IOS)
+C     &         INT2C,INT3C,ISAM2C,ISAM3C
+C          CALL HSDTIN
+C          GOTO 3998
+C        ENDIF
+C 3999   CONTINUE
+C        WRITE(LUNOUT,'(/A,I3/A)')
+C     &  ' *** NO STANDARD HERACLES INPUT FILE ASSIGNED TO UNIT',LUNDAT,
+C     &  ' *** COLD START OF HERACLES ASSUMED'
+C        DO 3901 I=1,5
+C          INT2C(I)=0
+C          ISAM2C(I)=0
+C 3901   CONTINUE
+C        DO 3902 I=1,15
+C          ISAM3C(I)=0
+C          INT3C(I)=0
+C 3902   CONTINUE
+
+C 3998   CONTINUE
 C
- 3998   CONTINUE
-C
-        INTEST=0
-        DO 3903 I=1,15
-          IF(INT3(I).GT.100.AND.INT3C(I).EQ.0) INTEST=1
- 3903   CONTINUE
-        IF(INTEST.EQ.1) THEN
-          WRITE(LUNOUT,'(A/A,15I4/A,15I4/A)')
+      INTEST=0
+      DO 3903 I=1,15
+        IF(INT3(I).GT.100.AND.INT3C(I).EQ.0) INTEST=1
+ 3903 CONTINUE
+      IF(INTEST.EQ.1) THEN
+        WRITE(LUNOUT,'(A/A,15I4/A,15I4/A)')
      &        ' *** INCONSISTENT INPUT DATA FOR INTEGRATION (INT3) ***',
      &        ' *** INT3(I) : ',INT3,
      &        ' *** INT3C(I): ',INT3C,
      &        ' *** EXECUTION STOPPED ***'
-          STOP
-        ENDIF
+        STOP
       ENDIF
-C
-C***********************************************************************
-C
-C               TEST RUN
-C
-C***********************************************************************
-c
-c      call tstrrr
-c      stop
-c
-C
+C      ENDIF
+
+
 C***********************************************************************
 C               INTEGRATION / INITIALIZATION FOR EVENT SAMPLING
 C               DETERMINATION OF GLOBAL/LOCAL MAXIMA
 C***********************************************************************
-      INFOSA=0
-C
-C---NEUTRAL CURRENT
-C---BORN TERM + SOFT & VIRTUAL CORRECTIONS------------------------------
-C
-      IF(INT2(1).GE.1) THEN
-        WRITE(LUNOUT,'(///,5X,2A)') ' START INTEGRATION FOR ',CHNAME(1)
-C---INTEGRATION
-        INCCC=1
-        CALL HSINIT(INCCC,EPSO,NBIN2,NDO2,SIG2,SIG2E,XX2)
-        WRITE(LUNOUT,'(//A/5X,A/5X,1PE12.4,A,1PE12.4,A)')
-     *       ' CROSS SECTION (WITH ERROR ESTIMATE) FOR THE CHANNEL:',
-     *       CHNAME(1), SIG2, ' +/- ', SIG2E, '  NB'
-        WRITE(LUNTES,'(5X,A,1PD10.1)') ' RELATIVE ACCURACY REQUIRED:',
-     &      EPSO
-C---LOCAL/GLOBAL MAXIMA FOR THE MODIFIED SAMPLING FUNCTION
-        CALL HSESTM(HSNCG2,NCHN2,NDIM2,NPOIN,NDO2,NBIN2,
-     *              T2GGMA,T2GMAX,XX2,IBIM2,NREG2N)
-C---SET OPTION TO SAVE INFORMATION FROM INTEGRATION ONTO UNIT LUNDAT
-        INFOSA=1
-        INT2C(1)=1
-      ENDIF
-C
-C---NEUTRAL CURRENT
-C---LEPTONIC BREMSSTRAHLUNG: INITIAL STATE------------------------------
-      IF(INT3(1).GT.0) THEN
-        WRITE(LUNOUT,'(///,5X,2A)') ' START INTEGRATION FOR ',CHNAME(6)
-C---INTEGRATION
-        IF(INT3(1).LT.100) THEN
-          ITMX31=INT3(1)
-          CALL VEGAS(HSTSK1,ACCVEG,NDIM31,NPOVEG,ITMX31,IPRVEG,IGRVEG,
-     &               NDO31,IT31,SI31,SI2N31,SWGT31,SCHI31,XX31)
-        ELSEIF(INT3(1).LT.200) THEN
-          ITMX31=INT3(1) - 100
-          CALL VEGAS1(HSTSK1,ACCVEG,NDIM31,NPOVEG,ITMX31,IPRVEG,IGRVEG,
-     &                NDO31,IT31,SI31,SI2N31,SWGT31,SCHI31,XX31)
-        ELSE
-          ITMX31=INT3(1) - 200
-          CALL VEGAS2(HSTSK1,ACCVEG,NDIM31,NPOVEG,ITMX31,IPRVEG,IGRVEG,
-     &                NDO31,IT31,SI31,SI2N31,SWGT31,SCHI31,XX31)
-        ENDIF
-        SIG31=S1
-        SIG31E=S2
-C
-C---LOCAL/GLOBAL MAXIMA FOR THE MODIFIED SAMPLING FUNCTION
-        CALL HSESTM(HSTSK1,NCHN31,NDIM31,NPOIN,NDO31,NBIN31,
-     *              T31GMA,T31MAX,XX31,IBIM31,NREG31)
-        INFOSA=1
-        INT3C(1)=INT3C(1) + ITMX31
-      ENDIF
-C
-C---NEUTRAL CURRENT
-C---LEPTONIC BREMSSTRAHLUNG: FINAL STATE -------------------------------
-      IF(INT3(2).GT.0) THEN
-        WRITE(LUNOUT,'(///,5X,2A)') ' START INTEGRATION FOR ',CHNAME(7)
-C---INTEGRATION
-        IF(INT3(2).LT.100) THEN
-          ITMX32=INT3(2)
-          CALL VEGAS(HSTSK2,ACCVEG,NDIM32,NPOVEG,ITMX32,IPRVEG,IGRVEG,
-     &               NDO32,IT32,SI32,SI2N32,SWGT32,SCHI32,XX32)
-        ELSEIF(INT3(2).LT.200) THEN
-          ITMX32=INT3(2) - 100
-          CALL VEGAS1(HSTSK2,ACCVEG,NDIM32,NPOVEG,ITMX32,IPRVEG,IGRVEG,
-     &                NDO32,IT32,SI32,SI2N32,SWGT32,SCHI32,XX32)
-        ELSE
-          ITMX32=INT3(2) - 200
-          CALL VEGAS2(HSTSK2,ACCVEG,NDIM32,NPOVEG,ITMX32,IPRVEG,IGRVEG,
-     &                NDO32,IT32,SI32,SI2N32,SWGT32,SCHI32,XX32)
-        ENDIF
-        SIG32=S1
-        SIG32E=S2
-C
-C---LOCAL/GLOBAL MAXIMA FOR THE MODIFIED SAMPLING FUNCTION
-        CALL HSESTM(HSTSK2,NCHN32,NDIM32,NPOIN,NDO32,NBIN32,
-     *              T32GMA,T32MAX,XX32,IBIM32,NREG32)
-        INFOSA=1
-        INT3C(2)=INT3C(2) + ITMX32
-      ENDIF
-C
-C---NEUTRAL CURRENT
-C---LEPTONIC BREMSSTRAHLUNG: COMPTON CONTRIBUTION ----------------------
-      IF(INT3(3).GT.0) THEN
-        WRITE(LUNOUT,'(///,5X,2A)') ' START INTEGRATION FOR ',CHNAME(8)
-C---INTEGRATION
-        IF(INT3(3).LT.100) THEN
-          ITMX33=INT3(3)
-          CALL VEGAS(HSK1TS,ACCVEG,NDIM33,NPOVEG,ITMX33,IPRVEG,IGRVEG,
-     &               NDO33,IT33,SI33,SI2N33,SWGT33,SCHI33,XX33)
-        ELSEIF(INT3(3).LT.200) THEN
-          ITMX33=INT3(3) - 100
-          CALL VEGAS1(HSK1TS,ACCVEG,NDIM33,NPOVEG,ITMX33,IPRVEG,IGRVEG,
-     &                NDO33,IT33,SI33,SI2N33,SWGT33,SCHI33,XX33)
-        ELSE
-          ITMX33=INT3(3) - 200
-          CALL VEGAS2(HSK1TS,ACCVEG,NDIM33,NPOVEG,ITMX33,IPRVEG,IGRVEG,
-     &                NDO33,IT33,SI33,SI2N33,SWGT33,SCHI33,XX33)
-        ENDIF
-        SIG33=S1
-        SIG33E=S2
-C
-C---LOCAL/GLOBAL MAXIMA FOR THE MODIFIED SAMPLING FUNCTION
-        CALL HSESTM(HSK1TS,NCHN33,NDIM33,NPOIN,NDO33,NBIN33,
-     *              T33GMA,T33MAX,XX33,IBIM33,NREG33)
-        INFOSA=1
-        INT3C(3)=INT3C(3) + ITMX33
-      ENDIF
-C
-C---NEUTRAL CURRENT
-C---LEPTONIC BREMSSTRAHLUNG: QUARKONIC RADIATION -----------------------
-      IF(INT3(4).GT.0) THEN
-        WRITE(LUNOUT,'(///,5X,2A)') ' START INTEGRATION FOR ',CHNAME(9)
-C---INTEGRATION
-        IF(INT3(4).LT.100) THEN
-          ITMX34=INT3(4)
-          CALL VEGAS(HSK1K3,ACCVEG,NDIM34,NPOVEG,ITMX34,IPRVEG,IGRVEG,
-     &               NDO34,IT34,SI34,SI2N34,SWGT34,SCHI34,XX34)
-        ELSEIF(INT3(4).LT.200) THEN
-          ITMX34=INT3(4) - 100
-          CALL VEGAS1(HSK1K3,ACCVEG,NDIM31,NPOVEG,ITMX34,IPRVEG,IGRVEG,
-     &                NDO34,IT34,SI34,SI2N34,SWGT34,SCHI34,XX34)
-        ELSE
-          ITMX34=INT3(4) - 200
-          CALL VEGAS2(HSK1K3,ACCVEG,NDIM34,NPOVEG,ITMX34,IPRVEG,IGRVEG,
-     &                NDO34,IT34,SI34,SI2N34,SWGT34,SCHI34,XX34)
-        ENDIF
-        SIG34=S1
-        SIG34E=S2
-C
-C---LOCAL/GLOBAL MAXIMA FOR THE MODIFIED SAMPLING FUNCTION
-        CALL HSESTM(HSK1K3,NCHN34,NDIM34,NPOIN,NDO34,NBIN34,
-     *              T34GMA,T34MAX,XX34,IBIM34,NREG34)
-        INFOSA=1
-        INT3C(4)=INT3C(4) + ITMX34
-      ENDIF
-C
+
+C---DEFINE SCALE OF THE GRID
+      GDSCLE=2*GDSDDV/GDSIZE
+
+C---LOOPY-LOOP OVER XSECTION GRID
+      DO 3980 I = 1, GDSIZE
+        INFOSA=0
+        EELE=GDMEAN-GDSDDV+(I-1)*GDSCLE+GDSCLE/2
+
+C---PUTTING VARIABLE BACK TO ZERO (COZ IF SUBROUTINE USED SEVERAL TIMES)
+        SIGTOT(I)=0
+        SIGTRR(I)=0
+
+C---DO THE NECESSARY INITIALIZATION / PRINT PARAMETERS
+        CALL HSPRLG
+
 C-----------------------------------------------------------------------
-C
-C---CHARGED CURRENT
-C---BORN TERM + SOFT & VIRTUAL CORRECTIONS------------------------------
-C
-      IF(INT2(2).GE.1) THEN
-        WRITE(LUNOUT,'(///,5X,2A)') ' START INTEGRATION FOR ',CHNAME(2)
-C---INTEGRATION
-        INCCC=2
-        CALL HSINIT(INCCC,EPSO,NBIN2,NDO2C,SIG2C,SIG2EC,XX2C)
-        WRITE(LUNOUT,'(//A/5X,A/5X,1PE12.4,A,1PE12.4,A)')
-     *       ' CROSS SECTION (WITH ERROR ESTIMATE) FOR THE CHANNEL:',
-     *       CHNAME(2), SIG2C, ' +/- ', SIG2EC, '  NB'
-        WRITE(LUNTES,'(5X,A,1PD10.1)') ' RELATIVE ACCURACY REQUIRED:',
-     &      EPSO
-C---LOCAL/GLOBAL MAXIMA FOR THE MODIFIED SAMPLING FUNCTION
-        CALL HSESTM(HSCCG2,NCHC2,NDIM2,NPOIN,NDO2C,NBIN2,
-     *              T2GMAC,T2MAXC,XX2C,IBIM2C,NREG2C)
-C---SET OPTION TO SAVE INFORMATION FROM INTEGRATION ONTO UNIT LUNDAT
-        INFOSA=1
-        INT2C(2)=1
-      ENDIF
-C
-C---CHARGED CURRENT
-C---PHOTON BREMSSTRAHLUNG: KP - CHANNEL-------------------------------
-      IF(INT3(7).GT.0) THEN
-        WRITE(LUNOUT,'(///,5X,2A)') ' START INTEGRATION FOR ',
-     &CHNAME(12)
-C---INTEGRATION
-        IF(INT3(7).LT.100) THEN
-          ITM31C=INT3(7)
-          CALL VEGAS(HSCCKL,ACCVEG,NDM3CC,NPOVEG,ITM31C,IPRVEG,IGRVEG,
-     &               NDO31C,IT31C,SI31C,S2N31C,SWT31C,SCH31C,XX31C)
-        ELSEIF(INT3(7).LT.200) THEN
-          ITM31C=INT3(7) - 100
-          CALL VEGAS1(HSCCKL,ACCVEG,NDM3CC,NPOVEG,ITM31C,IPRVEG,IGRVEG,
-     &                NDO31C,IT31C,SI31C,S2N31C,SWT31C,SCH31C,XX31C)
-        ELSE
-          ITM31C=INT3(7) - 200
-          CALL VEGAS2(HSCCKL,ACCVEG,NDM3CC,NPOVEG,ITM31C,IPRVEG,IGRVEG,
-     &                NDO31C,IT31C,SI31C,S2N31C,SWT31C,SCH31C,XX31C)
-        ENDIF
-        SIG31C=S1
-        SG31EC=S2
-C
-C---LOCAL/GLOBAL MAXIMA FOR THE MODIFIED SAMPLING FUNCTION
-        CALL HSESTM(HSCCKL,NCHC31,NDM3CC,NPOIN,NDO31C,NBN31C,
-     *              T31GMC,T31MXC,XX31C,IBM31C,NRG31C)
-        INFOSA=1
-        INT3C(7)=INT3C(7) + ITM31C
-      ENDIF
-C
-C---CHARGED CURRENT
-C---PHOTON BREMSSTRAHLUNG: KQ - CHANNEL-------------------------------
-      IF(INT3(8).GT.0) THEN
-        WRITE(LUNOUT,'(///,5X,2A)') ' START INTEGRATION FOR ',
-     &CHNAME(13)
-C---INTEGRATION
-        IF(INT3(8).LT.100) THEN
-          ITM32C=INT3(8)
-          CALL VEGAS(HSCCQI,ACCVEG,NDM3CC,NPOVEG,ITM32C,IPRVEG,IGRVEG,
-     &               NDO32C,IT32C,SI32C,S2N32C,SWT32C,SCH32C,XX32C)
-        ELSEIF(INT3(8).LT.200) THEN
-          ITM32C=INT3(8) - 100
-          CALL VEGAS1(HSCCQI,ACCVEG,NDM3CC,NPOVEG,ITM32C,IPRVEG,IGRVEG,
-     &                NDO32C,IT32C,SI32C,S2N32C,SWT32C,SCH32C,XX32C)
-        ELSE
-          ITM32C=INT3(8) - 200
-          CALL VEGAS2(HSCCQI,ACCVEG,NDM3CC,NPOVEG,ITM32C,IPRVEG,IGRVEG,
-     &                NDO32C,IT32C,SI32C,S2N32C,SWT32C,SCH32C,XX32C)
-        ENDIF
-        SIG32C=S1
-        SG32EC=S2
-C
-C---LOCAL/GLOBAL MAXIMA FOR THE MODIFIED SAMPLING FUNCTION
-        CALL HSESTM(HSCCQI,NCHC32,NDM3CC,NPOIN,NDO32C,NBN32C,
-     *              T32GMC,T32MXC,XX32C,IBM32C,NRG32C)
-        INFOSA=1
-        INT3C(8)=INT3C(8) + ITM32C
-      ENDIF
-C
-C---CHARGED CURRENT
-C---PHOTON BREMSSTRAHLUNG: KQS - CHANNEL------------------------------
-      IF(INT3(9).GT.0) THEN
-        WRITE(LUNOUT,'(///,5X,2A)') ' START INTEGRATION FOR ',
-     &CHNAME(14)
-C---INTEGRATION
-        IF(INT3(9).LT.100) THEN
-          ITM33C=INT3(9)
-          CALL VEGAS(HSCCQF,ACCVEG,NDM3CC,NPOVEG,ITM33C,IPRVEG,IGRVEG,
-     &               NDO33C,IT33C,SI33C,S2N33C,SWT33C,SCH33C,XX33C)
-        ELSEIF(INT3(9).LT.200) THEN
-          ITM33C=INT3(9) - 100
-          CALL VEGAS1(HSCCQF,ACCVEG,NDM3CC,NPOVEG,ITM33C,IPRVEG,IGRVEG,
-     &                NDO33C,IT33C,SI33C,S2N33C,SWT33C,SCH33C,XX33C)
-        ELSE
-          ITM33C=INT3(9) - 200
-          CALL VEGAS2(HSCCQF,ACCVEG,NDM3CC,NPOVEG,ITM33C,IPRVEG,IGRVEG,
-     &                NDO33C,IT33C,SI33C,S2N33C,SWT33C,SCH33C,XX33C)
-        ENDIF
-        SIG33C=S1
-        SG33EC=S2
-C
-C---LOCAL/GLOBAL MAXIMA FOR THE MODIFIED SAMPLING FUNCTION
-        CALL HSESTM(HSCCQF,NCHC33,NDM3CC,NPOIN,NDO33C,NBN33C,
-     *              T33GMC,T33MXC,XX33C,IBM33C,NRG33C)
-        INFOSA=1
-        INT3C(9)=INT3C(9) + ITM33C
-      ENDIF
-C
+C*** NEUTRAL CURRENT ***************************************************
 C-----------------------------------------------------------------------
-C
-C---ELASTIC EP SCATTERING
-C---BORN TERM + SOFT & VIRTUAL CORRECTIONS------------------------------
-C
-      IF(INT2(3).GE.1) THEN
-        WRITE(LUNOUT,'(///,5X,2A)') ' START INTEGRATION FOR ',CHNAME(3)
-C---INTEGRATION
-        CALL HSINIL(HSELG1,EPSO,NBIN2,NDO2E,SIG2L,SIG2EE,XX2E)
-        WRITE(LUNOUT,'(//A/5X,A/5X,1PE12.4,A,1PE12.4,A)')
-     *       ' CROSS SECTION (WITH ERROR ESTIMATE) FOR THE CHANNEL:',
-     *       CHNAME(3), SIG2L, ' +/- ', SIG2EE, '  NB'
-        WRITE(LUNTES,'(5X,A,1PD10.1)') ' RELATIVE ACCURACY REQUIRED:',
-     &      EPSO
-C---LOCAL/GLOBAL MAXIMA FOR THE MODIFIED SAMPLING FUNCTION
-        CALL HSESTM(HSELG2,NCHE2,NDIM1,NPOIN,NDO2E,NBIN2,
-     *              T2GMAE,T2MAXE,XX2E,IBIM2E,NREG2E)
-C---SET OPTION TO SAVE INFORMATION FROM INTEGRATION ONTO UNIT LUNDAT
-        INFOSA=1
-        INT2C(3)=1
-      ENDIF
-C
-C---ELASTIC TAIL
-C---PHOTON BREMSSTRAHLUNG: INITIAL STATE RADIATION -------------------
-      IF(INT3(10).GT.0) THEN
-        WRITE(LUNOUT,'(///,5X,2A)') ' START INTEGRATION FOR ',
-     &CHNAME(15)
-C---INTEGRATION
-        IF(INT3(10).LT.100) THEN
-          ITM31E=INT3(10)
-          CALL VEGAS(HSELK1,ACCVEG,NDM3EL,NPOVEG,ITM31E,IPRVEG,IGRVEG,
-     &               NDO31E,IT31E,SI31E,S2N31E,SWT31E,SCH31E,XX31E)
-        ELSEIF(INT3(10).LT.200) THEN
-          ITM31E=INT3(10) - 100
-          CALL VEGAS1(HSELK1,ACCVEG,NDM3EL,NPOVEG,ITM31E,IPRVEG,IGRVEG,
-     &                NDO31E,IT31E,SI31E,S2N31E,SWT31E,SCH31E,XX31E)
-        ELSE
-          ITM31E=INT3(10) - 200
-          CALL VEGAS2(HSELK1,ACCVEG,NDM3EL,NPOVEG,ITM31E,IPRVEG,IGRVEG,
-     &                NDO31E,IT31E,SI31E,S2N31E,SWT31E,SCH31E,XX31E)
+
+C--- BORN TERM + SOFT & VIRTUAL CORRECTIONS ----------------------------
+        IF(INT2(1).GE.1) THEN
+          IF(VERBOZ.EQ.1) THEN
+            WRITE(LUNOUT,'(///,5X,2A)') ' START INTEGRATION FOR ',
+     *          CHNAME(1)
+          ENDIF
+
+C--- INTEGRATION
+          INCCC=1
+          CALL HSINIT(INCCC,EPSO,NBIN2,NDO2,SIG2,
+     *                SIG2E,XX2)
+          HSXNC2(I)%SIG2=SIG2
+          HSXNC2(I)%SIG2E=SIG2E
+          IF(VERBOZ.EQ.1) THEN
+            WRITE(LUNOUT,'(//A/5X,A/5X,1PE12.4,A,1PE12.4,A)')
+     *          ' CROSS SECTION (WITH ERROR ESTIMATE) FOR THE CHANNEL:',
+     *          CHNAME(1), HSXNC2(I)%SIG2, ' +/- ', HSXNC2(I)%SIG2E,
+     *          '  NB'
+            WRITE(LUNTES,'(5X,A,1PD10.1)')
+     &          ' RELATIVE ACCURACY REQUIRED:',EPSO
+          ENDIF
+
+C--- LOCAL/GLOBAL MAXIMA FOR THE MODIFIED SAMPLING FUNCTION
+          CALL HSESTM(HSNCG2,NCHN2,NDIM2,NPOIN,NDO2,NBIN2,
+     *                T2GGMA,T2GMAX,
+     *                XX2,IBIM2,NREG2N)
+          HSXNC2(I)%T2GGMA=T2GGMA
+          HSXNC2(I)%T2GMAX=T2GMAX
+          HSXNC2(I)%XX2=XX2
+          HSXNC2(I)%NDO2=NDO2
+
+C--- SET OPTION TO SAVE INFORMATION FROM INTEGRATION ONTO UNIT LUNDAT
+          INFOSA=1
+          INT2C(1)=1
         ENDIF
-        SIG31L=S1
-        SG31EE=S2
-C
-C---LOCAL/GLOBAL MAXIMA FOR THE MODIFIED SAMPLING FUNCTION
-        CALL HSESTM(HSELK1,NCHE31,NDM3EL,NPOIN,NDO31E,NBN31E,
-     *              T31GME,T31MXE,XX31E,IBM31E,NRG31E)
-        INFOSA=1
-        INT3C(10)=INT3C(10) + ITM31E
-      ENDIF
-C
-C---ELASTIC TAIL
-C---PHOTON BREMSSTRAHLUNG: FINAL STATE RADIATOIN ---------------------
-      IF(INT3(11).GT.0) THEN
-        WRITE(LUNOUT,'(///,5X,2A)') ' START INTEGRATION FOR ',
-     &CHNAME(16)
-C---INTEGRATION
-        IF(INT3(11).LT.100) THEN
-          ITM32E=INT3(11)
-          CALL VEGAS(HSELK2,ACCVEG,NDM3EL,NPOVEG,ITM32E,IPRVEG,IGRVEG,
-     &               NDO32E,IT32E,SI32E,S2N32E,SWT32E,SCH32E,XX32E)
-        ELSEIF(INT3(11).LT.200) THEN
-          ITM32E=INT3(11) - 100
-          CALL VEGAS1(HSELK2,ACCVEG,NDM3EL,NPOVEG,ITM32E,IPRVEG,IGRVEG,
-     &                NDO32E,IT32E,SI32E,S2N32E,SWT32E,SCH32E,XX32E)
-        ELSE
-          ITM32E=INT3(11) - 200
-          CALL VEGAS2(HSELK2,ACCVEG,NDM3EL,NPOVEG,ITM32E,IPRVEG,IGRVEG,
-     &                NDO32E,IT32E,SI32E,S2N32E,SWT32E,SCH32E,XX32E)
+C-----------------------------------------------------------------------
+
+
+C--- LEPTONIC BREMSSTRAHLUNG: INITIAL STATE ----------------------------
+        IF(INT3(1).GT.0) THEN
+          IF(VERBOZ.EQ.1) THEN
+            WRITE(LUNOUT,'(///,5X,2A)') ' START INTEGRATION FOR ',
+     *          CHNAME(6)
+          ENDIF
+
+C--- INTEGRATION
+          IF(INT3(1).LT.100) THEN
+            ITMX31=INT3(1)
+            CALL VEGAS(HSTSK1,ACCVEG,NDIM31,NPOVEG,ITMX31,IPRVEG,IGRVEG,
+     &                 NDO31,IT31,SI31,SI2N31,SWGT31,SCHI31,XX31)
+          ELSEIF(INT3(1).LT.200) THEN
+            ITMX31=INT3(1) - 100
+            CALL VEGAS1(HSTSK1,ACCVEG,NDIM31,NPOVEG,ITMX31,IPRVEG,IGRVEG,
+     &                  NDO31,IT31,SI31,SI2N31,SWGT31,SCHI31,XX31)
+          ELSE
+            ITMX31=INT3(1) - 200
+            CALL VEGAS2(HSTSK1,ACCVEG,NDIM31,NPOVEG,ITMX31,IPRVEG,IGRVEG,
+     &                  NDO31,IT31,SI31,SI2N31,SWGT31,SCHI31,XX31)
+          ENDIF
+          HSXN31(I)%SIG31=S1
+          HSXN31(I)%SIG31E=S2
+
+C--- LOCAL/GLOBAL MAXIMA FOR THE MODIFIED SAMPLING FUNCTION
+          CALL HSESTM(HSTSK1,NCHN31,NDIM31,NPOIN,NDO31,NBIN31,
+     *                T31GMA,T31MAX,XX31,IBIM31,NREG31)
+          HSXN31(I)%NDO31=NDO31
+          HSXN31(I)%T31GMA=T31GMA
+          HSXN31(I)%T31MAX=T31MAX
+          HSXN31(I)%XX31=XX31
+          HSXN31(I)%IBIM31=IBIM31
+
+C--- SET OPTION TO SAVE INFORMATION FROM INTEGRATION ONTO UNIT LUNDAT
+          INFOSA=1
+          INT3C(1)=INT3C(1) + ITMX31
         ENDIF
-        SIG32L=S1
-        SG32EE=S2
-C
-C---LOCAL/GLOBAL MAXIMA FOR THE MODIFIED SAMPLING FUNCTION
-        CALL HSESTM(HSELK2,NCHE32,NDM3EL,NPOIN,NDO32E,NBN32E,
-     *              T32GME,T32MXE,XX32E,IBM32E,NRG32E)
-        INFOSA=1
-        INT3C(11)=INT3C(11)+ITM32E
-      ENDIF
-C
-C---ELASTIC TAIL
-C---PHOTON BREMSSTRAHLUNG: COMPTON PART ------------------------------
-      IF(INT3(12).GT.0) THEN
-        WRITE(LUNOUT,'(///,5X,2A)') ' START INTEGRATION FOR ',
-     &CHNAME(17)
-C---INTEGRATION
-        IF(INT3(12).LT.100) THEN
-          ITM33E=INT3(12)
-          CALL VEGAS(HSELCO,ACCVEG,NDM3EL,NPOVEG,ITM33E,IPRVEG,IGRVEG,
-     &               NDO33E,IT33E,SI33E,S2N33E,SWT33E,SCH33E,XX33E)
-        ELSEIF(INT3(12).LT.200) THEN
-          ITM33E=INT3(12) - 100
-          CALL VEGAS1(HSELCO,ACCVEG,NDM3EL,NPOVEG,ITM33E,IPRVEG,IGRVEG,
-     &                NDO33E,IT33E,SI33E,S2N33E,SWT33E,SCH33E,XX33E)
-        ELSE
-          ITM33E=INT3(12) - 200
-          CALL VEGAS2(HSELCO,ACCVEG,NDM3EL,NPOVEG,ITM33E,IPRVEG,IGRVEG,
-     &                NDO33E,IT33E,SI33E,S2N33E,SWT33E,SCH33E,XX33E)
+C-----------------------------------------------------------------------
+
+
+C--- LEPTONIC BREMSSTRAHLUNG: FINAL STATE ------------------------------
+        IF(INT3(2).GT.0) THEN
+          IF(VERBOZ.EQ.1) THEN
+            WRITE(LUNOUT,'(///,5X,2A)') ' START INTEGRATION FOR ',
+     *          CHNAME(7)
+          ENDIF
+
+C--- INTEGRATION
+          IF(INT3(2).LT.100) THEN
+            ITMX32=INT3(2)
+            CALL VEGAS(HSTSK2,ACCVEG,NDIM32,NPOVEG,ITMX32,IPRVEG,IGRVEG,
+     &                 NDO32,IT32,SI32,SI2N32,SWGT32,SCHI32,XX32)
+          ELSEIF(INT3(2).LT.200) THEN
+            ITMX32=INT3(2) - 100
+            CALL VEGAS1(HSTSK2,ACCVEG,NDIM32,NPOVEG,ITMX32,IPRVEG,IGRVEG,
+     &                  NDO32,IT32,SI32,SI2N32,SWGT32,SCHI32,XX32)
+          ELSE
+            ITMX32=INT3(2) - 200
+            CALL VEGAS2(HSTSK2,ACCVEG,NDIM32,NPOVEG,ITMX32,IPRVEG,IGRVEG,
+     &                  NDO32,IT32,SI32,SI2N32,SWGT32,SCHI32,XX32)
+          ENDIF
+          HSXN32(I)%SIG32=S1
+          HSXN32(I)%SIG32E=S2
+
+C--- LOCAL/GLOBAL MAXIMA FOR THE MODIFIED SAMPLING FUNCTION
+          CALL HSESTM(HSTSK2,NCHN32,NDIM32,NPOIN,NDO32,NBIN32,
+     *                T32GMA,T32MAX,XX32,IBIM32,NREG32)
+          HSXN32(I)%NDO32=NDO32
+          HSXN32(I)%T32GMA=T32GMA
+          HSXN32(I)%T32MAX=T32MAX
+          HSXN32(I)%XX32=XX32
+          HSXN32(I)%IBIM32=IBIM32
+
+C--- SET OPTION TO SAVE INFORMATION FROM INTEGRATION ONTO UNIT LUNDAT
+          INFOSA=1
+          INT3C(2)=INT3C(2) + ITMX32
         ENDIF
-        SIG33L=S1
-        SG33EE=S2
-C
-C---LOCAL/GLOBAL MAXIMA FOR THE MODIFIED SAMPLING FUNCTION
-        CALL HSESTM(HSELCO,NCHE33,NDM3EL,NPOIN,NDO33E,NBN33E,
-     *              T33GME,T33MXE,XX33E,IBM33E,NRG33E)
-        INFOSA=1
-        INT3C(12)=INT3C(12) + ITM33E
-      ENDIF
+C-----------------------------------------------------------------------
+
+
+C--- LEPTONIC BREMSSTRAHLUNG: COMPTON CONTRIBUTION ---------------------
+        IF(INT3(3).GT.0) THEN
+          IF(VERBOZ.EQ.1) THEN
+            WRITE(LUNOUT,'(///,5X,2A)') ' START INTEGRATION FOR ',
+     *          CHNAME(8)
+          ENDIF
+
+C--- INTEGRATION
+          IF(INT3(3).LT.100) THEN
+            ITMX33=INT3(3)
+            CALL VEGAS(HSK1TS,ACCVEG,NDIM33,NPOVEG,ITMX33,IPRVEG,IGRVEG,
+     &                 NDO33,IT33,SI33,SI2N33,SWGT33,SCHI33,XX33)
+          ELSEIF(INT3(3).LT.200) THEN
+            ITMX33=INT3(3) - 100
+            CALL VEGAS1(HSK1TS,ACCVEG,NDIM33,NPOVEG,ITMX33,IPRVEG,IGRVEG,
+     &                  NDO33,IT33,SI33,SI2N33,SWGT33,SCHI33,XX33)
+          ELSE
+            ITMX33=INT3(3) - 200
+            CALL VEGAS2(HSK1TS,ACCVEG,NDIM33,NPOVEG,ITMX33,IPRVEG,IGRVEG,
+     &                  NDO33,IT33,SI33,SI2N33,SWGT33,SCHI33,XX33)
+          ENDIF
+          HSXN33(I)%SIG33=S1
+          HSXN33(I)%SIG33E=S2
+
+C--- LOCAL/GLOBAL MAXIMA FOR THE MODIFIED SAMPLING FUNCTION
+          CALL HSESTM(HSK1TS,NCHN33,NDIM33,NPOIN,NDO33,NBIN33,
+     *                T33GMA,T33MAX,XX33,IBIM33,NREG33)
+          HSXN33(I)%NDO33=NDO33
+          HSXN33(I)%T33GMA=T33GMA
+          HSXN33(I)%T33MAX=T33MAX
+          HSXN33(I)%XX33=XX33
+          HSXN33(I)%IBIM33=IBIM33
+
+C--- SET OPTION TO SAVE INFORMATION FROM INTEGRATION ONTO UNIT LUNDAT
+          INFOSA=1
+          INT3C(3)=INT3C(3) + ITMX33
+        ENDIF
+C-----------------------------------------------------------------------
+
+
+C--- LEPTONIC BREMSSTRAHLUNG: QUARKONIC RADIATION ----------------------
+        IF(INT3(4).GT.0) THEN
+          IF(VERBOZ.EQ.1) THEN
+            WRITE(LUNOUT,'(///,5X,2A)') ' START INTEGRATION FOR ',
+     *          CHNAME(9)
+          ENDIF
+
+C--- INTEGRATION
+          IF(INT3(4).LT.100) THEN
+            ITMX34=INT3(4)
+            CALL VEGAS(HSK1K3,ACCVEG,NDIM34,NPOVEG,ITMX34,IPRVEG,IGRVEG,
+     &                 NDO34,IT34,SI34,SI2N34,SWGT34,SCHI34,XX34)
+          ELSEIF(INT3(4).LT.200) THEN
+            ITMX34=INT3(4) - 100
+            CALL VEGAS1(HSK1K3,ACCVEG,NDIM31,NPOVEG,ITMX34,IPRVEG,IGRVEG,
+     &                  NDO34,IT34,SI34,SI2N34,SWGT34,SCHI34,XX34)
+          ELSE
+            ITMX34=INT3(4) - 200
+            CALL VEGAS2(HSK1K3,ACCVEG,NDIM34,NPOVEG,ITMX34,IPRVEG,IGRVEG,
+     &                  NDO34,IT34,SI34,SI2N34,SWGT34,SCHI34,XX34)
+          ENDIF
+          HSXN34(I)%SIG34=S1
+          HSXN34(I)%SIG34E=S2
+
+C--- LOCAL/GLOBAL MAXIMA FOR THE MODIFIED SAMPLING FUNCTION
+          CALL HSESTM(HSK1K3,NCHN34,NDIM34,NPOIN,NDO34,NBIN34,
+     *                T34GMA,T34MAX,XX34,IBIM34,NREG34)
+          HSXN34(I)%NDO34=NDO34
+          HSXN34(I)%T34GMA=T34GMA
+          HSXN34(I)%T34MAX=T34MAX
+          HSXN34(I)%XX34=XX34
+          HSXN34(I)%IBIM34=IBIM34
+
+C--- SET OPTION TO SAVE INFORMATION FROM INTEGRATION ONTO UNIT LUNDAT
+          INFOSA=1
+          INT3C(4)=INT3C(4) + ITMX34
+        ENDIF
+
+C-----------------------------------------------------------------------
+
+C-----------------------------------------------------------------------
+C***********************************************************************
+C-----------------------------------------------------------------------
+
+C-----------------------------------------------------------------------
+C*** CHARGED CURRENT ***************************************************
+C-----------------------------------------------------------------------
+
+C--- BORN TERM + SOFT & VIRTUAL CORRECTIONS ----------------------------
+
+        IF(INT2(2).GE.1) THEN
+          IF(VERBOZ.EQ.1) THEN
+            WRITE(LUNOUT,'(///,5X,2A)') ' START INTEGRATION FOR ',
+     *          CHNAME(2)
+          ENDIF
+
+C--- INTEGRATION
+          INCCC=2
+          CALL HSINIT(INCCC,EPSO,NBIN2,NDO2C,SIG2C,SIG2EC,XX2C)
+          HSXCC2(I)%SIG2C=SIG2C
+          HSXCC2(I)%SIG2EC=SIG2EC
+          IF(VERBOZ.EQ.1) THEN
+            WRITE(LUNOUT,'(//A/5X,A/5X,1PE12.4,A,1PE12.4,A)')
+     *          ' CROSS SECTION (WITH ERROR ESTIMATE) FOR THE CHANNEL:',
+     *          CHNAME(2), HSXCC2(I)%SIG2C, ' +/- ', HSXCC2(I)%SIG2EC,
+     *          '  NB'
+            WRITE(LUNTES,'(5X,A,1PD10.1)')
+     &          ' RELATIVE ACCURACY REQUIRED:',EPSO
+          ENDIF
+
+C--- LOCAL/GLOBAL MAXIMA FOR THE MODIFIED SAMPLING FUNCTION
+          CALL HSESTM(HSCCG2,NCHC2,NDIM2,NPOIN,NDO2C,NBIN2,
+     *                T2GMAC,T2MAXC,XX2C,IBIM2C,NREG2C)
+          HSXCC2(I)%NDO2C=NDO2C
+          HSXCC2(I)%T2GMAC=T2GMAC
+          HSXCC2(I)%T2MAXC=T2MAXC
+          HSXCC2(I)%XX2C=XX2C
+          HSXCC2(I)%IBIM2C=IBIM2C
+
+C--- SET OPTION TO SAVE INFORMATION FROM INTEGRATION ONTO UNIT LUNDAT
+          INFOSA=1
+          INT2C(2)=1
+        ENDIF
+
+C---------------------------------------------------------------------
+
+C--- PHOTON BREMSSTRAHLUNG: KP - CHANNEL -----------------------------
+        IF(INT3(7).GT.0) THEN
+          IF(VERBOZ.EQ.1) THEN
+            WRITE(LUNOUT,'(///,5X,2A)') ' START INTEGRATION FOR ',
+     &          CHNAME(12)
+          ENDIF
+
+C--- INTEGRATION
+          IF(INT3(7).LT.100) THEN
+            ITM31C=INT3(7)
+            CALL VEGAS(HSCCKL,ACCVEG,NDM3CC,NPOVEG,ITM31C,IPRVEG,IGRVEG,
+     &                 NDO31C,IT31C,SI31C,S2N31C,SWT31C,SCH31C,XX31C)
+          ELSEIF(INT3(7).LT.200) THEN
+            ITM31C=INT3(7) - 100
+            CALL VEGAS1(HSCCKL,ACCVEG,NDM3CC,NPOVEG,ITM31C,IPRVEG,IGRVEG,
+     &                  NDO31C,IT31C,SI31C,S2N31C,SWT31C,SCH31C,XX31C)
+          ELSE
+            ITM31C=INT3(7) - 200
+            CALL VEGAS2(HSCCKL,ACCVEG,NDM3CC,NPOVEG,ITM31C,IPRVEG,IGRVEG,
+     &                  NDO31C,IT31C,SI31C,S2N31C,SWT31C,SCH31C,XX31C)
+          ENDIF
+          HSXC31(I)%SIG31C=S1
+          HSXC31(I)%SG31EC=S2
+
+C--- LOCAL/GLOBAL MAXIMA FOR THE MODIFIED SAMPLING FUNCTION
+          CALL HSESTM(HSCCKL,NCHC31,NDM3CC,NPOIN,NDO31C,NBN31C,
+     *                T31GMC,T31MXC,XX31C,IBM31C,NRG31C)
+          HSXC31(I)%NDO31C=NDO31C
+          HSXC31(I)%T31GMC=T31GMC
+          HSXC31(I)%T31MXC=T31MXC
+          HSXC31(I)%XX31C=XX31C
+          HSXC31(I)%IBM31C=IBM31C
+          INFOSA=1
+          INT3C(7)=INT3C(7) + ITM31C
+        ENDIF
+
+C---------------------------------------------------------------------
+
+C--- PHOTON BREMSSTRAHLUNG: KQ - CHANNEL -----------------------------
+        IF(INT3(8).GT.0) THEN
+          IF(VERBOZ.EQ.1) THEN
+            WRITE(LUNOUT,'(///,5X,2A)') ' START INTEGRATION FOR ',
+     &          CHNAME(13)
+          ENDIF
+
+C--- INTEGRATION
+          IF(INT3(8).LT.100) THEN
+            ITM32C=INT3(8)
+            CALL VEGAS(HSCCQI,ACCVEG,NDM3CC,NPOVEG,ITM32C,IPRVEG,IGRVEG,
+     &                 NDO32C,IT32C,SI32C,S2N32C,SWT32C,SCH32C,XX32C)
+          ELSEIF(INT3(8).LT.200) THEN
+            ITM32C=INT3(8) - 100
+            CALL VEGAS1(HSCCQI,ACCVEG,NDM3CC,NPOVEG,ITM32C,IPRVEG,IGRVEG,
+     &                  NDO32C,IT32C,SI32C,S2N32C,SWT32C,SCH32C,XX32C)
+          ELSE
+            ITM32C=INT3(8) - 200
+            CALL VEGAS2(HSCCQI,ACCVEG,NDM3CC,NPOVEG,ITM32C,IPRVEG,IGRVEG,
+     &                  NDO32C,IT32C,SI32C,S2N32C,SWT32C,SCH32C,XX32C)
+          ENDIF
+          HSXC32(I)%SIG32C=S1
+          HSXC32(I)%SG32EC=S2
+
+C--- LOCAL/GLOBAL MAXIMA FOR THE MODIFIED SAMPLING FUNCTION
+          CALL HSESTM(HSCCQI,NCHC32,NDM3CC,NPOIN,NDO32C,NBN32C,
+     *                T32GMC,T32MXC,XX32C,IBM32C,NRG32C)
+          HSXC32(I)%NDO32C=NDO32C
+          HSXC32(I)%T32GMC=T32GMC
+          HSXC32(I)%T32MXC=T32MXC
+          HSXC32(I)%XX32C=XX32C
+          HSXC32(I)%IBM32C=IBM32C
+          INFOSA=1
+          INT3C(8)=INT3C(8) + ITM32C
+        ENDIF
+
+C---------------------------------------------------------------------
+
+C--- PHOTON BREMSSTRAHLUNG: KQS - CHANNEL ----------------------------
+        IF(INT3(9).GT.0) THEN
+          IF(VERBOZ.EQ.1) THEN
+            WRITE(LUNOUT,'(///,5X,2A)') ' START INTEGRATION FOR ',
+     &          CHNAME(14)
+          ENDIF
+
+C--- INTEGRATION
+          IF(INT3(9).LT.100) THEN
+            ITM33C=INT3(9)
+            CALL VEGAS(HSCCQF,ACCVEG,NDM3CC,NPOVEG,ITM33C,IPRVEG,IGRVEG,
+     &                 NDO33C,IT33C,SI33C,S2N33C,SWT33C,SCH33C,XX33C)
+          ELSEIF(INT3(9).LT.200) THEN
+            ITM33C=INT3(9) - 100
+            CALL VEGAS1(HSCCQF,ACCVEG,NDM3CC,NPOVEG,ITM33C,IPRVEG,IGRVEG,
+     &                  NDO33C,IT33C,SI33C,S2N33C,SWT33C,SCH33C,XX33C)
+          ELSE
+            ITM33C=INT3(9) - 200
+            CALL VEGAS2(HSCCQF,ACCVEG,NDM3CC,NPOVEG,ITM33C,IPRVEG,IGRVEG,
+     &                  NDO33C,IT33C,SI33C,S2N33C,SWT33C,SCH33C,XX33C)
+          ENDIF
+          HSXC33(I)%SIG33C=S1
+          HSXC33(I)%SG33EC=S2
+
+C--- LOCAL/GLOBAL MAXIMA FOR THE MODIFIED SAMPLING FUNCTION
+          CALL HSESTM(HSCCQF,NCHC33,NDM3CC,NPOIN,NDO33C,NBN33C,
+     *                T33GMC,T33MXC,XX33C,IBM33C,NRG33C)
+          HSXC33(I)%NDO33C=NDO33C
+          HSXC33(I)%T33GMC=T33GMC
+          HSXC33(I)%T33MXC=T33MXC
+          HSXC33(I)%XX33C=XX33C
+          HSXC33(I)%IBM33C=IBM33C
+          INFOSA=1
+          INT3C(9)=INT3C(9) + ITM33C
+        ENDIF
+
+C-----------------------------------------------------------------------
+
+C-----------------------------------------------------------------------
+C***********************************************************************
+C-----------------------------------------------------------------------
+
+C-----------------------------------------------------------------------
+C*** ELASTIC EP SCATTERING *********************************************
+C-----------------------------------------------------------------------
+
+C--- BORN TERM + SOFT & VIRTUAL CORRECTIONS ----------------------------
+        IF(INT2(3).GE.1) THEN
+          IF(VERBOZ.EQ.1) THEN
+            WRITE(LUNOUT,'(///,5X,2A)') ' START INTEGRATION FOR ',
+     *          CHNAME(3)
+          ENDIF
+
+C--- INTEGRATION
+          CALL HSINIL(HSELG1,EPSO,NBIN2,NDO2E,SIG2L,SIG2EE,XX2E)
+          HSXEL2(I)%SIG2L=SIG2L
+          HSXEL2(I)%SIG2EE=SIG2EE
+          IF(VERBOZ.EQ.1) THEN
+            WRITE(LUNOUT,'(//A/5X,A/5X,1PE12.4,A,1PE12.4,A)')
+     *          ' CROSS SECTION (WITH ERROR ESTIMATE) FOR THE CHANNEL:',
+     *          CHNAME(3), HSXEL2(I)%SIG2L, ' +/- ', HSXEL2(I)%SIG2EE,
+     *          '  NB'
+            WRITE(LUNTES,'(5X,A,1PD10.1)')
+     &          ' RELATIVE ACCURACY REQUIRED:',EPSO
+          ENDIF
+
+C--- LOCAL/GLOBAL MAXIMA FOR THE MODIFIED SAMPLING FUNCTION
+          CALL HSESTM(HSELG2,NCHE2,NDIM1,NPOIN,NDO2E,NBIN2,
+     *                T2GMAE,T2MAXE,XX2E,IBIM2E,NREG2E)
+          HSXEL2(I)%NDO2E=NDO2E
+          HSXEL2(I)%T2GMAE=T2GMAE
+          HSXEL2(I)%T2MAXE=T2MAXE
+          HSXEL2(I)%XX2E=XX2E
+          HSXEL2(I)%IBIM2E=IBIM2E
+
+C--- SET OPTION TO SAVE INFORMATION FROM INTEGRATION ONTO UNIT LUNDAT
+          INFOSA=1
+          INT2C(3)=1
+        ENDIF
+
+C---------------------------------------------------------------------
+
+C--- PHOTON BREMSSTRAHLUNG: INITIAL STATE RADIATION ------------------
+        IF(INT3(10).GT.0) THEN
+          IF(VERBOZ.EQ.1) THEN
+            WRITE(LUNOUT,'(///,5X,2A)') ' START INTEGRATION FOR ',
+     &          CHNAME(15)
+          ENDIF
+
+C--- INTEGRATION
+          IF(INT3(10).LT.100) THEN
+            ITM31E=INT3(10)
+            CALL VEGAS(HSELK1,ACCVEG,NDM3EL,NPOVEG,ITM31E,IPRVEG,IGRVEG,
+     &                 NDO31E,IT31E,SI31E,S2N31E,SWT31E,SCH31E,XX31E)
+          ELSEIF(INT3(10).LT.200) THEN
+            ITM31E=INT3(10) - 100
+            CALL VEGAS1(HSELK1,ACCVEG,NDM3EL,NPOVEG,ITM31E,IPRVEG,IGRVEG,
+     &                  NDO31E,IT31E,SI31E,S2N31E,SWT31E,SCH31E,XX31E)
+          ELSE
+            ITM31E=INT3(10) - 200
+            CALL VEGAS2(HSELK1,ACCVEG,NDM3EL,NPOVEG,ITM31E,IPRVEG,IGRVEG,
+     &                  NDO31E,IT31E,SI31E,S2N31E,SWT31E,SCH31E,XX31E)
+          ENDIF
+          HSXE31(I)%SIG31L=S1
+          HSXE31(I)%SG31EE=S2
+
+C--- LOCAL/GLOBAL MAXIMA FOR THE MODIFIED SAMPLING FUNCTION
+          CALL HSESTM(HSELK1,NCHE31,NDM3EL,NPOIN,NDO31E,NBN31E,
+     *                T31GME,T31MXE,XX31E,IBM31E,NRG31E)
+          HSXE31(I)%NDO31E=NDO31E
+          HSXE31(I)%T31GME=T31GME
+          HSXE31(I)%T31MXE=T31MXE
+          HSXE31(I)%XX31E=XX31E
+          HSXE31(I)%IBM31E=IBM31E
+          INFOSA=1
+          INT3C(10)=INT3C(10) + ITM31E
+        ENDIF
+
+C---------------------------------------------------------------------
+
+C--- PHOTON BREMSSTRAHLUNG: FINAL STATE RADIATOIN --------------------
+        IF(INT3(11).GT.0) THEN
+          IF(VERBOZ.EQ.1) THEN
+            WRITE(LUNOUT,'(///,5X,2A)') ' START INTEGRATION FOR ',
+     &          CHNAME(16)
+          ENDIF
+
+C--- INTEGRATION
+          IF(INT3(11).LT.100) THEN
+            ITM32E=INT3(11)
+            CALL VEGAS(HSELK2,ACCVEG,NDM3EL,NPOVEG,ITM32E,IPRVEG,IGRVEG,
+     &                 NDO32E,IT32E,SI32E,S2N32E,SWT32E,SCH32E,XX32E)
+          ELSEIF(INT3(11).LT.200) THEN
+            ITM32E=INT3(11) - 100
+            CALL VEGAS1(HSELK2,ACCVEG,NDM3EL,NPOVEG,ITM32E,IPRVEG,IGRVEG,
+     &                  NDO32E,IT32E,SI32E,S2N32E,SWT32E,SCH32E,XX32E)
+          ELSE
+            ITM32E=INT3(11) - 200
+            CALL VEGAS2(HSELK2,ACCVEG,NDM3EL,NPOVEG,ITM32E,IPRVEG,IGRVEG,
+     &                  NDO32E,IT32E,SI32E,S2N32E,SWT32E,SCH32E,XX32E)
+          ENDIF
+          HSXE32(I)%SIG32L=S1
+          HSXE32(I)%SG32EE=S2
+
+C--- LOCAL/GLOBAL MAXIMA FOR THE MODIFIED SAMPLING FUNCTION
+          CALL HSESTM(HSELK2,NCHE32,NDM3EL,NPOIN,NDO32E,NBN32E,
+     *                T32GME,T32MXE,XX32E,IBM32E,NRG32E)
+          HSXE32(I)%NDO32E=NDO32E
+          HSXE32(I)%T32GME=T32GME
+          HSXE32(I)%T32MXE=T32MXE
+          HSXE32(I)%XX32E=XX32E
+          HSXE32(I)%IBM32E=IBM32E
+          INFOSA=1
+          INT3C(11)=INT3C(11)+ITM32E
+        ENDIF
+
+C---------------------------------------------------------------------
+
+C--- PHOTON BREMSSTRAHLUNG: COMPTON PART -----------------------------
+        IF(INT3(12).GT.0) THEN
+          IF(VERBOZ.EQ.1) THEN
+            WRITE(LUNOUT,'(///,5X,2A)') ' START INTEGRATION FOR ',
+     &          CHNAME(17)
+          ENDIF
+
+C--- INTEGRATION
+          IF(INT3(12).LT.100) THEN
+            ITM33E=INT3(12)
+            CALL VEGAS(HSELCO,ACCVEG,NDM3EL,NPOVEG,ITM33E,IPRVEG,IGRVEG,
+     &                 NDO33E,IT33E,SI33E,S2N33E,SWT33E,SCH33E,XX33E)
+          ELSEIF(INT3(12).LT.200) THEN
+            ITM33E=INT3(12) - 100
+            CALL VEGAS1(HSELCO,ACCVEG,NDM3EL,NPOVEG,ITM33E,IPRVEG,IGRVEG,
+     &                  NDO33E,IT33E,SI33E,S2N33E,SWT33E,SCH33E,XX33E)
+          ELSE
+            ITM33E=INT3(12) - 200
+            CALL VEGAS2(HSELCO,ACCVEG,NDM3EL,NPOVEG,ITM33E,IPRVEG,IGRVEG,
+     &                  NDO33E,IT33E,SI33E,S2N33E,SWT33E,SCH33E,XX33E)
+          ENDIF
+          HSXE33(I)%SIG33L=S1
+          HSXE33(I)%SG33EE=S2
+
+C--- LOCAL/GLOBAL MAXIMA FOR THE MODIFIED SAMPLING FUNCTION
+          CALL HSESTM(HSELCO,NCHE33,NDM3EL,NPOIN,NDO33E,NBN33E,
+     *                T33GME,T33MXE,XX33E,IBM33E,NRG33E)
+          HSXE33(I)%NDO33E=NDO33E
+          HSXE33(I)%T33GME=T33GME
+          HSXE33(I)%T33MXE=T33MXE
+          HSXE33(I)%XX33E=XX33E
+          HSXE33(I)%IBM33E=IBM33E
+          INFOSA=1
+          INT3C(12)=INT3C(12) + ITM33E
+        ENDIF
+
 C--------------------------------------------------------------------
-      IF(INFOSA.EQ.1) THEN
-        WRITE(LUNTES,'(///2A/)')
-     *       ' ACTUAL CROSS SECTION VALUES (WITH ERROR ESTIMATES)',
-     *       ' AFTER INTEGRATION'
-        WRITE(LUNTES,'(/A/)')
-     *       ' ** NEUTRAL CURRENT: '
-        WRITE(LUNTES,'(3X,A,1PE12.4,A,1PE12.4,A)')
-     *     ' VIRTUAL & SOFT CONTRIBUTIONS  SIG2   ',
-     *       SIG2, ' +/- ', SIG2E, '  NB'
-        WRITE(LUNTES,'(3X,A,1PE12.4,A,1PE12.4,A)')
-     *     ' INITIAL STATE LEPTONIC RADIATION     ',
-     *       SIG31, ' +/- ', SIG31E, '  NB'
-        WRITE(LUNTES,'(3X,A,1PE12.4,A,1PE12.4,A)')
-     *     ' FINAL STATE LEPTONIC RADIATION       ',
-     *       SIG32, ' +/- ', SIG32E, '  NB'
-        WRITE(LUNTES,'(3X,A,1PE12.4,A,1PE12.4,A)')
-     *     ' COMPTON CONTRIBUTION                 ',
-     *       SIG33, ' +/- ', SIG33E, '  NB'
-        WRITE(LUNTES,'(3X,A,1PE12.4,A,1PE12.4,A)')
-     *     ' QUARKONIC RADIATION                  ',
-     *       SIG34, ' +/- ', SIG34E, '  NB'
-        WRITE(LUNTES,'(/A/)')
-     *       ' ** CHARGED CURRENT: '
-        WRITE(LUNTES,'(3X,A,1PE12.4,A,1PE12.4,A)')
-     *     ' VIRTUAL & SOFT CONTRIBUTIONS  SIG2C  ',
-     *       SIG2C, ' +/- ', SIG2EC, '  NB'
-        WRITE(LUNTES,'(3X,A,1PE12.4,A,1PE12.4,A)')
-     *     ' LEPTONIC RADIATION (1/k.p)   SIG31C  ',
-     *       SIG31C, ' +/- ', SG31EC, '  NB'
-        WRITE(LUNTES,'(3X,A,1PE12.4,A,1PE12.4,A)')
-     *     ' QUARKONIC RADIATION (1/k.q)  SIG32C  ',
-     *       SIG32C, ' +/- ', SG32EC, '  NB'
-        WRITE(LUNTES,'(3X,A,1PE12.4,A,1PE12.4,A)')
-     *     ' LEPTONIC RADIATION (1/k.qs)  SIG33C  ',
-     *       SIG33C, ' +/- ', SG33EC, '  NB'
-        WRITE(LUNTES,'(/A/)')
-     *       ' ** ELASTIC TAIL: '
-        WRITE(LUNTES,'(3X,A,1PE12.4,A,1PE12.4,A)')
-     *     ' ELASTIC EP WITH CORRECTIONS          ',
-     *       SIG2L, ' +/- ', SIG2EE, '  NB'
-        WRITE(LUNTES,'(3X,A,1PE12.4,A,1PE12.4,A)')
-     *     ' INITIAL STATE LEPTONIC RADIATION     ',
-     *       SIG31L, ' +/- ', SG31EE, '  NB'
-        WRITE(LUNTES,'(3X,A,1PE12.4,A,1PE12.4,A)')
-     *     ' FINAL STATE LEPTONIC RADIATION       ',
-     *       SIG32L, ' +/- ', SG32EE, '  NB'
-        WRITE(LUNTES,'(3X,A,1PE12.4,A,1PE12.4,A)')
-     *     ' COMPTON CONTRIBUTION                 ',
-     *       SIG33L, ' +/- ', SG33EE, '  NB'
-        SIGTW=SIG2+SIG31+SIG32+SIG33+SIG34
-     *       +SIG2C+SIG31C+SIG32C+SIG33C
-     *       +SIG2L+SIG31L+SIG32L+SIG33L
-        SIGEW=DSQRT(SIG2E**2+SIG31E**2+SIG32E**2+SIG33E**2+SIG34E**2
-     *       +SIG2EC**2+SG31EC**2+SG32EC**2+SG33EC**2
-     *       +SIG2EE**2+SG31EE**2+SG32EE**2+SG33EE**2)
-        WRITE(LUNTES,'(/A,1PE12.4,A,1PE12.4,A)')
-     *     ' ** TOTAL CROSS SECTION:                 ',
-     *       SIGTW, ' +/- ', SIGEW, '  NB'
-        IMOD=1
-        CALL HSCPDF(IMOD)
-      ENDIF
+
+C--------------------------------------------------------------------
+C********************************************************************
+C--------------------------------------------------------------------
+
+        IF(INFOSA.EQ.1.AND.VERBOZ.EQ.1) THEN
+          WRITE(LUNTES,'(///2A/)')
+     *         ' ACTUAL CROSS SECTION VALUES (WITH ERROR ESTIMATES)',
+     *         ' AFTER INTEGRATION'
+          WRITE(LUNTES,'(/A/)')
+     *         ' ** NEUTRAL CURRENT: '
+          WRITE(LUNTES,'(3X,A,1PE12.4,A,1PE12.4,A)')
+     *       ' VIRTUAL & SOFT CONTRIBUTIONS  SIG2   ',
+     *         HSXNC2(I)%SIG2, ' +/- ', HSXNC2(I)%SIG2E, '  NB'
+          WRITE(LUNTES,'(3X,A,1PE12.4,A,1PE12.4,A)')
+     *       ' INITIAL STATE LEPTONIC RADIATION     ',
+     *         HSXN31(I)%SIG31, ' +/- ', HSXN31(I)%SIG31E, '  NB'
+          WRITE(LUNTES,'(3X,A,1PE12.4,A,1PE12.4,A)')
+     *       ' FINAL STATE LEPTONIC RADIATION       ',
+     *         HSXN32(I)%SIG32, ' +/- ', HSXN32(I)%SIG32E, '  NB'
+          WRITE(LUNTES,'(3X,A,1PE12.4,A,1PE12.4,A)')
+     *       ' COMPTON CONTRIBUTION                 ',
+     *         HSXN33(I)%SIG33, ' +/- ', HSXN33(I)%SIG33E, '  NB'
+          WRITE(LUNTES,'(3X,A,1PE12.4,A,1PE12.4,A)')
+     *       ' QUARKONIC RADIATION                  ',
+     *         HSXN34(I)%SIG34, ' +/- ', HSXN34(I)%SIG34E, '  NB'
+          WRITE(LUNTES,'(/A/)')
+     *         ' ** CHARGED CURRENT: '
+          WRITE(LUNTES,'(3X,A,1PE12.4,A,1PE12.4,A)')
+     *       ' VIRTUAL & SOFT CONTRIBUTIONS  SIG2C  ',
+     *         HSXCC2(I)%SIG2C, ' +/- ', HSXCC2(I)%SIG2EC, '  NB'
+          WRITE(LUNTES,'(3X,A,1PE12.4,A,1PE12.4,A)')
+     *       ' LEPTONIC RADIATION (1/k.p)   SIG31C  ',
+     *         HSXC31(I)%SIG31C, ' +/- ', HSXC31(I)%SG31EC, '  NB'
+          WRITE(LUNTES,'(3X,A,1PE12.4,A,1PE12.4,A)')
+     *       ' QUARKONIC RADIATION (1/k.q)  SIG32C  ',
+     *         HSXC32(I)%SIG32C, ' +/- ', HSXC32(I)%SG32EC, '  NB'
+          WRITE(LUNTES,'(3X,A,1PE12.4,A,1PE12.4,A)')
+     *       ' LEPTONIC RADIATION (1/k.qs)  SIG33C  ',
+     *         HSXC33(I)%SIG33C, ' +/- ', HSXC33(I)%SG33EC, '  NB'
+          WRITE(LUNTES,'(/A/)')
+     *         ' ** ELASTIC TAIL: '
+          WRITE(LUNTES,'(3X,A,1PE12.4,A,1PE12.4,A)')
+     *       ' ELASTIC EP WITH CORRECTIONS          ',
+     *         HSXEL2(I)%SIG2L, ' +/- ', HSXEL2(I)%SIG2EE, '  NB'
+          WRITE(LUNTES,'(3X,A,1PE12.4,A,1PE12.4,A)')
+     *       ' INITIAL STATE LEPTONIC RADIATION     ',
+     *         HSXE31(I)%SIG31L, ' +/- ', HSXE31(I)%SG31EE, '  NB'
+          WRITE(LUNTES,'(3X,A,1PE12.4,A,1PE12.4,A)')
+     *       ' FINAL STATE LEPTONIC RADIATION       ',
+     *         HSXE32(I)%SIG32L, ' +/- ', HSXE32(I)%SG32EE, '  NB'
+          WRITE(LUNTES,'(3X,A,1PE12.4,A,1PE12.4,A)')
+     *       ' COMPTON CONTRIBUTION                 ',
+     *         HSXE33(I)%SIG33L, ' +/- ', HSXE33(I)%SG33EE, '  NB'
+          SIGTW=HSXNC2(I)%SIG2+HSXN31(I)%SIG31
+     *         +HSXN32(I)%SIG32
+     *         +HSXN33(I)%SIG33+HSXN34(I)%SIG34
+     *        +HSXCC2(I)%SIG2C+HSXC31(I)%SIG31C
+     *        +HSXC32(I)%SIG32C+HSXC33(I)%SIG33C
+     *        +HSXEL2(I)%SIG2L+HSXE31(I)%SIG31L
+     *        +HSXE32(I)%SIG32L+HSXE33(I)%SIG33L
+          SIGEW=SQRT(HSXNC2(I)%SIG2E**2+HSXN31(I)%SIG31E**2
+     *         +HSXN32(I)%SIG32E**2
+     *         +HSXN33(I)%SIG33E**2+HSXN34(I)%SIG34E**2
+     *        +HSXCC2(I)%SIG2EC**2+HSXC31(I)%SG31EC**2
+     *        +HSXC32(I)%SG32EC**2+HSXC33(I)%SG33EC**2
+     *        +HSXEL2(I)%SIG2EE**2+HSXE31(I)%SG31EE**2
+     *        +HSXE32(I)%SG32EE**2+HSXE33(I)%SG33EE**2)
+          WRITE(LUNTES,'(/A,1PE12.4,A,1PE12.4,A)')
+     *       ' ** TOTAL CROSS SECTION:                 ',
+     *         SIGTW, ' +/- ', SIGEW, '  NB'
+          IMOD=1
+          CALL HSCPDF(IMOD)
+        ENDIF
 C
 C***********************************************************************
 C   SAVE INFORMATION FROM INTEGRATION
 C***********************************************************************
 C
-      IF(INFOSA.EQ.1) THEN
-        REWIND (LUNDAT)
-        WRITE(LUNDAT,ERR=3996,IOSTAT=IOS) FNAME
-        WRITE(LUNDAT,ERR=3996,IOSTAT=IOS)
-     &       INT2C,INT3C,ISAM2C,ISAM3C
-        CALL HSDOUT
-      ENDIF
-      INFOSA=0
+C        IF(INFOSA.EQ.1) THEN
+C          REWIND (LUNDAT)
+C          WRITE(LUNDAT,ERR=3996,IOSTAT=IOS) FNAME
+C          WRITE(LUNDAT,ERR=3996,IOSTAT=IOS)
+C     &         INT2C,INT3C,ISAM2C,ISAM3C
+C          CALL HSDOUT
+C        ENDIF
 C
 C***********************************************************************
 C   INITIALIZATION FOR SAMPLING
 C***********************************************************************
-      DO 3904 I=1,5
-        IF(ISAM2(I).GT.0) INFOSA=1
-        IF(ISAM2C(I).LT.ISAM2(I)) ISAM2C(I)=ISAM2(I)
- 3904 CONTINUE
-      DO 3905 I=1,15
-        IF(ISAM3(I).GT.0) INFOSA=1
-        IF(ISAM3C(I).LT.ISAM3(I)) ISAM3C(I)=ISAM3(I)
- 3905 CONTINUE
-      IF(INFOSA.EQ.1) THEN
+        DO 3904 J=1,5
+          IF(ISAM2(J).GT.0) INFOSA=1
+          IF(ISAM2C(J).LT.ISAM2(J)) ISAM2C(J)=ISAM2(J)
+ 3904   CONTINUE
+        DO 3905 J=1,15
+          IF(ISAM3(J).GT.0) INFOSA=1
+          IF(ISAM3C(J).LT.ISAM3(J)) ISAM3C(J)=ISAM3(J)
+ 3905   CONTINUE
+
 C
 C---CHECK CONSISTENCY OF INPUT DATA FILE
 C---READ SAMPLING INFORMATION FOR ALL CONTRIBUTIONS
-        REWIND (LUNDAT)
-        READ(LUNDAT,ERR=3994,END=3994,IOSTAT=IOS) FNAMET
-        IF(FNAME.EQ.FNAMET) THEN
-          READ(LUNDAT,ERR=3994,END=3994,IOSTAT=IOS)
-     &         INT2C,INT3C,ISAM2C,ISAM3C
-          CALL HSDTIN
-          GOTO 3993
-        ENDIF
- 3994   CONTINUE
-        WRITE(LUNOUT,'(/A,I3/A)')
-     &  ' *** NO STANDARD HERACLES INPUT FILE ASSIGNED TO UNIT',LUNDAT,
-     &  ' *** EXECUTION STOPPED ***'
-        STOP
+C          REWIND (LUNDAT)
+C          READ(LUNDAT,ERR=3994,END=3994,IOSTAT=IOS) FNAMET
+C          IF(FNAME.EQ.FNAMET) THEN
+C            READ(LUNDAT,ERR=3994,END=3994,IOSTAT=IOS)
+C     &           INT2C,INT3C,ISAM2C,ISAM3C
+C            CALL HSDTIN
+C            GOTO 3993
+C          ENDIF
+C 3994     CONTINUE
+C          WRITE(LUNOUT,'(/A,I3/A)')
+C     &    ' *** NO STANDARD HERACLES INPUT FILE ASSIGNED TO UNIT'
+C     &    ,LUNDAT,' *** EXECUTION STOPPED ***'
+C          STOP
 C
- 3993   CONTINUE
-        INFOSA=0
-        DO 3906 I=1,5
-          IF(ISAM2(I).GT.0.AND.INT2C(I).EQ.0) INFOSA=1
- 3906   CONTINUE
-        DO 3907 I=1,15
-          IF(ISAM3(I).GT.0.AND.INT3C(I).EQ.0) INFOSA=1
- 3907   CONTINUE
-        IF(INFOSA.EQ.1) THEN
-          WRITE(LUNOUT,'(A/A/2(A,5I4/),2(A,15I4/),A)')
+ 3993     CONTINUE
+          INFOSA=0
+          DO 3906 J=1,5
+            IF(ISAM2(J).GT.0.AND.INT2C(J).EQ.0) INFOSA=1
+ 3906     CONTINUE
+          DO 3907 J=1,15
+            IF(ISAM3(J).GT.0.AND.INT3C(J).EQ.0) INFOSA=1
+ 3907     CONTINUE
+          IF(INFOSA.EQ.1) THEN
+            WRITE(LUNOUT,'(A/A/2(A,5I4/),2(A,15I4/),A)')
      &      ' *** INCONSISTENT INPUT DATA FOR SAMPLING (INT/ISAM) ***',
      &      ' *** ANY CHANNEL(S) REQUESTED NOT YET INTEGRATED     ***',
      &      ' *** INT2C(I): ',INT2C,
@@ -1608,172 +1829,94 @@ C
      &      ' *** INT3C(I): ',INT3C,
      &      ' *** ISAM3(I): ',ISAM3,
      &      ' *** EXECUTION STOPPED ***'
-          STOP
-        ENDIF
-C
-C---DETERMINE TOTAL CROSS SECTIONS AND ERRORS
-        IF(ISAM2(1).GT.0) THEN
-          SIGG(1)=SIG2
-          SIGGRR(1)=SIG2E
-        ENDIF
-        IF(ISAM2(2).GT.0) THEN
-          SIGG(2)=SIG2C
-          SIGGRR(2)=SIG2EC
-        ENDIF
-        IF(ISAM2(3).GT.0) THEN
-          SIGG(3)=SIG2L
-          SIGGRR(3)=SIG2EE
-        ENDIF
-        IF(ISAM3(1).GT.0) THEN
-          SIGG(6)=SIG31
-          SIGGRR(6)=SIG31E
-        ENDIF
-        IF(ISAM3(2).GT.0) THEN
-          SIGG(7)=SIG32
-          SIGGRR(7)=SIG32E
-        ENDIF
-        IF(ISAM3(3).GT.0) THEN
-          SIGG(8)=SIG33
-          SIGGRR(8)=SIG33E
-        ENDIF
-        IF(ISAM3(4).GT.0) THEN
-          SIGG(9)=SIG34
-          SIGGRR(9)=SIG34E
-        ENDIF
-        IF(ISAM3(7).GT.0) THEN
-          SIGG(12)=SIG31C
-          SIGGRR(12)=SG31EC
-        ENDIF
-        IF(ISAM3(8).GT.0) THEN
-          SIGG(13)=SIG32C
-          SIGGRR(13)=SG32EC
-        ENDIF
-        IF(ISAM3(9).GT.0) THEN
-          SIGG(14)=SIG33C
-          SIGGRR(14)=SG33EC
-        ENDIF
-        IF(ISAM3(10).GT.0) THEN
-          SIGG(15)=SIG31L
-          SIGGRR(15)=SG31EE
-        ENDIF
-        IF(ISAM3(11).GT.0) THEN
-          SIGG(16)=SIG32L
-          SIGGRR(16)=SG32EE
-        ENDIF
-        IF(ISAM3(12).GT.0) THEN
-          SIGG(17)=SIG33L
-          SIGGRR(17)=SG33EE
-        ENDIF
-        DO 3908 I=1,20
-          SIGTOT=SIGTOT + SIGG(I)
-          SIGTRR=SIGTRR + SIGGRR(I)**2
- 3908   CONTINUE
-        SIGTRR=SQRT(SIGTRR)
-C
-C---READ INPUT FOR DJANGO6
-        CALL DJGCHC(IHSONL)
-C---INITIALIZATION OF USER ROUTINES---------
-        ICALL=1
-        CALL HSUSER(ICALL,0D0,0D0,0D0)
-        IF (IHSONL.EQ.0) THEN
-          IF (ICC32.NE.0.OR.ISCC32.NE.0) THEN
-            WRITE(LUNOUT,*)' '
-            WRITE(LUNOUT,*)' *** WARNING: channel CC32 not active, '
-            WRITE(LUNOUT,*)'              set to ICC32=ISCC32=0'
-            ICC32=0
-            ISCC32=0
-          ENDIF
-          IF (ICC33.NE.0.OR.ISCC33.NE.0) THEN
-            WRITE(LUNOUT,*)' '
-            WRITE(LUNOUT,*)' *** WARNING: channel CC33 not active, '
-            WRITE(LUNOUT,*)'              set to ICC33=ISCC33=0'
-            ICC33=0
-            ISCC33=0
-          ENDIF
-          IF (ILQMOD.GT.1) THEN
-            WRITE(LUNOUT,'(A/A/A)')
-     &      ' *** INCONSISTENT INPUT DATA: ILQMOD and FRAG ***',
-     &      ' *** ILQMOD > 1 not allowed for FRAG .ne. -1  ***',
-     &      ' *** EXECUTION STOPPED                        ***'
             STOP
           ENDIF
-          INTER=4
-          IF (ISAM2(2).GT.0.OR.ISAM3(7).GT.0
-     &        .OR. ISAM3(8).GT.0 .OR. ISAM3(9).GT.0) THEN
-            INTER=2
-            IF (ISAM2(1).GT.0.OR.ISAM3(1).GT.0
-     &          .OR. ISAM3(2).GT.0 .OR. ISAM3(3).GT.0
-     &          .OR. ISAM3(4).GT.0) THEN
-              INTER=4
-              WRITE(LUNOUT,'(//10X,A/10X,2A/10X,2A//)')
-     &      ' ******* WARNING: DJANGO INITIALISATION IS FOR NC EVENTS',
-     &      ' *******          NC & CC NOT POSSIBLE AT THE SAME TIME',
-     &      ' IN DJANGO/LEPTO',
-     &      ' ******* HADRONIZATION WILL BE TREATED INCORRECTLY',
-     &      ' FOR CC EVENTS'
-            ENDIF
+
+C---DETERMINE TOTAL CROSS SECTIONS AND ERRORS
+          IF(ISAM2(1).GT.0) THEN
+            SIGG(I,1)=HSXNC2(I)%SIG2
+            SIGGRR(I,1)=HSXNC2(I)%SIG2E
           ENDIF
-          CALL DJGINIT(LEPIN,PELE,-PPRO,INTER)
-        ENDIF
-C
-C***********************************************************************
-C   EVENT GENERATION
-C***********************************************************************
-C
-C---CONTROL OF EVENT GENERATION IN HSEVTG
-        IWEIGS=IWEIGR
-        CALL HSEVTG
-C
-C---FINAL CALL OF USER TO GENERATE USER MONITORED OUTPUT
-Chs-Correct total cross sections for failed hadronization
-        NREJCT=NFAILL+NFAILP
-        NEVTRN=NPASDJ+NSOPH+NREJCT
-        PARL(24)=SIGTOT*(1D0-DFLOAT(NREJCT)/NEVTRN)*1E3
-        ICALL=3
-        CALL HSUSER(ICALL,0D0,0D0,0D0)
-        IMOD=2
-        CALL HSCPDF(IMOD)
-C
-C---SAVE INFORMATION FOR FURTHER SAMPLING
-        REWIND (LUNDAT)
-        WRITE(LUNDAT,ERR=3996,IOSTAT=IOS) FNAME
-        WRITE(LUNDAT,ERR=3996,IOSTAT=IOS)
-     &       INT2C,INT3C,ISAM2C,ISAM3C
-        CALL HSDOUT
-      ENDIF
-C
-C---SAVE CURRENT RANDOM NUMBER STATUS IF REQUESTED
-      IF(ISDOUT.GT.0) THEN
-        REWIND LUNRND
-        CALL HSRNOU(UIO,CIO,CDIO,CMIO,IIO,JIO)
-        WRITE(LUNRND,*) UIO
-        WRITE(LUNRND,*) CIO,CDIO,CMIO,IIO,JIO
-        WRITE(LUNOUT,'(/A,I2)')
-     *  ' *** ACTUAL RANDOM NUMBER SEEDS WRITTEN TO UNIT LUNRND=',LUNRND
-      ENDIF
+          IF(ISAM2(2).GT.0) THEN
+            SIGG(I,2)=HSXCC2(I)%SIG2C
+            SIGGRR(I,2)=HSXCC2(I)%SIG2EC
+          ENDIF
+          IF(ISAM2(3).GT.0) THEN
+            SIGG(I,3)=HSXEL2(I)%SIG2L
+            SIGGRR(I,3)=HSXEL2(I)%SIG2EE
+          ENDIF
+          IF(ISAM3(1).GT.0) THEN
+            SIGG(I,6)=HSXN31(I)%SIG31
+            SIGGRR(I,6)=HSXN31(I)%SIG31E
+          ENDIF
+          IF(ISAM3(2).GT.0) THEN
+            SIGG(I,7)=HSXN32(I)%SIG32
+            SIGGRR(I,7)=HSXN32(I)%SIG32E
+          ENDIF
+          IF(ISAM3(3).GT.0) THEN
+            SIGG(I,8)=HSXN33(I)%SIG33
+            SIGGRR(I,8)=HSXN33(I)%SIG33E
+          ENDIF
+          IF(ISAM3(4).GT.0) THEN
+            SIGG(I,9)=HSXN34(I)%SIG34
+            SIGGRR(I,9)=HSXN34(I)%SIG34E
+          ENDIF
+          IF(ISAM3(7).GT.0) THEN
+            SIGG(I,12)=HSXC31(I)%SIG31C
+            SIGGRR(I,12)=HSXC31(I)%SG31EC
+          ENDIF
+          IF(ISAM3(8).GT.0) THEN
+            SIGG(I,13)=HSXC32(I)%SIG32C
+            SIGGRR(I,13)=HSXC32(I)%SG32EC
+          ENDIF
+          IF(ISAM3(9).GT.0) THEN
+            SIGG(I,14)=HSXC33(I)%SIG33C
+            SIGGRR(I,14)=HSXC33(I)%SG33EC
+          ENDIF
+          IF(ISAM3(10).GT.0) THEN
+            SIGG(I,15)=HSXE31(I)%SIG31L
+            SIGGRR(I,15)=HSXE31(I)%SG31EE
+          ENDIF
+          IF(ISAM3(11).GT.0) THEN
+            SIGG(I,16)=HSXE32(I)%SIG32L
+            SIGGRR(I,16)=HSXE32(I)%SG32EE
+          ENDIF
+          IF(ISAM3(12).GT.0) THEN
+            SIGG(I,17)=HSXE33(I)%SIG33L
+            SIGGRR(I,17)=HSXE33(I)%SG33EE
+          ENDIF
+          DO 3908 J=1,20
+            SIGTOT(I)=SIGTOT(I) + SIGG(I,J)
+            SIGTRR(I)=SIGTRR(I) + SIGGRR(I,J)**2
+ 3908     CONTINUE
+          SIGTRR(I)=SQRT(SIGTRR(I))
 
-C---SAVE KINEMATIC VARIABLE FOR INTERFACE (N.P. 17/11/2016)
-      DJX=XDJ
-      DJY=YDJ
-      DJQ2=Q2DJ
-      DJW2=W2DJ
-      DJU=UDJ
+          WRITE(19,*) SIGTOT(I)
 
-      WRITE(6,*) DJX
-      WRITE(6,*) DJY
-      WRITE(6,*) DJQ2
-      WRITE(6,*) XDJ
-      WRITE(6,*) YDJ
-      WRITE(6,*) Q2DJ
+3980  CONTINUE
+
+C---READ INPUT FOR DJANGO6
+      CALL DJGCHC(IHSONL)
+
+      IF(VERBOZ.EQ.1) THEN
+        WRITE(LUNOUT,*) 'CROSS-SECTION GRID :'
+        DO I=1,GDSIZE
+          WRITE(LUNOUT,*) 'STEP [',GDMEAN-GDSDDV+GDSCLE*(I-1),
+     *                    ',',GDMEAN-GDSDDV+GDSCLE*I,'] : '
+          WRITE(LUNOUT,*) 'SIGTOT(',I,')=',SIGTOT(I)
+          WRITE(LUNOUT,*) 'SIGTRR(',I,')=',SIGTRR(I)
+        END DO
+      ENDIF
 
       GOTO 5000
-C
+
 C---ERROR WHILE WRITING HERACLES DATA FILE
  3996 CONTINUE
       WRITE(LUNOUT,'(A,I4/A)')
      &   ' *** ERROR WRITING HERACLES DATA FILE ON UNIT',LUNDAT,
      &   ' *** EXECUTION STOPPED ***'
       GOTO 5000
+
 C
 C***********************************************************************
 C               CONTROL CARD: CODEWD = STOP
@@ -1786,10 +1929,430 @@ C
 C***********************************************************************
 C               END OF SUBROUTINE
 C***********************************************************************
- 5000 CLOSE(19)
-      CLOSE(LUNOUT)
-      CLOSE(LUNDAT)
-      CLOSE(LUNRND)
+ 5000 END
+
+
+C***********************************************************************
+C***********************************************************************
+
+      SUBROUTINE HSEGEN()
+
+      USE xSectionModule
+      IMPLICIT DOUBLE PRECISION (A-H,M,O-Z)
+      EXTERNAL HSNCG1,HSNCG2,HSTSK1,HSTSK2,HSK1TS,HSK1K3
+      EXTERNAL HSCCG1,HSCCG2,HSCCKL,HSCCQI,HSCCQF
+      EXTERNAL HSELG1,HSELG2,HSELK1,HSELK2,HSELCO
+      PARAMETER (NCHN2=1,NCHC2=2,NCHE2=3)
+      PARAMETER (NCHN31=6,NCHN32=7,NCHN33=8,NCHN34=9)
+      PARAMETER (NCHC31=12,NCHC32=13,NCHC33=14)
+      PARAMETER (NCHE31=15,NCHE32=16,NCHE33=17)
+      COMMON /HSUNTS/ LUNTES,LUNDAT,LUNIN,LUNOUT,LUNRND
+      COMMON /HSOPTN/ INT2(5),INT3(15),ISAM2(5),ISAM3(15),
+     *                IOPLOT,IPRINT,ICUT
+      COMMON /HSGSW/  SW,CW,SW2,CW2
+     *              ,MW,MZ,MH,ME,MMY,MTAU,MU,MD,MS,MC,MB,MT
+     *              ,MW2,MZ2,MH2,ME2,MMY2,MTAU2,MU2,MD2,MS2,MC2,MB2,MT2
+      COMMON /HSELAB/ SP,EELE,PELE,EPRO,PPRO
+      COMMON /HSCUTS/ XMIN,XMAX,Q2MIN,Q2MAX,YMIN,YMAX,WMIN,GMIN
+      COMMON /IHSCUT/ IXMIN,IXMAX,IQ2MIN,IQ2MAX,IYMIN,IYMAX,IWMIN
+      DOUBLE PRECISION    IXMIN,IXMAX,IQ2MIN,IQ2MAX,IYMIN,IYMAX,IWMIN
+      COMMON /HSTCUT/ THEMIN,THEMAX,CTHMIN,CTHCON
+      COMMON /HSPCUT/ PTMIN,PTXM0
+      COMMON /HSISGM/ TCUTQ,TCUTQS
+      COMMON /HSPARL/ LPAR(20),LPARIN(12)
+      COMMON /HSSTRP/ ICODE,ILIB,ILQMOD,IDPVR
+      COMMON /HSPDFO/ IPDFOP,IFLOPT,LQCD,LTM,LHT
+      COMMON /HSELEP/ IDIPOL
+      COMMON /HSNUCL/ HNA,HNZ,INUMOD
+      INTEGER         HNA,HNZ
+      COMMON /HSPARM/ POLARI,HPOLAR,LLEPT,LQUA
+      COMMON /HSWGTC/ IWEIGS
+      COMMON /HSONLY/ IHSONL
+      COMMON /HSLTYP/ LEPIN1
+      COMMON /HSLPTU/ HSLST(40), HSPARL(30)
+      INTEGER         HSLST
+      DOUBLE PRECISION           HSPARL
+      COMMON /LUJETS/ N,K(4000,5),P(4000,5),V(4000,5)
+      COMMON /HSINTNC/ INC2,INC31,INC32,INC33,INC34,IEL2,IEL31,IEL32,
+     +                 IEL33
+      INTEGER          INC2,INC31,INC32,INC33,INC34,IEL2,IEL31,IEL32,
+     +                 IEL33
+      COMMON /HSINTCC/ ICC2,ICC31,ICC32,ICC33
+      INTEGER          ICC2,ICC31,ICC32,ICC33
+      COMMON /HSSAMNC/ ISNC2,ISNC31,ISNC32,ISNC33,ISNC34,ISEL2,ISEL31,
+     +                 ISEL32,ISEL33
+      INTEGER          ISNC2,ISNC31,ISNC32,ISNC33,ISNC34,ISEL2,ISEL31,
+     +                 ISEL32,ISEL33
+      COMMON /HSSAMCC/ ISCC2,ISCC31,ISCC32,ISCC33
+      INTEGER          ISCC2,ISCC31,ISCC32,ISCC33
+C---
+      PARAMETER(NDIM2=2,NBIN2=50)
+      PARAMETER(NREG2N=2500)
+C---                     NREG2N=NBIN2**NDIM2
+      LOGICAL LGLO2,LLOC2
+      double precision ntot2
+      COMMON /HSSNC2/ SIG2,SIG2E,T2GGMA,T2GMAX(NREG2N),
+     +                XX2(50,2),
+     +                FFGO2,DNCG2,FFLO2,DNCL2,GOLD2,
+     +                NM2(NREG2N),NDO2,
+     +                NTOT2,NCAL2,NCA12,NCA22,IBIM2,JCOR2,
+     +                LGLO2,LLOC2
+      PARAMETER(NREG2C=2500)
+C---                     NREG2C=NBIN2**NDIM2
+      LOGICAL LGLO2C,LLOC2C
+      double precision ntot2c
+      COMMON /HSSCC2/ SIG2C,SIG2EC,T2GMAC,T2MAXC(NREG2C),
+     +                XX2C(50,2),
+     +                FFGO2C,DNCG2C,FFLO2C,DNCL2C,GOLD2C,
+     +                NM2C(NREG2C),NDO2C,
+     +                NTOT2C,NCAL2C,NCA12C,NCA22C,IBIM2C,JCOR2C,
+     +                LGLO2C,LLOC2C
+      PARAMETER(NREG2E=50)
+      PARAMETER(NDIM1=1)
+C---                     NREG2E=NBIN2**NDIM1
+      LOGICAL LGLO2E,LLOC2E
+      double precision ntot2e
+      COMMON /HSSEL2/ SIG2L,SIG2EE,T2GMAE,T2MAXE(NREG2E),
+     +                XX2E(50,1),
+     +                FFGO2E,DNCG2E,FFLO2E,DNCL2E,GOLD2E,
+     +                NM2E(NREG2E),NDO2E,
+     +                NTOT2E,NCAL2E,NCA12E,NCA22E,IBIM2E,JCOR2E,
+     +                LGLO2E,LLOC2E
+      PARAMETER(NDIM31=5,NBIN31=6,NREG31=7776)
+C---                     NREG31=NBIN31**NDIM31
+      LOGICAL LGLO31,LLOC31
+      double precision ntot31
+      COMMON /HSSN31/ SIG31,SIG31E,T31GMA,T31MAX(NREG31),
+     +                XX31(50,NDIM31),
+     +                FFGO31,DNCG31,FFLO31,DNCL31,GOLD31,
+     +                SI31,SI2N31,SWGT31,SCHI31,IT31,
+     +                NM31(NREG31),NDO31,
+     +                NTOT31,NCAL31,NCA131,NCA231,IBIM31,JCOR31,
+     +                LGLO31,LLOC31
+      PARAMETER(NDIM32=5,NBIN32=6,NREG32=7776)
+C---                     NREG32=NBIN32**NDIM32
+      LOGICAL LGLO32,LLOC32
+      double precision ntot32
+      COMMON /HSSN32/ SIG32,SIG32E,T32GMA,T32MAX(NREG32),
+     +                XX32(50,NDIM32),
+     +                FFGO32,DNCG32,FFLO32,DNCL32,GOLD32,
+     +                SI32,SI2N32,SWGT32,SCHI32,IT32,
+     +                NM32(NREG32),NDO32,
+     +                NTOT32,NCAL32,NCA132,NCA232,IBIM32,JCOR32,
+     +                LGLO32,LLOC32
+      PARAMETER(NDIM33=5,NBIN33=6,NREG33=7776)
+C---                     NREG33=NBIN33**NDIM33
+      LOGICAL LGLO33,LLOC33
+      double precision ntot33
+      COMMON /HSSN33/ SIG33,SIG33E,T33GMA,T33MAX(NREG33),
+     +                XX33(50,NDIM33),
+     +                FFGO33,DNCG33,FFLO33,DNCL33,GOLD33,
+     +                SI33,SI2N33,SWGT33,SCHI33,IT33,
+     +                NM33(NREG33),NDO33,
+     +                NTOT33,NCAL33,NCA133,NCA233,IBIM33,JCOR33,
+     +                LGLO33,LLOC33
+      PARAMETER(NDIM34=5,NBIN34=6,NREG34=7776)
+C---                     NREG34=NBIN34**NDIM34
+      LOGICAL LGLO34,LLOC34
+      double precision ntot34
+      COMMON /HSSN34/ SIG34,SIG34E,T34GMA,T34MAX(NREG34),
+     +                XX34(50,NDIM34),
+     +                FFGO34,DNCG34,FFLO34,DNCL34,GOLD34,
+     +                SI34,SI2N34,SWGT34,SCHI34,IT34,
+     +                NM34(NREG34),NDO34,
+     +                NTOT34,NCAL34,NCA134,NCA234,IBIM34,JCOR34,
+     +                LGLO34,LLOC34
+      PARAMETER(NDM3CC=5)
+      PARAMETER(NBN31C=6,NRG31C=7776)
+C---                     NRG31C=NBN31C**NDM3CC
+      LOGICAL LGL31C,LLC31C
+      double precision ntt31c
+      COMMON /HSSC31/ SIG31C,SG31EC,T31GMC,T31MXC(NRG31C),
+     +                XX31C(50,5),
+     +                FFG31C,DNG31C,FFL31C,DNL31C,GLD31C,
+     +                SI31C,S2N31C,SWT31C,SCH31C,IT31C,
+     +                NM31C(NRG31C),NDO31C,
+     +                NTT31C,NCL31C,NC131C,NC231C,IBM31C,JCR31C,
+     +                LGL31C,LLC31C
+      PARAMETER(NBN32C=6,NRG32C=7776)
+C---                     NRG32C=NBN32C**NDM3CC
+      LOGICAL LGL32C,LLC32C
+      double precision ntt32c
+      COMMON /HSSC32/ SIG32C,SG32EC,T32GMC,T32MXC(NRG32C),
+     +                XX32C(50,5),
+     +                FFG32C,DNG32C,FFL32C,DNL32C,GLD32C,
+     +                SI32C,S2N32C,SWT32C,SCH32C,IT32C,
+     +                NM32C(NRG32C),NDO32C,
+     +                NTT32C,NCL32C,NC132C,NC232C,IBM32C,JCR32C,
+     +                LGL32C,LLC32C
+      PARAMETER(NBN33C=6,NRG33C=7776)
+C---                     NRG33C=NBN33C**NDM3CC
+      LOGICAL LGL33C,LLC33C
+      double precision ntt33c
+      COMMON /HSSC33/ SIG33C,SG33EC,T33GMC,T33MXC(NRG33C),
+     +                XX33C(50,5),
+     +                FFG33C,DNG33C,FFL33C,DNL33C,GLD33C,
+     +                SI33C,S2N33C,SWT33C,SCH33C,IT33C,
+     +                NM33C(NRG33C),NDO33C,
+     +                NTT33C,NCL33C,NC133C,NC233C,IBM33C,JCR33C,
+     +                LGL33C,LLC33C
+      PARAMETER(NDM3EL=4)
+      PARAMETER(NBN31E=8,NRG31E=4096)
+C---                     NRG31E=NBN31E**NDM3EL
+      LOGICAL LGL31E,LLC31E
+      double precision ntt31e
+      COMMON /HSSE31/ SIG31L,SG31EE,T31GME,T31MXE(NRG31E),
+     +                XX31E(50,4),
+     +                FFG31E,DNG31E,FFL31E,DNL31E,GLD31E,
+     +                SI31E,S2N31E,SWT31E,SCH31E,IT31E,
+     +                NM31E(NRG31E),NDO31E,
+     +                NTT31E,NCL31E,NC131E,NC231E,IBM31E,JCR31E,
+     +                LGL31E,LLC31E
+      PARAMETER(NBN32E=8,NRG32E=4096)
+C---                     NRG32E=NBN32E**NDM3EL
+      LOGICAL LGL32E,LLC32E
+      double precision ntt32e
+      COMMON /HSSE32/ SIG32L,SG32EE,T32GME,T32MXE(NRG32E),
+     +                XX32E(50,4),
+     +                FFG32E,DNG32E,FFL32E,DNL32E,GLD32E,
+     +                SI32E,S2N32E,SWT32E,SCH32E,IT32E,
+     +                NM32E(NRG32E),NDO32E,
+     +                NTT32E,NCL32E,NC132E,NC232E,IBM32E,JCR32E,
+     +                LGL32E,LLC32E
+      PARAMETER(NBN33E=8,NRG33E=4096)
+C---                     NRG33E=NBN33E**NDM3EL
+      LOGICAL LGL33E,LLC33E
+      double precision ntt33e
+      COMMON /HSSE33/ SIG33L,SG33EE,T33GME,T33MXE(NRG33E),
+     +                XX33E(50,4),
+     +                FFG33E,DNG33E,FFL33E,DNL33E,GLD33E,
+     +                SI33E,S2N33E,SWT33E,SCH33E,IT33E,
+     +                NM33E(NRG33E),NDO33E,
+     +                NTT33E,NCL33E,NC133E,NC233E,IBM33E,JCR33E,
+     +                LGL33E,LLC33E
+C-------------------------
+      TYPE(xSection2) :: HSXNC2
+      TYPE(xSection2C) :: HSXCC2
+      TYPE(xSection2E) :: HSXEL2
+      TYPE(xSection31) :: HSXN31
+      TYPE(xSection32) :: HSXN32
+      TYPE(xSection33) :: HSXN33
+      TYPE(xSection34) :: HSXN34
+      TYPE(xSection31C) :: HSXC31
+      TYPE(xSection32C) :: HSXC32
+      TYPE(xSection33C) :: HSXC33
+      TYPE(xSection31E) :: HSXE31
+      TYPE(xSection32E) :: HSXE32
+      TYPE(xSection33E) :: HSXE33
+      COMMON /HSXSEC/ HSXNC2(100),HSXCC2(100),HSXEL2(100),
+     +                HSXN31(100),HSXN32(100),HSXN33(100),HSXN34(100),
+     +                HSXC31(100),HSXC32(100),HSXC33(100),
+     +                HSXE31(100),HSXE32(100),HSXE33(100)
+      COMMON /HSGRID/ GDSIZE, GDINDX, GDMEAN, GDSDDV, GDSCLE
+      INTEGER         GDSIZE, GDINDX
+      SAVE /HSGRID/
+C-------------------------
+      CHARACTER*45 CHNAME
+      COMMON /HSNAMC/ CHNAME(20)
+      COMMON /HSNUME/ SIGTOT(100),SIGTRR(100),
+     +                SIGG(100,20),SIGGRR(100,20),
+     +                NEVENT,NEVE(20)
+      INTEGER         NEVENT
+      COMMON /SPPASS/ NSOPH,NSPOUT,NFAILP,NSPACC
+      COMMON /DJPASS/ NTOTDJ,NPASDJ,NFAILL
+      COMMON /HSVGLP/ NPOVEG,NUMINT,NPHYP
+      COMMON /HSRDIO/ ISDINP,ISDOUT
+      COMMON /VGRES/  S1,S2,S3,S4
+      COMMON /HSIRCT/ DELEPS,DELTA,EGMIN,IOPEGM
+      COMMON /HYSTFU/ PYSTOP,PYSLAM,NPYMAX,NPYMIN
+      REAL            PYSTOP,PYSLAM
+      COMMON /HSALFS/ PAR111,PAR112,PARL11,PARL19,MST111,MST115
+      REAL            PAR111,PAR112,PARL11,PARL19
+      INTEGER                                     MST111,MST115
+      CHARACTER*80 LHAPATHI
+      CHARACTER*232 LHAPATH
+      COMMON /LHAPDFC/ LHAPATH
+      SAVE /LHAPDFC/
+      COMMON /LEPTOU/ CUTDJ(14),LST(40),PARL(30),XDJ,YDJ,W2DJ,Q2DJ,UDJ
+      REAL            CUTDJ,            PARL,    XDJ,YDJ,W2DJ,Q2DJ,UDJ
+      INTEGER                   LST
+      COMMON /DJKIN/ DJX,DJY,DJW2,DJQ2,DJU
+      SAVE /DJKIN/
+      COMMON /ISDEBUG/ ISDBG
+      INTEGER          ISDBG
+      COMMON /IHSCW/ INPUTCODEWD(46), ITCW
+      CHARACTER*10   INPUTCODEWD
+      INTEGER                         ITCW
+      SAVE   /IHSCW/
+      DIMENSION CODE(40)
+      DIMENSION UIO(97)
+      DIMENSION INT2C(5),ISAM2C(5),INT3C(15),ISAM3C(15)
+
+      DO I=1,GDSIZE
+        IF(EELE.LE.(GDMEAN-GDSDDV+GDSCLE*I)) THEN
+          GDINDX=I
+          GOTO 3994
+        ENDIF
+      END DO
+
+      WRITE(LUNOUT,*) 'DJANGOH INTERFACE :',
+     &                'ERROR: INPUT ENERGY EELE = ',EELE,' NOT IN THE ',
+     &                'RANGE OF GRID [',GDMEAN-GDSDDV,';',GDMEAN+GDSDDV,'].',
+     &                'EVENT SKIPPED.'
+      GOTO 3997
+
+ 3994 CONTINUE
+
+      IF(EELE.NE.PREV) THEN
+C---DO THE NECESSARY INITIALIZATION / PRINT PARAMETERS
+        CALL HSPRLG
+
+C---INITIALIZATION OF USER ROUTINES---------
+
+        ICALL=1
+        CALL HSUSER(ICALL,0D0,0D0,0D0)
+      ENDIF
+
+      IF (IHSONL.EQ.0) THEN
+        IF (ICC32.NE.0.OR.ISCC32.NE.0) THEN
+          WRITE(LUNOUT,*)' '
+          WRITE(LUNOUT,*)' *** WARNING: channel CC32 not active, '
+          WRITE(LUNOUT,*)'              set to ICC32=ISCC32=0'
+          ICC32=0
+          ISCC32=0
+        ENDIF
+        IF (ICC33.NE.0.OR.ISCC33.NE.0) THEN
+          WRITE(LUNOUT,*)' '
+          WRITE(LUNOUT,*)' *** WARNING: channel CC33 not active, '
+          WRITE(LUNOUT,*)'              set to ICC33=ISCC33=0'
+          ICC33=0
+          ISCC33=0
+        ENDIF
+
+        IF (ILQMOD.GT.1.AND.HSLST(7+1).NE.-1) THEN
+          WRITE(LUNOUT,'(A/A/A)')
+     &    ' *** INCONSISTENT INPUT DATA: ILQMOD and FRAG ***',
+     &    ' *** ILQMOD > 1 not allowed for FRAG .ne. -1  ***',
+     &    ' *** EXECUTION STOPPED                        ***'
+          STOP
+        ENDIF
+        INTER=4
+        IF (ISAM2(2).GT.0.OR.ISAM3(7).GT.0
+     &      .OR. ISAM3(8).GT.0 .OR. ISAM3(9).GT.0) THEN
+          INTER=2
+          IF (ISAM2(1).GT.0.OR.ISAM3(1).GT.0
+     &        .OR. ISAM3(2).GT.0 .OR. ISAM3(3).GT.0
+     &        .OR. ISAM3(4).GT.0) THEN
+            INTER=4
+            WRITE(LUNOUT,'(//10X,A/10X,2A/10X,2A//)')
+     &      ' ******* WARNING: DJANGO INITIALISATION IS FOR NC EVENTS',
+     &      ' *******          NC & CC NOT POSSIBLE AT THE SAME TIME',
+     &      ' IN DJANGO/LEPTO',
+     &      ' ******* HADRONIZATION WILL BE TREATED INCORRECTLY',
+     &      ' FOR CC EVENTS'
+          ENDIF
+        ENDIF
+
+C 3995   CONTINUE
+        IF(EELE.NE.PREV) THEN
+          CALL DJGINIT(LEPIN,PELE,-PPRO,INTER)
+        ENDIF
+
+C
+C***********************************************************************
+C   EVENT GENERATION
+C***********************************************************************
+C
+C---CONTROL OF EVENT GENERATION IN HSEVTG
+        IWEIGS=IWEIGR
+        CALL HSEVTG
+
+C--- SECURE TEST TO KNOW IF DIS EVENT WAS WELL GENERATED.
+C        IF(K(1,1).EQ.21) THEN
+C          GOTO 3995
+C        ENDIF
+C
+C---FINAL CALL OF USER TO GENERATE USER MONITORED OUTPUT
+C---Correct total cross sections for failed hadronization
+C        NREJCT=NFAILL+NFAILP
+C        NEVTRN=NPASDJ+NSOPH+NREJCT
+C        PARL(24)=SIGTOT(GDINDX)*(1D0-DFLOAT(NREJCT)/NEVTRN)*1E3
+C        ICALL=3
+C        CALL HSUSER(ICALL,0D0,0D0,0D0)
+C        IMOD=2
+C        CALL HSCPDF(IMOD)
+C
+C---SAVE INFORMATION FOR FURTHER SAMPLING
+C        REWIND (LUNDAT)
+C        WRITE(LUNDAT,ERR=3996,IOSTAT=IOS) FNAME
+C        WRITE(LUNDAT,ERR=3996,IOSTAT=IOS)
+C     &       INT2C,INT3C,ISAM2C,ISAM3C
+C        CALL HSDOUT
+      ENDIF
+C
+C---SAVE CURRENT RANDOM NUMBER STATUS IF REQUESTED
+C      IF(ISDOUT.GT.0) THEN
+C        REWIND LUNRND
+C        CALL HSRNOU(UIO,CIO,CDIO,CMIO,IIO,JIO)
+C        WRITE(LUNRND,*) UIO
+C        WRITE(LUNRND,*) CIO,CDIO,CMIO,IIO,JIO
+C        WRITE(LUNOUT,'(/A,I2)')
+C     *  ' *** ACTUAL RANDOM NUMBER SEEDS WRITTEN TO UNIT LUNRND=',LUNRND
+C      ENDIF
+
+C---SAVE KINEMATIC VARIABLE FOR INTERFACE (NP. 17/11/2016)
+      DJX=XDJ
+      DJY=YDJ
+      DJQ2=Q2DJ
+      DJW2=W2DJ
+      DJU=UDJ
+
+C---SAVE ENERGY FOR NEXT EVENT
+      PREV=EELE
+
+      GOTO 3997
+
+C
+C---ERROR WHILE WRITING HERACLES DATA FILE
+ 3996 CONTINUE
+      WRITE(LUNOUT,'(A,I4/A)')
+     &   ' *** ERROR WRITING HERACLES DATA FILE ON UNIT',LUNDAT,
+     &   ' *** EXECUTION STOPPED ***'
+      GOTO 3997
+
+ 3997 CONTINUE
+      END
+
+C***********************************************************************
+C***********************************************************************
+
+      SUBROUTINE HSRCAP()
+
+      USE xSectionModule
+      IMPLICIT DOUBLE PRECISION (A-H,M,O-Z)
+      COMMON /SPPASS/ NSOPH,NSPOUT,NFAILP,NSPACC
+      COMMON /DJPASS/ NTOTDJ,NPASDJ,NFAILL
+      COMMON /LEPTOU/ CUTDJ(14),LST(40),PARL(30),XDJ,YDJ,W2DJ,Q2DJ,UDJ
+      REAL            CUTDJ,            PARL,    XDJ,YDJ,W2DJ,Q2DJ,UDJ
+      CHARACTER*80 OUTFILENAM
+      COMMON /HSOUTF/ OUTFILENAM,ICH
+      CHARACTER*45 CHNAME
+      COMMON /HSNAMC/ CHNAME(20)
+      COMMON /HSNUME/ SIGTOT(100),SIGTRR(100),
+     +                SIGG(100,20),SIGGRR(100,20),
+     +                NEVENT,NEVE(20)
+      COMMON /HSGRID/ GDSIZE, GDINDX, GDMEAN, GDSDDV, GDSCLE
+      INTEGER         GDSIZE, GDINDX
+
+
+      NREJCT=NFAILL+NFAILP
+      NEVTRN=NPASDJ+NSOPH+NREJCT
+      PARL(24)=SIGTOT(GDINDX)*(1D0-DFLOAT(NREJCT)/NEVTRN)*1E3
+      ICALL=3
+      CALL HSUSER(ICALL,0D0,0D0,0D0)
+      IMOD=2
+      CALL HSCPDF(IMOD)
+
       END
 
 C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1957,7 +2520,9 @@ C---                     NRG33E=NBN33E**NDM3EL
 C-----------------------------
       CHARACTER*45 CHNAME
       COMMON /HSNAMC/ CHNAME(20)
-      COMMON /HSNUME/ SIGTOT,SIGTRR,SIGG(20),SIGGRR(20),NEVENT,NEVE(20)
+      COMMON /HSNUME/ SIGTOT(100),SIGTRR(100),
+     +                SIGG(100,20),SIGGRR(100,20),
+     +                NEVENT,NEVE(20)
       COMMON /HSELAB/ SP,EELE,PELE,EPRO,PPRO
       COMMON /HSCUTS/ XMIN,XMAX,Q2MIN,Q2MAX,YMIN,YMAX,WMIN,GMIN
       COMMON /HSTCUT/ THEMIN,THEMAX,CTHMIN,CTHCON
@@ -1969,6 +2534,7 @@ C-----------------------------
       COMMON /HSPDFO/ IPDFOP,IFLOPT,LQCD,LTM,LHT
       COMMON /HSELEP/ IDIPOL
       COMMON /HSNUCL/ HNA,HNZ,INUMOD
+      INTEGER         HNA,HNZ
       COMMON /HYSTFU/ PYSTOP,PYSLAM,NPYMAX,NPYMIN
       REAL            PYSTOP,PYSLAM
       COMMON /HSALFS/ PAR111,PAR112,PARL11,PARL19,MST111,MST115
@@ -1979,8 +2545,8 @@ cs..Sophia
       COMMON /SOPHCT/ WSOPHIA
 C
 C--- STANDARD KINEMATICS
-      DATA EELE, EPRO  / 27.5D0, 920D0 /
-      DATA SIGTOT,SIGTRR,SIGG,SIGGRR /42*0D0/
+      DATA EELE, EPRO  / 160D0, 0D0 /
+      DATA SIGTOT,SIGTRR,SIGG,SIGGRR / 200*0D0, 4000*0D0 /
       DATA NEVENT,NEVE               /21*0/
       DATA LUNIN,LUNOUT,LUNTES,LUNRND,LUNDAT
      *    /    5,     6,     6,    10,    11/
@@ -2114,7 +2680,9 @@ C
       COMMON /HSIRCX/ XIRDEL
       COMMON /HSOPTN/ INT2(5),INT3(15),ISAM2(5),ISAM3(15),
      *                IOPLOT,IPRINT,ICUT
-      COMMON /HSNUME/ SIGTOT,SIGTRR,SIGG(20),SIGGRR(20),NEVENT,NEVE(20)
+      COMMON /HSNUME/ SIGTOT(100),SIGTRR(100),
+     +                SIGG(100,20),SIGGRR(100,20),
+     +                NEVENT,NEVE(20)
       COMMON /HSELAB/ SP,EELE,PELE,EPRO,PPRO
       COMMON /HSCUTS/ XMIN,XMAX,Q2MIN,Q2MAX,YMIN,YMAX,WMIN,GMIN
       COMMON /HSTCUT/ THEMIN,THEMAX,CTHMIN,CTHCON
@@ -2132,18 +2700,22 @@ C
       COMMON /HSPDFO/ IPDFOP,IFLOPT,LQCD,LTM,LHT
       COMMON /HSELEP/ IDIPOL
       COMMON /HSNUCL/ HNA,HNZ,INUMOD
+      INTEGER         HNA,HNZ
       REAL            PYSTOP,PYSLAM
       COMMON /HYSTFU/ PYSTOP,PYSLAM,NPYMAX,NPYMIN
       COMMON /HSLTYP/ LEPIN1
 
-      WRITE(LUNOUT,901)
+      IF(VERBOZ.EQ.1) THEN
+        WRITE(LUNOUT,901)
+        WRITE(LUNOUT,'(2(20X,A/))')
+     &    'FINAL DEFINITION OF RUN PARAMETERS',
+     &    '           FOR HERACLES           '
+        WRITE(LUNOUT,902)
+      ENDIF
+
  901  FORMAT(////,
      1'**************************************************',
      2'*****************************'/)
-      WRITE(LUNOUT,'(2(20X,A/))')
-     &    'FINAL DEFINITION OF RUN PARAMETERS',
-     &    '           FOR HERACLES           '
-      WRITE(LUNOUT,902)
  902  FORMAT(
      1'**************************************************',
      2'*****************************')
@@ -2324,68 +2896,70 @@ C---LOWER LIMIT IN PHOTON ENERGY (OPTIONAL)
       ENDIF
 C
 C---PRINT KINEMATICS / BEAM PROPERTIES
+      IF(VERBOZ.EQ.1) THEN
 C---ELECTRON BEAM
-      WRITE(LUNOUT,'(///A/)')
+        WRITE(LUNOUT,'(///A/)')
      *    ' *****  PROPERTIES OF THE LEPTON BEAM  *****'
-      WRITE(LUNOUT,'(10X,A,I3)')
+        WRITE(LUNOUT,'(10X,A,I3)')
      *      ' LEPTON TYPE =  ',LEPIN1
-      WRITE(LUNOUT,'(10X,A,F8.1,A)')
+        WRITE(LUNOUT,'(10X,A,F8.1,A)')
      *      ' ENERGY OF INCIDENT LEPTON =  ',EELE,' GEV'
-      WRITE(LUNOUT,'(10X,A,F8.1,A)')
+        WRITE(LUNOUT,'(10X,A,F8.1,A)')
      *      ' MOMENTUM OF INCIDENT LEPTON =',PELE,' GEV/C'
-      WRITE(LUNOUT,'(10X,A,F11.8,A)')
+        WRITE(LUNOUT,'(10X,A,F11.8,A)')
      *      ' LEPTON MASS =',MEI,' GEV/C**2'
-      WRITE(LUNOUT,'(10X,A,I3)')
+        WRITE(LUNOUT,'(10X,A,I3)')
      *      ' CHARGE OF INCIDENT LEPTON =',LLEPT
-      WRITE(LUNOUT,'(10X,A,F8.4)')
+        WRITE(LUNOUT,'(10X,A,F8.4)')
      *      ' DEGREE OF LEPTON BEAM POLARIZATION =', POLARI
 C
 C---PROTON BEAM
-      IF (INT(HNA).EQ.1.AND.INT(HNZ).EQ.1) THEN
-        WRITE(LUNOUT,'(///A/)')
+        IF (INT(HNA).EQ.1.AND.INT(HNZ).EQ.1) THEN
+          WRITE(LUNOUT,'(///A/)')
      *      ' *****  PROPERTIES OF THE PROTON BEAM  *****'
-        WRITE(LUNOUT,'(10X,A,F8.1,A)')
+          WRITE(LUNOUT,'(10X,A,F8.1,A)')
      *      ' ENERGY OF INCIDENT PROTON =  ',EPRO,' GEV'
-        WRITE(LUNOUT,'(10X,A,F8.1,A)')
+          WRITE(LUNOUT,'(10X,A,F8.1,A)')
      *      ' MOMENTUM OF INCIDENT PROTON =',PPRO,' GEV/C'
-        WRITE(LUNOUT,'(10X,A,F8.4)')
+          WRITE(LUNOUT,'(10X,A,F8.4)')
      *      ' DEGREE OF PROTON BEAM POLARIZATION =', HPOLAR
-        WRITE(LUNOUT,'(10X,A,F7.4,A)')
+          WRITE(LUNOUT,'(10X,A,F7.4,A)')
      *      ' PROTON MASS =',MPRO,' GEV/C**2'
-        WRITE(LUNOUT,'(//10X,A,1PE12.5,A)')
+          WRITE(LUNOUT,'(//10X,A,1PE12.5,A)')
      *      ' CMS ENERGY SQUARED  S =',SP,' GEV**2'
-      ELSE
-        WRITE(LUNOUT,'(///A/)')
+        ELSE
+          WRITE(LUNOUT,'(///A/)')
      *      ' *****  PROPERTIES OF THE TARGET BEAM  *****'
-        WRITE(LUNOUT,'(10X,A,F4.0,A,F4.0)')
+          WRITE(LUNOUT,*)
      *      ' A-NUCLEUS = ',HNA,'   Z-NUCLEUS = ',HNZ
-        WRITE(LUNOUT,'(10X,A,F8.1,A)')
+          WRITE(LUNOUT,'(10X,A,F8.1,A)')
      *      ' ENERGY PER INCIDENT NUCLEON =  ',EPRO,' GEV'
-        WRITE(LUNOUT,'(10X,A,F8.1,A)')
+          WRITE(LUNOUT,'(10X,A,F8.1,A)')
      *      ' MOMENTUM PER INCIDENT NUCLEON =',PPRO,' GEV/C'
-        WRITE(LUNOUT,'(10X,A,F8.4)')
+          WRITE(LUNOUT,'(10X,A,F8.4)')
      *      ' DEGREE OF NUCLEON BEAM POLARIZATION =', HPOLAR
-        WRITE(LUNOUT,'(10X,A,F7.4,A)')
+          WRITE(LUNOUT,'(10X,A,F7.4,A)')
      *      ' NUCLEON MASS =',MPRO,' GEV/C**2'
-        WRITE(LUNOUT,'(//10X,A,1PE12.5,A)')
+          WRITE(LUNOUT,'(//10X,A,1PE12.5,A)')
      *      ' CMS ENERGY SQUARED  S =',SP,' GEV**2'
-      ENDIF
+        ENDIF
 C
 C---KINEMATICAL CUTS FOR GENERATED EVENTS
-      WRITE(LUNOUT,'(///A/)')
+        WRITE(LUNOUT,'(///A/)')
      *     ' *****  KINEMATICAL LIMITS FOR GENERATED EVENTS  *****'
-      WRITE(LUNOUT,'(10X,A,1PE12.5,2X,A,1PE12.5)')
+        WRITE(LUNOUT,'(10X,A,1PE12.5,2X,A,1PE12.5)')
      *     ' XMIN=',XMIN,' XMAX=',XMAX
-      WRITE(LUNOUT,'(10X,A,1PE12.5,A)')
+        WRITE(LUNOUT,'(10X,A,1PE12.5,A)')
      *     ' Q2MIN=',Q2MIN,' GEV**2, '
-      WRITE(LUNOUT,'(10X,A,1PE12.5,A)')
+        WRITE(LUNOUT,'(10X,A,1PE12.5,A)')
      *     ' Q2MAX=',Q2MAX,' GEV**2'
-      WRITE(LUNOUT,'(10X,A,1PE12.5,A,17X,A)')
+        WRITE(LUNOUT,'(10X,A,1PE12.5,A,17X,A)')
      *     ' WMIN=', WMIN, ' GEV',' (ACTIVE ONLY FOR ICUT=2)'
-      WRITE(LUNOUT,'(10X,A,1PE12.5,2X,A,1PE12.5,1X,A)')
+        WRITE(LUNOUT,'(10X,A,1PE12.5,2X,A,1PE12.5,1X,A)')
      *     ' YMIN=',YMIN,' YMAX=',YMAX, ' (ACTIVE ONLY FOR ICUT=3)'
-      WRITE(LUNOUT,'(10X,A,I2)')
+        WRITE(LUNOUT,'(10X,A,I2)')
      *     ' ICUT=',ICUT
+      ENDIF
 C
       IF(ICUTO2.EQ.1) THEN
         WRITE(LUNOUT,'(/10X,A)')
@@ -2437,26 +3011,33 @@ C
      &     ' Q2MIN MODIFIED, VALUES <= 0 NOT ALLOWED '
       ENDIF
 C
+      IF(VERBOZ.EQ.1) THEN
 C---LOWER LIMIT IN PHOTON ENERGY (OPTIONAL)
-      IF (IOPEGM.GT.0) THEN
-        WRITE(LUNOUT,'(/10X,A,1PE10.3,A)')
+        IF (IOPEGM.GT.0) THEN
+          WRITE(LUNOUT,'(/10X,A,1PE10.3,A)')
      &       ' MINIMUM PHOTON ENERGY REQUESTED: EGMIN = ',EGMIN,' GEV'
-        WRITE(LUNOUT,'(10X,A)')
+          WRITE(LUNOUT,'(10X,A)')
      &       ' (EVENT SAMPLING FOR HARD-PHOTON CONTRIBUTIONS ONLY)'
-      ENDIF
+        ENDIF
 C
 C---PARAMETERS FOR GSW THEORY
-      WRITE(LUNOUT,'(///A/)')
+        WRITE(LUNOUT,'(///A/)')
      *    ' *****  PARAMETERS FOR EL-WEAK THEORY  *****'
-      WRITE(LUNOUT,'(10X,A,I2,10X,A/29X,A/)')
+        WRITE(LUNOUT,'(10X,A,I2,10X,A/29X,A/)')
      *    ' IFIX =', LPAR(4), ' IFIX=1 : MW FIXED',
      *                        '     =2 : GF FIXED'
-      WRITE(LUNOUT,212) MW,MZ,SW2
+        WRITE(LUNOUT,212) MW,MZ,SW2
+      ENDIF
+
       WWIDTH=-DIMAG(CMW2)/DSQRT(DREAL(CMW2))
       ZWIDTH=-DIMAG(CMZ2)/DSQRT(DREAL(CMZ2))
-      WRITE(LUNOUT,213) WWIDTH,ZWIDTH
-      WRITE(LUNOUT,214) MU,MC,MD,MB,MS,MT
-      WRITE(LUNOUT,215) MH
+
+      IF(VERBOZ.EQ.1) THEN
+        WRITE(LUNOUT,213) WWIDTH,ZWIDTH
+        WRITE(LUNOUT,214) MU,MC,MD,MB,MS,MT
+        WRITE(LUNOUT,215) MH
+      ENDIF
+
 212   FORMAT(10X,' BOSON MASSES:   MW = ',F10.4,' GEV,',/
      F       10X,'                 MZ = ',F10.4,' GEV,   SW2 = ',F10.4)
 213   FORMAT(10X,' BOSON WIDTHS:   GW = ',F10.4,' GEV,    GZ = ',F10.4)
@@ -2467,34 +3048,39 @@ C---PARAMETERS FOR GSW THEORY
 215   FORMAT(10X,' HIGGS MASS:     MH = ',F10.4,' GEV')
 C
 C---PARTON DISTRIBUTION
-      WRITE(LUNOUT,'(///A/A/)')
+      IF(VERBOZ.EQ.1) THEN
+        WRITE(LUNOUT,'(///A/A/)')
      *    ' *****  OPTIONS FOR PARTON DISTRIBUTIONS OR      *****',
      *    ' *****  STRUCTURE FUNCTIONS                      *****'
+      ENDIF
       CALL HSWPDF
 C
 C---ELASTIC SCATTERING
-      IF (IDIPOL.NE.0) THEN
+      IF (IDIPOL.NE.0.AND.VERBOZ.EQ.1) THEN
       WRITE(LUNOUT,'(///A/A/)')
      *    ' *****  ELASTIC SCATTERING INCLUDED               *****',
      *    ' *****  WITH DIPOLE FORM FACTOR FROM STEIN ET AL. *****'
       ENDIF
 C
 C---ANGULAR CUTS FOR QUARKONIC BREMSSTRAHLUNG
-      IF(INT3(4).GE.1 .OR. ISAM3(4).GE.1 .OR.
+      IF(VERBOZ.EQ.1) THEN
+        IF(INT3(4).GE.1 .OR. ISAM3(4).GE.1 .OR.
      &   ((INT2(1).GE.1.OR.ISAM2(1).GE.1).AND.LPARIN(5).GE.1) ) THEN
-        WRITE(LUNOUT,'(//A/)')
+          WRITE(LUNOUT,'(//A/)')
      &          ' *****  ANGULAR CUTS FOR QUARKONIC RADIATION  *****'
-        WRITE(LUNOUT,'(10X,A,1PE10.3,A)')
+          WRITE(LUNOUT,'(10X,A,1PE10.3,A)')
      &    ' TCUTQ  =', TCUTQ, ' RAD',
      &    ' TCUTQS =', TCUTQS, ' RAD'
+        ENDIF
       ENDIF
 C
 C---OPTIONS FOR VIRTUAL&SOFT CONTRIBUTION
-      IF(INT2(1).EQ.1.OR.INT2(2).EQ.1
+      IF(VERBOZ.EQ.1) THEN
+        IF(INT2(1).EQ.1.OR.INT2(2).EQ.1
      *   .OR.ISAM2(1).GE.1.OR.ISAM2(2).GE.1) THEN
-        WRITE(LUNOUT,'(//A/)')
+          WRITE(LUNOUT,'(//A/)')
      *    ' *****  OPTIONS FOR VIRT&SOFT CONTRIBUTION         *****'
-        WRITE(LUNOUT,216) LPAR
+          WRITE(LUNOUT,216) LPAR
 216     FORMAT(/,' PARAMETER LIST',/
      F,' *******************************************************',/
      F,' **      BORN CROSS SECTION:    LPAR( 1) = ',I6,'     **',/
@@ -2518,6 +3104,7 @@ C---OPTIONS FOR VIRTUAL&SOFT CONTRIBUTION
      F,' **      NOT USED:              LPAR(19) = ',I6,'     **',/
      F,' **      NOT USED:              LPAR(20) = ',I6,'     **',/
      F,' *******************************************************'/)
+        ENDIF
       ENDIF
 C
 C---ELASTIC CONTRIBUTIONS COMPATIBLE WITH KINEMATIC CUTS?
@@ -2551,37 +3138,45 @@ C---ELASTIC CONTRIBUTIONS COMPATIBLE WITH KINEMATIC CUTS?
       ENDIF
 C
 C---OPTIONS FOR INTEGRATION / SAMPLING
-      WRITE(LUNOUT,'(///A/)')
+      IF(VERBOZ.EQ.1) THEN
+        WRITE(LUNOUT,'(///A/)')
      *    ' *****  OPTIONS FOR INTEGRATION / SAMPLING  *****'
+      ENDIF
 C---CHANNELS FOR CHARGED CURRENT NOT YET DEFINED
       IF (INT3(8).NE.0.OR.ISAM3(8).NE.0) THEN
         INT3(8)=0
         ISAM3(8)=0
         LPAR(13)=0
-        WRITE(LUNOUT,'(10X,A,/,10X,A)')
+        IF(VERBOZ.EQ.1) THEN
+          WRITE(LUNOUT,'(10X,A,/,10X,A)')
      *  ' CHARGED CURRENT: QUARKONIC RADIATION NOT YET ACTIVATED ',
      *  ' ICC32, ISCC32 AND LPARIN(5) SET TO ZERO '
+        ENDIF
       ENDIF
       IF (INT3(9).NE.0.OR.ISAM3(9).NE.0) THEN
         INT3(9)=0
         ISAM3(9)=0
         LPAR(14)=0
-        WRITE(LUNOUT,'(10X,A,/,10X,A)')
+        IF(VERBOZ.EQ.1) THEN
+          WRITE(LUNOUT,'(10X,A,/,10X,A)')
      *' CHARGED CURRENT: LEPTON-QUARK INTERFERENCE NOT YET ACTIVATED ',
      *' ICC33, ISCC33 AND LPARIN(6) SET TO ZERO '
+        ENDIF
       ENDIF
 
       DO 1 I=1,5
         IF(INT2(I).LT.0.OR.INT2(I).GT.1) INT2(I)=0
  1    CONTINUE
-      WRITE(LUNOUT,'(10X,A,8I4)')
+      IF(VERBOZ.EQ.1) THEN
+        WRITE(LUNOUT,'(10X,A,8I4)')
      *      ' INT2(I) ', INT2
-      WRITE(LUNOUT,'(10X,A,15I4)')
+        WRITE(LUNOUT,'(10X,A,15I4)')
      *      ' INT3(I) ', INT3
-      WRITE(LUNOUT,'(10X,A,8I4)')
+        WRITE(LUNOUT,'(10X,A,8I4)')
      *      ' ISAM2(I)',ISAM2
-      WRITE(LUNOUT,'(10X,A,15I4)')
+        WRITE(LUNOUT,'(10X,A,15I4)')
      *      ' ISAM3(I)', ISAM3
+      ENDIF
       IF(LPAR(14).GT.0) THEN
         ISM3TT=ISAM3(1)+ISAM3(2)+ISAM3(3)+ISAM3(4)
         IF ((ISM3TT.GT.0).AND.(ISAM3(1).EQ.0.OR.ISAM3(2).EQ.0.OR.
@@ -2596,19 +3191,20 @@ C---CHANNELS FOR CHARGED CURRENT NOT YET DEFINED
         ENDIF
       ENDIF
 C
+C--- NOT USEFUL ANYMORE W/ INTERFACE
 C---NUMBER OF REQUESTED EVENTS
-      IF (ISAM2(1).NE.0 .OR. ISAM2(2).NE.0.OR.ISAM2(3).NE.0
-     &    .OR. ISAM3(1).GT.0 .OR. ISAM3(2).GT.0 .OR. ISAM3(3).GT.0
-     &    .OR. ISAM3(4).GT.0 .OR. ISAM3(7).GT.0 .OR. ISAM3(9).GT.0
-     &    .OR. ISAM3(10).GT.0 .OR. ISAM3(11).GT.0 .OR. ISAM3(12).GT.0
-     &   ) THEN
-        WRITE(LUNOUT,'(///A/)')
-     *              ' *****  NUMBER OF EVENTS TO BE SAMPLED  *****'
-        WRITE(LUNOUT,'(10X,A,I12)')
-     *    ' NUMBER OF EVENTS REQUESTED  NEVENT =',NEVENT
-      ENDIF
+C      IF (ISAM2(1).NE.0 .OR. ISAM2(2).NE.0.OR.ISAM2(3).NE.0
+C     &    .OR. ISAM3(1).GT.0 .OR. ISAM3(2).GT.0 .OR. ISAM3(3).GT.0
+C     &    .OR. ISAM3(4).GT.0 .OR. ISAM3(7).GT.0 .OR. ISAM3(9).GT.0
+C     &    .OR. ISAM3(10).GT.0 .OR. ISAM3(11).GT.0 .OR. ISAM3(12).GT.0
+C     &   ) THEN
+C        WRITE(LUNOUT,'(///A/)')
+C     *              ' *****  NUMBER OF EVENTS TO BE SAMPLED  *****'
+C        WRITE(LUNOUT,'(10X,A,I12)')
+C     *    ' NUMBER OF EVENTS REQUESTED  NEVENT =',NEVENT
+C      ENDIF
 C---
-      WRITE(LUNOUT,'(///)')
+C      WRITE(LUNOUT,'(///)')
       RETURN
       END
 
@@ -2922,11 +3518,13 @@ C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 C
 C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-      SUBROUTINE HSEVTG
+      SUBROUTINE HSEVTG()
 C---
 C   EVENT SAMPLING
 C   FRACTIONS FROM DIFFERENT CONTRIBUTIONS ACCORDING TO CROSS SECTIONS
 C---
+      use xSectionModule
+
       IMPLICIT DOUBLE PRECISION (A-H,M,O-Z)
       EXTERNAL HSNCG2, HSTSK1, HSTSK2, HSK1TS, HSK1K3
       EXTERNAL HSCCG2, HSCCKL, HSCCQI, HSCCQF
@@ -2937,8 +3535,11 @@ C---
       PARAMETER (NCHE31=15,NCHE32=16,NCHE33=16)
       COMMON /HSOPTN/ INT2(5),INT3(15),ISAM2(5),ISAM3(15),
      *                IOPLOT,IPRINT,ICUT
-      COMMON /HSNUME/ SIGTOT,SIGTRR,SIGG(20),SIGGRR(20),NEVENT,NEVE(20)
+      COMMON /HSNUME/ SIGTOT(100),SIGTRR(100),
+     +                SIGG(100,20),SIGGRR(100,20),
+     +                NEVENT,NEVE(20)
       COMMON /HSUNTS/ LUNTES,LUNDAT,LUNIN,LUNOUT,LUNRND
+      COMMON /LUJETS/N,K(4000,5),P(4000,5),V(4000,5)
 C-----------------------------
       PARAMETER(NDIM2=2,NBIN2=50)
       PARAMETER(NREG2N=2500)
@@ -3071,28 +3672,52 @@ C-----------------------------
      +                NM33E(NRG33E),NDO33E,
      +                NTT33E,NCL33E,NC133E,NC233E,IBM33E,JCR33E,
      +                LGL33E,LLC33E
+C-------------------------
+      TYPE(xSection2) :: HSXNC2
+      TYPE(xSection2C) :: HSXCC2
+      TYPE(xSection2E) :: HSXEL2
+      TYPE(xSection31) :: HSXN31
+      TYPE(xSection32) :: HSXN32
+      TYPE(xSection33) :: HSXN33
+      TYPE(xSection34) :: HSXN34
+      TYPE(xSection31C) :: HSXC31
+      TYPE(xSection32C) :: HSXC32
+      TYPE(xSection33C) :: HSXC33
+      TYPE(xSection31E) :: HSXE31
+      TYPE(xSection32E) :: HSXE32
+      TYPE(xSection33E) :: HSXE33
+      COMMON /HSXSEC/ HSXNC2(100),HSXCC2(100),HSXEL2(100),
+     +                HSXN31(100),HSXN32(100),HSXN33(100),HSXN34(100),
+     +                HSXC31(100),HSXC32(100),HSXC33(100),
+     +                HSXE31(100),HSXE32(100),HSXE33(100)
+      COMMON /HSGRID/ GDSIZE, GDINDX, GDMEAN, GDSDDV, GDSCLE
+      INTEGER         GDSIZE, GDINDX
+C-------------------------
       CHARACTER*45 CHNAME
       COMMON /HSNAMC/ CHNAME(20)
       DIMENSION PROCON(20),ICONTI(20),EFFIC(20)
       PARAMETER(NEV2=1,NEV3NC=1,NEV3CC=1,NEVEL=1)
       LOGICAL LFIRST(20)
       DATA LFIRST /20*.TRUE./
+
 C-----------------------------------------------------------------------
-      WRITE(LUNOUT,'(//A/)')
+      IF(VERBOZ.EQ.1) THEN
+        WRITE(LUNOUT,'(//A/)')
      * ' CROSS SECTIONS ACTUALLY APPLIED FOR SAMPLING (IN NANOBARN): '
-      WRITE(LUNOUT,'(A,1PE12.4,A,1PE11.4/)')
+        WRITE(LUNOUT,'(A,1PE12.4,A,1PE11.4/)')
      *     ' TOTAL CROSS SECTION,  SIGTOT =              ',
-     *       SIGTOT,' +/-',SIGTRR
+     *       SIGTOT(GDINDX),' +/-',SIGTRR(GDINDX)
       DO 110 I=1,20
-        IF(SIGG(I).GT.0D0)
+        IF(SIGG(GDINDX,I).GT.0D0)
      *    WRITE(LUNOUT,'(A,1PE12.4,A,1PE11.4)')
-     *          CHNAME(I),SIGG(I),' +/-', SIGGRR(I)
+     *          CHNAME(I),SIGG(GDINDX,I),' +/-', SIGGRR(GDINDX,I)
  110  CONTINUE
+      ENDIF
 C-----------------------------------------------------------------------
 C---CUMULATIVE PROBABILITIES FOR CHOSING THE ACTUAL CONTRIBUTION
-      PROCON(1)=SIGG(1)/SIGTOT
+      PROCON(1)=SIGG(GDINDX,1)/SIGTOT(GDINDX)
       DO 101 I=2,20
-        PROCON(I)=PROCON(I-1) + SIGG(I)/SIGTOT
+        PROCON(I)=PROCON(I-1) + SIGG(GDINDX,I)/SIGTOT(GDINDX)
   101 CONTINUE
       DO 102 I=1,5
         ICONTI(I)=ISAM2(I)
@@ -3102,186 +3727,300 @@ C---CUMULATIVE PROBABILITIES FOR CHOSING THE ACTUAL CONTRIBUTION
   103 CONTINUE
 C-----------------------------------------------------------------------
 C---EVENT SAMPLING
-      DO 1000 I=1,NEVENT
+
 C---CHANNEL SELECTION
-        RNC=HSRNDM(-1)
-        DO 1001 NC=1,20
-          IF(RNC.LE.PROCON(NC)) THEN
-            NCA=NC
-            GOTO 1002
-          ENDIF
- 1001   CONTINUE
-        NCA=999
-        WRITE(LUNOUT,'(A,I4/A)')
+      RNC=HSRNDM(-1)
+      DO 1001 NC=1,20
+        IF(RNC.LE.PROCON(NC)) THEN
+          NCA=NC
+          GOTO 1002
+        ENDIF
+ 1001 CONTINUE
+      NCA=999
+      WRITE(LUNOUT,'(A,I4/A)')
      &        ' HSEVTG: ERROR IN CHANNEL SELECTION - NCA=',NCA,
      &        '         EXECUTION STOPPED'
-        STOP
+      STOP
 C---GENERATION OF ONE SINGLE EVENT IN THE SELECTED CHANNEL
- 1002   GOTO(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20), NCA
+ 1002 GOTO(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20), NCA
 C
 C---NON RADIATIVE EVENTS - NEUTRAL CURRENT / BORN + VIRTUAL&SOFT
-  1     CONTINUE
-          IF(IPRINT.GE.3)
-     *      WRITE(LUNTES,'(//A/A,5X,2I3,I8,2I4)')
-     *           ' CALL HSGENM ',' NCHN2,NDIM2,NEV2,NDO2,NBIN2',
-     *                             NCHN2,NDIM2,NEV2,NDO2,NBIN2
-          CALL HSGENM(HSNCG2,NCHN2,NDIM2,NEV2,ICONTI(1),T2GGMA,T2GMAX,
-     &                GOLD2,FFGO2,FFLO2,DNCG2,DNCL2,LLOC2,LGLO2,
-     &                NTOT2,NM2,NCAL2,NCA12,NCA22,IBIM2,JCOR2,
-     &                XX2,NDO2,NBIN2,NREG2N)
-          GOTO 1010
+  1   CONTINUE
+      IF(IPRINT.GE.3)
+     *  WRITE(LUNTES,'(//A/A,5X,2I3,I8,2I4)')
+     *          ' CALL HSGENM ',' NCHN2,NDIM2,NEV2,NDO2,NBIN2',
+     *                            NCHN2,NDIM2,NEV2,NDO2,NBIN2
+      CALL HSGENM(HSNCG2,NCHN2,NDIM2,NEV2,ICONTI(1),
+     &            HSXNC2(GDINDX)%T2GGMA,HSXNC2(GDINDX)%T2GMAX,
+     &            HSXNC2(GDINDX)%GOLD2,HSXNC2(GDINDX)%FFGO2,
+     &            HSXNC2(GDINDX)%DNCG2,HSXNC2(GDINDX)%DNCL2,
+     &            HSXNC2(GDINDX)%DNCL2,HSXNC2(GDINDX)%LLOC2,
+     &            HSXNC2(GDINDX)%LGLO2,
+     &            HSXNC2(GDINDX)%NTOT2,HSXNC2(GDINDX)%NM2,
+     &            HSXNC2(GDINDX)%NCAL2,HSXNC2(GDINDX)%NCA12,
+     &            HSXNC2(GDINDX)%NCA22,HSXNC2(GDINDX)%IBIM2,
+     &            HSXNC2(GDINDX)%JCOR2,
+     &            HSXNC2(GDINDX)%XX2,HSXNC2(GDINDX)%NDO2,
+     &            NBIN2,NREG2N)
+      GOTO 1010
 C---NON RADIATIVE EVENTS - CHARGED CURRENT / BORN + VIRTUAL&SOFT
-  2     CONTINUE
-          CALL HSGENM(HSCCG2,NCHC2,NDIM2,NEV2,ICONTI(2),T2GMAC,T2MAXC,
-     &                GOLD2C,FFGO2C,FFLO2C,DNCG2C,DNCL2C,LLOC2C,LGLO2C,
-     &                NTOT2C,NM2C,NCAL2C,NCA12C,NCA22C,IBIM2C,JCOR2C,
-     &                XX2C,NDO2C,NBIN2,NREG2C)
-          GOTO 1010
+  2   CONTINUE
+      CALL HSGENM(HSCCG2,NCHC2,NDIM2,NEV2,ICONTI(2),
+     &              HSXCC2(GDINDX)%T2GMAC,HSXCC2(GDINDX)%T2MAXC,
+     &              HSXCC2(GDINDX)%GOLD2C,HSXCC2(GDINDX)%FFGO2C,
+     &              HSXCC2(GDINDX)%FFLO2C,HSXCC2(GDINDX)%DNCG2C,
+     &              HSXCC2(GDINDX)%DNCL2C,HSXCC2(GDINDX)%LLOC2C,
+     &              HSXCC2(GDINDX)%LGLO2C,
+     &              HSXCC2(GDINDX)%NTOT2C,HSXCC2(GDINDX)%NM2C,
+     &              HSXCC2(GDINDX)%NCAL2C,HSXCC2(GDINDX)%NCA12C,
+     &              HSXCC2(GDINDX)%NCA22C,HSXCC2(GDINDX)%IBIM2C,
+     &              HSXCC2(GDINDX)%JCOR2C,
+     &              HSXCC2(GDINDX)%XX2C,HSXCC2(GDINDX)%NDO2C,
+     &              NBIN2,NREG2C)
+      GOTO 1010
 C---NON RADIATIVE EVENTS - ELASTIC EP / BORN + VIRTUAL&SOFT
-  3     CONTINUE
-          IF(IPRINT.GE.3)
-     *      WRITE(LUNTES,'(//A/A,5X,2I3,I8,2I4)')
+  3   CONTINUE
+      IF(IPRINT.GE.3)
+     *  WRITE(LUNTES,'(//A/A,5X,2I3,I8,2I4)')
      *           ' CALL HSGENM ',' NCHE2,NDIM1,NEVEL,NDO2E,NBIN2',
      *                             NCHE2,NDIM1,NEVEL,NDO2E,NBIN2
-          CALL HSGENM(HSELG2,NCHE2,NDIM1,NEVEL,ICONTI(3),T2GMAE,T2MAXE,
-     &                GOLD2E,FFGO2E,FFLO2E,DNCG2E,DNCL2E,LLOC2E,LGLO2E,
-     &                NTOT2E,NM2E,NCAL2E,NCA12E,NCA22E,IBIM2E,JCOR2E,
-     &                XX2E,NDO2E,NBIN2,NREG2E)
-          GOTO 1010
-  4     CONTINUE
-  5     CONTINUE
-        WRITE(LUNOUT,'(A,I4/A)')
+      CALL HSGENM(HSELG2,NCHE2,NDIM1,NEVEL,ICONTI(3),
+     &            HSXEL2(GDINDX)%T2GMAE,HSXEL2(GDINDX)%T2MAXE,
+     &            HSXEL2(GDINDX)%GOLD2E,HSXEL2(GDINDX)%FFGO2E,
+     &            HSXEL2(GDINDX)%FFLO2E,HSXEL2(GDINDX)%DNCG2E,
+     &            HSXEL2(GDINDX)%DNCL2E,HSXEL2(GDINDX)%LLOC2E,
+     &            HSXEL2(GDINDX)%LGLO2E,
+     &            HSXEL2(GDINDX)%NTOT2E,HSXEL2(GDINDX)%NM2E,
+     &            HSXEL2(GDINDX)%NCAL2E,HSXEL2(GDINDX)%NCA12E,
+     &            HSXEL2(GDINDX)%NCA22E,HSXEL2(GDINDX)%IBIM2E,
+     &            HSXEL2(GDINDX)%JCOR2E,
+     &            HSXEL2(GDINDX)%XX2E,HSXEL2(GDINDX)%NDO2E,
+     &            NBIN2,NREG2E)
+      GOTO 1010
+  4   CONTINUE
+  5   CONTINUE
+      WRITE(LUNOUT,'(A,I4/A)')
      &        ' HSEVTG: UNDEFINED CHANNEL SELECTED- NCA=',NCA,
      &        '         EXECUTION STOPPED'
-        STOP
+      STOP
 C---RADIATIVE EVENTS - NEUTRAL CURRENT / INITIAL STATE LEPTONIC RAD.
-  6     CONTINUE
-          IF(IPRINT.GE.3)
-     *      WRITE(LUNTES,'(//A/A,5X,2I3,I8,2I4)')
+  6   CONTINUE
+      IF(IPRINT.GE.3)
+     *  WRITE(LUNTES,'(//A/A,5X,2I3,I8,2I4)')
      *           ' CALL HSGENM ',' NCHN31,NDIM31,NEV3NC,NDO31,NBIN31',
      *                             NCHN31,NDIM31,NEV3NC,NDO31,NBIN31
-          CALL HSGENM(HSTSK1,NCHN31,NDIM31,NEV3NC,ICONTI(6),
-     &                T31GMA,T31MAX,
-     &                GOLD31,FFGO31,FFLO31,DNCG31,DNCL31,LLOC31,LGLO31,
-     &                NTOT31,NM31,NCAL31,NCA131,NCA231,IBIM31,JCOR31,
-     &                XX31,NDO31,NBIN31,NREG31)
-          GOTO 1010
+      CALL HSGENM(HSTSK1,NCHN31,NDIM31,NEV3NC,ICONTI(6),
+     &            HSXN31(GDINDX)%T31GMA,HSXN31(GDINDX)%T31MAX,
+     &            HSXN31(GDINDX)%GOLD31,HSXN31(GDINDX)%FFGO31,
+     &            HSXN31(GDINDX)%FFLO31,HSXN31(GDINDX)%DNCG31,
+     &            HSXN31(GDINDX)%DNCL31,HSXN31(GDINDX)%LLOC31,
+     &            HSXN31(GDINDX)%LGLO31,
+     &            HSXN31(GDINDX)%NTOT31,HSXN31(GDINDX)%NM31,
+     &            HSXN31(GDINDX)%NCAL31,HSXN31(GDINDX)%NCA131,
+     &            HSXN31(GDINDX)%NCA231,HSXN31(GDINDX)%IBIM31,
+     &            HSXN31(GDINDX)%JCOR31,
+     &            HSXN31(GDINDX)%XX31,HSXN31(GDINDX)%NDO31,
+     &            NBIN31,NREG31)
+      GOTO 1010
 C---RADIATIVE EVENTS - NEUTRAL CURRENT / FINAL STATE LEPTONIC RAD.
-  7     CONTINUE
-          IF(IPRINT.GE.3)
-     *      WRITE(LUNTES,'(//A/A,5X,2I3,I8,2I4)')
+  7   CONTINUE
+      IF(IPRINT.GE.3)
+     *  WRITE(LUNTES,'(//A/A,5X,2I3,I8,2I4)')
      *           ' CALL HSGENM ',' NCHN32,NDIM32,NEV3NC,NDO32,NBIN32',
      *                             NCHN32,NDIM32,NEV3NC,NDO32,NBIN32
-          CALL HSGENM(HSTSK2,NCHN32,NDIM32,NEV3NC,ICONTI(7),
-     &                T32GMA,T32MAX,
-     &                GOLD32,FFGO32,FFLO32,DNCG32,DNCL32,LLOC32,LGLO32,
-     &                NTOT32,NM32,NCAL32,NCA132,NCA232,IBIM32,JCOR32,
-     &                XX32,NDO32,NBIN32,NREG32)
-          GOTO 1010
+      CALL HSGENM(HSTSK2,NCHN32,NDIM32,NEV3NC,ICONTI(7),
+     &            HSXN32(GDINDX)%T32GMA,HSXN32(GDINDX)%T32MAX,
+     &            HSXN32(GDINDX)%GOLD32,HSXN32(GDINDX)%FFGO32,
+     &            HSXN32(GDINDX)%FFLO32,HSXN32(GDINDX)%DNCG32,
+     &            HSXN32(GDINDX)%DNCL32,HSXN32(GDINDX)%LLOC32,
+     &            HSXN32(GDINDX)%LGLO32,
+     &            HSXN32(GDINDX)%NTOT32,HSXN32(GDINDX)%NM32,
+     &            HSXN32(GDINDX)%NCAL32,HSXN32(GDINDX)%NCA132,
+     &            HSXN32(GDINDX)%NCA232,HSXN32(GDINDX)%IBIM32,
+     &            HSXN32(GDINDX)%JCOR32,
+     &            HSXN32(GDINDX)%XX32,HSXN32(GDINDX)%NDO32,
+     &            NBIN32,NREG32)
+      GOTO 1010
 C---RADIATIVE EVENTS - NEUTRAL CURRENT / COMPTON CONTRIBUTION
-  8     CONTINUE
-          IF(IPRINT.GE.1)
-     *      WRITE(LUNTES,'(//A/A,5X,2I3,I8,2I4)')
+  8   CONTINUE
+      IF(IPRINT.GE.1)
+     *  WRITE(LUNTES,'(//A/A,5X,2I3,I8,2I4)')
      *           ' CALL HSGENM ',' NCHN33,NDIM33,NEV3NC,NDO33,NBIN33',
      *                             NCHN33,NDIM33,NEV3NC,NDO33,NBIN33
-          CALL HSGENM(HSK1TS,NCHN33,NDIM33,NEV3NC,ICONTI(8),
-     &                T33GMA,T33MAX,
-     &                GOLD33,FFGO33,FFLO33,DNCG33,DNCL33,LLOC33,LGLO33,
-     &                NTOT33,NM33,NCAL33,NCA133,NCA233,IBIM33,JCOR33,
-     &                XX33,NDO33,NBIN33,NREG33)
-          GOTO 1010
+      CALL HSGENM(HSK1TS,NCHN33,NDIM33,NEV3NC,ICONTI(8),
+     &            HSXN33(GDINDX)%T33GMA,HSXN33(GDINDX)%T33MAX,
+     &            HSXN33(GDINDX)%GOLD33,HSXN33(GDINDX)%FFGO33,
+     &            HSXN33(GDINDX)%FFLO33,HSXN33(GDINDX)%DNCG33,
+     &            HSXN33(GDINDX)%DNCL33,HSXN33(GDINDX)%LLOC33,
+     &            HSXN33(GDINDX)%LGLO33,
+     &            HSXN33(GDINDX)%NTOT33,HSXN33(GDINDX)%NM33,
+     &            HSXN33(GDINDX)%NCAL33,HSXN33(GDINDX)%NCA133,
+     &            HSXN33(GDINDX)%NCA233,HSXN33(GDINDX)%IBIM33,
+     &            HSXN33(GDINDX)%JCOR33,
+     &            HSXN33(GDINDX)%XX33,HSXN33(GDINDX)%NDO33,
+     &            NBIN33,NREG33)
+      GOTO 1010
 C---RADIATIVE EVENTS - NEUTRAL CURRENT / QUARKONIC RADIATION
-  9     CONTINUE
-          IF(IPRINT.GE.1)
-     &      WRITE(LUNTES,'(//A/A,5X,2I3,I8,2I4)')
+  9   CONTINUE
+      IF(IPRINT.GE.1)
+     &  WRITE(LUNTES,'(//A/A,5X,2I3,I8,2I4)')
      &           ' CALL HSGENM ',' NCHN34,NDIM34,NEV3NC,NDO34,NBIN34',
      &                             NCHN34,NDIM34,NEV3NC,NDO34,NBIN34
-          CALL HSGENM(HSK1K3,NCHN34,NDIM34,NEV3NC,ICONTI(9),
-     &                T34GMA,T34MAX,
-     &                GOLD34,FFGO34,FFLO34,DNCG34,DNCL34,LLOC34,LGLO34,
-     &                NTOT34,NM34,NCAL34,NCA134,NCA234,IBIM34,JCOR34,
-     &                XX34,NDO34,NBIN34,NREG34)
-          GOTO 1010
- 10     CONTINUE
- 11     CONTINUE
-        GOTO 20
+      CALL HSGENM(HSK1K3,NCHN34,NDIM34,NEV3NC,ICONTI(9),
+     &            HSXN34(GDINDX)%T34GMA,HSXN34(GDINDX)%T34MAX,
+     &            HSXN34(GDINDX)%GOLD34,HSXN34(GDINDX)%FFGO34,
+     &            HSXN34(GDINDX)%FFLO34,HSXN34(GDINDX)%DNCG34,
+     &            HSXN34(GDINDX)%DNCL34,HSXN34(GDINDX)%LLOC34,
+     &            HSXN34(GDINDX)%LGLO34,
+     &            HSXN34(GDINDX)%NTOT34,HSXN34(GDINDX)%NM34,
+     &            HSXN34(GDINDX)%NCAL34,HSXN34(GDINDX)%NCA134,
+     &            HSXN34(GDINDX)%NCA234,HSXN34(GDINDX)%IBIM34,
+     &            HSXN34(GDINDX)%JCOR34,
+     &            HSXN34(GDINDX)%XX34,HSXN34(GDINDX)%NDO34,
+     &            NBIN34,NREG34)
+      GOTO 1010
+ 10   CONTINUE
+ 11   CONTINUE
+      GOTO 20
 C---RADIATIVE EVENTS - CHARGED CURRENT / LEPTONIC RADIATION
- 12     CONTINUE
-          CALL HSGENM(HSCCKL,NCHC31,NDM3CC,NEV3CC,ICONTI(12),T31GMC,
-     &                                                          T31MXC,
-     &                GLD31C,FFG31C,FFL31C,DNG31C,DNL31C,LLC31C,LGL31C,
-     &                NTT31C,NM31C,NCL31C,NC131C,NC231C,IBM31C,JCR31C,
-     &                XX31C,NDO31C,NBN31C,NRG31C)
-          GOTO 1010
+ 12   CONTINUE
+      CALL HSGENM(HSCCKL,NCHC31,NDM3CC,NEV3CC,ICONTI(12),
+     &            HSXC31(GDINDX)%T31GMC,HSXC31(GDINDX)%T31MXC,
+     &            HSXC31(GDINDX)%GLD31C,HSXC31(GDINDX)%FFG31C,
+     &            HSXC31(GDINDX)%FFL31C,HSXC31(GDINDX)%DNG31C,
+     &            HSXC31(GDINDX)%DNL31C,HSXC31(GDINDX)%LLC31C,
+     &            HSXC31(GDINDX)%LGL31C,
+     &            HSXC31(GDINDX)%NTT31C,HSXC31(GDINDX)%NM31C,
+     &            HSXC31(GDINDX)%NCL31C,HSXC31(GDINDX)%NC131C,
+     &            HSXC31(GDINDX)%NC231C,HSXC31(GDINDX)%IBM31C,
+     &            HSXC31(GDINDX)%JCR31C,
+     &            HSXC31(GDINDX)%XX31C,HSXC31(GDINDX)%NDO31C,
+     &            NBN31C,NRG31C)
+      GOTO 1010
 C---RADIATIVE EVENTS - CHARGED CURRENT / (KQ) CHANNEL
- 13     CONTINUE
-          CALL HSGENM(HSCCQI,NCHC32,NDM3CC,NEV3CC,ICONTI(13),T32GMC,
-     &                                                          T32MXC,
-     &                GLD32C,FFG32C,FFL32C,DNG32C,DNL32C,LLC32C,LGL32C,
-     &                NTT32C,NM32C,NCL32C,NC132C,NC232C,IBM32C,JCR32C,
-     &                XX32C,NDO32C,NBN32C,NRG32C)
-          GOTO 1010
+ 13   CONTINUE
+      CALL HSGENM(HSCCQI,NCHC32,NDM3CC,NEV3CC,ICONTI(13),
+     &            HSXC32(GDINDX)%T32GMC,HSXC32(GDINDX)%T32MXC,
+     &            HSXC32(GDINDX)%GLD32C,HSXC32(GDINDX)%FFG32C,
+     &            HSXC32(GDINDX)%FFL32C,HSXC32(GDINDX)%DNG32C,
+     &            HSXC32(GDINDX)%DNL32C,HSXC32(GDINDX)%LLC32C,
+     &            HSXC32(GDINDX)%LGL32C,
+     &            HSXC32(GDINDX)%NTT32C,HSXC32(GDINDX)%NM32C,
+     &            HSXC32(GDINDX)%NCL32C,HSXC32(GDINDX)%NC132C,
+     &            HSXC32(GDINDX)%NC232C,HSXC32(GDINDX)%IBM32C,
+     &            HSXC32(GDINDX)%JCR32C,
+     &            HSXC32(GDINDX)%XX32C,HSXC32(GDINDX)%NDO32C,
+     &            NBN32C,NRG32C)
+      GOTO 1010
 C---RADIATIVE EVENTS - CHARGED CURRENT / (KQS) CHANNEL
- 14     CONTINUE
-          CALL HSGENM(HSCCQF,NCHC33,NDM3CC,NEV3CC,ICONTI(14),T33GMC,
-     &                                                          T33MXC,
-     &                GLD33C,FFG33C,FFL33C,DNG33C,DNL33C,LLC33C,LGL33C,
-     &                NTT33C,NM33C,NCL33C,NC133C,NC233C,IBM33C,JCR33C,
-     &                XX33C,NDO33C,NBN33C,NRG33C)
-          GOTO 1010
+ 14   CONTINUE
+      CALL HSGENM(HSCCQF,NCHC33,NDM3CC,NEV3CC,ICONTI(14),
+     &            HSXC33(GDINDX)%T33GMC,HSXC33(GDINDX)%T33MXC,
+     &            HSXC33(GDINDX)%GLD33C,HSXC33(GDINDX)%FFG33C,
+     &            HSXC33(GDINDX)%FFL33C,HSXC33(GDINDX)%DNG33C,
+     &            HSXC33(GDINDX)%DNL33C,HSXC33(GDINDX)%LLC33C,
+     &            HSXC33(GDINDX)%LGL33C,
+     &            HSXC33(GDINDX)%NTT33C,HSXC33(GDINDX)%NM33C,
+     &            HSXC33(GDINDX)%NCL33C,HSXC33(GDINDX)%NC133C,
+     &            HSXC33(GDINDX)%NC233C,HSXC33(GDINDX)%IBM33C,
+     &            HSXC33(GDINDX)%JCR33C,
+     &            HSXC33(GDINDX)%XX33C,HSXC33(GDINDX)%NDO33C,
+     &            NBN33C,NRG33C)
+      GOTO 1010
 C---RADIATIVE EVENTS - ELASTIC TAIL / INITIAL STATE
- 15     CONTINUE
-          IF(IPRINT.GE.3)
-     *      WRITE(LUNTES,'(//A/A,5X,2I3,I8,2I4)')
+ 15   CONTINUE
+      IF(IPRINT.GE.3)
+     *  WRITE(LUNTES,'(//A/A,5X,2I3,I8,2I4)')
      *           ' CALL HSGENM ',' NCHE31,NDM3EL,NEVEL,NDO31E,NBN31E',
      *                             NCHE31,NDM3EL,NEVEL,NDO31E,NBN31E
-          CALL HSGENM(HSELK1,NCHE31,NDM3EL,NEVEL,ICONTI(15),T31GME,
-     &                                                          T31MXE,
-     &                GLD31E,FFG31E,FFL31E,DNG31E,DNL31E,LLC31E,LGL31E,
-     &                NTT31E,NM31E,NCL31E,NC131E,NC231E,IBM31E,JCR31E,
-     &                XX31E,NDO31E,NBN31E,NRG31E)
-          GOTO 1010
+      CALL HSGENM(HSELK1,NCHE31,NDM3EL,NEVEL,ICONTI(15),
+     &            HSXE31(GDINDX)%T31GME,HSXE31(GDINDX)%T31MXE,
+     &            HSXE31(GDINDX)%GLD31E,HSXE31(GDINDX)%FFG31E,
+     &            HSXE31(GDINDX)%FFL31E,HSXE31(GDINDX)%DNG31E,
+     &            HSXE31(GDINDX)%DNL31E,HSXE31(GDINDX)%LLC31E,
+     &            HSXE31(GDINDX)%LGL31E,
+     &            HSXE31(GDINDX)%NTT31E,HSXE31(GDINDX)%NM31E,
+     &            HSXE31(GDINDX)%NCL31E,HSXE31(GDINDX)%NC131E,
+     &            HSXE31(GDINDX)%NC231E,HSXE31(GDINDX)%IBM31E,
+     &            HSXE31(GDINDX)%JCR31E,
+     &            HSXE31(GDINDX)%XX31E,HSXE31(GDINDX)%NDO31E,
+     &            NBN31E,NRG31E)
+      GOTO 1010
 C---  RADIATIVE EVENTS - ELASTIC TAIL / FINAL STATE
- 16     CONTINUE
-          IF(IPRINT.GE.3)
-     *      WRITE(LUNTES,'(//A/A,5X,2I3,I8,2I4)')
+ 16   CONTINUE
+      IF(IPRINT.GE.3)
+     *  WRITE(LUNTES,'(//A/A,5X,2I3,I8,2I4)')
      *           ' CALL HSGENM ',' NCHE32,NDM3EL,NEVEL,NDO32E,NBN32E',
      *                             NCHE32,NDM3EL,NEVEL,NDO32E,NBN32E
-          CALL HSGENM(HSELK2,NCHE32,NDM3EL,NEVEL,ICONTI(16),T32GME,
-     &                                                          T32MXE,
-     &                GLD32E,FFG32E,FFL32E,DNG32E,DNL32E,LLC32E,LGL32E,
-     &                NTT32E,NM32E,NCL32E,NC132E,NC232E,IBM32E,JCR32E,
-     &                XX32E,NDO32E,NBN32E,NRG32E)
-          GOTO 1010
+      CALL HSGENM(HSELK2,NCHE32,NDM3EL,NEVEL,ICONTI(16),
+     &            HSXE32(GDINDX)%T32GME,HSXE32(GDINDX)%T32MXE,
+     &            HSXE32(GDINDX)%GLD32E,HSXE32(GDINDX)%FFG32E,
+     &            HSXE32(GDINDX)%FFL32E,HSXE32(GDINDX)%DNG32E,
+     &            HSXE32(GDINDX)%DNL32E,HSXE32(GDINDX)%LLC32E,
+     &            HSXE32(GDINDX)%LGL32E,
+     &            HSXE32(GDINDX)%NTT32E,HSXE32(GDINDX)%NM32E,
+     &            HSXE32(GDINDX)%NCL32E,HSXE32(GDINDX)%NC132E,
+     &            HSXE32(GDINDX)%NC232E,HSXE32(GDINDX)%IBM32E,
+     &            HSXE32(GDINDX)%JCR32E,
+     &            HSXE32(GDINDX)%XX32E,HSXE32(GDINDX)%NDO32E,
+     &            NBN32E,NRG32E)
+      GOTO 1010
 C---RADIATIVE EVENTS - ELASTIC TAIL / COMPTON
- 17     CONTINUE
-          IF(IPRINT.GE.3)
-     *      WRITE(LUNTES,'(//A/A,5X,2I3,I8,2I4)')
+ 17   CONTINUE
+      IF(IPRINT.GE.3)
+     *  WRITE(LUNTES,'(//A/A,5X,2I3,I8,2I4)')
      *           ' CALL HSGENM ',' NCHE33,NDM3EL,NEVEL,NDO33E,NBN33E',
      *                             NCHE33,NDM3EL,NEVEL,NDO33E,NBN33E
-          CALL HSGENM(HSELCO,NCHE33,NDM3EL,NEVEL,ICONTI(17),T33GME,
-     &                                                          T33MXE,
-     &                GLD33E,FFG33E,FFL33E,DNG33E,DNL33E,LLC33E,LGL33E,
-     &                NTT33E,NM33E,NCL33E,NC133E,NC233E,IBM33E,JCR33E,
-     &                XX33E,NDO33E,NBN33E,NRG33E)
-          GOTO 1010
- 18     CONTINUE
- 19     CONTINUE
- 20     CONTINUE
-        WRITE(LUNOUT,'(A,I4/A)')
+      CALL HSGENM(HSELCO,NCHE33,NDM3EL,NEVEL,ICONTI(17),
+     &            HSXE33(GDINDX)%T33GME,HSXE33(GDINDX)%T33MXE,
+     &            HSXE33(GDINDX)%GLD33E,HSXE33(GDINDX)%FFG33E,
+     &            HSXE33(GDINDX)%FFL33E,HSXE33(GDINDX)%DNG33E,
+     &            HSXE33(GDINDX)%DNL33E,HSXE33(GDINDX)%LLC33E,
+     &            HSXE33(GDINDX)%LGL33E,
+     &            HSXE33(GDINDX)%NTT33E,HSXE33(GDINDX)%NM33E,
+     &            HSXE33(GDINDX)%NCL33E,HSXE33(GDINDX)%NC133E,
+     &            HSXE33(GDINDX)%NC233E,HSXE33(GDINDX)%IBM33E,
+     &            HSXE33(GDINDX)%JCR33E,
+     &            HSXE33(GDINDX)%XX33E,HSXE33(GDINDX)%NDO33E,
+     &            NBN33E,NRG33E)
+      GOTO 1010
+ 18   CONTINUE
+ 19   CONTINUE
+ 20   CONTINUE
+      WRITE(LUNOUT,'(A,I4/A)')
      &        ' HSEVTG: UNDEFINED CHANNEL SELECTED- NCA=',NCA,
      &        '         EXECUTION STOPPED'
-        STOP
+      STOP
 C---
- 1010   CONTINUE
-        NEVE(NCA)=NEVE(NCA) + 1
-        IF(LFIRST(NCA)) THEN
-          LFIRST(NCA)=.FALSE.
-          ICONTI(NCA)=2
-        ENDIF
- 1000 CONTINUE
-C
+ 1010 CONTINUE
+
+      IF(K(1,1).EQ.21) THEN
+        GOTO 1002
+      ENDIF
+
+      NEVE(NCA)=NEVE(NCA) + 1
+      IF(LFIRST(NCA)) THEN
+        LFIRST(NCA)=.FALSE.
+        ICONTI(NCA)=2
+      ENDIF
+
 C---Efficiencies
+      DO I=1,GDSIZE
+      NCAL2=NCAL2+HSXNC2(I)%NCAL2
+      NCAL2C=NCAL2C+HSXCC2(I)%NCAL2C
+      NCAL2E=NCAL2E+HSXEL2(I)%NCAL2E
+      NCAL31=NCAL31+HSXN31(I)%NCAL31
+      NCAL32=NCAL32+HSXN32(I)%NCAL32
+      NCAL33=NCAL33+HSXN33(I)%NCAL33
+      NCAL34=NCAL34+HSXN34(I)%NCAL34
+      NCL31C=NCL31C+HSXC31(I)%NCL31C
+      NCL32C=NCL32C+HSXC32(I)%NCL32C
+      NCL33C=NCL33C+HSXC33(I)%NCL33C
+      NCL31E=NCL31E+HSXE31(I)%NCL31E
+      NCL32E=NCL32E+HSXE32(I)%NCL32E
+      NCL33E=NCL33E+HSXE33(I)%NCL33E
+      END DO
+
       EFFIC(1)=DFLOAT(NEVE(1))/DFLOAT(NCAL2)
       EFFIC(2)=DFLOAT(NEVE(2))/DFLOAT(NCAL2C)
       EFFIC(3)=DFLOAT(NEVE(3))/DFLOAT(NCAL2E)
@@ -3296,1097 +4035,1100 @@ C---Efficiencies
       EFFIC(16)=DFLOAT(NEVE(16))/DFLOAT(NCL32E)
       EFFIC(17)=DFLOAT(NEVE(17))/DFLOAT(NCL33E)
 
-      WRITE(LUNOUT,'(//2A/)') 'NUMBERS OF GENERATED EVENTS',
-     &' AND EFFICIENCIES'
-      WRITE(LUNOUT,'(A,I12)') 'TOTAL EVENT NUMBER', NEVENT
-      DO 3911 I=1,20
-        IF(NEVE(I).GT.0) WRITE(LUNOUT,'(A,I12,5X,1PE12.4)')
-     &  CHNAME(I),NEVE(I),EFFIC(I)
- 3911 CONTINUE
+      IF(VERBOZ.EQ.1) THEN
+        WRITE(LUNOUT,'(//2A/)') 'NUMBERS OF GENERATED EVENTS',
+     &  ' AND EFFICIENCIES'
+        WRITE(LUNOUT,'(A,I12)') 'TOTAL EVENT NUMBER', NEVENT
+        DO 3911 I=1,20
+          IF(NEVE(I).GT.0) THEN
+            WRITE(LUNOUT,'(A,I12,5X,1PE12.4)')
+     &      CHNAME(I),NEVE(I),EFFIC(I)
+          ENDIF
+ 3911   CONTINUE
+      ENDIF
 C
-      RETURN
       END
 C
 C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 C
 C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 C
-      SUBROUTINE HSDTIN
-C
-      IMPLICIT DOUBLE PRECISION (A-H,O-Z)
-      COMMON /HSOPTN/ INT2(5),INT3(15),ISAM2(5),ISAM3(15),
-     *                IOPLOT,IPRINT,ICUT
-      COMMON /HSUNTS/ LUNTES,LUNDAT,LUNIN,LUNOUT,LUNRND
-      PARAMETER(NDIM2=2,NBIN2=50)
-      PARAMETER(NREG2N=2500)
+C      SUBROUTINE HSDTIN (!!!!!!!! NOT USED ANYMORE)
+
+C      IMPLICIT DOUBLE PRECISION (A-H,O-Z)
+C      COMMON /HSOPTN/ INT2(5),INT3(15),ISAM2(5),ISAM3(15),
+C     *                IOPLOT,IPRINT,ICUT
+C      COMMON /HSUNTS/ LUNTES,LUNDAT,LUNIN,LUNOUT,LUNRND
+C      PARAMETER(NDIM2=2,NBIN2=50)
+C      PARAMETER(NREG2N=2500)
 C---                     NREG2N=NBIN2**NDIM2
-      LOGICAL LGLO2,LLOC2
-      double precision ntot2
-      COMMON /HSSNC2/ SIG2,SIG2E,T2GGMA,T2GMAX(NREG2N),
-     +                XX2(50,2),
-     +                FFGO2,DNCG2,FFLO2,DNCL2,GOLD2,
-     +                NM2(NREG2N),NDO2,
-     +                NTOT2,NCAL2,NCA12,NCA22,IBIM2,JCOR2,
-     +                LGLO2,LLOC2
-      PARAMETER(NREG2C=2500)
+C      LOGICAL LGLO2,LLOC2
+C      double precision ntot2
+C      COMMON /HSSNC2/ SIG2,SIG2E,T2GGMA,T2GMAX(NREG2N),
+C     +                XX2(50,2),
+C     +                FFGO2,DNCG2,FFLO2,DNCL2,GOLD2,
+C     +                NM2(NREG2N),NDO2,
+C     +                NTOT2,NCAL2,NCA12,NCA22,IBIM2,JCOR2,
+C     +                LGLO2,LLOC2
+C      PARAMETER(NREG2C=2500)
 C---                     NREG2C=NBIN2**NDIM2
-      LOGICAL LGLO2C,LLOC2C
-      double precision ntot2c
-      COMMON /HSSCC2/ SIG2C,SIG2EC,T2GMAC,T2MAXC(NREG2C),
-     +                XX2C(50,2),
-     +                FFGO2C,DNCG2C,FFLO2C,DNCL2C,GOLD2C,
-     +                NM2C(NREG2C),NDO2C,
-     +                NTOT2C,NCAL2C,NCA12C,NCA22C,IBIM2C,JCOR2C,
-     +                LGLO2C,LLOC2C
-      PARAMETER(NREG2E=50)
-      PARAMETER(NDIM1=1)
+C      LOGICAL LGLO2C,LLOC2C
+C      double precision ntot2c
+C      COMMON /HSSCC2/ SIG2C,SIG2EC,T2GMAC,T2MAXC(NREG2C),
+C     +                XX2C(50,2),
+C     +                FFGO2C,DNCG2C,FFLO2C,DNCL2C,GOLD2C,
+C     +                NM2C(NREG2C),NDO2C,
+C     +                NTOT2C,NCAL2C,NCA12C,NCA22C,IBIM2C,JCOR2C,
+C     +                LGLO2C,LLOC2C
+C      PARAMETER(NREG2E=50)
+C      PARAMETER(NDIM1=1)
 C---                     NREG2E=NBIN2**NDIM1
-      LOGICAL LGLO2E,LLOC2E
-      double precision ntot2e
-      COMMON /HSSEL2/ SIG2L,SIG2EE,T2GMAE,T2MAXE(NREG2E),
-     +                XX2E(50,1),
-     +                FFGO2E,DNCG2E,FFLO2E,DNCL2E,GOLD2E,
-     +                NM2E(NREG2E),NDO2E,
-     +                NTOT2E,NCAL2E,NCA12E,NCA22E,IBIM2E,JCOR2E,
-     +                LGLO2E,LLOC2E
+C      LOGICAL LGLO2E,LLOC2E
+C      double precision ntot2e
+C      COMMON /HSSEL2/ SIG2L,SIG2EE,T2GMAE,T2MAXE(NREG2E),
+C     +                XX2E(50,1),
+C     +                FFGO2E,DNCG2E,FFLO2E,DNCL2E,GOLD2E,
+C     +                NM2E(NREG2E),NDO2E,
+C     +                NTOT2E,NCAL2E,NCA12E,NCA22E,IBIM2E,JCOR2E,
+C     +                LGLO2E,LLOC2E
 C-----------------
-      PARAMETER(NDIM31=5,NBIN31=6,NREG31=7776)
+C      PARAMETER(NDIM31=5,NBIN31=6,NREG31=7776)
 C---                     NREG31=NBIN31**NDIM31
-      LOGICAL LGLO31,LLOC31
-      double precision ntot31
-      COMMON /HSSN31/ SIG31,SIG31E,T31GMA,T31MAX(NREG31),
-     +                XX31(50,NDIM31),
-     +                FFGO31,DNCG31,FFLO31,DNCL31,GOLD31,
-     +                SI31,SI2N31,SWGT31,SCHI31,IT31,
-     +                NM31(NREG31),NDO31,
-     +                NTOT31,NCAL31,NCA131,NCA231,IBIM31,JCOR31,
-     +                LGLO31,LLOC31
-C
-      PARAMETER(NDIM32=5,NBIN32=6,NREG32=7776)
+C      LOGICAL LGLO31,LLOC31
+C      double precision ntot31
+C      COMMON /HSSN31/ SIG31,SIG31E,T31GMA,T31MAX(NREG31),
+C     +                XX31(50,NDIM31),
+C     +                FFGO31,DNCG31,FFLO31,DNCL31,GOLD31,
+C     +                SI31,SI2N31,SWGT31,SCHI31,IT31,
+C     +                NM31(NREG31),NDO31,
+C     +                NTOT31,NCAL31,NCA131,NCA231,IBIM31,JCOR31,
+C     +                LGLO31,LLOC31
+
+C      PARAMETER(NDIM32=5,NBIN32=6,NREG32=7776)
 C---                     NREG32=NBIN32**NDIM32
-      LOGICAL LGLO32,LLOC32
-      double precision ntot32
-      COMMON /HSSN32/ SIG32,SIG32E,T32GMA,T32MAX(NREG32),
-     +                XX32(50,NDIM32),
-     +                FFGO32,DNCG32,FFLO32,DNCL32,GOLD32,
-     +                SI32,SI2N32,SWGT32,SCHI32,IT32,
-     +                NM32(NREG32),NDO32,
-     +                NTOT32,NCAL32,NCA132,NCA232,IBIM32,JCOR32,
-     +                LGLO32,LLOC32
-C
-      PARAMETER(NDIM33=5,NBIN33=6,NREG33=7776)
+C      LOGICAL LGLO32,LLOC32
+C      double precision ntot32
+C      COMMON /HSSN32/ SIG32,SIG32E,T32GMA,T32MAX(NREG32),
+C     +                XX32(50,NDIM32),
+C     +                FFGO32,DNCG32,FFLO32,DNCL32,GOLD32,
+C     +                SI32,SI2N32,SWGT32,SCHI32,IT32,
+C     +                NM32(NREG32),NDO32,
+C     +                NTOT32,NCAL32,NCA132,NCA232,IBIM32,JCOR32,
+C     +                LGLO32,LLOC32
+
+C      PARAMETER(NDIM33=5,NBIN33=6,NREG33=7776)
 C---                     NREG33=NBIN33**NDIM33
-      LOGICAL LGLO33,LLOC33
-      double precision ntot33
-      COMMON /HSSN33/ SIG33,SIG33E,T33GMA,T33MAX(NREG33),
-     +                XX33(50,NDIM33),
-     +                FFGO33,DNCG33,FFLO33,DNCL33,GOLD33,
-     +                SI33,SI2N33,SWGT33,SCHI33,IT33,
-     +                NM33(NREG33),NDO33,
-     +                NTOT33,NCAL33,NCA133,NCA233,IBIM33,JCOR33,
-     +                LGLO33,LLOC33
-C
-      PARAMETER(NDIM34=5,NBIN34=6,NREG34=7776)
+C      LOGICAL LGLO33,LLOC33
+C      double precision ntot33
+C      COMMON /HSSN33/ SIG33,SIG33E,T33GMA,T33MAX(NREG33),
+C     +                XX33(50,NDIM33),
+C     +                FFGO33,DNCG33,FFLO33,DNCL33,GOLD33,
+C     +                SI33,SI2N33,SWGT33,SCHI33,IT33,
+C     +                NM33(NREG33),NDO33,
+C     +                NTOT33,NCAL33,NCA133,NCA233,IBIM33,JCOR33,
+C     +                LGLO33,LLOC33
+
+C      PARAMETER(NDIM34=5,NBIN34=6,NREG34=7776)
 C---                     NREG34=NBIN34**NDIM34
-      LOGICAL LGLO34,LLOC34
-      double precision ntot34
-      COMMON /HSSN34/ SIG34,SIG34E,T34GMA,T34MAX(NREG34),
-     +                XX34(50,NDIM34),
-     +                FFGO34,DNCG34,FFLO34,DNCL34,GOLD34,
-     +                SI34,SI2N34,SWGT34,SCHI34,IT34,
-     +                NM34(NREG34),NDO34,
-     +                NTOT34,NCAL34,NCA134,NCA234,IBIM34,JCOR34,
-     +                LGLO34,LLOC34
-C
-      PARAMETER(NDM3CC=5)
-      PARAMETER(NBN31C=6,NRG31C=7776)
+C      LOGICAL LGLO34,LLOC34
+C      double precision ntot34
+C      COMMON /HSSN34/ SIG34,SIG34E,T34GMA,T34MAX(NREG34),
+C     +                XX34(50,NDIM34),
+C     +                FFGO34,DNCG34,FFLO34,DNCL34,GOLD34,
+C     +                SI34,SI2N34,SWGT34,SCHI34,IT34,
+C     +                NM34(NREG34),NDO34,
+C     +                NTOT34,NCAL34,NCA134,NCA234,IBIM34,JCOR34,
+C     +                LGLO34,LLOC34
+
+C      PARAMETER(NDM3CC=5)
+C      PARAMETER(NBN31C=6,NRG31C=7776)
 C---                     NRG31C=NBN31C**NDM3CC
-      LOGICAL LGL31C,LLC31C
-      double precision ntt31c
-      COMMON /HSSC31/ SIG31C,SG31EC,T31GMC,T31MXC(NRG31C),
-     +                XX31C(50,5),
-     +                FFG31C,DNG31C,FFL31C,DNL31C,GLD31C,
-     +                SI31C,S2N31C,SWT31C,SCH31C,IT31C,
-     +                NM31C(NRG31C),NDO31C,
-     +                NTT31C,NCL31C,NC131C,NC231C,IBM31C,JCR31C,
-     +                LGL31C,LLC31C
-C
-      PARAMETER(NBN32C=6,NRG32C=7776)
+C      LOGICAL LGL31C,LLC31C
+C      double precision ntt31c
+C      COMMON /HSSC31/ SIG31C,SG31EC,T31GMC,T31MXC(NRG31C),
+C     +                XX31C(50,5),
+C     +                FFG31C,DNG31C,FFL31C,DNL31C,GLD31C,
+C     +                SI31C,S2N31C,SWT31C,SCH31C,IT31C,
+C     +                NM31C(NRG31C),NDO31C,
+C     +                NTT31C,NCL31C,NC131C,NC231C,IBM31C,JCR31C,
+C     +                LGL31C,LLC31C
+
+C      PARAMETER(NBN32C=6,NRG32C=7776)
 C---                     NRG32C=NBN32C**NDM3CC
-      LOGICAL LGL32C,LLC32C
-      double precision ntt32c
-      COMMON /HSSC32/ SIG32C,SG32EC,T32GMC,T32MXC(NRG32C),
-     +                XX32C(50,5),
-     +                FFG32C,DNG32C,FFL32C,DNL32C,GLD32C,
-     +                SI32C,S2N32C,SWT32C,SCH32C,IT32C,
-     +                NM32C(NRG32C),NDO32C,
-     +                NTT32C,NCL32C,NC132C,NC232C,IBM32C,JCR32C,
-     +                LGL32C,LLC32C
-      PARAMETER(NBN33C=6,NRG33C=7776)
+C      LOGICAL LGL32C,LLC32C
+C      double precision ntt32c
+C      COMMON /HSSC32/ SIG32C,SG32EC,T32GMC,T32MXC(NRG32C),
+C     +                XX32C(50,5),
+C     +                FFG32C,DNG32C,FFL32C,DNL32C,GLD32C,
+C     +                SI32C,S2N32C,SWT32C,SCH32C,IT32C,
+C     +                NM32C(NRG32C),NDO32C,
+C     +                NTT32C,NCL32C,NC132C,NC232C,IBM32C,JCR32C,
+C     +                LGL32C,LLC32C
+C      PARAMETER(NBN33C=6,NRG33C=7776)
 C---                     NRG33C=NBN33C**NDM3CC
-      LOGICAL LGL33C,LLC33C
-      double precision ntt33c
-      COMMON /HSSC33/ SIG33C,SG33EC,T33GMC,T33MXC(NRG33C),
-     +                XX33C(50,5),
-     +                FFG33C,DNG33C,FFL33C,DNL33C,GLD33C,
-     +                SI33C,S2N33C,SWT33C,SCH33C,IT33C,
-     +                NM33C(NRG33C),NDO33C,
-     +                NTT33C,NCL33C,NC133C,NC233C,IBM33C,JCR33C,
-     +                LGL33C,LLC33C
-      PARAMETER(NDM3EL=4)
-      PARAMETER(NBN31E=8,NRG31E=4096)
+C      LOGICAL LGL33C,LLC33C
+C      double precision ntt33c
+C      COMMON /HSSC33/ SIG33C,SG33EC,T33GMC,T33MXC(NRG33C),
+C     +                XX33C(50,5),
+C     +                FFG33C,DNG33C,FFL33C,DNL33C,GLD33C,
+C     +                SI33C,S2N33C,SWT33C,SCH33C,IT33C,
+C     +                NM33C(NRG33C),NDO33C,
+C     +                NTT33C,NCL33C,NC133C,NC233C,IBM33C,JCR33C,
+C     +                LGL33C,LLC33C
+C      PARAMETER(NDM3EL=4)
+C      PARAMETER(NBN31E=8,NRG31E=4096)
 C---                     NRG31C=NBN31E**NDM3EL
-      LOGICAL LGL31E,LLC31E
-      double precision ntt31e
-      COMMON /HSSE31/ SIG31L,SG31EE,T31GME,T31MXE(NRG31E),
-     +                XX31E(50,4),
-     +                FFG31E,DNG31E,FFL31E,DNL31E,GLD31E,
-     +                SI31E,S2N31E,SWT31E,SCH31E,IT31E,
-     +                NM31E(NRG31E),NDO31E,
-     +                NTT31E,NCL31E,NC131E,NC231E,IBM31E,JCR31E,
-     +                LGL31E,LLC31E
-      PARAMETER(NBN32E=8,NRG32E=4096)
+C      LOGICAL LGL31E,LLC31E
+C      double precision ntt31e
+C      COMMON /HSSE31/ SIG31L,SG31EE,T31GME,T31MXE(NRG31E),
+C     +                XX31E(50,4),
+C     +                FFG31E,DNG31E,FFL31E,DNL31E,GLD31E,
+C     +                SI31E,S2N31E,SWT31E,SCH31E,IT31E,
+C     +                NM31E(NRG31E),NDO31E,
+C     +                NTT31E,NCL31E,NC131E,NC231E,IBM31E,JCR31E,
+C     +                LGL31E,LLC31E
+C      PARAMETER(NBN32E=8,NRG32E=4096)
 C---                     NRG32E=NBN32E**NDM3EL
-      LOGICAL LGL32E,LLC32E
-      double precision ntt32e
-      COMMON /HSSE32/ SIG32L,SG32EE,T32GME,T32MXE(NRG32E),
-     +                XX32E(50,4),
-     +                FFG32E,DNG32E,FFL32E,DNL32E,GLD32E,
-     +                SI32E,S2N32E,SWT32E,SCH32E,IT32E,
-     +                NM32E(NRG32E),NDO32E,
-     +                NTT32E,NCL32E,NC132E,NC232E,IBM32E,JCR32E,
-     +                LGL32E,LLC32E
-      PARAMETER(NBN33E=8,NRG33E=4096)
+C      LOGICAL LGL32E,LLC32E
+C      double precision ntt32e
+C      COMMON /HSSE32/ SIG32L,SG32EE,T32GME,T32MXE(NRG32E),
+C     +                XX32E(50,4),
+C     +                FFG32E,DNG32E,FFL32E,DNL32E,GLD32E,
+C     +                SI32E,S2N32E,SWT32E,SCH32E,IT32E,
+C     +                NM32E(NRG32E),NDO32E,
+C     +                NTT32E,NCL32E,NC132E,NC232E,IBM32E,JCR32E,
+C     +                LGL32E,LLC32E
+C      PARAMETER(NBN33E=8,NRG33E=4096)
 C---                     NRG33E=NBN33E**NDM3EL
-      LOGICAL LGL33E,LLC33E
-      double precision ntt33e
-      COMMON /HSSE33/ SIG33L,SG33EE,T33GME,T33MXE(NRG33E),
-     +                XX33E(50,4),
-     +                FFG33E,DNG33E,FFL33E,DNL33E,GLD33E,
-     +                SI33E,S2N33E,SWT33E,SCH33E,IT33E,
-     +                NM33E(NRG33E),NDO33E,
-     +                NTT33E,NCL33E,NC133E,NC233E,IBM33E,JCR33E,
-     +                LGL33E,LLC33E
-C
+C      LOGICAL LGL33E,LLC33E
+C      double precision ntt33e
+C      COMMON /HSSE33/ SIG33L,SG33EE,T33GME,T33MXE(NRG33E),
+C     +                XX33E(50,4),
+C     +                FFG33E,DNG33E,FFL33E,DNL33E,GLD33E,
+C     +                SI33E,S2N33E,SWT33E,SCH33E,IT33E,
+C     +                NM33E(NRG33E),NDO33E,
+C     +                NTT33E,NCL33E,NC133E,NC233E,IBM33E,JCR33E,
+C     +                LGL33E,LLC33E
+
 C-------------------------
-      COMMON /HSCUTS/ XMIN,XMAX,Q2MIN,Q2MAX,YMIN,YMAX,WMIN,GMIN
-      COMMON /HSPARM/ POLARI,HPOLAR,LLEPT,LQUA
-      COMMON /HSELAB/ SP,EELE,PELE,EPRO,PPRO
-      COMMON /HSIRCT/ DELEPS,DELTA,EGMIN,IOPEGM
+C      COMMON /HSCUTS/ XMIN,XMAX,Q2MIN,Q2MAX,YMIN,YMAX,WMIN,GMIN
+C      COMMON /HSPARM/ POLARI,HPOLAR,LLEPT,LQUA
+C      COMMON /HSELAB/ SP,EELE,PELE,EPRO,PPRO
+C      COMMON /HSIRCT/ DELEPS,DELTA,EGMIN,IOPEGM
 C
 C---READ PARAMETER DEFINITIONS OF THE PREVIOUS RUN
 C---CROSS CHECK WITH CURRENT ONES
 C
-      CALL HSTPAR
+C      CALL HSTPAR
 C
 C---NEUTRAL CURRENT - NONRADIATIVE CHANNEL
 C
-      READ(LUNDAT,ERR=9900,END=9900,IOSTAT=IOS) SIG2,SIG2E,T2GGMA,NDO2
-      READ(LUNDAT,ERR=9900,END=9900,IOSTAT=IOS) (T2GMAX(I),I=1,NREG2N)
-      READ(LUNDAT,ERR=9900,END=9900,IOSTAT=IOS) (NM2(I),I=1,NREG2N)
-      READ(LUNDAT,ERR=9900,END=9900,IOSTAT=IOS)
-     &    ((XX2(I,II),I=1,NDO2),II=1,NDIM2)
-      READ(LUNDAT,ERR=9900,END=9900,IOSTAT=IOS)
-     &                FFGO2,DNCG2,FFLO2,DNCL2,GOLD2,
-     &                NTOT2,NCAL2,NCA12,NCA22,IBIM2,JCOR2,
-     &                LGLO2,LLOC2
+C      READ(LUNDAT,ERR=9900,END=9900,IOSTAT=IOS) SIG2,SIG2E,T2GGMA,NDO2
+C      READ(LUNDAT,ERR=9900,END=9900,IOSTAT=IOS) (T2GMAX(I),I=1,NREG2N)
+C      READ(LUNDAT,ERR=9900,END=9900,IOSTAT=IOS) (NM2(I),I=1,NREG2N)
+C      READ(LUNDAT,ERR=9900,END=9900,IOSTAT=IOS)
+C     &    ((XX2(I,II),I=1,NDO2),II=1,NDIM2)
+C      READ(LUNDAT,ERR=9900,END=9900,IOSTAT=IOS)
+C     &                FFGO2,DNCG2,FFLO2,DNCL2,GOLD2,
+C     &                NTOT2,NCAL2,NCA12,NCA22,IBIM2,JCOR2,
+C     &                LGLO2,LLOC2
 C
- 9900 CONTINUE
-      IF(IOS.NE.0. OR. IPRINT.GE.2) THEN
-        WRITE(LUNTES,'(//A/)') ' TEST PRINT HSDTIN'
-        WRITE(LUNTES,'(/A)') ' SIG2, SIG2E, T2GGMA, NDO2'
-        WRITE(LUNTES,11) SIG2,SIG2E,T2GGMA,NDO2
-        IF(IPRINT.GE.3) THEN
-          WRITE(LUNTES,'(/,A)') ' T2GMAX(NREG2N)'
-          WRITE(LUNTES,12) (T2GMAX(I),I=1,NREG2N)
-          WRITE(LUNTES,'(/,A)') ' NM2(NREG2N)'
-          WRITE(LUNTES,13) (NM2(I),I=1,NREG2N)
-          WRITE(LUNTES,'(/,A)') ' XX2(...)'
-          WRITE(LUNTES,12) ((XX2(I,II),I=1,NDO2),II=1,NDIM2)
-        ENDIF
+C 9900 CONTINUE
+C      IF(IOS.NE.0. OR. IPRINT.GE.2) THEN
+C        WRITE(LUNTES,'(//A/)') ' TEST PRINT HSDTIN'
+C        WRITE(LUNTES,'(/A)') ' SIG2, SIG2E, T2GGMA, NDO2'
+C        WRITE(LUNTES,11) SIG2,SIG2E,T2GGMA,NDO2
+C        IF(IPRINT.GE.3) THEN
+C          WRITE(LUNTES,'(/,A)') ' T2GMAX(NREG2N)'
+C          WRITE(LUNTES,12) (T2GMAX(I),I=1,NREG2N)
+C          WRITE(LUNTES,'(/,A)') ' NM2(NREG2N)'
+C          WRITE(LUNTES,13) (NM2(I),I=1,NREG2N)
+C          WRITE(LUNTES,'(/,A)') ' XX2(...)'
+C          WRITE(LUNTES,12) ((XX2(I,II),I=1,NDO2),II=1,NDIM2)
+C        ENDIF
 C
-        WRITE(LUNTES,'(/A/A/A)') ' FFGO2,DNCG2,FFLO2,DNCL2',
-     &                   'NTOT2,NCAL2,NCA12,NCA22,IBIM2,JCOR2',
-     &                   'LGLO2,LLOC2'
-        WRITE(LUNTES,'(4(1PE13.4)/6I10/2L4)')
-     &                   FFGO2,DNCG2,FFLO2,DNCL2,
-     &                   NTOT2,NCAL2,NCA12,NCA22,IBIM2,JCOR2,
-     &                   LGLO2,LLOC2
-        IF(IOS.NE.0) GOTO 9999
-      ENDIF
+C        WRITE(LUNTES,'(/A/A/A)') ' FFGO2,DNCG2,FFLO2,DNCL2',
+C     &                   'NTOT2,NCAL2,NCA12,NCA22,IBIM2,JCOR2',
+C     &                   'LGLO2,LLOC2'
+C        WRITE(LUNTES,'(4(1PE13.4)/6I10/2L4)')
+C     &                   FFGO2,DNCG2,FFLO2,DNCL2,
+C     &                   NTOT2,NCAL2,NCA12,NCA22,IBIM2,JCOR2,
+C     &                   LGLO2,LLOC2
+C        IF(IOS.NE.0) GOTO 9999
+C      ENDIF
 C
 C---NEUTRAL CURRENT - INITIAL STATE LEPTONIC RADIATION
 C
-      READ(LUNDAT,ERR=9901,END=9901,IOSTAT=IOS)
-     &     SIG31,SIG31E,T31GMA,NDO31
-      IF(IPRINT.GE.5) THEN
-        WRITE(LUNTES,'(///A)') ' HSDTIN :  SIG31,SIG31E,T31GMA,NDO31'
-        WRITE(LUNTES,*) SIG31,SIG31E,T31GMA,NDO31
-      ENDIF
-      READ(LUNDAT,ERR=9901,END=9901,IOSTAT=IOS) (T31MAX(I),I=1,NREG31)
-      READ(LUNDAT,ERR=9901,END=9901,IOSTAT=IOS) (NM31(I),I=1,NREG31)
-      READ(LUNDAT,ERR=9901,END=9901,IOSTAT=IOS)
-     &     IT31,SI31,SI2N31,SWGT31,SCHI31
-      READ(LUNDAT,ERR=9901,END=9901,IOSTAT=IOS)
-     &     ((XX31(I,II),I=1,NDO31),II=1,NDIM31)
-      READ(LUNDAT,ERR=9901,END=9901,IOSTAT=IOS)
-     &                FFGO31,DNCG31,FFLO31,DNCL31,GOLD31,
-     &                NTOT31,NCAL31,NCA131,NCA231,IBIM31,JCOR31,
-     &                LGLO31,LLOC31
+C      READ(LUNDAT,ERR=9901,END=9901,IOSTAT=IOS)
+C     &     SIG31,SIG31E,T31GMA,NDO31
+C      IF(IPRINT.GE.5) THEN
+C        WRITE(LUNTES,'(///A)') ' HSDTIN :  SIG31,SIG31E,T31GMA,NDO31'
+C        WRITE(LUNTES,*) SIG31,SIG31E,T31GMA,NDO31
+C      ENDIF
+C      READ(LUNDAT,ERR=9901,END=9901,IOSTAT=IOS) (T31MAX(I),I=1,NREG31)
+C      READ(LUNDAT,ERR=9901,END=9901,IOSTAT=IOS) (NM31(I),I=1,NREG31)
+C      READ(LUNDAT,ERR=9901,END=9901,IOSTAT=IOS)
+C     &     IT31,SI31,SI2N31,SWGT31,SCHI31
+C      READ(LUNDAT,ERR=9901,END=9901,IOSTAT=IOS)
+C     &     ((XX31(I,II),I=1,NDO31),II=1,NDIM31)
+C      READ(LUNDAT,ERR=9901,END=9901,IOSTAT=IOS)
+C     &                FFGO31,DNCG31,FFLO31,DNCL31,GOLD31,
+C     &                NTOT31,NCAL31,NCA131,NCA231,IBIM31,JCOR31,
+C     &                LGLO31,LLOC31
 C
- 9901 CONTINUE
+C 9901 CONTINUE
 C
-      IF(IPRINT.GE.6 .OR. IOS.NE.0) THEN
-        WRITE(LUNTES,'(/A/5X,5(1PD13.5))')
-     &       ' HSDTIN :    FFGO31,DNCG31,FFLO31,DNCL31,GOLD31',
-     &                    FFGO31,DNCG31,FFLO31,DNCL31,GOLD31
-        WRITE(LUNTES,'(/A/5X,2I8,4I5)')
-     &       ' HSDTIN :    NTOT31,NCAL31,NCA131,NCA231,IBIM31,JCOR31',
-     &                    NTOT31,NCAL31,NCA131,NCA231,IBIM31,JCOR31
-        WRITE(LUNTES,'(/A,2L4)')
-     &       ' HSDTIN:     LGLO31,LLOC31',  LGLO31,LLOC31
-        IF(IOS.NE.0) GOTO 9999
-      ENDIF
-C
+C      IF(IPRINT.GE.6 .OR. IOS.NE.0) THEN
+C        WRITE(LUNTES,'(/A/5X,5(1PD13.5))')
+C     &       ' HSDTIN :    FFGO31,DNCG31,FFLO31,DNCL31,GOLD31',
+C     &                    FFGO31,DNCG31,FFLO31,DNCL31,GOLD31
+C        WRITE(LUNTES,'(/A/5X,2I8,4I5)')
+C     &       ' HSDTIN :    NTOT31,NCAL31,NCA131,NCA231,IBIM31,JCOR31',
+C     &                    NTOT31,NCAL31,NCA131,NCA231,IBIM31,JCOR31
+C        WRITE(LUNTES,'(/A,2L4)')
+C     &       ' HSDTIN:     LGLO31,LLOC31',  LGLO31,LLOC31
+C        IF(IOS.NE.0) GOTO 9999
+C      ENDIF
+
 C---NEUTRAL CURRENT - FINAL STATE LEPTONIC RADIATION
 C
-      READ(LUNDAT,ERR=9902,END=9902,IOSTAT=IOS)
-     &     SIG32,SIG32E,T32GMA,NDO32
-      READ(LUNDAT,ERR=9902,END=9902,IOSTAT=IOS) (T32MAX(I),I=1,NREG32)
-      READ(LUNDAT,ERR=9902,END=9902,IOSTAT=IOS) (NM32(I),I=1,NREG32)
-      READ(LUNDAT,ERR=9902,END=9902,IOSTAT=IOS)
-     &     IT32,SI32,SI2N32,SWGT32,SCHI32
-      READ(LUNDAT,ERR=9902,END=9902,IOSTAT=IOS)
-     &    ((XX32(I,II),I=1,NDO32),II=1,NDIM32)
-      READ(LUNDAT,ERR=9902,END=9902,IOSTAT=IOS)
-     &     FFGO32,DNCG32,FFLO32,DNCL32,GOLD32,
-     &     NTOT32,NCAL32,NCA132,NCA232,IBIM32,JCOR32,
-     &     LGLO32,LLOC32
+C      READ(LUNDAT,ERR=9902,END=9902,IOSTAT=IOS)
+C     &     SIG32,SIG32E,T32GMA,NDO32
+C      READ(LUNDAT,ERR=9902,END=9902,IOSTAT=IOS) (T32MAX(I),I=1,NREG32)
+C      READ(LUNDAT,ERR=9902,END=9902,IOSTAT=IOS) (NM32(I),I=1,NREG32)
+C      READ(LUNDAT,ERR=9902,END=9902,IOSTAT=IOS)
+C     &     IT32,SI32,SI2N32,SWGT32,SCHI32
+C      READ(LUNDAT,ERR=9902,END=9902,IOSTAT=IOS)
+C     &    ((XX32(I,II),I=1,NDO32),II=1,NDIM32)
+C      READ(LUNDAT,ERR=9902,END=9902,IOSTAT=IOS)
+C     &     FFGO32,DNCG32,FFLO32,DNCL32,GOLD32,
+C     &     NTOT32,NCAL32,NCA132,NCA232,IBIM32,JCOR32,
+C     &     LGLO32,LLOC32
+
+C 9902 CONTINUE
 C
- 9902 CONTINUE
-C
-      IF(IPRINT.GE.6 .OR. IOS.NE.0) THEN
-        WRITE(LUNTES,'(/A/5X,5(1PD13.5))')
-     &       ' HSDTIN :    FFGO32,DNCG32,FFLO32,DNCL32,GOLD32',
-     &                    FFGO32,DNCG32,FFLO32,DNCL32,GOLD32
-        WRITE(LUNTES,'(/A/5X,2I8,4I5)')
-     &       ' HSDTIN :    NTOT32,NCAL32,NCA132,NCA232,IBIM32,JCOR32',
-     &                    NTOT32,NCAL32,NCA132,NCA232,IBIM32,JCOR32
-        WRITE(LUNTES,'(/A,2L4)')
-     &       ' HSDTIN:     LGLO32,LLOC32',  LGLO32,LLOC32
-        IF(IOS.NE.0) GOTO 9999
-      ENDIF
+C      IF(IPRINT.GE.6 .OR. IOS.NE.0) THEN
+C        WRITE(LUNTES,'(/A/5X,5(1PD13.5))')
+C     &       ' HSDTIN :    FFGO32,DNCG32,FFLO32,DNCL32,GOLD32',
+C     &                    FFGO32,DNCG32,FFLO32,DNCL32,GOLD32
+C        WRITE(LUNTES,'(/A/5X,2I8,4I5)')
+C     &       ' HSDTIN :    NTOT32,NCAL32,NCA132,NCA232,IBIM32,JCOR32',
+C     &                    NTOT32,NCAL32,NCA132,NCA232,IBIM32,JCOR32
+C        WRITE(LUNTES,'(/A,2L4)')
+C     &       ' HSDTIN:     LGLO32,LLOC32',  LGLO32,LLOC32
+C        IF(IOS.NE.0) GOTO 9999
+C      ENDIF
 C
 C---NEUTRAL CURRENT - COMPTON CHANNEL
 C
-      READ(LUNDAT,ERR=9903,END=9903,IOSTAT=IOS)
-     &     SIG33,SIG33E,T33GMA,NDO33
-      IF(IPRINT.GE.5) THEN
-        WRITE(LUNTES,'(///A)') ' HSDTIN :  SIG33,SIG33E,T33GMA,NDO33'
-        WRITE(LUNTES,*) SIG33,SIG33E,T33GMA,NDO33
-      ENDIF
-      READ(LUNDAT,ERR=9903,END=9903,IOSTAT=IOS) (T33MAX(I),I=1,NREG33)
-      READ(LUNDAT,ERR=9903,END=9903,IOSTAT=IOS) (NM33(I),I=1,NREG33)
-      READ(LUNDAT,ERR=9903,END=9903,IOSTAT=IOS)
-     &     IT33,SI33,SI2N33,SWGT33,SCHI33
-      READ(LUNDAT,ERR=9903,END=9903,IOSTAT=IOS)
-     &     ((XX33(I,II),I=1,NDO33),II=1,NDIM33)
-      READ(LUNDAT,ERR=9903,END=9903,IOSTAT=IOS)
-     &     FFGO33,DNCG33,FFLO33,DNCL33,GOLD33,
-     &     NTOT33,NCAL33,NCA133,NCA233,IBIM33,JCOR33,
-     &     LGLO33,LLOC33
-C
- 9903 CONTINUE
-C
-      IF(IPRINT.GE.6 .OR. IOS.NE.0) THEN
-        WRITE(LUNTES,'(/A/5X,5(1PD13.5))')
-     &       ' HSDTIN :    FFGO33,DNCG33,FFLO33,DNCL33,GOLD33',
-     &                    FFGO33,DNCG33,FFLO33,DNCL33,GOLD33
-        WRITE(LUNTES,'(/A/5X,2I8,4I5)')
-     &       ' HSDTIN :    NTOT33,NCAL33,NCA133,NCA233,IBIM33,JCOR33',
-     &                    NTOT33,NCAL33,NCA133,NCA233,IBIM33,JCOR33
-        WRITE(LUNTES,'(/A,2L4)')
-     &       ' HSDTIN:     LGLO33,LLOC33',  LGLO33,LLOC33
-        IF(IOS.NE.0) GOTO 9999
-      ENDIF
-C
+C      READ(LUNDAT,ERR=9903,END=9903,IOSTAT=IOS)
+C     &     SIG33,SIG33E,T33GMA,NDO33
+C      IF(IPRINT.GE.5) THEN
+C        WRITE(LUNTES,'(///A)') ' HSDTIN :  SIG33,SIG33E,T33GMA,NDO33'
+C        WRITE(LUNTES,*) SIG33,SIG33E,T33GMA,NDO33
+C      ENDIF
+C      READ(LUNDAT,ERR=9903,END=9903,IOSTAT=IOS) (T33MAX(I),I=1,NREG33)
+C      READ(LUNDAT,ERR=9903,END=9903,IOSTAT=IOS) (NM33(I),I=1,NREG33)
+C      READ(LUNDAT,ERR=9903,END=9903,IOSTAT=IOS)
+C     &     IT33,SI33,SI2N33,SWGT33,SCHI33
+C      READ(LUNDAT,ERR=9903,END=9903,IOSTAT=IOS)
+C     &     ((XX33(I,II),I=1,NDO33),II=1,NDIM33)
+C      READ(LUNDAT,ERR=9903,END=9903,IOSTAT=IOS)
+C     &     FFGO33,DNCG33,FFLO33,DNCL33,GOLD33,
+C     &     NTOT33,NCAL33,NCA133,NCA233,IBIM33,JCOR33,
+C     &     LGLO33,LLOC33
+
+C 9903 CONTINUE
+
+C      IF(IPRINT.GE.6 .OR. IOS.NE.0) THEN
+C        WRITE(LUNTES,'(/A/5X,5(1PD13.5))')
+C     &       ' HSDTIN :    FFGO33,DNCG33,FFLO33,DNCL33,GOLD33',
+C     &                    FFGO33,DNCG33,FFLO33,DNCL33,GOLD33
+C        WRITE(LUNTES,'(/A/5X,2I8,4I5)')
+C     &       ' HSDTIN :    NTOT33,NCAL33,NCA133,NCA233,IBIM33,JCOR33',
+C     &                    NTOT33,NCAL33,NCA133,NCA233,IBIM33,JCOR33
+C        WRITE(LUNTES,'(/A,2L4)')
+C     &       ' HSDTIN:     LGLO33,LLOC33',  LGLO33,LLOC33
+C        IF(IOS.NE.0) GOTO 9999
+C      ENDIF
+
 C---NEUTRAL CURRENT - QUARKONIC RADIATION
 C
-      READ(LUNDAT,ERR=9904,END=9904,IOSTAT=IOS)
-     &     SIG34,SIG34E,T34GMA,NDO34
-      IF(IPRINT.GE.5) THEN
-        WRITE(LUNTES,'(///A)') ' HSDTIN :  SIG34,SIG34E,T34GMA,NDO34'
-        WRITE(LUNTES,*) SIG34,SIG34E,T34GMA,NDO34
-      ENDIF
-      READ(LUNDAT,ERR=9904,END=9904,IOSTAT=IOS) (T34MAX(I),I=1,NREG34)
-      READ(LUNDAT,ERR=9904,END=9904,IOSTAT=IOS) (NM34(I),I=1,NREG34)
-      READ(LUNDAT,ERR=9904,END=9904,IOSTAT=IOS)
-     &     IT34,SI34,SI2N34,SWGT34,SCHI34
-      READ(LUNDAT,ERR=9904,END=9904,IOSTAT=IOS)
-     &     ((XX34(I,II),I=1,NDO34),II=1,NDIM34)
-      READ(LUNDAT,ERR=9904,END=9904,IOSTAT=IOS)
-     &     FFGO34,DNCG34,FFLO34,DNCL34,GOLD34,
-     &     NTOT34,NCAL34,NCA134,NCA234,IBIM34,JCOR34,
-     &     LGLO34,LLOC34
+C      READ(LUNDAT,ERR=9904,END=9904,IOSTAT=IOS)
+C     &     SIG34,SIG34E,T34GMA,NDO34
+C      IF(IPRINT.GE.5) THEN
+C        WRITE(LUNTES,'(///A)') ' HSDTIN :  SIG34,SIG34E,T34GMA,NDO34'
+C        WRITE(LUNTES,*) SIG34,SIG34E,T34GMA,NDO34
+C      ENDIF
+C      READ(LUNDAT,ERR=9904,END=9904,IOSTAT=IOS) (T34MAX(I),I=1,NREG34)
+C      READ(LUNDAT,ERR=9904,END=9904,IOSTAT=IOS) (NM34(I),I=1,NREG34)
+C      READ(LUNDAT,ERR=9904,END=9904,IOSTAT=IOS)
+C     &     IT34,SI34,SI2N34,SWGT34,SCHI34
+C      READ(LUNDAT,ERR=9904,END=9904,IOSTAT=IOS)
+C     &     ((XX34(I,II),I=1,NDO34),II=1,NDIM34)
+C      READ(LUNDAT,ERR=9904,END=9904,IOSTAT=IOS)
+C     &     FFGO34,DNCG34,FFLO34,DNCL34,GOLD34,
+C     &     NTOT34,NCAL34,NCA134,NCA234,IBIM34,JCOR34,
+C     &     LGLO34,LLOC34
 C
- 9904 CONTINUE
+C 9904 CONTINUE
 C
-      IF(IPRINT.GE.6 .OR. IOS.NE.0) THEN
-        WRITE(LUNTES,'(/A/5X,5(1PD13.5))')
-     &       ' HSDTIN :    FFGO34,DNCG34,FFLO34,DNCL34,GOLD34',
-     &                    FFGO34,DNCG34,FFLO34,DNCL34,GOLD34
-        WRITE(LUNTES,'(/A/5X,2I8,4I5)')
-     &       ' HSDTIN :    NTOT34,NCAL34,NCA134,NCA234,IBIM34,JCOR34',
-     &                    NTOT34,NCAL34,NCA134,NCA234,IBIM34,JCOR34
-        WRITE(LUNTES,'(/A,2L4)')
-     &       ' HSDTIN:     LGLO34,LLOC34',  LGLO34,LLOC34
-        IF(IOS.NE.0) GOTO 9999
-      ENDIF
-C
+C      IF(IPRINT.GE.6 .OR. IOS.NE.0) THEN
+C        WRITE(LUNTES,'(/A/5X,5(1PD13.5))')
+C     &       ' HSDTIN :    FFGO34,DNCG34,FFLO34,DNCL34,GOLD34',
+C     &                    FFGO34,DNCG34,FFLO34,DNCL34,GOLD34
+C        WRITE(LUNTES,'(/A/5X,2I8,4I5)')
+C     &       ' HSDTIN :    NTOT34,NCAL34,NCA134,NCA234,IBIM34,JCOR34',
+C     &                    NTOT34,NCAL34,NCA134,NCA234,IBIM34,JCOR34
+C        WRITE(LUNTES,'(/A,2L4)')
+C     &       ' HSDTIN:     LGLO34,LLOC34',  LGLO34,LLOC34
+C        IF(IOS.NE.0) GOTO 9999
+C      ENDIF
+
 C---CHARGED CURRENT - NONRADIATIVE CHANNEL
-C
-      READ(LUNDAT,ERR=9905,END=9905,IOSTAT=IOS)SIG2C,SIG2EC,T2GMAC,NDO2C
-      READ(LUNDAT,ERR=9905,END=9905,IOSTAT=IOS) (T2MAXC(I),I=1,NREG2C)
-      READ(LUNDAT,ERR=9905,END=9905,IOSTAT=IOS) (NM2C(I),I=1,NREG2C)
-      READ(LUNDAT,ERR=9905,END=9905,IOSTAT=IOS)
-     &    ((XX2C(I,II),I=1,NDO2C),II=1,NDIM2)
-      READ(LUNDAT,ERR=9905,END=9905,IOSTAT=IOS)
-     &                FFGO2C,DNCG2C,FFLO2C,DNCL2C,GOLD2C,
-     &                NTOT2C,NCAL2C,NCA12C,NCA22C,IBIM2C,JCOR2C,
-     &                LGLO2C,LLOC2C
+
+C      READ(LUNDAT,ERR=9905,END=9905,IOSTAT=IOS)SIG2C,SIG2EC,T2GMAC,NDO2C
+C      READ(LUNDAT,ERR=9905,END=9905,IOSTAT=IOS) (T2MAXC(I),I=1,NREG2C)
+C      READ(LUNDAT,ERR=9905,END=9905,IOSTAT=IOS) (NM2C(I),I=1,NREG2C)
+C      READ(LUNDAT,ERR=9905,END=9905,IOSTAT=IOS)
+C     &    ((XX2C(I,II),I=1,NDO2C),II=1,NDIM2)
+C      READ(LUNDAT,ERR=9905,END=9905,IOSTAT=IOS)
+C     &                FFGO2C,DNCG2C,FFLO2C,DNCL2C,GOLD2C,
+C     &                NTOT2C,NCAL2C,NCA12C,NCA22C,IBIM2C,JCOR2C,
+C     &                LGLO2C,LLOC2C
 C
 C---CHARGED CURRENT - (KP) CHANNEL
 C
- 9905 CONTINUE
-      READ(LUNDAT,ERR=9906,END=9906,IOSTAT=IOS)
-     &     SIG31C,SG31EC,T31GMC,NDO31C
-      READ(LUNDAT,ERR=9906,END=9906,IOSTAT=IOS) (T31MXC(I),I=1,NRG31C)
-      READ(LUNDAT,ERR=9906,END=9906,IOSTAT=IOS) (NM31C(I),I=1,NRG31C)
-      READ(LUNDAT,ERR=9906,END=9906,IOSTAT=IOS)
-     &     IT31C,SI31C,S2N31C,SWT31C,SCH31C
-      READ(LUNDAT,ERR=9906,END=9906,IOSTAT=IOS)
-     &     ((XX31C(I,II),I=1,NDO31C),II=1,NDM3CC)
-      READ(LUNDAT,ERR=9906,END=9906,IOSTAT=IOS)
-     &                FFG31C,DNG31C,FFL31C,DNL31C,GLD31C,
-     &                NTT31C,NCL31C,NC131C,NC231C,IBM31C,JCR31C,
-     &                LGL31C,LLC31C
+C 9905 CONTINUE
+C      READ(LUNDAT,ERR=9906,END=9906,IOSTAT=IOS)
+C     &     SIG31C,SG31EC,T31GMC,NDO31C
+C      READ(LUNDAT,ERR=9906,END=9906,IOSTAT=IOS) (T31MXC(I),I=1,NRG31C)
+C      READ(LUNDAT,ERR=9906,END=9906,IOSTAT=IOS) (NM31C(I),I=1,NRG31C)
+C      READ(LUNDAT,ERR=9906,END=9906,IOSTAT=IOS)
+C     &     IT31C,SI31C,S2N31C,SWT31C,SCH31C
+C      READ(LUNDAT,ERR=9906,END=9906,IOSTAT=IOS)
+C     &     ((XX31C(I,II),I=1,NDO31C),II=1,NDM3CC)
+C      READ(LUNDAT,ERR=9906,END=9906,IOSTAT=IOS)
+C     &                FFG31C,DNG31C,FFL31C,DNL31C,GLD31C,
+C     &                NTT31C,NCL31C,NC131C,NC231C,IBM31C,JCR31C,
+C     &                LGL31C,LLC31C
 C
 C---CHARGED CURRENT - (KQ) CHANNEL
 C
- 9906 CONTINUE
-      READ(LUNDAT,ERR=9907,END=9907,IOSTAT=IOS)
-     &     SIG32C,SG32EC,T32GMC,NDO32C
-      READ(LUNDAT,ERR=9907,END=9907,IOSTAT=IOS) (T32MXC(I),I=1,NRG32C)
-      READ(LUNDAT,ERR=9907,END=9907,IOSTAT=IOS) (NM32C(I),I=1,NRG32C)
-      READ(LUNDAT,ERR=9907,END=9907,IOSTAT=IOS)
-     &     IT32C,SI32C,S2N32C,SWT32C,SCH32C
-      READ(LUNDAT,ERR=9907,END=9907,IOSTAT=IOS)
-     &     ((XX32C(I,II),I=1,NDO32C),II=1,NDM3CC)
-      READ(LUNDAT,ERR=9907,END=9907,IOSTAT=IOS)
-     &                FFG32C,DNG32C,FFL32C,DNL32C,GLD32C,
-     &                NTT32C,NCL32C,NC132C,NC232C,IBM32C,JCR32C,
-     &                LGL32C,LLC32C
+C 9906 CONTINUE
+C      READ(LUNDAT,ERR=9907,END=9907,IOSTAT=IOS)
+C     &     SIG32C,SG32EC,T32GMC,NDO32C
+C      READ(LUNDAT,ERR=9907,END=9907,IOSTAT=IOS) (T32MXC(I),I=1,NRG32C)
+C      READ(LUNDAT,ERR=9907,END=9907,IOSTAT=IOS) (NM32C(I),I=1,NRG32C)
+C      READ(LUNDAT,ERR=9907,END=9907,IOSTAT=IOS)
+C     &     IT32C,SI32C,S2N32C,SWT32C,SCH32C
+C      READ(LUNDAT,ERR=9907,END=9907,IOSTAT=IOS)
+C     &     ((XX32C(I,II),I=1,NDO32C),II=1,NDM3CC)
+C      READ(LUNDAT,ERR=9907,END=9907,IOSTAT=IOS)
+C     &                FFG32C,DNG32C,FFL32C,DNL32C,GLD32C,
+C     &                NTT32C,NCL32C,NC132C,NC232C,IBM32C,JCR32C,
+C     &                LGL32C,LLC32C
 C
 C---CHARGED CURRENT - (KQS) CHANNEL
 C
- 9907 CONTINUE
-      READ(LUNDAT,ERR=9908,END=9908,IOSTAT=IOS)
-     &     SIG33C,SG33EC,T33GMC,NDO33C
-      READ(LUNDAT,ERR=9908,END=9908,IOSTAT=IOS) (T33MXC(I),I=1,NRG33C)
-      READ(LUNDAT,ERR=9908,END=9908,IOSTAT=IOS) (NM33C(I),I=1,NRG33C)
-      READ(LUNDAT,ERR=9908,END=9908,IOSTAT=IOS)
-     &     IT33C,SI33C,S2N33C,SWT33C,SCH33C
-      READ(LUNDAT,ERR=9908,END=9908,IOSTAT=IOS)
-     &     ((XX33C(I,II),I=1,NDO33C),II=1,NDM3CC)
-      READ(LUNDAT,ERR=9908,END=9908,IOSTAT=IOS)
-     &                FFG33C,DNG33C,FFL33C,DNL33C,GLD33C,
-     &                NTT33C,NCL33C,NC133C,NC233C,IBM33C,JCR33C,
-     &                LGL33C,LLC33C
+C 9907 CONTINUE
+C      READ(LUNDAT,ERR=9908,END=9908,IOSTAT=IOS)
+C     &     SIG33C,SG33EC,T33GMC,NDO33C
+C      READ(LUNDAT,ERR=9908,END=9908,IOSTAT=IOS) (T33MXC(I),I=1,NRG33C)
+C      READ(LUNDAT,ERR=9908,END=9908,IOSTAT=IOS) (NM33C(I),I=1,NRG33C)
+C      READ(LUNDAT,ERR=9908,END=9908,IOSTAT=IOS)
+C     &     IT33C,SI33C,S2N33C,SWT33C,SCH33C
+C      READ(LUNDAT,ERR=9908,END=9908,IOSTAT=IOS)
+C     &     ((XX33C(I,II),I=1,NDO33C),II=1,NDM3CC)
+C      READ(LUNDAT,ERR=9908,END=9908,IOSTAT=IOS)
+C     &                FFG33C,DNG33C,FFL33C,DNL33C,GLD33C,
+C     &                NTT33C,NCL33C,NC133C,NC233C,IBM33C,JCR33C,
+C     &                LGL33C,LLC33C
 C
 C
 C---ELASTIC NON-RADIATIVE CHANNEL
 C
- 9908 CONTINUE
-      READ(LUNDAT,ERR=9909,END=9909,IOSTAT=IOS)SIG2L,SIG2EE,T2GMAE,NDO2E
-      READ(LUNDAT,ERR=9909,END=9909,IOSTAT=IOS) (T2MAXE(I),I=1,NREG2E)
-      READ(LUNDAT,ERR=9909,END=9909,IOSTAT=IOS) (NM2E(I),I=1,NREG2E)
-      READ(LUNDAT,ERR=9909,END=9909,IOSTAT=IOS)
-     &    (XX2E(I,1),I=1,NDO2E)
-      READ(LUNDAT,ERR=9909,END=9909,IOSTAT=IOS)
-     &                FFGO2E,DNCG2E,FFLO2E,DNCL2E,GOLD2E,
-     &                NTOT2E,NCAL2E,NCA12E,NCA22E,IBIM2E,JCOR2E,
-     &                LGLO2E,LLOC2E
+C 9908 CONTINUE
+C      READ(LUNDAT,ERR=9909,END=9909,IOSTAT=IOS)SIG2L,SIG2EE,T2GMAE,NDO2E
+C      READ(LUNDAT,ERR=9909,END=9909,IOSTAT=IOS) (T2MAXE(I),I=1,NREG2E)
+C      READ(LUNDAT,ERR=9909,END=9909,IOSTAT=IOS) (NM2E(I),I=1,NREG2E)
+C      READ(LUNDAT,ERR=9909,END=9909,IOSTAT=IOS)
+C     &    (XX2E(I,1),I=1,NDO2E)
+C      READ(LUNDAT,ERR=9909,END=9909,IOSTAT=IOS)
+C     &                FFGO2E,DNCG2E,FFLO2E,DNCL2E,GOLD2E,
+C     &                NTOT2E,NCAL2E,NCA12E,NCA22E,IBIM2E,JCOR2E,
+C     &                LGLO2E,LLOC2E
 C
 C---ELASTIC TAIL (KP) CHANNEL
 C
- 9909 CONTINUE
-      READ(LUNDAT,ERR=9910,END=9910,IOSTAT=IOS)
-     &     SIG31L,SG31EE,T31GME,NDO31E
-      READ(LUNDAT,ERR=9910,END=9910,IOSTAT=IOS) (T31MXE(I),I=1,NRG31E)
-      READ(LUNDAT,ERR=9910,END=9910,IOSTAT=IOS) (NM31E(I),I=1,NRG31E)
-      READ(LUNDAT,ERR=9910,END=9910,IOSTAT=IOS)
-     &     IT31E,SI31E,S2N31E,SWT31E,SCH31E
-      READ(LUNDAT,ERR=9910,END=9910,IOSTAT=IOS)
-     &     ((XX31E(I,II),I=1,NDO31E),II=1,NDM3EL)
-      READ(LUNDAT,ERR=9910,END=9910,IOSTAT=IOS)
-     &                FFG31E,DNG31E,FFL31E,DNL31E,GLD31E,
-     &                NTT31E,NCL31E,NC131E,NC231E,IBM31E,JCR31E,
-     &                LGL31E,LLC31E
+C 9909 CONTINUE
+C      READ(LUNDAT,ERR=9910,END=9910,IOSTAT=IOS)
+C     &     SIG31L,SG31EE,T31GME,NDO31E
+C      READ(LUNDAT,ERR=9910,END=9910,IOSTAT=IOS) (T31MXE(I),I=1,NRG31E)
+C      READ(LUNDAT,ERR=9910,END=9910,IOSTAT=IOS) (NM31E(I),I=1,NRG31E)
+C      READ(LUNDAT,ERR=9910,END=9910,IOSTAT=IOS)
+C     &     IT31E,SI31E,S2N31E,SWT31E,SCH31E
+C      READ(LUNDAT,ERR=9910,END=9910,IOSTAT=IOS)
+C     &     ((XX31E(I,II),I=1,NDO31E),II=1,NDM3EL)
+C      READ(LUNDAT,ERR=9910,END=9910,IOSTAT=IOS)
+C     &                FFG31E,DNG31E,FFL31E,DNL31E,GLD31E,
+C     &                NTT31E,NCL31E,NC131E,NC231E,IBM31E,JCR31E,
+C     &                LGL31E,LLC31E
 C
 C---ELASTIC TAIL (KPS) CHANNEL
 C
- 9910 CONTINUE
-      READ(LUNDAT,ERR=9911,END=9911,IOSTAT=IOS)
-     &     SIG32L,SG32EE,T32GME,NDO32E
-      READ(LUNDAT,ERR=9911,END=9911,IOSTAT=IOS) (T32MXE(I),I=1,NRG32E)
-      READ(LUNDAT,ERR=9911,END=9911,IOSTAT=IOS) (NM32E(I),I=1,NRG32E)
-      READ(LUNDAT,ERR=9911,END=9911,IOSTAT=IOS)
-     &     IT32E,SI32E,S2N32E,SWT32E,SCH32E
-      READ(LUNDAT,ERR=9911,END=9911,IOSTAT=IOS)
-     &     ((XX32E(I,II),I=1,NDO32E),II=1,NDM3EL)
-      READ(LUNDAT,ERR=9911,END=9911,IOSTAT=IOS)
-     &                FFG32E,DNG32E,FFL32E,DNL32E,GLD32E,
-     &                NTT32E,NCL32E,NC132E,NC232E,IBM32E,JCR32E,
-     &                LGL32E,LLC32E
+C 9910 CONTINUE
+C      READ(LUNDAT,ERR=9911,END=9911,IOSTAT=IOS)
+C     &     SIG32L,SG32EE,T32GME,NDO32E
+C      READ(LUNDAT,ERR=9911,END=9911,IOSTAT=IOS) (T32MXE(I),I=1,NRG32E)
+C      READ(LUNDAT,ERR=9911,END=9911,IOSTAT=IOS) (NM32E(I),I=1,NRG32E)
+C      READ(LUNDAT,ERR=9911,END=9911,IOSTAT=IOS)
+C     &     IT32E,SI32E,S2N32E,SWT32E,SCH32E
+C      READ(LUNDAT,ERR=9911,END=9911,IOSTAT=IOS)
+C     &     ((XX32E(I,II),I=1,NDO32E),II=1,NDM3EL)
+C      READ(LUNDAT,ERR=9911,END=9911,IOSTAT=IOS)
+C     &                FFG32E,DNG32E,FFL32E,DNL32E,GLD32E,
+C     &                NTT32E,NCL32E,NC132E,NC232E,IBM32E,JCR32E,
+C     &                LGL32E,LLC32E
 C
 C---ELASTIC TAIL COMPTON PART
+
+C 9911 CONTINUE
+C      READ(LUNDAT,ERR=9912,END=9912,IOSTAT=IOS)
+C     &     SIG33L,SG33EE,T33GME,NDO33E
+C      READ(LUNDAT,ERR=9912,END=9912,IOSTAT=IOS) (T33MXE(I),I=1,NRG33E)
+C      READ(LUNDAT,ERR=9912,END=9912,IOSTAT=IOS) (NM33E(I),I=1,NRG33E)
+C      READ(LUNDAT,ERR=9912,END=9912,IOSTAT=IOS)
+C     &     IT33E,SI33E,S2N33E,SWT33E,SCH33E
+C      READ(LUNDAT,ERR=9912,END=9912,IOSTAT=IOS)
+C     &     ((XX33E(I,II),I=1,NDO33E),II=1,NDM3EL)
+C      READ(LUNDAT,ERR=9912,END=9912,IOSTAT=IOS)
+C     &                FFG33E,DNG33E,FFL33E,DNL33E,GLD33E,
+C     &                NTT33E,NCL33E,NC133E,NC233E,IBM33E,JCR33E,
+C     &                LGL33E,LLC33E
 C
- 9911 CONTINUE
-      READ(LUNDAT,ERR=9912,END=9912,IOSTAT=IOS)
-     &     SIG33L,SG33EE,T33GME,NDO33E
-      READ(LUNDAT,ERR=9912,END=9912,IOSTAT=IOS) (T33MXE(I),I=1,NRG33E)
-      READ(LUNDAT,ERR=9912,END=9912,IOSTAT=IOS) (NM33E(I),I=1,NRG33E)
-      READ(LUNDAT,ERR=9912,END=9912,IOSTAT=IOS)
-     &     IT33E,SI33E,S2N33E,SWT33E,SCH33E
-      READ(LUNDAT,ERR=9912,END=9912,IOSTAT=IOS)
-     &     ((XX33E(I,II),I=1,NDO33E),II=1,NDM3EL)
-      READ(LUNDAT,ERR=9912,END=9912,IOSTAT=IOS)
-     &                FFG33E,DNG33E,FFL33E,DNL33E,GLD33E,
-     &                NTT33E,NCL33E,NC133E,NC233E,IBM33E,JCR33E,
-     &                LGL33E,LLC33E
-C
- 9912 CONTINUE
-      IF(IOS.NE.0) GOTO 9999
-      RETURN
+C 9912 CONTINUE
+C      IF(IOS.NE.0) GOTO 9999
+C      RETURN
 C------------------------------
 C                    EXECUTION HALTED BECAUSE OF READING ERROR
- 9999 CONTINUE
-        WRITE(LUNOUT,'(A,I3/A,I3/A)')
-     &          ' ERROR READING UNIT =',LUNDAT,
-     &          ' IOSTAT =', IOS, ' EXECUTION HALTED IN HSDTIN'
-      STOP
-C
- 11   FORMAT(3(1PD15.5),3I5)
- 12   FORMAT(5(1PD15.5))
- 13   FORMAT(10I8)
-      END
-C
-C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C 9999 CONTINUE
+C        WRITE(LUNOUT,'(A,I3/A,I3/A)')
+C     &          ' ERROR READING UNIT =',LUNDAT,
+C     &          ' IOSTAT =', IOS, ' EXECUTION HALTED IN HSDTIN'
+C      STOP
+
+C 11   FORMAT(3(1PD15.5),3I5)
+C 12   FORMAT(5(1PD15.5))
+C 13   FORMAT(10I8)
+C      END
 C
 C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 C
-      SUBROUTINE HSDOUT
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 C
-      IMPLICIT DOUBLE PRECISION (A-H,O-Z)
-      COMMON /HSOPTN/ INT2(5),INT3(15),ISAM2(5),ISAM3(15),
-     &                IOPLOT,IPRINT,ICUT
-      COMMON /HSUNTS/ LUNTES,LUNDAT,LUNIN,LUNOUT,LUNRND
-      PARAMETER(NDIM2=2,NBIN2=50)
-      PARAMETER(NREG2N=2500)
+C      SUBROUTINE HSDOUT
+C
+C      IMPLICIT DOUBLE PRECISION (A-H,O-Z)
+C      COMMON /HSOPTN/ INT2(5),INT3(15),ISAM2(5),ISAM3(15),
+C     &                IOPLOT,IPRINT,ICUT
+C      COMMON /HSUNTS/ LUNTES,LUNDAT,LUNIN,LUNOUT,LUNRND
+C      PARAMETER(NDIM2=2,NBIN2=50)
+C      PARAMETER(NREG2N=2500)
 C---                     NREG2N=NBIN2**NDIM2
-      LOGICAL LGLO2,LLOC2
-      double precision ntot2
-      COMMON /HSSNC2/ SIG2,SIG2E,T2GGMA,T2GMAX(NREG2N),
-     +                XX2(50,2),
-     +                FFGO2,DNCG2,FFLO2,DNCL2,GOLD2,
-     +                NM2(NREG2N),NDO2,
-     +                NTOT2,NCAL2,NCA12,NCA22,IBIM2,JCOR2,
-     +                LGLO2,LLOC2
-      PARAMETER(NREG2C=2500)
+C      LOGICAL LGLO2,LLOC2
+C      double precision ntot2
+C      COMMON /HSSNC2/ SIG2,SIG2E,T2GGMA,T2GMAX(NREG2N),
+C     +                XX2(50,2),
+C     +                FFGO2,DNCG2,FFLO2,DNCL2,GOLD2,
+C     +                NM2(NREG2N),NDO2,
+C     +                NTOT2,NCAL2,NCA12,NCA22,IBIM2,JCOR2,
+C     +                LGLO2,LLOC2
+C      PARAMETER(NREG2C=2500)
 C---                     NREG2C=NBIN2**NDIM2
-      LOGICAL LGLO2C,LLOC2C
-      double precision ntot2c
-      COMMON /HSSCC2/ SIG2C,SIG2EC,T2GMAC,T2MAXC(NREG2C),
-     +                XX2C(50,2),
-     +                FFGO2C,DNCG2C,FFLO2C,DNCL2C,GOLD2C,
-     +                NM2C(NREG2C),NDO2C,
-     +                NTOT2C,NCAL2C,NCA12C,NCA22C,IBIM2C,JCOR2C,
-     +                LGLO2C,LLOC2C
-      PARAMETER(NREG2E=50)
-      PARAMETER(NDIM1=1)
+C      LOGICAL LGLO2C,LLOC2C
+C      double precision ntot2c
+C      COMMON /HSSCC2/ SIG2C,SIG2EC,T2GMAC,T2MAXC(NREG2C),
+C     +                XX2C(50,2),
+C     +                FFGO2C,DNCG2C,FFLO2C,DNCL2C,GOLD2C,
+C     +                NM2C(NREG2C),NDO2C,
+C     +                NTOT2C,NCAL2C,NCA12C,NCA22C,IBIM2C,JCOR2C,
+C     +                LGLO2C,LLOC2C
+C      PARAMETER(NREG2E=50)
+C      PARAMETER(NDIM1=1)
 C---                     NREG2E=NBIN2**NDIM1
-      LOGICAL LGLO2E,LLOC2E
-      double precision ntot2e
-      COMMON /HSSEL2/ SIG2L,SIG2EE,T2GMAE,T2MAXE(NREG2E),
-     +                XX2E(50,1),
-     +                FFGO2E,DNCG2E,FFLO2E,DNCL2E,GOLD2E,
-     +                NM2E(NREG2E),NDO2E,
-     +                NTOT2E,NCAL2E,NCA12E,NCA22E,IBIM2E,JCOR2E,
-     +                LGLO2E,LLOC2E
+C      LOGICAL LGLO2E,LLOC2E
+C      double precision ntot2e
+C      COMMON /HSSEL2/ SIG2L,SIG2EE,T2GMAE,T2MAXE(NREG2E),
+C     +                XX2E(50,1),
+C     +                FFGO2E,DNCG2E,FFLO2E,DNCL2E,GOLD2E,
+C     +                NM2E(NREG2E),NDO2E,
+C     +                NTOT2E,NCAL2E,NCA12E,NCA22E,IBIM2E,JCOR2E,
+C     +                LGLO2E,LLOC2E
 C-----------------
-      PARAMETER(NDIM31=5,NBIN31=6,NREG31=7776)
+C      PARAMETER(NDIM31=5,NBIN31=6,NREG31=7776)
 C---                     NREG31=NBIN31**NDIM31
-      LOGICAL LGLO31,LLOC31
-      double precision ntot31
-      COMMON /HSSN31/ SIG31,SIG31E,T31GMA,T31MAX(NREG31),
-     +                XX31(50,NDIM31),
-     +                FFGO31,DNCG31,FFLO31,DNCL31,GOLD31,
-     +                SI31,SI2N31,SWGT31,SCHI31,IT31,
-     +                NM31(NREG31),NDO31,
-     +                NTOT31,NCAL31,NCA131,NCA231,IBIM31,JCOR31,
-     +                LGLO31,LLOC31
-      PARAMETER(NDIM32=5,NBIN32=6,NREG32=7776)
+C      LOGICAL LGLO31,LLOC31
+C      double precision ntot31
+C      COMMON /HSSN31/ SIG31,SIG31E,T31GMA,T31MAX(NREG31),
+C     +                XX31(50,NDIM31),
+C     +                FFGO31,DNCG31,FFLO31,DNCL31,GOLD31,
+C     +                SI31,SI2N31,SWGT31,SCHI31,IT31,
+C     +                NM31(NREG31),NDO31,
+C     +                NTOT31,NCAL31,NCA131,NCA231,IBIM31,JCOR31,
+C     +                LGLO31,LLOC31
+C      PARAMETER(NDIM32=5,NBIN32=6,NREG32=7776)
 C---                     NREG32=NBIN32**NDIM32
-      LOGICAL LGLO32,LLOC32
-      double precision ntot32
-      COMMON /HSSN32/ SIG32,SIG32E,T32GMA,T32MAX(NREG32),
-     +                XX32(50,NDIM32),
-     +                FFGO32,DNCG32,FFLO32,DNCL32,GOLD32,
-     +                SI32,SI2N32,SWGT32,SCHI32,IT32,
-     +                NM32(NREG32),NDO32,
-     +                NTOT32,NCAL32,NCA132,NCA232,IBIM32,JCOR32,
-     +                LGLO32,LLOC32
-      PARAMETER(NDIM33=5,NBIN33=6,NREG33=7776)
+C      LOGICAL LGLO32,LLOC32
+C      double precision ntot32
+C      COMMON /HSSN32/ SIG32,SIG32E,T32GMA,T32MAX(NREG32),
+C     +                XX32(50,NDIM32),
+C     +                FFGO32,DNCG32,FFLO32,DNCL32,GOLD32,
+C     +                SI32,SI2N32,SWGT32,SCHI32,IT32,
+C     +                NM32(NREG32),NDO32,
+C     +                NTOT32,NCAL32,NCA132,NCA232,IBIM32,JCOR32,
+C     +                LGLO32,LLOC32
+C      PARAMETER(NDIM33=5,NBIN33=6,NREG33=7776)
 C---                     NREG33=NBIN33**NDIM33
-      LOGICAL LGLO33,LLOC33
-      double precision ntot33
-      COMMON /HSSN33/ SIG33,SIG33E,T33GMA,T33MAX(NREG33),
-     +                XX33(50,NDIM33),
-     +                FFGO33,DNCG33,FFLO33,DNCL33,GOLD33,
-     +                SI33,SI2N33,SWGT33,SCHI33,IT33,
-     +                NM33(NREG33),NDO33,
-     +                NTOT33,NCAL33,NCA133,NCA233,IBIM33,JCOR33,
-     +                LGLO33,LLOC33
-      PARAMETER(NDIM34=5,NBIN34=6,NREG34=7776)
+C      LOGICAL LGLO33,LLOC33
+C      double precision ntot33
+C      COMMON /HSSN33/ SIG33,SIG33E,T33GMA,T33MAX(NREG33),
+C     +                XX33(50,NDIM33),
+C     +                FFGO33,DNCG33,FFLO33,DNCL33,GOLD33,
+C     +                SI33,SI2N33,SWGT33,SCHI33,IT33,
+C     +                NM33(NREG33),NDO33,
+C     +                NTOT33,NCAL33,NCA133,NCA233,IBIM33,JCOR33,
+C     +                LGLO33,LLOC33
+C      PARAMETER(NDIM34=5,NBIN34=6,NREG34=7776)
 C---                     NREG34=NBIN34**NDIM34
-      LOGICAL LGLO34,LLOC34
-      double precision ntot34
-      COMMON /HSSN34/ SIG34,SIG34E,T34GMA,T34MAX(NREG34),
-     +                XX34(50,NDIM34),
-     +                FFGO34,DNCG34,FFLO34,DNCL34,GOLD34,
-     +                SI34,SI2N34,SWGT34,SCHI34,IT34,
-     +                NM34(NREG34),NDO34,
-     +                NTOT34,NCAL34,NCA134,NCA234,IBIM34,JCOR34,
-     +                LGLO34,LLOC34
+C      LOGICAL LGLO34,LLOC34
+C      double precision ntot34
+C      COMMON /HSSN34/ SIG34,SIG34E,T34GMA,T34MAX(NREG34),
+C     +                XX34(50,NDIM34),
+C     +                FFGO34,DNCG34,FFLO34,DNCL34,GOLD34,
+C     +                SI34,SI2N34,SWGT34,SCHI34,IT34,
+C     +                NM34(NREG34),NDO34,
+C     +                NTOT34,NCAL34,NCA134,NCA234,IBIM34,JCOR34,
+C     +                LGLO34,LLOC34
 C
-      PARAMETER(NDM3CC=5)
-      PARAMETER(NBN31C=6,NRG31C=7776)
+C      PARAMETER(NDM3CC=5)
+C      PARAMETER(NBN31C=6,NRG31C=7776)
 C---                     NRG31C=NBN31C**NDM3CC
-      LOGICAL LGL31C,LLC31C
-      double precision ntt31c
-      COMMON /HSSC31/ SIG31C,SG31EC,T31GMC,T31MXC(NRG31C),
-     +                XX31C(50,5),
-     +                FFG31C,DNG31C,FFL31C,DNL31C,GLD31C,
-     +                SI31C,S2N31C,SWT31C,SCH31C,IT31C,
-     +                NM31C(NRG31C),NDO31C,
-     +                NTT31C,NCL31C,NC131C,NC231C,IBM31C,JCR31C,
-     +                LGL31C,LLC31C
+C      LOGICAL LGL31C,LLC31C
+C      double precision ntt31c
+C      COMMON /HSSC31/ SIG31C,SG31EC,T31GMC,T31MXC(NRG31C),
+C     +                XX31C(50,5),
+C     +                FFG31C,DNG31C,FFL31C,DNL31C,GLD31C,
+C     +                SI31C,S2N31C,SWT31C,SCH31C,IT31C,
+C     +                NM31C(NRG31C),NDO31C,
+C     +                NTT31C,NCL31C,NC131C,NC231C,IBM31C,JCR31C,
+C     +                LGL31C,LLC31C
 C
-      PARAMETER(NBN32C=6,NRG32C=7776)
+C      PARAMETER(NBN32C=6,NRG32C=7776)
 C---                     NRG32C=NBN32C**NDM3CC
-      LOGICAL LGL32C,LLC32C
-      double precision ntt32c
-      COMMON /HSSC32/ SIG32C,SG32EC,T32GMC,T32MXC(NRG32C),
-     +                XX32C(50,5),
-     +                FFG32C,DNG32C,FFL32C,DNL32C,GLD32C,
-     +                SI32C,S2N32C,SWT32C,SCH32C,IT32C,
-     +                NM32C(NRG32C),NDO32C,
-     +                NTT32C,NCL32C,NC132C,NC232C,IBM32C,JCR32C,
-     +                LGL32C,LLC32C
-      PARAMETER(NBN33C=6,NRG33C=7776)
+C      LOGICAL LGL32C,LLC32C
+C      double precision ntt32c
+C      COMMON /HSSC32/ SIG32C,SG32EC,T32GMC,T32MXC(NRG32C),
+C     +                XX32C(50,5),
+C     +                FFG32C,DNG32C,FFL32C,DNL32C,GLD32C,
+C     +                SI32C,S2N32C,SWT32C,SCH32C,IT32C,
+C     +                NM32C(NRG32C),NDO32C,
+C     +                NTT32C,NCL32C,NC132C,NC232C,IBM32C,JCR32C,
+C     +                LGL32C,LLC32C
+C      PARAMETER(NBN33C=6,NRG33C=7776)
 C---                     NRG33C=NBN33C**NDM3CC
-      LOGICAL LGL33C,LLC33C
-      double precision ntt33c
-      COMMON /HSSC33/ SIG33C,SG33EC,T33GMC,T33MXC(NRG33C),
-     +                XX33C(50,5),
-     +                FFG33C,DNG33C,FFL33C,DNL33C,GLD33C,
-     +                SI33C,S2N33C,SWT33C,SCH33C,IT33C,
-     +                NM33C(NRG33C),NDO33C,
-     +                NTT33C,NCL33C,NC133C,NC233C,IBM33C,JCR33C,
-     +                LGL33C,LLC33C
-      PARAMETER(NDM3EL=4)
-      PARAMETER(NBN31E=8,NRG31E=4096)
+C      LOGICAL LGL33C,LLC33C
+C      double precision ntt33c
+C      COMMON /HSSC33/ SIG33C,SG33EC,T33GMC,T33MXC(NRG33C),
+C     +                XX33C(50,5),
+C     +                FFG33C,DNG33C,FFL33C,DNL33C,GLD33C,
+C     +                SI33C,S2N33C,SWT33C,SCH33C,IT33C,
+C     +                NM33C(NRG33C),NDO33C,
+C     +                NTT33C,NCL33C,NC133C,NC233C,IBM33C,JCR33C,
+C     +                LGL33C,LLC33C
+C      PARAMETER(NDM3EL=4)
+C      PARAMETER(NBN31E=8,NRG31E=4096)
 C---                     NRG31C=NBN31E**NDM3EL
-      LOGICAL LGL31E,LLC31E
-      double precision ntt31e
-      COMMON /HSSE31/ SIG31L,SG31EE,T31GME,T31MXE(NRG31E),
-     +                XX31E(50,4),
-     +                FFG31E,DNG31E,FFL31E,DNL31E,GLD31E,
-     +                SI31E,S2N31E,SWT31E,SCH31E,IT31E,
-     +                NM31E(NRG31E),NDO31E,
-     +                NTT31E,NCL31E,NC131E,NC231E,IBM31E,JCR31E,
-     +                LGL31E,LLC31E
-      PARAMETER(NBN32E=8,NRG32E=4096)
+C      LOGICAL LGL31E,LLC31E
+C      double precision ntt31e
+C      COMMON /HSSE31/ SIG31L,SG31EE,T31GME,T31MXE(NRG31E),
+C     +                XX31E(50,4),
+C     +                FFG31E,DNG31E,FFL31E,DNL31E,GLD31E,
+C     +                SI31E,S2N31E,SWT31E,SCH31E,IT31E,
+C     +                NM31E(NRG31E),NDO31E,
+C     +                NTT31E,NCL31E,NC131E,NC231E,IBM31E,JCR31E,
+C     +                LGL31E,LLC31E
+C      PARAMETER(NBN32E=8,NRG32E=4096)
 C---                     NRG32E=NBN32E**NDM3EL
-      LOGICAL LGL32E,LLC32E
-      double precision ntt32e
-      COMMON /HSSE32/ SIG32L,SG32EE,T32GME,T32MXE(NRG32E),
-     +                XX32E(50,4),
-     +                FFG32E,DNG32E,FFL32E,DNL32E,GLD32E,
-     +                SI32E,S2N32E,SWT32E,SCH32E,IT32E,
-     +                NM32E(NRG32E),NDO32E,
-     +                NTT32E,NCL32E,NC132E,NC232E,IBM32E,JCR32E,
-     +                LGL32E,LLC32E
-      PARAMETER(NBN33E=8,NRG33E=4096)
+C      LOGICAL LGL32E,LLC32E
+C      double precision ntt32e
+C      COMMON /HSSE32/ SIG32L,SG32EE,T32GME,T32MXE(NRG32E),
+C     +                XX32E(50,4),
+C     +                FFG32E,DNG32E,FFL32E,DNL32E,GLD32E,
+C     +                SI32E,S2N32E,SWT32E,SCH32E,IT32E,
+C     +                NM32E(NRG32E),NDO32E,
+C     +                NTT32E,NCL32E,NC132E,NC232E,IBM32E,JCR32E,
+C     +                LGL32E,LLC32E
+C      PARAMETER(NBN33E=8,NRG33E=4096)
 C---                     NRG33E=NBN33E**NDM3EL
-      LOGICAL LGL33E,LLC33E
-      double precision ntt33e
-      COMMON /HSSE33/ SIG33L,SG33EE,T33GME,T33MXE(NRG33E),
-     +                XX33E(50,4),
-     +                FFG33E,DNG33E,FFL33E,DNL33E,GLD33E,
-     +                SI33E,S2N33E,SWT33E,SCH33E,IT33E,
-     +                NM33E(NRG33E),NDO33E,
-     +                NTT33E,NCL33E,NC133E,NC233E,IBM33E,JCR33E,
-     +                LGL33E,LLC33E
+C      LOGICAL LGL33E,LLC33E
+C      double precision ntt33e
+C      COMMON /HSSE33/ SIG33L,SG33EE,T33GME,T33MXE(NRG33E),
+C     +                XX33E(50,4),
+C     +                FFG33E,DNG33E,FFL33E,DNL33E,GLD33E,
+C     +                SI33E,S2N33E,SWT33E,SCH33E,IT33E,
+C     +                NM33E(NRG33E),NDO33E,
+C     +                NTT33E,NCL33E,NC133E,NC233E,IBM33E,JCR33E,
+C     +                LGL33E,LLC33E
 C---------------------------
-      COMMON /HSCUTS/ XMIN,XMAX,Q2MIN,Q2MAX,YMIN,YMAX,WMIN,GMIN
-      COMMON /HSPARM/ POLARI,HPOLAR,LLEPT,LQUA
-      COMMON /HSELAB/ SP,EELE,PELE,EPRO,PPRO
-      COMMON /HSIRCT/ DELEPS,DELTA,EGMIN,IOPEGM
+C      COMMON /HSCUTS/ XMIN,XMAX,Q2MIN,Q2MAX,YMIN,YMAX,WMIN,GMIN
+C      COMMON /HSPARM/ POLARI,HPOLAR,LLEPT,LQUA
+C      COMMON /HSELAB/ SP,EELE,PELE,EPRO,PPRO
+C      COMMON /HSIRCT/ DELEPS,DELTA,EGMIN,IOPEGM
 C-----------------------------------------------------------------------
 C
 C---WRITE PARAMETER DEFINITIONS OF THE CURRENT RUN
-      CALL HSWRPA
+C      CALL HSWRPA
 C
 C---WRITE INFORMATION FOR SAMPLING -------------------------------------
 C---NEUTRAL CURRENT - NONRADIATIVE CHANNEL
-      IF(IPRINT.GE.2) THEN
-        WRITE(LUNTES,'(//2A,I3)')
-     &       ' *** WRITE SAMPLING INFORMATION FOR NEUTRAL CURRENT/',
-     &       'NON-RADIATIVE CHANNEL ONTO UNIT', LUNDAT
-      ENDIF
-      ISET=0
-      CALL HSWRSA(ISET,NREG2N,NDIM2,
-     &            SIG2,SIG2E,T2GGMA,NDO2,T2GMAX,NM2,XX2,
-     &            FFGO2,DNCG2,FFLO2,DNCL2,GOLD2,
-     &            NTOT2,NCAL2,NCA12,NCA22,IBIM2,JCOR2,
-     &            LGLO2,LLOC2,
-     &            IT31,SI31,SI2N31,SWGT31,SCHI31)
-C***    NOTE: LAST 6 VARIABLES NOT USED IN THIS CASE!!!
+C      IF(IPRINT.GE.2) THEN
+C        WRITE(LUNTES,'(//2A,I3)')
+C     &       ' *** WRITE SAMPLING INFORMATION FOR NEUTRAL CURRENT/',
+C     &       'NON-RADIATIVE CHANNEL ONTO UNIT', LUNDAT
+C      ENDIF
+C      ISET=0
+C      CALL HSWRSA(ISET,NREG2N,NDIM2,
+C     &            SIG2,SIG2E,T2GGMA,NDO2,T2GMAX,NM2,XX2,
+C     &            FFGO2,DNCG2,FFLO2,DNCL2,GOLD2,
+C     &            NTOT2,NCAL2,NCA12,NCA22,IBIM2,JCOR2,
+C     &            LGLO2,LLOC2,
+C     &            IT31,SI31,SI2N31,SWGT31,SCHI31)
+
 C
 C---NEUTRAL CURRENT - INITIAL STATE LEPTONIC RADIATION
-      ISET=1
-      CALL HSWRSA(ISET,NREG31,NDIM31,
-     &            SIG31,SIG31E,T31GMA,NDO31,T31MAX,NM31,XX31,
-     &            FFGO31,DNCG31,FFLO31,DNCL31,GOLD31,
-     &            NTOT31,NCAL31,NCA131,NCA231,IBIM31,JCOR31,
-     &            LGLO31,LLOC31,
-     &            IT31,SI31,SI2N31,SWGT31,SCHI31)
+C      ISET=1
+C      CALL HSWRSA(ISET,NREG31,NDIM31,
+C     &            SIG31,SIG31E,T31GMA,NDO31,T31MAX,NM31,XX31,
+C     &            FFGO31,DNCG31,FFLO31,DNCL31,GOLD31,
+C     &            NTOT31,NCAL31,NCA131,NCA231,IBIM31,JCOR31,
+C     &            LGLO31,LLOC31,
+C     &            IT31,SI31,SI2N31,SWGT31,SCHI31)
 C
 C---NEUTRAL CURRENT - FINAL STATE LEPTONIC RADIATION
-      ISET=1
-      CALL HSWRSA(ISET,NREG32,NDIM32,
-     &            SIG32,SIG32E,T32GMA,NDO32,T32MAX,NM32,XX32,
-     &            FFGO32,DNCG32,FFLO32,DNCL32,GOLD32,
-     &            NTOT32,NCAL32,NCA132,NCA232,IBIM32,JCOR32,
-     &            LGLO32,LLOC32,
-     &            IT32,SI32,SI2N32,SWGT32,SCHI32)
+C      ISET=1
+C      CALL HSWRSA(ISET,NREG32,NDIM32,
+C     &            SIG32,SIG32E,T32GMA,NDO32,T32MAX,NM32,XX32,
+C     &            FFGO32,DNCG32,FFLO32,DNCL32,GOLD32,
+C     &            NTOT32,NCAL32,NCA132,NCA232,IBIM32,JCOR32,
+C     &            LGLO32,LLOC32,
+C     &            IT32,SI32,SI2N32,SWGT32,SCHI32)
 C
 C---NEUTRAL CURRENT - COMPTON CHANNEL
-      ISET=1
-      CALL HSWRSA(ISET,NREG33,NDIM33,
-     &            SIG33,SIG33E,T33GMA,NDO33,T33MAX,NM33,XX33,
-     &            FFGO33,DNCG33,FFLO33,DNCL33,GOLD33,
-     &            NTOT33,NCAL33,NCA133,NCA233,IBIM33,JCOR33,
-     &            LGLO33,LLOC33,
-     &            IT33,SI33,SI2N33,SWGT33,SCHI33)
+C      ISET=1
+C      CALL HSWRSA(ISET,NREG33,NDIM33,
+C     &            SIG33,SIG33E,T33GMA,NDO33,T33MAX,NM33,XX33,
+C     &            FFGO33,DNCG33,FFLO33,DNCL33,GOLD33,
+C     &            NTOT33,NCAL33,NCA133,NCA233,IBIM33,JCOR33,
+C     &            LGLO33,LLOC33,
+C     &            IT33,SI33,SI2N33,SWGT33,SCHI33)
 C
 C---NEUTRAL CURRENT - QUARKONIC RADIATION
-      ISET=1
-      CALL HSWRSA(ISET,NREG34,NDIM34,
-     &            SIG34,SIG34E,T34GMA,NDO34,T34MAX,NM34,XX34,
-     &            FFGO34,DNCG34,FFLO34,DNCL34,GOLD34,
-     &            NTOT34,NCAL34,NCA134,NCA234,IBIM34,JCOR34,
-     &            LGLO34,LLOC34,
-     &            IT34,SI34,SI2N34,SWGT34,SCHI34)
-C
+C      ISET=1
+C      CALL HSWRSA(ISET,NREG34,NDIM34,
+C     &            SIG34,SIG34E,T34GMA,NDO34,T34MAX,NM34,XX34,
+C     &            FFGO34,DNCG34,FFLO34,DNCL34,GOLD34,
+C     &            NTOT34,NCAL34,NCA134,NCA234,IBIM34,JCOR34,
+C     &            LGLO34,LLOC34,
+C     &            IT34,SI34,SI2N34,SWGT34,SCHI34)
+
 C---CHARGED CURRENT - NONRADIATIVE CHANNEL
-      IF(IPRINT.GE.2) THEN
-        WRITE(LUNTES,'(//2A,I3)')
-     &       ' *** WRITE SAMPLING INFORMATION FOR CHARGED CURRENT/',
-     &       'NON-RADIATIVE CHANNEL ONTO UNIT', LUNDAT
-      ENDIF
-      ISET=0
-      CALL HSWRSA(ISET,NREG2C,NDIM2,
-     &            SIG2C,SIG2EC,T2GMAC,NDO2C,T2MAXC,NM2C,XX2C,
-     &            FFGO2C,DNCG2C,FFLO2C,DNCL2C,GOLD2C,
-     &            NTOT2C,NCAL2C,NCA12C,NCA22C,IBIM2C,JCOR2C,
-     &            LGLO2C,LLOC2C,
-     &            IT31C,SI31C,S2N31C,SWT31C,SCH31C)
+C      IF(IPRINT.GE.2) THEN
+C        WRITE(LUNTES,'(//2A,I3)')
+C     &       ' *** WRITE SAMPLING INFORMATION FOR CHARGED CURRENT/',
+C     &       'NON-RADIATIVE CHANNEL ONTO UNIT', LUNDAT
+C      ENDIF
+C      ISET=0
+C      CALL HSWRSA(ISET,NREG2C,NDIM2,
+C     &            SIG2C,SIG2EC,T2GMAC,NDO2C,T2MAXC,NM2C,XX2C,
+C     &            FFGO2C,DNCG2C,FFLO2C,DNCL2C,GOLD2C,
+C     &            NTOT2C,NCAL2C,NCA12C,NCA22C,IBIM2C,JCOR2C,
+C     &            LGLO2C,LLOC2C,
+C     &            IT31C,SI31C,S2N31C,SWT31C,SCH31C)
 C
 C---CHARGED CURRENT - (KP) CHANNEL
-      ISET=1
-      CALL HSWRSA(ISET,NRG31C,NDM3CC,
-     &            SIG31C,SG31EC,T31GMC,NDO31C,T31MXC,NM31C,XX31C,
-     &            FFG31C,DNG31C,FFL31C,DNL31C,GLD31C,
-     &            NTT31C,NCL31C,NC131C,NC231C,IBM31C,JCR31C,
-     &            LGL31C,LLC31C,
-     &            IT31C,SI31C,S2N31C,SWT31C,SCH31C)
+C      ISET=1
+C      CALL HSWRSA(ISET,NRG31C,NDM3CC,
+C     &            SIG31C,SG31EC,T31GMC,NDO31C,T31MXC,NM31C,XX31C,
+C     &            FFG31C,DNG31C,FFL31C,DNL31C,GLD31C,
+C     &            NTT31C,NCL31C,NC131C,NC231C,IBM31C,JCR31C,
+C     &            LGL31C,LLC31C,
+C     &            IT31C,SI31C,S2N31C,SWT31C,SCH31C)
 C
 C---CHARGED CURRENT - (KQ) CHANNEL
-      ISET=1
-      CALL HSWRSA(ISET,NRG32C,NDM3CC,
-     &            SIG32C,SG32EC,T32GMC,NDO32C,T32MXC,NM32C,XX32C,
-     &            FFG32C,DNG32C,FFL32C,DNL32C,GLD32C,
-     &            NTT32C,NCL32C,NC132C,NC232C,IBM32C,JCR32C,
-     &            LGL32C,LLC32C,
-     &            IT32C,SI32C,S2N32C,SWT32C,SCH32C)
+C      ISET=1
+C      CALL HSWRSA(ISET,NRG32C,NDM3CC,
+C     &            SIG32C,SG32EC,T32GMC,NDO32C,T32MXC,NM32C,XX32C,
+C     &            FFG32C,DNG32C,FFL32C,DNL32C,GLD32C,
+C     &            NTT32C,NCL32C,NC132C,NC232C,IBM32C,JCR32C,
+C     &            LGL32C,LLC32C,
+C     &            IT32C,SI32C,S2N32C,SWT32C,SCH32C)
 C
 C---CHARGED CURRENT - (KQS) CHANNEL
-      ISET=1
-      CALL HSWRSA(ISET,NRG33C,NDM3CC,
-     &            SIG33C,SG33EC,T33GMC,NDO33C,T33MXC,NM33C,XX33C,
-     &            FFG33C,DNG33C,FFL33C,DNL33C,GLD33C,
-     &            NTT33C,NCL33C,NC133C,NC233C,IBM33C,JCR33C,
-     &            LGL33C,LLC33C,
-     &            IT33C,SI33C,S2N33C,SWT33C,SCH33C)
+C      ISET=1
+C      CALL HSWRSA(ISET,NRG33C,NDM3CC,
+C     &            SIG33C,SG33EC,T33GMC,NDO33C,T33MXC,NM33C,XX33C,
+C     &            FFG33C,DNG33C,FFL33C,DNL33C,GLD33C,
+C     &            NTT33C,NCL33C,NC133C,NC233C,IBM33C,JCR33C,
+C     &            LGL33C,LLC33C,
+C     &            IT33C,SI33C,S2N33C,SWT33C,SCH33C)
 C
 C---ELASTIC EP - NONRADIATIVE CHANNEL
-      IF(IPRINT.GE.2) THEN
-        WRITE(LUNTES,'(//2A,I3)')
-     &       ' *** WRITE SAMPLING INFORMATION FOR ELASTIC EP /',
-     &       'NON-RADIATIVE CHANNEL ONTO UNIT', LUNDAT
-      ENDIF
-      ISET=0
-      CALL HSWRSA(ISET,NREG2E,NDIM1,
-     &            SIG2L,SIG2EE,T2GMAE,NDO2E,T2MAXE,NM2E,XX2E,
-     &            FFGO2E,DNCG2E,FFLO2E,DNCL2E,GOLD2E,
-     &            NTOT2E,NCAL2E,NCA12E,NCA22E,IBIM2E,JCOR2E,
-     &            LGLO2E,LLOC2E,
-     &            IT31E,SI31E,S2N31E,SWT31E,SCH31E)
-C
+C      IF(IPRINT.GE.2) THEN
+C        WRITE(LUNTES,'(//2A,I3)')
+C     &       ' *** WRITE SAMPLING INFORMATION FOR ELASTIC EP /',
+C     &       'NON-RADIATIVE CHANNEL ONTO UNIT', LUNDAT
+C      ENDIF
+C      ISET=0
+C      CALL HSWRSA(ISET,NREG2E,NDIM1,
+C     &            SIG2L,SIG2EE,T2GMAE,NDO2E,T2MAXE,NM2E,XX2E,
+C     &            FFGO2E,DNCG2E,FFLO2E,DNCL2E,GOLD2E,
+C     &            NTOT2E,NCAL2E,NCA12E,NCA22E,IBIM2E,JCOR2E,
+C     &            LGLO2E,LLOC2E,
+C     &            IT31E,SI31E,S2N31E,SWT31E,SCH31E)
+
 C---ELASTIC TAIL (KP) CHANNEL
-      ISET=1
-      CALL HSWRSA(ISET,NRG31E,NDM3EL,
-     &            SIG31L,SG31EE,T31GME,NDO31E,T31MXE,NM31E,XX31E,
-     &            FFG31E,DNG31E,FFL31E,DNL31E,GLD31E,
-     &            NTT31E,NCL31E,NC131E,NC231E,IBM31E,JCR31E,
-     &            LGL31E,LLC31E,
-     &            IT31E,SI31E,S2N31E,SWT31E,SCH31E)
+C      ISET=1
+C      CALL HSWRSA(ISET,NRG31E,NDM3EL,
+C     &            SIG31L,SG31EE,T31GME,NDO31E,T31MXE,NM31E,XX31E,
+C     &            FFG31E,DNG31E,FFL31E,DNL31E,GLD31E,
+C     &            NTT31E,NCL31E,NC131E,NC231E,IBM31E,JCR31E,
+C     &            LGL31E,LLC31E,
+C     &            IT31E,SI31E,S2N31E,SWT31E,SCH31E)
 C
 C---ELASTIC TAIL (KPS) CHANNEL
-      ISET=1
-      CALL HSWRSA(ISET,NRG32E,NDM3EL,
-     &            SIG32L,SG32EE,T32GME,NDO32E,T32MXE,NM32E,XX32E,
-     &            FFG32E,DNG32E,FFL32E,DNL32E,GLD32E,
-     &            NTT32E,NCL32E,NC132E,NC232E,IBM32E,JCR32E,
-     &            LGL32E,LLC32E,
-     &            IT32E,SI32E,S2N32E,SWT32E,SCH32E)
+C      ISET=1
+C      CALL HSWRSA(ISET,NRG32E,NDM3EL,
+C     &            SIG32L,SG32EE,T32GME,NDO32E,T32MXE,NM32E,XX32E,
+C     &            FFG32E,DNG32E,FFL32E,DNL32E,GLD32E,
+C     &            NTT32E,NCL32E,NC132E,NC232E,IBM32E,JCR32E,
+C     &            LGL32E,LLC32E,
+C     &            IT32E,SI32E,S2N32E,SWT32E,SCH32E)
 C
 C---ELASTIC TAIL COMPTON PART
-      ISET=1
-      CALL HSWRSA(ISET,NRG33E,NDM3EL,
-     &            SIG33L,SG33EE,T33GME,NDO33E,T33MXE,NM33E,XX33E,
-     &            FFG33E,DNG33E,FFL33E,DNL33E,GLD33E,
-     &            NTT33E,NCL33E,NC133E,NC233E,IBM33E,JCR33E,
-     &            LGL33E,LLC33E,
-     &            IT33E,SI33E,S2N33E,SWT33E,SCH33E)
+C      ISET=1
+C      CALL HSWRSA(ISET,NRG33E,NDM3EL,
+C     &            SIG33L,SG33EE,T33GME,NDO33E,T33MXE,NM33E,XX33E,
+C     &            FFG33E,DNG33E,FFL33E,DNL33E,GLD33E,
+C     &            NTT33E,NCL33E,NC133E,NC233E,IBM33E,JCR33E,
+C     &            LGL33E,LLC33E,
+C     &            IT33E,SI33E,S2N33E,SWT33E,SCH33E)
 C
-      WRITE(LUNOUT,'(/2A,I3)')
-     &       ' *** SAMPLING INFORMATION FOR ALL CHANNELS',
-     &       ' WRITTEN ONTO UNIT LUNDAT=',LUNDAT
-      RETURN
-      END
-C
-C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C      WRITE(LUNOUT,'(/2A,I3)')
+C     &       ' *** SAMPLING INFORMATION FOR ALL CHANNELS',
+C     &       ' WRITTEN ONTO UNIT LUNDAT=',LUNDAT
+C      RETURN
+C      END
 C
 C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 C
-      SUBROUTINE HSTPAR
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C      SUBROUTINE HSTPAR (!!!!! NOT USED ANYMORE)
 C---
 C   TEST CURRENTLY DEFINED RUN PARAMETERS
 C   AGAINST THE INPUT READ FROM UNIT LUNDAT
 C
-      IMPLICIT DOUBLE PRECISION (A-H,M,O-Z)
+C      IMPLICIT DOUBLE PRECISION (A-H,M,O-Z)
 C
-      PARAMETER(TESACC=1D-10)
-      COMMON /HSOPTN/ INT2(5),INT3(15),ISAM2(5),ISAM3(15),
-     *                IOPLOT,IPRINT,ICUT
-      COMMON /HSUNTS/ LUNTES,LUNDAT,LUNIN,LUNOUT,LUNRND
-      COMMON /HSCUTS/ XMIN,XMAX,Q2MIN,Q2MAX,YMIN,YMAX,WMIN,GMIN
-      COMMON /HSPARL/ LPAR(20),LPARIN(12)
-      COMMON /HSSTRP/ ICODE,ILIB,ILQMOD,IDPVR
-      COMMON /HSELAB/ SP,EELE,PELE,EPRO,PPRO
-      COMMON /HSPARM/ POLARI,HPOLAR,LLEPT,LQUA
-      COMMON /HSIRCT/ DELEPS,DELTA,EGMIN,IOPEGM
-      COMMON /HSISGM/ TCUTQ,TCUTQS
-      DIMENSION LPARIT(12)
+C      PARAMETER(TESACC=1D-10)
+C      COMMON /HSOPTN/ INT2(5),INT3(15),ISAM2(5),ISAM3(15),
+C     *                IOPLOT,IPRINT,ICUT
+C      COMMON /HSUNTS/ LUNTES,LUNDAT,LUNIN,LUNOUT,LUNRND
+C      COMMON /HSCUTS/ XMIN,XMAX,Q2MIN,Q2MAX,YMIN,YMAX,WMIN,GMIN
+C      COMMON /HSPARL/ LPAR(20),LPARIN(12)
+C      COMMON /HSSTRP/ ICODE,ILIB,ILQMOD,IDPVR
+C      COMMON /HSELAB/ SP,EELE,PELE,EPRO,PPRO
+C      COMMON /HSPARM/ POLARI,HPOLAR,LLEPT,LQUA
+C      COMMON /HSIRCT/ DELEPS,DELTA,EGMIN,IOPEGM
+C      COMMON /HSISGM/ TCUTQ,TCUTQS
+C      DIMENSION LPARIT(12)
 C
-      READ(LUNDAT,ERR=9901,END=9901,IOSTAT=IOS)
-     &    TXMIN,TXMAX,TQ2MIN,TYMIN,TYMAX,TWMIN,ICUTT
-      READ(LUNDAT,ERR=9901,END=9901,IOSTAT=IOS) TTCUTQ,TTCTQS
-      READ(LUNDAT,ERR=9901,END=9901,IOSTAT=IOS)
-     &      (LPARIT(I),I=1,12)
-      READ(LUNDAT,ERR=9901,END=9901,IOSTAT=IOS)
-     &    ICODET,ILIBT,ILQMODT
-      READ(LUNDAT,ERR=9901,END=9901,IOSTAT=IOS)
-     &    TEELE,TEPRO,TPOLAR,LLEPTT
-      READ(LUNDAT,ERR=9901,END=9901,IOSTAT=IOS)  TEGMIN
-C
-      IF((ABS(TXMIN-XMIN).GT.TESACC)
-     &    .OR. (ABS(TXMIN-XMIN).GT.TESACC)
-     &    .OR. (ABS(TXMAX-XMAX).GT.TESACC)
-     &    .OR. (ABS(TQ2MIN-Q2MIN).GT.TESACC)
-     &    .OR. (ABS(TYMIN-YMIN).GT.TESACC)
-     &    .OR. (ABS(TYMAX-YMAX).GT.TESACC)
-     &    .OR. (ICUTT.NE.ICUT))                 THEN
-        WRITE(LUNOUT,'(/2A,I3//A/)')
-     &      ' CURRENT KINEMATICAL CUTS INCONSISTENT WITH THE DATA SET',
-     &      ' TO BE READ FROM UNIT',LUNDAT,
-     &      ' CUTS DEFINED IN THE DATA SET:'
-        WRITE(LUNOUT,'(10X,A,1PE10.3,5X,A,1PE10.3)')
-     *     ' XMIN=',TXMIN,' XMAX=',TXMAX
-        WRITE(LUNOUT,'(10X,A,1PE10.3)')
-     *     ' Q2MIN=',TQ2MIN
-        WRITE(LUNOUT,'(10X,A,1PE10.3,26X,A)')
-     *     ' WMIN=', TWMIN, ' (ACTIVE ONLY FOR ICUT>1)'
-        WRITE(LUNOUT,'(10X,A,1PE10.3,5X,A,1PE10.3,5X,A)')
-     *     ' YMIN=',TYMIN,' YMAX=',TYMAX, ' (ACTIVE ONLY FOR ICUT=3)'
-        WRITE(LUNOUT,'(10X,A,I2)')
-     *     ' ICUT=',ICUTT
-C
-        WRITE(LUNOUT,'(/A/)')  ' CURRENTLY DEFINED PARAMETERS:'
-        WRITE(LUNOUT,'(10X,A,1PE10.3,5X,A,1PE10.3)')
-     *     ' XMIN=',XMIN,' XMAX=',XMAX
-        WRITE(LUNOUT,'(10X,A,1PE10.3)')
-     *     ' Q2MIN=',Q2MIN
-        WRITE(LUNOUT,'(10X,A,1PE10.3,26X,A)')
-     *     ' WMIN=', WMIN, ' (ACTIVE ONLY FOR ICUT>1)'
-        WRITE(LUNOUT,'(10X,A,1PE10.3,5X,A,1PE10.3,5X,A)')
-     *     ' YMIN=',YMIN,' YMAX=',YMAX, ' (ACTIVE ONLY FOR ICUT=3)'
-        WRITE(LUNOUT,'(10X,A,I2)')
-     *     ' ICUT=',ICUT
-        WRITE(LUNOUT,100)
-        STOP
-      ENDIF
-C
-      IF(INT3(4).GT.1 .OR. ISAM3(4).GE.1) THEN
-        IF(ABS(TTCUTQ-TCUTQ).GT.TESACC
-     &      .OR. ABS(TTCTQS-TCUTQS).GT.TESACC) THEN
-          WRITE(LUNOUT,'(/2A,I3//A/)')
-     &      ' CURRENT ANGULAR CUTS FOR QUARKONIC BREMSSTRAHLUNG',
-     &      ' INCONSISTENT WITH THE DATA SET TO BE READ FROM UNIT',
-     &        LUNDAT,
-     &      ' CUTS DEFINED IN THE DATA SET:'
-          WRITE(LUNOUT,'(10X,A,1PE10.3,5X,A,1PE10.3)')
-     &     ' TCUTQ=',TTCUTQ,' TCUTQS=',TTCTQS
-          WRITE(LUNOUT,'(/A/)')  ' CURRENTLY DEFINED PARAMETERS:'
-          WRITE(LUNOUT,'(10X,A,1PE10.3,5X,A,1PE10.3)')
-     &     ' TCUTQ=',TCUTQ,' TCUTQS=',TCUTQS
-          WRITE(LUNOUT,100)
-          STOP
-        ENDIF
-      ENDIF
-C
-      DO 11 I=1,12
-        IF(LPARIN(I).NE.LPARIT(I)) GOTO 12
-  11  CONTINUE
-      GOTO 13
-  12  CONTINUE
-      WRITE(LUNOUT,'(//2A,I3//A,I3,A)')
-     &  ' CURRENT GSW-PARAMETERS INCONSISTENT WITH DATA SET ',
-     &  ' TO BE READ FROM UNIT ',LUNDAT,
-     &  ' PARAMETERS FROM DATA SET ON UNIT ',LUNDAT, ' :'
-      WRITE(LUNOUT,'(12I3)') LPARIT
-      WRITE(LUNOUT,'(/A/)')  ' CURRENTLY DEFINED PARAMETERS:'
-      WRITE(LUNOUT,'(12I3)') LPARIN
-      WRITE(LUNOUT,100)
-      STOP
-C
-  13  CONTINUE
-C
-      IF(ICODET.NE.ICODE
-     &  .OR.ILIBT.NE.ILIB
-     &  .OR.ILQMODT.NE.ILQMOD) THEN
-        WRITE(LUNOUT,'(//2A,I3//A,I3,A)')
-     &    ' OTHER PARTON DISTRIBUTIONS USED FOR THE DATA SET ',
-     &    ' TO BE READ FROM UNIT',LUNDAT,
-     &    ' PARAMETER FROM DATA SET ON UNIT',LUNDAT,' : '
-        WRITE(LUNOUT,'(10X,A,I7,A,I3,A,I3)')
-     &      ' ICODE = ',ICODET,' ILIB = ',ILIBT,' ILQMOD = ',ILQMODT
-        WRITE(LUNOUT,'(/A)')
-     &    ' CURRENTLY DEFINED PARAMETERS:'
-        WRITE(LUNOUT,'(10X,A,I7,A,I3,A,I3)')
-     &      ' ICODE = ',ICODE,' ILIB = ',ILIB,' ILQMOD = ',ILQMOD
-C
-        WRITE(LUNOUT,100)
-        STOP
-      ENDIF
-C
-      IF((ABS(TEELE-EELE).GT.TESACC)
-     &    .OR. (ABS(TEPRO-EPRO).GT.TESACC)
-     &    .OR. (ABS(TPOLAR-POLARI).GT.TESACC)
-     &    .OR. (LLEPTT.NE.LLEPT))                 THEN
-        WRITE(LUNOUT,'(/2A,I3//A,I3/)')
-     &      ' CURRENT BEAM PARAMETERS INCONSISTENT WITH THE DATA SET',
-     &      ' TO BE READ FROM UNIT',LUNDAT,
-     &      ' PARAMETERS FROM DSTS SET ON UNIT',LUNDAT,' :'
-        WRITE(LUNOUT,'(10X,A,F8.1,A)')
-     &      ' ENERGY OF INCIDENT ELECTRON =',TEELE,' GEV'
-        WRITE(LUNOUT,'(10X,A,I3)')
-     &                  ' CHARGE OF INCIDENT ELECTRON =',LLEPTT
-        WRITE(LUNOUT,'(10X,A,F8.4)')
-     &      ' DEGREE OF BEAM POLARIZATION =', TPOLAR
-        WRITE(LUNOUT,'(10X,A,F8.1,A)')
-     &      ' ENERGY OF INCIDENT PROTON =',TEPRO,' GEV'
-C
-        WRITE(LUNOUT,'(/A/)')  ' CURRENTLY DEFINED PARAMETERS:'
-        WRITE(LUNOUT,'(10X,A,F8.1,A)')
-     &      ' ENERGY OF INCIDENT ELECTRON =',EELE,' GEV'
-        WRITE(LUNOUT,'(10X,A,I3)')
-     &                  ' CHARGE OF INCIDENT ELECTRON =',LLEPT
-        WRITE(LUNOUT,'(10X,A,F8.4)')
-     &      ' DEGREE OF BEAM POLARIZATION =', POLARI
-        WRITE(LUNOUT,'(10X,A,F8.1,A)')
-     *      ' ENERGY OF INCIDENT PROTON =',EPRO,' GEV'
-C
-        WRITE(LUNOUT,100)
-        STOP
-      ENDIF
-C
-      IF(ABS(TEGMIN-EGMIN).GT.TESACC) THEN
-        WRITE(LUNOUT,'(//2A,I3//A,I3,A,1PE11.3,A)')
-     &      ' CURRENT CUT ON PHOTON ENERGY INCONSISTENT WITH DATA SET ',
-     &       ' TO BE READ FROM UNIT',LUNDAT,
-     &       ' CUT FROM DATA SET ON UNIT',LUNDAT,' :  EGMIN=',
-     &       TEGMIN,' GEV'
-        WRITE(LUNOUT,'(/A,1PE11.3,A)')
-     &       ' CURRENTLY DEFINED PARAMETER: EGMIN=',EGMIN,' GEV'
-        WRITE(LUNOUT,100)
-        STOP
-      ENDIF
-C
-      RETURN
-C
- 9901 CONTINUE
-      WRITE(LUNOUT,'(/A,I3/A,I3/A)')
-     &    ' ***  ERROR IN HSTPAR READING DATA FROM UNIT ',LUNDAT,
-     &    ' ***  IOS=',IOS,
-     &    ' ***  EXECUTION STOPPED'
-      WRITE(LUNOUT,'(/A/5X,A/5X,6(1PE12.4),I3/5X,A,I7,A,I3,A,I3/
-     &               5X,A/5X,3(1PE12.4),I3/5X,A,1PE12.4)')
-     &    ' ***  ACTUAL VALUES OF PARAMETERS TO BE READ:',
-     &    ' TXMIN,TXMAX,TQ2MIN,TYMIN,TYMAX,TWMIN,ICUTT',
-     &      TXMIN,TXMAX,TQ2MIN,TYMIN,TYMAX,TWMIN,ICUTT,
-     &    ' ICODET=',ICODET,' ILIBT=', ILIBT,' ILQMODT=',ILQMODT,
-     &    ' TEELE,TEPRO,TPOLAR,LLEPTT',
-     &      TEELE,TEPRO,TPOLAR,LLEPTT,
-     &    ' TEGMIN=', TEGMIN
-      STOP
-C
- 100  FORMAT(/' ***  EXECUTION STOPPED IN SUBROUTINE HSTPAR')
-      END
-C
-C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C      READ(LUNDAT,ERR=9901,END=9901,IOSTAT=IOS)
+C     &    TXMIN,TXMAX,TQ2MIN,TYMIN,TYMAX,TWMIN,ICUTT
+C      READ(LUNDAT,ERR=9901,END=9901,IOSTAT=IOS) TTCUTQ,TTCTQS
+C      READ(LUNDAT,ERR=9901,END=9901,IOSTAT=IOS)
+C     &      (LPARIT(I),I=1,12)
+C      READ(LUNDAT,ERR=9901,END=9901,IOSTAT=IOS)
+C     &    ICODET,ILIBT,ILQMODT
+C      READ(LUNDAT,ERR=9901,END=9901,IOSTAT=IOS)
+C     &    TEELE,TEPRO,TPOLAR,LLEPTT
+C      READ(LUNDAT,ERR=9901,END=9901,IOSTAT=IOS)  TEGMIN
+
+C      IF((ABS(TXMIN-XMIN).GT.TESACC)
+C     &    .OR. (ABS(TXMIN-XMIN).GT.TESACC)
+C     &    .OR. (ABS(TXMAX-XMAX).GT.TESACC)
+C     &    .OR. (ABS(TQ2MIN-Q2MIN).GT.TESACC)
+C     &    .OR. (ABS(TYMIN-YMIN).GT.TESACC)
+C     &    .OR. (ABS(TYMAX-YMAX).GT.TESACC)
+C     &    .OR. (ICUTT.NE.ICUT))                 THEN
+C        WRITE(LUNOUT,'(/2A,I3//A/)')
+C     &      ' CURRENT KINEMATICAL CUTS INCONSISTENT WITH THE DATA SET',
+C     &      ' TO BE READ FROM UNIT',LUNDAT,
+C     &      ' CUTS DEFINED IN THE DATA SET:'
+C        WRITE(LUNOUT,'(10X,A,1PE10.3,5X,A,1PE10.3)')
+C     *     ' XMIN=',TXMIN,' XMAX=',TXMAX
+C        WRITE(LUNOUT,'(10X,A,1PE10.3)')
+C     *     ' Q2MIN=',TQ2MIN
+C        WRITE(LUNOUT,'(10X,A,1PE10.3,26X,A)')
+C     *     ' WMIN=', TWMIN, ' (ACTIVE ONLY FOR ICUT>1)'
+C        WRITE(LUNOUT,'(10X,A,1PE10.3,5X,A,1PE10.3,5X,A)')
+C     *     ' YMIN=',TYMIN,' YMAX=',TYMAX, ' (ACTIVE ONLY FOR ICUT=3)'
+C        WRITE(LUNOUT,'(10X,A,I2)')
+C     *     ' ICUT=',ICUTT
+
+C        WRITE(LUNOUT,'(/A/)')  ' CURRENTLY DEFINED PARAMETERS:'
+C        WRITE(LUNOUT,'(10X,A,1PE10.3,5X,A,1PE10.3)')
+C     *     ' XMIN=',XMIN,' XMAX=',XMAX
+C        WRITE(LUNOUT,'(10X,A,1PE10.3)')
+C     *     ' Q2MIN=',Q2MIN
+C        WRITE(LUNOUT,'(10X,A,1PE10.3,26X,A)')
+C     *     ' WMIN=', WMIN, ' (ACTIVE ONLY FOR ICUT>1)'
+C        WRITE(LUNOUT,'(10X,A,1PE10.3,5X,A,1PE10.3,5X,A)')
+C     *     ' YMIN=',YMIN,' YMAX=',YMAX, ' (ACTIVE ONLY FOR ICUT=3)'
+C        WRITE(LUNOUT,'(10X,A,I2)')
+C     *     ' ICUT=',ICUT
+C        WRITE(LUNOUT,100)
+C        STOP
+C      ENDIF
+
+C      IF(INT3(4).GT.1 .OR. ISAM3(4).GE.1) THEN
+C        IF(ABS(TTCUTQ-TCUTQ).GT.TESACC
+C     &      .OR. ABS(TTCTQS-TCUTQS).GT.TESACC) THEN
+C          WRITE(LUNOUT,'(/2A,I3//A/)')
+C     &      ' CURRENT ANGULAR CUTS FOR QUARKONIC BREMSSTRAHLUNG',
+C     &      ' INCONSISTENT WITH THE DATA SET TO BE READ FROM UNIT',
+C     &        LUNDAT,
+C     &      ' CUTS DEFINED IN THE DATA SET:'
+C          WRITE(LUNOUT,'(10X,A,1PE10.3,5X,A,1PE10.3)')
+C     &     ' TCUTQ=',TTCUTQ,' TCUTQS=',TTCTQS
+C          WRITE(LUNOUT,'(/A/)')  ' CURRENTLY DEFINED PARAMETERS:'
+C          WRITE(LUNOUT,'(10X,A,1PE10.3,5X,A,1PE10.3)')
+C     &     ' TCUTQ=',TCUTQ,' TCUTQS=',TCUTQS
+C          WRITE(LUNOUT,100)
+C          STOP
+C        ENDIF
+C      ENDIF
+
+C      DO 11 I=1,12
+C        IF(LPARIN(I).NE.LPARIT(I)) GOTO 12
+C  11  CONTINUE
+C      GOTO 13
+C  12  CONTINUE
+C      WRITE(LUNOUT,'(//2A,I3//A,I3,A)')
+C     &  ' CURRENT GSW-PARAMETERS INCONSISTENT WITH DATA SET ',
+C     &  ' TO BE READ FROM UNIT ',LUNDAT,
+C     &  ' PARAMETERS FROM DATA SET ON UNIT ',LUNDAT, ' :'
+C      WRITE(LUNOUT,'(12I3)') LPARIT
+C      WRITE(LUNOUT,'(/A/)')  ' CURRENTLY DEFINED PARAMETERS:'
+C      WRITE(LUNOUT,'(12I3)') LPARIN
+C      WRITE(LUNOUT,100)
+C      STOP
+
+C  13  CONTINUE
+
+C      IF(ICODET.NE.ICODE
+C     &  .OR.ILIBT.NE.ILIB
+C     &  .OR.ILQMODT.NE.ILQMOD) THEN
+C        WRITE(LUNOUT,'(//2A,I3//A,I3,A)')
+C     &    ' OTHER PARTON DISTRIBUTIONS USED FOR THE DATA SET ',
+C     &    ' TO BE READ FROM UNIT',LUNDAT,
+C     &    ' PARAMETER FROM DATA SET ON UNIT',LUNDAT,' : '
+C        WRITE(LUNOUT,'(10X,A,I7,A,I3,A,I3)')
+C     &      ' ICODE = ',ICODET,' ILIB = ',ILIBT,' ILQMOD = ',ILQMODT
+C        WRITE(LUNOUT,'(/A)')
+C     &    ' CURRENTLY DEFINED PARAMETERS:'
+C        WRITE(LUNOUT,'(10X,A,I7,A,I3,A,I3)')
+C     &      ' ICODE = ',ICODE,' ILIB = ',ILIB,' ILQMOD = ',ILQMOD
+
+C        WRITE(LUNOUT,100)
+C        STOP
+C      ENDIF
+
+C      IF((ABS(TEELE-EELE).GT.TESACC)
+C     &    .OR. (ABS(TEPRO-EPRO).GT.TESACC)
+C     &    .OR. (ABS(TPOLAR-POLARI).GT.TESACC)
+C     &    .OR. (LLEPTT.NE.LLEPT))                 THEN
+C        WRITE(LUNOUT,'(/2A,I3//A,I3/)')
+C     &      ' CURRENT BEAM PARAMETERS INCONSISTENT WITH THE DATA SET',
+C     &      ' TO BE READ FROM UNIT',LUNDAT,
+C     &      ' PARAMETERS FROM DSTS SET ON UNIT',LUNDAT,' :'
+C        WRITE(LUNOUT,'(10X,A,F8.1,A)')
+C     &      ' ENERGY OF INCIDENT ELECTRON =',TEELE,' GEV'
+C        WRITE(LUNOUT,'(10X,A,I3)')
+C     &                  ' CHARGE OF INCIDENT ELECTRON =',LLEPTT
+C        WRITE(LUNOUT,'(10X,A,F8.4)')
+C     &      ' DEGREE OF BEAM POLARIZATION =', TPOLAR
+C        WRITE(LUNOUT,'(10X,A,F8.1,A)')
+C     &      ' ENERGY OF INCIDENT PROTON =',TEPRO,' GEV'
+
+C        WRITE(LUNOUT,'(/A/)')  ' CURRENTLY DEFINED PARAMETERS:'
+C        WRITE(LUNOUT,'(10X,A,F8.1,A)')
+C     &      ' ENERGY OF INCIDENT ELECTRON =',EELE,' GEV'
+C        WRITE(LUNOUT,'(10X,A,I3)')
+C     &                  ' CHARGE OF INCIDENT ELECTRON =',LLEPT
+C        WRITE(LUNOUT,'(10X,A,F8.4)')
+C     &      ' DEGREE OF BEAM POLARIZATION =', POLARI
+C        WRITE(LUNOUT,'(10X,A,F8.1,A)')
+C     *      ' ENERGY OF INCIDENT PROTON =',EPRO,' GEV'
+
+C        WRITE(LUNOUT,100)
+C        STOP
+C      ENDIF
+
+C      IF(ABS(TEGMIN-EGMIN).GT.TESACC) THEN
+C        WRITE(LUNOUT,'(//2A,I3//A,I3,A,1PE11.3,A)')
+C     &      ' CURRENT CUT ON PHOTON ENERGY INCONSISTENT WITH DATA SET ',
+C     &       ' TO BE READ FROM UNIT',LUNDAT,
+C     &       ' CUT FROM DATA SET ON UNIT',LUNDAT,' :  EGMIN=',
+C     &       TEGMIN,' GEV'
+C        WRITE(LUNOUT,'(/A,1PE11.3,A)')
+C     &       ' CURRENTLY DEFINED PARAMETER: EGMIN=',EGMIN,' GEV'
+C        WRITE(LUNOUT,100)
+C        STOP
+C      ENDIF
+
+C      RETURN
+
+C 9901 CONTINUE
+C      WRITE(LUNOUT,'(/A,I3/A,I3/A)')
+C     &    ' ***  ERROR IN HSTPAR READING DATA FROM UNIT ',LUNDAT,
+C     &    ' ***  IOS=',IOS,
+C     &    ' ***  EXECUTION STOPPED'
+C      WRITE(LUNOUT,'(/A/5X,A/5X,6(1PE12.4),I3/5X,A,I7,A,I3,A,I3/
+C     &               5X,A/5X,3(1PE12.4),I3/5X,A,1PE12.4)')
+C     &    ' ***  ACTUAL VALUES OF PARAMETERS TO BE READ:',
+C     &    ' TXMIN,TXMAX,TQ2MIN,TYMIN,TYMAX,TWMIN,ICUTT',
+C     &      TXMIN,TXMAX,TQ2MIN,TYMIN,TYMAX,TWMIN,ICUTT,
+C     &    ' ICODET=',ICODET,' ILIBT=', ILIBT,' ILQMODT=',ILQMODT,
+C     &    ' TEELE,TEPRO,TPOLAR,LLEPTT',
+C     &      TEELE,TEPRO,TPOLAR,LLEPTT,
+C     &    ' TEGMIN=', TEGMIN
+C      STOP
+
+C 100  FORMAT(/' ***  EXECUTION STOPPED IN SUBROUTINE HSTPAR')
+C      END
 C
 C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 C
-      SUBROUTINE HSWRPA
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C      SUBROUTINE HSWRPA (!!!!!! NOT USED ANYMORE)
 C---
 C   WRITE PARAMETER DEFINITIONS OF THE CURRENT RUN
 C   FOR ALL CHANNELS TO UNIT LUNDAT
 C---
-      IMPLICIT DOUBLE PRECISION (A-H,O-Z)
-C
-      COMMON /HSOPTN/ INT2(5),INT3(15),ISAM2(5),ISAM3(15),
-     &                IOPLOT,IPRINT,ICUT
-      COMMON /HSUNTS/ LUNTES,LUNDAT,LUNIN,LUNOUT,LUNRND
-      COMMON /HSCUTS/ XMIN,XMAX,Q2MIN,Q2MAX,YMIN,YMAX,WMIN,GMIN
-      COMMON /HSPARM/ POLARI,HPOLAR,LLEPT,LQUA
-      COMMON /HSPARL/ LPAR(20),LPARIN(12)
-      COMMON /HSSTRP/ ICODE,ILIB,ILQMOD,IDPVR
-      COMMON /HSELAB/ SP,EELE,PELE,EPRO,PPRO
-      COMMON /HSIRCT/ DELEPS,DELTA,EGMIN,IOPEGM
-      COMMON /HSISGM/ TCUTQ,TCUTQS
+C      IMPLICIT DOUBLE PRECISION (A-H,O-Z)
+
+C      COMMON /HSOPTN/ INT2(5),INT3(15),ISAM2(5),ISAM3(15),
+C     &                IOPLOT,IPRINT,ICUT
+C      COMMON /HSUNTS/ LUNTES,LUNDAT,LUNIN,LUNOUT,LUNRND
+C      COMMON /HSCUTS/ XMIN,XMAX,Q2MIN,Q2MAX,YMIN,YMAX,WMIN,GMIN
+C      COMMON /HSPARM/ POLARI,HPOLAR,LLEPT,LQUA
+C      COMMON /HSPARL/ LPAR(20),LPARIN(12)
+C      COMMON /HSSTRP/ ICODE,ILIB,ILQMOD,IDPVR
+C      COMMON /HSELAB/ SP,EELE,PELE,EPRO,PPRO
+C      COMMON /HSIRCT/ DELEPS,DELTA,EGMIN,IOPEGM
+C      COMMON /HSISGM/ TCUTQ,TCUTQS
 C----------------
-      WRITE(LUNDAT) XMIN,XMAX,Q2MIN,YMIN,YMAX,WMIN,ICUT
-      WRITE(LUNDAT) TCUTQ,TCUTQS
-      WRITE(LUNDAT) (LPARIN(I),I=1,12)
-      WRITE(LUNDAT) ICODE,ILIB,ILQMOD
-      WRITE(LUNDAT) EELE,EPRO,POLARI,LLEPT
-      WRITE(LUNDAT) EGMIN
-C
-      IF(IPRINT.GE.2) THEN
-        WRITE(LUNTES,'(//A)') ' *** TEST PRINT HSWRPA'
-        WRITE(LUNTES,'(A/A,I3)')
-     &      ' *** PARAMETERS OF THE ACTUAL RUN',
-     &      ' *** WRITTEN ONTO UNIT', LUNDAT
-        WRITE(LUNTES,'(/A)') ' XMIN,XMAX,Q2MIN,YMIN,YMAX,WMIN,ICUT'
-        WRITE(LUNTES,'(6(1PE12.3),I4)')
-     &               XMIN,XMAX,Q2MIN,YMIN,YMAX,WMIN,ICUT
-        WRITE(LUNTES,'(/A)') ' TCUTQ,TCUTQS'
-        WRITE(LUNTES,'(2(1PE12.3))') TCUTQ,TCUTQS
-        WRITE(LUNTES,'(/A)') ' (LPARIN(I),I=1,12)'
-        WRITE(LUNTES,'(12I2)') (LPARIN(I),I=1,12)
-        WRITE(LUNTES,'(/A,I3,A,I8,A,I3))')
-     &    ' ICODE = ',ICODE,'ILIB = ',ILIB,' ILQMOD = ',ILQMOD
-        WRITE(LUNTES,'(/A)') ' EELE,EPRO,POLARI,LLEPT'
-        WRITE(LUNTES,'(3(1PE12.3),I5)') EELE,EPRO,POLARI,LLEPT
-        WRITE(LUNTES,'(A,1PE12.3)') ' EGMIN=',EGMIN
-      ENDIF
-      RETURN
-      END
-C
-C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C      WRITE(LUNDAT) XMIN,XMAX,Q2MIN,YMIN,YMAX,WMIN,ICUT
+C      WRITE(LUNDAT) TCUTQ,TCUTQS
+C      WRITE(LUNDAT) (LPARIN(I),I=1,12)
+C      WRITE(LUNDAT) ICODE,ILIB,ILQMOD
+C      WRITE(LUNDAT) EELE,EPRO,POLARI,LLEPT
+C      WRITE(LUNDAT) EGMIN
+
+C      IF(IPRINT.GE.2) THEN
+C        WRITE(LUNTES,'(//A)') ' *** TEST PRINT HSWRPA'
+C        WRITE(LUNTES,'(A/A,I3)')
+C     &      ' *** PARAMETERS OF THE ACTUAL RUN',
+C     &      ' *** WRITTEN ONTO UNIT', LUNDAT
+C        WRITE(LUNTES,'(/A)') ' XMIN,XMAX,Q2MIN,YMIN,YMAX,WMIN,ICUT'
+C        WRITE(LUNTES,'(6(1PE12.3),I4)')
+C     &               XMIN,XMAX,Q2MIN,YMIN,YMAX,WMIN,ICUT
+C        WRITE(LUNTES,'(/A)') ' TCUTQ,TCUTQS'
+C        WRITE(LUNTES,'(2(1PE12.3))') TCUTQ,TCUTQS
+C        WRITE(LUNTES,'(/A)') ' (LPARIN(I),I=1,12)'
+C        WRITE(LUNTES,'(12I2)') (LPARIN(I),I=1,12)
+C        WRITE(LUNTES,'(/A,I3,A,I8,A,I3))')
+C     &    ' ICODE = ',ICODE,'ILIB = ',ILIB,' ILQMOD = ',ILQMOD
+C        WRITE(LUNTES,'(/A)') ' EELE,EPRO,POLARI,LLEPT'
+C        WRITE(LUNTES,'(3(1PE12.3),I5)') EELE,EPRO,POLARI,LLEPT
+C        WRITE(LUNTES,'(A,1PE12.3)') ' EGMIN=',EGMIN
+C      ENDIF
+C      RETURN
+C      END
 C
 C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 C
-      SUBROUTINE HSWRSA(ISET,NREGX,NDIMX,
-     &                  SIG,SIGE,TGMAX,NDOX,TLMAX,NM,XX,
-     &                  FFGOX,DNCGX,FFLOX,DNCLX,GOLDX,
-     &                  NTOTX,NCALX,NCA1X,NCA2X,IBIMX,JCORX,
-     &                  LGLOX,LLOCX,
-     &                  IT,SI,SI2,SWGT,SCHI)
+C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C
+C      SUBROUTINE HSWRSA(ISET,NREGX,NDIMX,
+C     &                  SIG,SIGE,TGMAX,NDOX,TLMAX,NM,XX,
+C     &                  FFGOX,DNCGX,FFLOX,DNCLX,GOLDX,
+C     &                  NTOTX,NCALX,NCA1X,NCA2X,IBIMX,JCORX,
+C     &                  LGLOX,LLOCX,
+C     &                  IT,SI,SI2,SWGT,SCHI) (!!!!! NOT USED ANYMORE)
 C---
 C   WRITE INFORMATION FOR SAMPLING FOR ONE CONTRIBUTION TO UNIT LUNDAT
 C   ISET.GT.0 : RADIATIVE CHANNELS (INTEGRATION INFORMATION FROM VEGAS)
 C---
-      IMPLICIT DOUBLE PRECISION (A-H,O-Z)
-      double precision ntotx
-      LOGICAL LGLOX,LLOCX
-C
-      COMMON /HSOPTN/ INT2(5),INT3(15),ISAM2(5),ISAM3(15),
-     &                IOPLOT,IPRINT,ICUT
-      COMMON /HSUNTS/ LUNTES,LUNDAT,LUNIN,LUNOUT,LUNRND
-      DIMENSION TLMAX(NREGX),NM(NREGX),XX(NDOX,NDIMX)
+C      IMPLICIT DOUBLE PRECISION (A-H,O-Z)
+C      double precision ntotx
+C      LOGICAL LGLOX,LLOCX
+
+C      COMMON /HSOPTN/ INT2(5),INT3(15),ISAM2(5),ISAM3(15),
+C     &                IOPLOT,IPRINT,ICUT
+C      COMMON /HSUNTS/ LUNTES,LUNDAT,LUNIN,LUNOUT,LUNRND
+C      DIMENSION TLMAX(NREGX),NM(NREGX),XX(NDOX,NDIMX)
 C---------------------------------
-      WRITE(LUNDAT) SIG,SIGE,TGMAX,NDOX
-      IF(IPRINT.GE.6) THEN
-        WRITE(LUNTES,'(/A,3I5)') ' HSWRSA:  ISET, NREGX, NDIMX',
-     &                                      ISET, NREGX, NDIMX
-        WRITE(LUNTES,'(/A)') ' HSWRSA:  SIG,SIGE,TGMAX,NDOX'
-        WRITE(LUNTES,*) SIG,SIGE,TGMAX,NDOX
-      ENDIF
-      WRITE(LUNDAT) (TLMAX(I),I=1,NREGX)
-      WRITE(LUNDAT) (NM(I),I=1,NREGX)
-C
-      IF(ISET.GT.0) WRITE(LUNDAT) IT,SI,SI2,SWGT,SCHI
-      WRITE(LUNDAT) ((XX(I,II),I=1,NDOX),II=1,NDIMX)
-      WRITE(LUNDAT) FFGOX,DNCGX,FFLOX,DNCLX,GOLDX,
-     &              NTOTX,NCALX,NCA1X,NCA2X,IBIMX,JCORX,
-     &              LGLOX,LLOCX
-      IF(IPRINT.GE.6) THEN
-        WRITE(LUNTES,'(/A/5X,5(1PD13.5))')
-     &       ' HSWRSA :    FFGOX,DNCGX,FFLOX,DNCLX,GOLDX',
-     &                    FFGOX,DNCGX,FFLOX,DNCLX,GOLDX
-        WRITE(LUNTES,'(/A/5X,2I8,4I5)')
-     &       ' HSWRSA :    NTOTX,NCALX,NCA1X,NCA2X,IBIMX,JCORX',
-     &                    NTOTX,NCALX,NCA1X,NCA2X,IBIMX,JCORX
-        WRITE(LUNTES,'(/A,2L4)')
-     &       ' HSWRSA:     LGLOX,LLOCX',  LGLOX,LLOCX
-      ENDIF
-      IF(IPRINT.GE.6) THEN
-         WRITE(LUNTES,'(/A)') ' HSWRSA: XX(NDOX,NDIMX)'
-         WRITE(LUNTES,2) ((XX(I,J),I=1,NDOX),J=1,NDIMX)
-         WRITE(LUNTES,'(/A)') ' HSWRSA: TLMAX(NREGX)'
-         WRITE(LUNTES,2) (TLMAX(I),I=1,NREGX)
-         WRITE(LUNTES,'(/,A)') ' HSWRSA: NM2(NDOX,NDIMX)'
-         WRITE(LUNTES,3) (NM(I),I=1,NREGX)
-      ENDIF
-      RETURN
- 2    FORMAT(5(1PD15.5))
- 3    FORMAT(10I8)
-      END
+C      WRITE(LUNDAT) SIG,SIGE,TGMAX,NDOX
+C      IF(IPRINT.GE.6) THEN
+C        WRITE(LUNTES,'(/A,3I5)') ' HSWRSA:  ISET, NREGX, NDIMX',
+C     &                                      ISET, NREGX, NDIMX
+C        WRITE(LUNTES,'(/A)') ' HSWRSA:  SIG,SIGE,TGMAX,NDOX'
+C        WRITE(LUNTES,*) SIG,SIGE,TGMAX,NDOX
+C      ENDIF
+C      WRITE(LUNDAT) (TLMAX(I),I=1,NREGX)
+C      WRITE(LUNDAT) (NM(I),I=1,NREGX)
+
+C      IF(ISET.GT.0) WRITE(LUNDAT) IT,SI,SI2,SWGT,SCHI
+C      WRITE(LUNDAT) ((XX(I,II),I=1,NDOX),II=1,NDIMX)
+C      WRITE(LUNDAT) FFGOX,DNCGX,FFLOX,DNCLX,GOLDX,
+C     &              NTOTX,NCALX,NCA1X,NCA2X,IBIMX,JCORX,
+C     &              LGLOX,LLOCX
+C      IF(IPRINT.GE.6) THEN
+C        WRITE(LUNTES,'(/A/5X,5(1PD13.5))')
+C     &       ' HSWRSA :    FFGOX,DNCGX,FFLOX,DNCLX,GOLDX',
+C     &                    FFGOX,DNCGX,FFLOX,DNCLX,GOLDX
+C        WRITE(LUNTES,'(/A/5X,2I8,4I5)')
+C     &       ' HSWRSA :    NTOTX,NCALX,NCA1X,NCA2X,IBIMX,JCORX',
+C     &                    NTOTX,NCALX,NCA1X,NCA2X,IBIMX,JCORX
+C        WRITE(LUNTES,'(/A,2L4)')
+C     &       ' HSWRSA:     LGLOX,LLOCX',  LGLOX,LLOCX
+C      ENDIF
+C      IF(IPRINT.GE.6) THEN
+C         WRITE(LUNTES,'(/A)') ' HSWRSA: XX(NDOX,NDIMX)'
+C         WRITE(LUNTES,2) ((XX(I,J),I=1,NDOX),J=1,NDIMX)
+C         WRITE(LUNTES,'(/A)') ' HSWRSA: TLMAX(NREGX)'
+C         WRITE(LUNTES,2) (TLMAX(I),I=1,NREGX)
+C         WRITE(LUNTES,'(/,A)') ' HSWRSA: NM2(NDOX,NDIMX)'
+C         WRITE(LUNTES,3) (NM(I),I=1,NREGX)
+C      ENDIF
+C      RETURN
+C 2    FORMAT(5(1PD15.5))
+C 3    FORMAT(10I8)
+C      END
 C
 C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 C
@@ -5146,10 +5888,12 @@ C
       EXTERNAL F
 C
       IF(NCALL(NCONT).EQ.0) THEN
+C        WRITE(455,*) '2.3.1'
         NCALL(NCONT)=1
         R(NCONT)=NDO**NDIM
       ENDIF
 C
+C      WRITE(455,*) '2.3.2'
       W=R(NCONT)
       DO 4 I=1,NDIM
          XX=X(I)*NDO
@@ -5165,6 +5909,7 @@ C
          W=W*DD
 4     CONTINUE
 C
+C      WRITE(455,*) '2.3.3'
       FZ=F(Z)
       HSTRIT=W*FZ
 C
@@ -5203,14 +5948,17 @@ C
         FMAX(J)=0D0
  5    CONTINUE
 C
+C      WRITE(455,*) '1'
       SUM=0D0
       SUM2=0D0
       SUM2P=0D0
       IF(IPRINT.GE.1) WRITE(LUNTES,200) MBIN,NREGX,NPOIN
 
 C...DETERMINATION OF GLOBAL/LOCAL MAXIMA
+C      WRITE(455,*) '2'
       DO 1 J=1,NREGX
          JJ=J-1
+C         WRITE(455,*) '2.1'
          DO 2 K=1,NDIM
             JJJ=JJ/MBIN
             N(K)=JJ-JJJ*MBIN
@@ -5218,20 +5966,24 @@ C...DETERMINATION OF GLOBAL/LOCAL MAXIMA
 2        CONTINUE
          FSUM=0D0
          FSUM2=0D0
+C         WRITE(455,*) '2.2'
          DO 3 M=1,NPOIN
             DO 4 K=1,NDIM
                X(K)=(HSRNDM(-1)+N(K))/MBIN
 4           CONTINUE
+C            WRITE(455,*) '2.3'
             Z=HSTRIT(F,X,NDIM,NCONT,XI,NDO)
             IF(Z.GT.FMAX(J)) FMAX(J)=Z
             FSUM=FSUM + Z
             FSUM2=FSUM2 + Z*Z
 3        CONTINUE
+C         WRITE(455,*) '2.4'
          IF(FMAX(J).GT.FFMAX) THEN
            FFMAX=FMAX(J)
            IBIMAX=J
          ENDIF
 C
+C         WRITE(455,*) '3'
          AV=FSUM/FLOAT(NPOIN)
          AV2=FSUM2/FLOAT(NPOIN)
          SIG2=AV2-AV*AV
@@ -5253,6 +6005,7 @@ C
       DO 6 J=1,NREGX
          EFF1=EFF1+FMAX(J)
 6     CONTINUE
+C      WRITE(455,*) '4'
       EFF1=EFF1/(NREGX*SUM)
       EFF2=FFMAX/SUM
       IF(IPRINT.GE.1) THEN
@@ -5260,6 +6013,7 @@ C
         WRITE (LUNTES,'(/A,1PE13.5,5X,A,I5)')
      &        ' GLOBAL MAXIMUM FFMAX=',FFMAX,' IN BIN IBIMAX=',IBIMAX
       ENDIF
+C      WRITE(455,*) '5'
 C
 100   FORMAT(I6,3X,G13.6,G12.4,G13.6,3X,F8.2,3X,10I2)
 101   FORMAT(' THE AVERAGE FUNCTION VALUE =',G14.6/
@@ -5395,7 +6149,7 @@ C            DURING CORRECTION PROCEDURE FOR UNDERESTIMATED GLOBAL MAX.
 C
 C-----------------------------------------------------------------------
 
-      IF(IPRINT.GE.2) THEN
+      IF(IPRINT.GE.3) THEN
         WRITE(LUNTES,'(//A/A,5X,2I3,I8,I3,2(1PE13.6))')
      +     ' ENTRY HSGENM ',' NCONT,NDIM,NEVENT,ICONTI,FFMAX, GLAST',
      +                        NCONT,NDIM,NEVENT,ICONTI,FFMAX,GLAST
@@ -5423,7 +6177,8 @@ C...information on trial numbers and corrections from previous runs
         DNCGLO=0D0
         DNCLOC=0D0
         JCOR=0
-        NTOT=0
+C...Remove here and put it somwhere else
+C        NTOT=0
         NCALL=0
         MCALL1=0
         MCALL2=0
@@ -5460,6 +6215,7 @@ C...Test whether last function value exceeds local/global maxima
       ENDIF
 
   100 CONTINUE
+
 C...Entry after correctino procedures for local/global maxima
       LLOCAL=.FALSE.
       LGLOB=.FALSE.
@@ -5546,6 +6302,7 @@ C...New value smaller than global maximum
       FMAX(JCOR)=G
 
  210  CONTINUE
+
 C...Entry for correction loop without continued correction of the
 C...local maximum
       IF(DNCLOC.LT.1D0) THEN
@@ -5945,6 +6702,7 @@ C
       COMMON /HSPARM/ POLARI,HPOLAR,LLEPT,LQUA
       COMMON /HSLTYP/ LEPIN1
       COMMON /HSNUCL/ HNA,HNZ,INUMOD
+      INTEGER         HNA,HNZ
       COMMON /HSGSW/  SW,CW,SW2,CW2
      *              ,MW,MZ,MH,ME,MMY,MTAU,MU,MD,MS,MC,MB,MT
      *              ,MW2,MZ2,MH2,ME2,MMY2,MTAU2,MU2,MD2,MS2,MC2,MB2,MT2
@@ -6320,9 +7078,6 @@ C other nuclei
 
       CALL HSUSER(2,X,Y,Q2)
 
-      WRITE(6,*) DJX
-      WRITE(6,*) DJY
-      WRITE(6,*) DJQ2
 C
       RETURN
       END
@@ -6867,6 +7622,7 @@ C
      *                DQT,DQBT
       COMMON /HSPARM/ POLARI,HPOLAR,LLEPT,LQUA
       COMMON /HSNUCL/ HNA,HNZ,INUMOD
+      INTEGER         HNA,HNZ
       COMMON /HSGIKP/ GS,GU,GX,TP,UP
       COMMON /HSFIJK/ F1(2,2),F2(2,2),F3(2,2)
       COMMON /HSGIJK/ G1(2,2),G3(2,2),G4(2,2)
@@ -7455,6 +8211,7 @@ C
       COMMON /HSIKP/  S,T,U,SS,TS,US,DKP,DKPS,DKQ,DKQS
       COMMON /HSPARM/ POLARI,HPOLAR,LLEPT,LQUA
       COMMON /HSNUCL/ HNA,HNZ,INUMOD
+      INTEGER         HNA,HNZ
       COMMON /HSGIKP/ GS,GU,GX,TP,UP
       COMMON /HSFIJK/ F1(2,2),F2(2,2),F3(2,2)
       COMMON /HSGIJK/ G1(2,2),G3(2,2),G4(2,2)
@@ -8051,6 +8808,7 @@ C
      *                DQT,DQBT
       COMMON /HSPARM/ POLARI,HPOLAR,LLEPT,LQUA
       COMMON /HSNUCL/ HNA,HNZ,INUMOD
+      INTEGER         HNA,HNZ
       COMMON /HSGIKP/ GS,GU,GX,TP,UP
       COMMON /HSFIJK/ F1(2,2),F2(2,2),F3(2,2)
       COMMON /HSGIJK/ G1(2,2),G3(2,2),G4(2,2)
@@ -8675,6 +9433,7 @@ C
       COMMON /HSDPDF/ DQU,DQBU,DQD,DQBD,DQS,DQBS,DQC,DQBC,DQB,DQBB,
      *                DQT,DQBT
       COMMON /HSNUCL/ HNA,HNZ,INUMOD
+      INTEGER         HNA,HNZ
       COMMON /HSPARM/ POLARI,HPOLAR,LLEPT,LQUA
       COMMON /HSGIKP/ GS,GU,GX,TP,UP
       COMMON /HSFIJK/ F1(2,2),F2(2,2),F3(2,2)
@@ -9149,6 +9908,7 @@ C
       COMMON /HSDPDF/ DQU,DQBU,DQD,DQBD,DQS,DQBS,DQC,DQBC,DQB,DQBB,
      *                DQT,DQBT
       COMMON /HSNUCL/ HNA,HNZ,INUMOD
+      INTEGER         HNA,HNZ
       COMMON /HSPDFO/ IPDFOP,IFLOPT,LQCD,LTM,LHT
       COMMON /HSWGTC/ IWEIGS
       COMMON /HSFIJK/ F1(2,2),F2(2,2),F3(2,2)
@@ -11208,6 +11968,7 @@ C
       COMMON /HSDPDF/ DQU,DQBU,DQD,DQBD,DQS,DQBS,DQC,DQBC,DQB,DQBB,
      *                DQT,DQBT
       COMMON /HSNUCL/ HNA,HNZ,INUMOD
+      INTEGER         HNA,HNZ
       COMMON /HSPARM/ POLARI,HPOLAR,LLEPT,LQUA
       COMMON /HSPSPC/ IPHSPC
       COMMON /HSWGTC/ IWEIGS
@@ -11544,6 +12305,7 @@ C
       COMMON /HSDPDF/ DQU,DQBU,DQD,DQBD,DQS,DQBS,DQC,DQBC,DQB,DQBB,
      *                DQT,DQBT
       COMMON /HSNUCL/ HNA,HNZ,INUMOD
+      INTEGER         HNA,HNZ
       COMMON /HSPARM/ POLARI,HPOLAR,LLEPT,LQUA
       COMMON /HSWGTC/ IWEIGS
       DIMENSION X(5)
@@ -11729,6 +12491,7 @@ C
       COMMON /HSKNCC/ SXNRCC,SX1NCC
       COMMON /HSPARL/ LPAR(20),LPARIN(12)
       COMMON /HSNUCL/ HNA,HNZ,INUMOD
+      INTEGER         HNA,HNZ
       COMMON /HSPARM/ POLARI,HPOLAR,LLEPT,LQUA
       COMMON /HSELAB/ SP,EELE,PELE,EPRO,PPRO
       COMMON /HSGSW/  SW,CW,SW2,CW2
@@ -12756,6 +13519,7 @@ C
       COMMON /HSDPDF/ DQU,DQBU,DQD,DQBD,DQS,DQBS,DQC,DQBC,DQB,DQBB,
      *                DQT,DQBT
       COMMON /HSNUCL/ HNA,HNZ,INUMOD
+      INTEGER         HNA,HNZ
 
       IF (INT(HNA).EQ.1.AND.INT(HNZ).EQ.1) RETURN
       IF (INT(HNA).EQ.1.AND.INT(HNZ).EQ.0) THEN
@@ -13039,8 +13803,9 @@ C...Quark part.
         ACCUR=PARL(11)
         IT=0
   100   IT=IT+1
-        NTOT=0
-        NPASS=0
+C... NTOT+NPASS
+C        NTOT=0
+C        NPASS=0
         EPS=ACCUR
         CALL GADAP(X,1.,FLQINT,EPS,FLQ)
         IF(FLQ.LT.1) THEN
@@ -13052,8 +13817,9 @@ C...Gluon part.
         ACCUR=PARL(11)
         IT=0
   200   IT=IT+1
-        NTOT=0
-        NPASS=0
+C... NTOT+NPASS
+C        NTOT=0
+C        NPASS=0
         EPS=ACCUR
         CALL GADAP(X,1.,FLGINT,EPS,FLG)
         IF(FLG.LT.1.) THEN
@@ -13067,8 +13833,9 @@ C...Target mass  part.
         ACCUR=PARL(11)
         IT=0
   300   IT=IT+1
-        NTOT=0
-        NPASS=0
+C... NTOT+NPASS
+C        NTOT=0
+C        NPASS=0
         EPS=ACCUR
         CALL GADAP(X,1.,FLTINT,EPS,FLM)
         IF(FLM.LT.1) THEN
@@ -13195,8 +13962,9 @@ C...FL from QCD, quark and gluon contributions.
         ACCUR=PARL(11)
         IT=0
   100   IT=IT+1
-        NTOT=0
-        NPASS=0
+C... NTOT+NPASS
+C        NTOT=0
+C        NPASS=0
         EPS=ACCUR
         CALL GADAP(X,1.,FLQINT,EPS,CFLQ)
         IF(CFLQ.LT.1) THEN
@@ -13206,8 +13974,9 @@ C...FL from QCD, quark and gluon contributions.
         ACCUR=PARL(11)
         IT=0
   200   IT=IT+1
-        NTOT=0
-        NPASS=0
+C... NTOT+NPASS
+C        NTOT=0
+C        NPASS=0
         EPS=ACCUR
         CALL GADAP(X,1.,FLGINT,EPS,CFLG)
         IF(CFLG.LT.1.) THEN
@@ -13219,8 +13988,9 @@ C...FL from QCD, quark and gluon contributions.
         ACCUR=PARL(11)
         IT=0
   300   IT=IT+1
-        NTOT=0
-        NPASS=0
+C... NTOT+NPASS
+C        NTOT=0
+C        NPASS=0
         EPS=ACCUR
         CALL GADAP(X,1.,FLTINT,EPS,CFLM)
         IF(CFLM.LT.1.) THEN
@@ -13570,6 +14340,7 @@ C
       COMMON /HSSTRP/ ICODE,ILIB,ILQMOD,IDPVR
       COMMON /HSPDFO/ IPDFOP,IFLOPT,LQCD,LTM,LHT
       COMMON /HSNUCL/ HNA,HNZ,INUMOD
+      INTEGER         HNA,HNZ
       COMMON /HSCUTS/ XMIN,XMAX,Q2MIN,Q2MAX,YMIN,YMAX,WMIN,GMIN
       COMMON /HYSTFU/ PYSTOP,PYSLAM,NPYMAX,NPYMIN
       REAL            PYSTOP,PYSLAM
@@ -13626,9 +14397,11 @@ C---Initialization of LHAPDF
       IF (ILIB.EQ.2) THEN
         LHAPTH=LHAPATH
         CALL SetPDFPath(LHAPTH)
-        WRITE(LUNOUT,'(2(10X,A/))')
+        IF(VERBOZ.EQ.1) THEN
+          WRITE(LUNOUT,'(2(10X,A/))')
      *  ' USING PATH TO PDFSETS: ',
      *  LHAPATH
+        ENDIF
         lhaverdef='5.9.1 '
         call getlhapdfversion(lhaversion)
         IF (lhaversion.NE.lhaverdef) THEN
@@ -13658,7 +14431,7 @@ c   CALL PDFSET via PYINIT
       ENDIF
 
 C---WRITE OPTIONS
-      IF (ILIB.EQ.1) THEN
+      IF (ILIB.EQ.1.AND.VERBOZ.EQ.1) THEN
         WRITE(LUNOUT,'(/A/A/)')
      *   '           PARTON DISTRIBUTIONS TAKEN FROM PYSTFU   *****'
      *  ,'           VIA LYSTFU FROM LEPTO 6.5                *****'
@@ -13956,6 +14729,7 @@ C
       COMMON /HSSTRP/ ICODE,ILIB,ILQMOD,IDPVR
       COMMON /HSPDFO/ IPDFOP,IFLOPT,LQCD,LTM,LHT
       COMMON /HSNUCL/ HNA,HNZ,INUMOD
+      INTEGER         HNA,HNZ
       COMMON /HSCUTS/ XMIN,XMAX,Q2MIN,Q2MAX,YMIN,YMAX,WMIN,GMIN
 c
       integer ixoutmn,iqoutmn,ixoutmx,iqoutmx
@@ -14035,6 +14809,1358 @@ C
 C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 C
 C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C-- TERAD PARAMETRISATION ADDED BY N. PIERRE (24/05/17) FOR TEST PURPOSE
+c-- Only for proton target
+
+      SUBROUTINE TERAD(X,Q2,ZF1,ZF2)
+      IMPLICIT DOUBLE PRECISION (A-H,M,O-Z)
+      COMMON /TERADINI/ IFRSTM
+      ZF1=0D0
+      ZF2=0D0
+
+C     One time initialization w/ IFRSTM flag
+      IF(IFRSTM.NE.1) THEN
+        WRITE(6,*) 'INITIALISATION TERAD PARAMETRISATION'
+        call rfitpar
+        call inijkb
+        x=	0.000070
+        Q2=	0.0011
+        call getjkb(X,Q2,ZF2)
+        WRITE(6,*) X, Q2, ZF2
+        x=	0.000070
+        Q2=	0.0147
+        call getjkb(X,Q2,ZF2)
+        WRITE(6,*) X, Q2, ZF2
+        x=	0.000500
+        Q2=	0.1351
+        call getjkb(X,Q2,ZF2)
+        WRITE(6,*) X, Q2, ZF2
+        x=	0.010000
+        Q2=	0.1501
+        call getjkb(X,Q2,ZF2)
+        WRITE(6,*) X, Q2, ZF2
+        IFRSTM=1
+      ENDIF
+
+      if (Q2 .lt. 0.2d0) then
+        call getjkb(X,Q2,ZF2)
+      else
+        call df2p15(X,Q2,ZF2)
+      endif
+
+      call R1990fun(X,Q2,DR,DDR)
+
+      ZF1 = ((1+(0.938272*0.938272)*4*X*X/Q2)*ZF2)/(2*X*(1+DR))
+
+      RETURN
+      END
+C
+C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+C FOLLOWS THE NECESSARY CODE FOR TERAD PARAMETRISATION
+
+c===================================
+c-----F2 parameterisation parameters
+c-----parameters are put to the common block "fitpar", array "dpf2(15)"
+
+      subroutine rfitpar
+      implicit double precision (a-h,o-z)
+      common /fitpar/ dpf2(15),if2typ,nf2p
+
+      IMAT = 1
+      IF2TYP = 4
+      NF2P = 15
+      DPF2(1) = -0.2499713175097D+00
+      DPF2(2) = 0.2396344728724D+01
+      DPF2(3) = 0.2289630236346D+00
+      DPF2(4) = 0.8498360257578D-01
+      DPF2(5) = 0.3860797992943D+01
+      DPF2(6) = -0.7414275585348D+01
+      DPF2(7) = 0.3434223579597D+01
+      DPF2(8) = 0.1141083888210D+00
+      DPF2(9) = -0.2235597858569D+01
+      DPF2(10) = 0.3115195484229D-01
+      DPF2(11) = 0.2135222381130D-01
+      DPF2(12) = -0.1451744104784D+01
+      DPF2(13) = 0.8474547402342D+01
+      DPF2(14) = -0.3437914208393D+02
+      DPF2(15) = 0.4588805973036D+02
+
+      return
+
+      end
+
+c===================================
+c===================================
+
+
+      SUBROUTINE df2p15(DX,DQ2,df2)
+      IMPLICIT DOUBLE PRECISION (a-h,o-z)
+      common /fitpar/ dpf2(15),if2typ,nf2p
+C
+      dimension dph2(15),dpd2(15)
+      DATA dph2 /-0.1011,2.562,0.4121,-0.518,5.967,-10.197,4.685,
+     &  0.364,-2.764,0.015,0.0186,-1.179,8.24,-36.36,47.76/
+c-----BB 4.V.2017      DATA dpd2 /-0.0996,2.489,0.4684,-1.924,8.159,-10.893,4.535,
+c-----BB 4.V.2017     &  0.252,-2.713,0.0254,0.0299,-1.221,7.50,-30.49,40.23/
+c
+c-----BB 4.V.2017      if(f2hh92a.eq.1) call ucopy(dph2,dpf2,30)
+c-----BB 4.V.2017      if(f2dd92a.eq.1) call ucopy(dpd2,dpf2,30)
+
+      DATA W2A,W2B/ 2.0, 1.9 /
+c
+      DXX = DMAX1( DMIN1( DX, 0.99D0 ) , 0.05D0 )
+      DFX = 1.D0 / DXX - 1.D0
+      DQ2A = W2A / DFX
+      IF(DQ2.GE.DQ2A) THEN
+         CALL df2aaa(DX,DQ2,df2)
+      ELSE
+         DQ2B = W2B / DFX
+         CALL df2aaa(DX,DQ2a,df2a)
+         CALL df2aaa(DX,DQ2b,df2b)
+         dTA = DLOG( (DQ2A+0.1D0) / 0.1D0 )
+         dTB = DLOG( (DQ2B+0.1D0) / 0.1D0 )
+         dTT = DLOG( (DQ2 +0.1D0) / 0.1D0 )
+         df2 = dTT*((dF2A*dTB-dF2B*dTA)*dTT+dF2B*dTA**2-dF2A*dTB**2 )
+     +            /dTA /dTB / (dTA - dTB)
+      ENDIF
+
+      if (df2. gt. 0.d0) return
+      df2 = 1.d-30
+
+      RETURN
+      END
+
+c
+c
+c
+      SUBROUTINE df2aaa(dx,dq2,df2)
+      IMPLICIT DOUBLE PRECISION (a-h,o-z)
+      common /fitpar/ dpf2(15),if2typ,nf2p
+
+C
+      PARAMETER (ALAMB=0.250, Q2ZERO=20.)
+C
+      dalamb=alamb
+      dq2zer=q2zero
+      dz = 1.d0 - dx
+      dAA =dx**dpf2(1)*dz**dpf2(2)*(dpf2(3)+dpf2(4)*dz+dpf2(5)*dz**2
+     +                               + dpf2(6)*dz**3+dpf2(7)*dz**4)
+      dBB = dpf2(8) + dpf2(9)*dx + dpf2(10) / ( dx + dpf2(11) )
+      dCC = dx*(dpf2(12)+dpf2(13)*dx+dpf2(14)*dx**2+dpf2(15)*dx**3 )
+      df2 = dAA * ( (dLOG(dQ2)    -dLOG(dALAMB**2))
+     +        /(dLOG(dQ2ZER)-dLOG(dALAMB**2)) )**dBB * (1.d0+dCC/dQ2)
+C
+      RETURN
+      END
+
+c================================================================
+c-----now comes the looooooong part of the F2 at Q2<0.2
+
+c-----observe that function "fint" is an interpolation function,
+c-----taken from CERNLIB
+
+
+      SUBROUTINE INIJKB
+      implicit double precision (a-h,o-z)
+      PARAMETER (NXM=50,NQM=50)
+      PARAMETER (NXQM=NXM+NQM)
+      real xqlogm,f2mod
+      COMMON /JKBCOM/ XQLOGM(NXQM),F2MOD(NXM,NQM),H(2,20,20)
+      common /jkbini/ ijkbb
+      DATA XLOGMIN/-5.5/,XLOGMAX/0.0/
+      DATA QLOGMIN/-5.0/,QLOGMAX/-0.3/
+      ijkbb = 0
+      mode = 72
+cc
+cc
+      DO IX=1,NXM
+       XQLOGM(IX)=XLOGMIN+(XLOGMAX-XLOGMIN)*IX/NXM
+       XX=10**(XQLOGM(IX))
+       DO IQ=1,NQM
+         XQLOGM(NQM+IQ)=QLOGMIN+(QLOGMAX-QLOGMIN)*IQ/NQM
+         Q2=10**(XQLOGM(NQM+IQ))
+         if(q2.lt.0.2d0) then
+           mode = 72
+           xbefore = xx
+           q2before = q2
+           call f2pd(mode,xx,q2,f2p,f2d,fv)
+           if (ix.lt.5.and.iq.lt.5) print *, xbefore,xx,q2before,q2,f2d
+C           print *, mode, xx, q2, f2p, f2d, fv
+           f2mod(ix,iq) = f2p
+         else
+c           if (q2.lt.0.0000001d0)
+cbbb...2015     +         print '======== q2 in INIJKB ======= ',q2
+c          +         print *, '======== q2 in INIJKB ======= ',q2
+           xqlogm(nqm+iq)=log10(q2)
+           call df2p15(xx,q2,f2)
+           f2mod(ix,iq) = f2
+         endif
+       ENDDO
+      ENDDO
+      ijkbb = 1
+      END
+c==================================================================
+
+      SUBROUTINE GETJKB (X,Q2,F2LXQ2)
+      implicit double precision (a-h,o-z)
+      PARAMETER (NXM=50,NQM=50)
+      PARAMETER (NXQM=NXM+NQM)
+      real xqlogm,f2mod
+      COMMON /JKBCOM/ XQLOGM(NXQM),F2MOD(NXM,NQM),H(2,20,20)
+      common /jkbini/ ijkbb
+      INTEGER NXQ2(2)
+      REAL XQ2(2)
+C      if (x.lt.0.0000001d0.or.q2.lt.0.0000001d0)
+C      +   print *,'============ x,q2 in GETJKB ===== ',x,q2
+      XQ2(1)=log10(X)
+      XQ2(2)=log10(Q2)
+      NXQ2(1)=NXM
+      NXQ2(2)=NQM
+      f2lxq2=fint(2,xq2,nxq2,xqlogm,f2mod)
+      END
+c
+c=====================================================================
+
+c
+      subroutine f2pd(mode,x,q2,f2p,f2d,fv)
+c
+c --- A code to calculate the nucleon structure function F2 in the
+c --- low q2 and low x region within the GVMD inspired model described in
+c --- B.Badelek and J.Kwiecinski, Phys. Lett. B295 (1992) 263.
+c --- The structure functions F2 corresponding to the QCD improved
+c --- parton model are obtained from the interpolation formula based on
+c --- Tchebyshev polynomials. The vector meson contributions are calculated
+c --- directly. Parton model contributions are based on the MRS and GRV94
+c --- parton distributions: (MRS: A.D.Martin, W.J.Stirling and R.G.Roberts,
+c --- Phys. Rev. D47(1993) 145, Phys.Lett B306(1993) 145,
+c     Phys. Rev. D50(1994) 6734
+c --- and GRV94: M.Gluck, E.Reya and A.Vogt, Z. Phys. C67 (1995) 433).
+c
+c >>>>>>  Model is valid for
+c                             nu > 10 GeV,
+c                             10**(-5) < x < 0.1,
+c                             Q2< 1000 GeV2                  <<<<<<
+c
+c --- The following asymptotic str. functions (data files)  exist:
+c --- mode=1 (f2mod1.dat), corresponds to the unshadowed MRS D- parametrisation;
+c --- mode=2 (f2mod2.dat), to the shadowed D- parametrisation and R=2GeV**(-1);
+c --- mode=3 (f2mod3.dat), to the shadowed D- parametrisation and R=5GeV**(-1);
+c --- mode=4 (f2mod4.dat), to the unshadowed D0 set of partons;
+c --- mode=5 (f2mod5.dat), to the D-';
+c --- mode=6 (f2mod6.dat), to the MRSH(A);
+c --- mode=71/72, GRV94, NLO MS(bar), no charm/with charm
+c --- mode=73/74, GRV94, NLO DIS,     no charm/with charm
+c --- mode=75/76, GRV94,  LO,         no charm/with charm
+c
+c --- OBS 1:  modes 1-4 are calculated in the LO and modes 5,6 in the NLO of QCD
+c --- OBS 2:  mode=1,2,3,4 have a narrower validity range: 10**(-4) < x < 0.1
+c --- OBS 3:  x validity range applies in fact to the {\bar x} variable,
+c             cf.the publication for the definition; validity in the Bjorken x
+c             extends to even lower x values (e.g. to x=0 for photoproduction).
+c
+c --- Subroutine parameters:
+c        mode:     an integer defining the asymptotic part of the str. function;
+c                  if mode < 70 it also defines the respective input file
+c                  (e.g.mode=2 for file f2mod2.dat),
+c        q2,x:     the usual kinematic variables,
+c        f2p,f2d   str. functions for the proton and for the deuteron
+c                  (returned values);
+c !!!    deteron here is (proton+neutron)/2 ie no shadowing effects. !!!!!!!!!!
+c        fv:       contribution of GVMD in the final F2 (return value)
+c
+c --- Example of the usage of the subroutine is given above.
+c --- For mode x< 70 user has to attach a data file, f2modx.dat,
+c                    containing the interpolation coefficients
+c                    for a chosen F_2^{AS}.
+c
+c --- History:
+c     Oct. 25th, 1993; introduced mode=5 which corresponds to the MRS D-'
+c                      parametrisation; NLO evolution (LO before);
+c                      extension of model validity down to x=1.E-5
+c                      (old limit: x=1.E-4).
+c     Sept.27th, 1994: introduced mode=6 which corresponds to the MRSH(A)
+c                      parametrisation; NLO evolution.
+c     Oct. 10th, 1995: introduced modes 71 - 76 corresponding to GRV94
+c                      proton...
+c     Sept.29th, 1997:          ... and deuteron
+c
+c     June 2000      : checked that GRV98 instead of GRV94 gives negligible
+c                      differences in F2
+c
+c
+
+c
+c
+c
+c...BB, 15.XII.2005....introduced double prec. in this routine to comply
+c......................with the rest of TERAD; certain old declarations
+c......................were thus commented by "ccc"
+c
+      implicit double precision (a-h,o-z)
+c
+ccc      double precision dx,dq2,dxbar, dqbar, df2, df2d, df2l, df2bh
+      PARAMETER (NXM=50,NQM=50)
+      PARAMETER (NXQM=NXM+NQM)
+      real xqlogm,f2mod
+      COMMON /JKBCOM/ XQLOGM(NXQM),F2MOD(NXM,NQM),H(2,20,20)
+      common /jkbini/ ijkbb
+      dimension alama(6),ftwo(2)
+      data nmax, pmass / 20, 0.938272/
+      data w02, ymax, q20, q2f / 1.2, 9.2103, 1., 1000./
+      data alama/3*0.2304, 0.1732, 0.2304, 0.23/
+      CHARACTER inucl*4
+
+c
+      viu=q2/x
+      viug=viu/(2.*pmass)
+      viubar=viu+w02
+      qbar=q2+w02
+      cbar=q2/qbar
+      xbar=qbar/viubar
+      dqbar=qbar
+      dxbar=xbar
+      dx=x
+      dq2=q2
+c
+      if (mode.gt.70) go to 2
+c
+c --- if mode < 70 then MRS
+c
+c...NP commented out as not useful
+c...BB, 15.XII.2005....introduced double prec. in this routine to comply
+c......................with the rest of TERAD; thus "alog" changed into
+c......................"dlog" in 4 places below
+c
+
+C      alam=alama(mode)*alama(mode)
+cc      ql0=alog(q20/alam)
+cc      qlf=alog(q2f/alam)
+C      ql0=dlog(q20/alam)
+C      qlf=dlog(q2f/alam)
+C      qlp=ql0+qlf
+C      qlm=qlf-ql0
+cc      aq=acos((2.*alog(qbar/alam)-qlp)/qlm)
+C      aq=acos((2.*dlog(qbar/alam)-qlp)/qlm)
+C      if (mode.gt.4) ymax=11.5129
+cc      ax=acos((2.*alog(1./xbar)-ymax)/ymax)
+C      ax=acos((2.*dlog(1./xbar)-ymax)/ymax)
+
+
+C      do 500 j=1,2
+C      f2=0.
+C      do 400 nx=1,nmax
+C      anx=float(nx)-1.
+C      tx=cos(anx*ax)
+C      do 300 nq=1,nmax
+C      anq=float(nq)-1.
+C      tq=cos(anq*aq)
+C      f2=f2+tx*tq*h(j,nq,nx)
+C  300 continue
+C  400 continue
+C      ftwo(j)=4./float(nmax)/float(nmax)*f2
+C  500 continue
+C      go to 3
+
+  2   continue
+c
+c --- if mode > 70 then GRV94 (in=1,2 corresponds to proton, deuteron)
+c
+c      call  grv(dx,   dq2,  df2p,df2pd,df2pl,df2bh)
+c      f2as=df2pl
+c      aux=df2bh
+      do in=1,2
+         inucl='deut'
+         if(in.eq.1) inucl='prot'
+         call  grv(dxbar,dqbar,df2,df2d,df2l,df2bh,inucl)
+c         print *, dxbar, dqbar, df2, df2d, df2l, df2bh, inucl
+         if (mode.eq.71) ftwo(in) = df2
+         if (mode.eq.72) ftwo(in) = df2  + df2bh
+         if (mode.eq.73) ftwo(in) = df2d
+         if (mode.eq.74) ftwo(in) = df2d + df2bh
+         if (mode.eq.75) ftwo(in) = df2l
+         if (mode.eq.76) ftwo(in) = df2l + df2bh
+      enddo
+c
+  3   continue
+c
+c --- vector meson contribution
+c
+      call sigvmes(viug,sigro,sigfi)
+      call vmesnuc(q2,sigro,sigfi,fv)
+c
+
+      f2p=cbar*ftwo(1)+fv
+      f2d=cbar*ftwo(2)+fv
+c
+      return
+      end
+
+c==========================================================================
+c
+      subroutine sigvmes(viu,sigro,sigfi)
+c
+c-----calculates sigro, sigfi at given energy viu using the energy dependent
+c-----piN and KN total cross-sections
+c
+      implicit double precision (a-h,o-z)
+      data      amk,     ampi,pmbnag,sigpi0, sigk0,   czad,sigpi1,sigpi2
+     *    /0.493646, 0.139567,  2.56, 13.52, 14.17, 0.0102, 22.77, 2.35/
+      data sigk1, alfpi1, alfpi2, alfk1
+     *    /14.75,  0.369,   0.37, 0.515/
+c
+      gampi=viu/ampi
+      gamk=viu/amk
+      gapa=log(gampi)
+      gaka=log(gamk)
+      spip=sigpi1*viu**(-alfpi1)
+      spip=spip+sigpi0*(1.+czad*gapa*gapa)
+      spim=sigpi2*viu**(-alfpi2)
+      skp=sigk1*viu**(-alfk1)
+      skp=skp+sigk0*(1.+czad*gaka*gaka)
+      sigro=pmbnag*spip
+      sigfi=pmbnag*(2.*skp-spip-spim)
+      return
+      end
+c
+      subroutine vmesnuc(q2,sigro,sigfi,fvmes2)
+c
+c-----calculates the vector meson contribution to the nucleon (!) f2.
+c
+      implicit double precision (a-h,o-z)
+      dimension vmass(3),vcoupl(3),gama2(3),sigin(3)
+      data pi/3.1415926/, vmass/0.7683, 0.78195, 1.019412/
+      data vcoupl/1.98, 21.07, 13.83/
+c
+      sigin(1)=sigro
+      sigin(2)=sigro
+      sigin(3)=sigfi
+      sumv=0.
+      do 100 l=1,3
+      sv=vmass(l)*vmass(l)
+      denv=pi*vcoupl(l)*(q2+sv)*(q2+sv)
+      sumv=sumv+sv*sv*sigin(l)/denv
+100   continue
+      fvmes2=q2/4./pi*sumv
+      return
+      end
+
+c====================================================================
+
+c=====================================================================
+*
+*From avogt@x4u2.desy.de Wed Oct  4 14:05:45 1995
+*
+*Dear Collegue,
+*please find appended the code for the F2 etc. calculation from the new
+*GRV parametrization. It has originally not been designed for wide dis-
+*tribution, but I hope it is clear enough to be useful for you.
+*                                       Best regards      Andreas
+*
+*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+*From avogt@physik.uni-wuerzburg.de Mon Sep 29 18:12:27 1997
+*the code you sent is ok, just remove the comments on f2dl, qdx, ... in the
+*main subroutine, then it runs as deuteron also. The only point to comment
+*them out was saving time on the integrations for the convolutions.
+
+*You can just use the DIS scheme version, they are equivalent on the level
+*of the accuracy of the parametrization, then you have no integral at all.
+*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+*...CALCULATION OF NUCLEON STRUCTURE FUNCTIONS FROM THE GRV('94)
+*   PARAMETRIZATION :
+*
+*...THE PARAMETRIZATION SUBROUTINES ARE READ IN VIA "INCLUDE" FROM THE
+*   FILE "grv94par.f", THE OUTPUT IS WRITTEN ON THE FILE "grv94str.erg".
+*
+*bbb      subroutine grv(xxx,qqq2,f2p,f2pd,f2pl,f2bh)
+          subroutine grv(xxx,qqq2,f2, f2d, f2l, f2bh, inucl)
+*bb       PROGRAM MAIN
+       IMPLICIT DOUBLE PRECISION (A - Z)
+          character inucl*4
+*bb       INTEGER K1, K2, i10
+*bb       DIMENSION QS(21), XB(25)
+       EXTERNAL F2PI, F2DI, F3DI, FLPI
+       COMMON / PAR / X, Q2, QPX, QDX, QNX
+*...X AND Q^2 TABLES :
+*bb       DATA QS / 0.5, 0.7, 1.0, 1.5, 2.0, 3.0, 5.0, 7.0, 10., 15.,
+*bb     1           20., 30., 50., 70., 100., 150., 200., 300., 500.,
+*bb     2           700., 1000. /
+*bb
+*bb
+*bb
+*bb       DATA XB / 1.D-4, 1.5D-4, 2.D-4, 3.D-4, 5.D-4, 7.D-4,
+*bb     1           0.001, 0.0015, 0.002, 0.003, 0.005, 0.007,
+*bb     2           0.01,  0.015,  0.02,  0.03,  0.05,  0.07,
+*bb     3           0.10,  0.15,   0.2,   0.3,   0.5,   0.7,   0.9 /
+*bb
+*bb
+*bb
+*...CONVOLUTION PARAMETERS (UPPER LIMIT, RELATIVE ACCURACY) :
+       DATA UP, EPS / 1.0 D0, 1.0 D-3 /
+*...OUTPUT FILE :
+*bb       OPEN (6, FILE = 'grv94str.erg')
+*...X AND Q^2 VALUES, ALPHA(S) :
+*bb
+       x = xxx
+       q2 = qqq2
+*bb
+*bb       DO 1 K1 =  4, 13, 3
+*bb       Q2 = QS(K1)
+*bb       WRITE (6,15) Q2
+  15   FORMAT (/,10X,' Q ** 2 = ',F6.1,1X,' GEV ** 2',/)
+       ALPH = ALPHAS (Q2,2)     ! alpha(s)_HO/(4 pi) at Q^2
+*bb       DO 2 K2 = 1, 25, 2
+*bb       X = XB (K2)
+*...X VALUES FOR LOG-PLOTS :
+C        DO 2 K2 = 0, 196, 2
+C        AX = -9.2103404 + K2 / 21.714724
+C        X = DEXP (AX)
+*...STRUCTURE FUNCION CALCULATION, PRESENTLY ACTIVE: F2(PROTON)
+*bb  +++++++++++++++++++++++ change of the above +++++++++++++++++++
+*   LO :
+       CALL GRV94LO (X, Q2, UVL, DVL, DELL, UDBL, SBL, GLL)
+       UBL  = (UDBL - DELL) /2.
+       DBL  = (UDBL + DELL) /2.
+*bb       F2PL = (4.* UVL + DVL + 8.* UBL + 2.* DBL + 2.* SBL) /9.
+c
+c ---
+       if(inucl.eq.'prot') then
+          F2L  = (4.* UVL + DVL + 8.* UBL + 2.* DBL + 2.* SBL) /9.
+       else
+C      F2DL = (5./2.* (UVL+DVL) + 5.* UDBL + 2.* SBL) /9.
+          F2L  = (5./2.* (UVL+DVL) + 5.* UDBL + 2.* SBL) /9.
+       endif
+c
+c ---
+C      F3DL = UDVL
+*...NLO MS(BAR) :
+       CALL GRV94HO (X, Q2, UVX, DVX, DELX, UDBX, SBX, GLX)
+       UBX  = (UDBX - DELX) /2.
+       DBX  = (UDBX + DELX) /2.
+       QPX = (4.* UVX + DVX + 8.* UBX + 2.* DBX + 2.* SBX) /9.
+      QDX = (5./2.* (UVX+DVX) + 5.* UDBX + 2.* SBX) /9.
+C      QNX = UDVX
+       L1X = DLOG (1.- X)
+       PI = 3.141592654
+       E2Q1 = 4./3. * (-9.- 2./3.* PI*PI + L1X * (2.* L1X - 3.))
+*bb       F2P = QPX + ALPH * (DINTEG (F2PI, X, UP, EPS) + E2Q1 * QPX)
+c ---
+c
+       if(inucl.eq.'prot') then
+          F2  = QPX + ALPH * (DINTEG (F2PI, X, UP, EPS) + E2Q1 * QPX)
+       else
+C      F2D = QDX + ALPH * (DINTEG (F2DI, X, UP, EPS) + E2Q1 * QDX)
+          F2  = QDX + ALPH * (DINTEG (F2DI, X, UP, EPS) + E2Q1 * QDX)
+       endif
+c
+c ---
+C      F3D = QNX + ALPH * (DINTEG (F3DI, X, UP, EPS) + E2Q1 * QNX)
+C      FLP = ALPH * DINTEG (FLPI, X, UP, EPS)
+*...NLO DIS :
+       CALL GRV94DI (X, Q2, UVD, DVD, DELD, UDBD, SBD, GLD)
+       UBD  = (UDBD - DELD) /2.
+       DBD  = (UDBD + DELD) /2.
+*bb       F2PD = (4.* UVD + DVD + 8.* UBD + 2.* DBD + 2.* SBD) /9.
+c
+c ---
+       if(inucl.eq.'prot') then
+          F2D  = (4.* UVD + DVD + 8.* UBD + 2.* DBD + 2.* SBD) /9.
+       else
+C      F2DD = (5./2.* (UVD+DVD) + 5.* UDBD + 2.* SBD) /9.
+          F2D  = (5./2.* (UVD+DVD) + 5.* UDBD + 2.* SBD) /9.
+       endif
+c
+c ---
+*...LOWEST ORDER BETHE-HEITLER CHARM CONTRIBUTIONS :
+*   (THEY WERE USED ALSO IN THE NLO ANALYSIS SINCE NO FAST NEXT ORDER
+*    BETHE-HEITLER PROGRAM WAS AVAILABLE, NOTE THAT NOW THE NLO VERSION
+*    IS AVAILABLE FROM S. RIEMERSMA)
+       MC = 1.5    !  CHARM MASS
+c
+c...BB...15.XII.2005 changed the name of F2C --> F2CBB (4 places
+c                                                       altogether)
+c                                                       altogether)
+c
+       F2BH = F2CBB (X, Q2, MC)
+C      FLBH = FLC   (X, Q2, MC)
+*...OUTPUT :
+*bb       WRITE (6,10) X, F2P, F2BH, F2P+F2BH
+C      WRITE (6,10) X, FLP, FLBH, FLP+FLBH
+  10   FORMAT (3X,1(1PE11.3),1X,5(1PE11.3),1X)
+   2   CONTINUE
+   1   CONTINUE
+*bb       STOP
+       return
+       END
+
+*
+*...CONVOLUTION INTEGRANDS :
+*   F2(PROTON) :
+*
+       FUNCTION F2PI (Z)
+       IMPLICIT DOUBLE PRECISION (A - Z)
+       COMMON / PAR / X, Q2, QPX, QDX, QNX
+       CALL COEFF (E2Q2, E2Q3, E3Q2, E3Q3, ELQ2, E2G2, ELG2, Z)
+       CALL GRV94HO (X/Z, Q2, UV, DV, DEL, UDB, SB, GL)
+       UB  = (UDB - DEL) /2.
+       DB  = (UDB + DEL) /2.
+       QPXZ = (4.* UV + DV + 8.* UB + 2.* DB + 2.* SB) / 9.
+       F2PI = E2Q2 * QPXZ + E2Q3 * (QPXZ - QPX) + E2G2 *  6./9. * GL
+       RETURN
+       END
+*
+*
+*...F2(DEUTERON) :
+*
+       FUNCTION F2DI (Z)
+       IMPLICIT DOUBLE PRECISION (A - Z)
+       COMMON / PAR / X, Q2, QPX, QDX, QNX
+       CALL COEFF (E2Q2, E2Q3, E3Q2, E3Q3, ELQ2, E2G2, ELG2, Z)
+       CALL GRV94HO (X/Z, Q2, UV, DV, DEL, UDB, SB, GL)
+       QDXZ = (5./2.* (UV+DV) + 5.* UDB + 2.* SB) / 9.
+       F2DI = E2Q2 * QDXZ + E2Q3 * (QDXZ - QDX) + E2G2 *  6./9. * GL
+       RETURN
+       END
+*
+*...F3(DEUTERON) :
+*
+       FUNCTION F3DI (Z)
+       IMPLICIT DOUBLE PRECISION (A - Z)
+       COMMON / PAR / X, Q2, QPX, QDX, QNX
+       CALL COEFF (E2Q2, E2Q3, E3Q2, E3Q3, ELQ2, E2G2, ELG2, Z)
+       CALL GRV94HO (X/Z, Q2, UV, DV, DEL, UDB, SB, GL)
+       QNXZ = UV + DV
+       F3DI = E3Q2 * QNXZ + E3Q3 * (QNXZ - QNX)
+       RETURN
+       END
+*
+*   FL(PROTON) :
+*
+       FUNCTION FLPI (Z)
+       IMPLICIT DOUBLE PRECISION (A - Z)
+       COMMON / PAR / X, Q2, QPX, QDX, QNX
+       CALL COEFF (E2Q2, E2Q3, E3Q2, E3Q3, ELQ2, E2G2, ELG2, Z)
+       CALL GRV94HO (X/Z, Q2, UV, DV, DEL, UDB, SB, GL)
+       UB  = (UDB - DEL) /2.
+       DB  = (UDB + DEL) /2.
+       QPXZ = (4.* UV + DV + 8.* UB + 2.* DB + 2.* SB) / 9.
+       FLPI = ELQ2 * QPXZ + ELG2 * 6./9.* GL
+       RETURN
+       END
+
+*
+*...COEFFICIENT FUNCTIONS FOR F2, F3 (IN MS(BAR)) and FL :
+*    (THE NOTATION IS AS IN FLORATOS ET. AL. (1981))
+*
+       SUBROUTINE COEFF (E2Q2, E2Q3, E3Q2, E3Q3, ELQ2, E2G2, ELG2, Z)
+       IMPLICIT DOUBLE PRECISION (A - Z)
+       CF = 4./3.
+       TR = 0.5
+       L1Z = DLOG (1.- Z)
+       LZ = DLOG (Z)
+       E2Q2 = CF * (6.+ 4.* Z - 2.* (1.+ Z*Z) * LZ / (1.- Z)
+     1              - 2.* (1.+ Z) * L1Z)
+       E2Q3 = CF * (-3.+ 4.* L1Z) / (1.- Z)
+       E3Q2 = CF * (4.+ 2.* Z - 2.* (1.+ Z*Z) * LZ / (1.- Z)
+     1              - 2.* (1.+ Z) * L1Z)
+       E3Q3 = E2Q3
+       ELQ2 = 2.* CF * Z  * 2.
+       E2G2 = -4.* TR * (-3.+ (1.- 2.* Z + 2.* Z*Z)
+     1                   * (4.- L1Z + LZ))
+       ELG2 = 8.* TR * Z * (1.- Z) * 2.
+       RETURN
+       END
+*
+*...CALCULATION OF ALPHA STRONG (Q**2) DIVIDED BY 4*PI IN LO (FOR
+*    FLAG = 1) AND IN NLO (FOR FLAG = 2) :
+*
+       FUNCTION ALPHAS (Q2,FLAG)
+       IMPLICIT DOUBLE PRECISION (A - Z)
+       INTEGER NF, K, FLAG
+       DIMENSION LAMBDAL (3:6), LAMBDAH (3:6), Q2THR (3)
+       DATA LAMBDAH / 0.248, 0.200, 0.131, 0.053 /
+       DATA LAMBDAL / 0.232, 0.200, 0.153, 0.082 /
+       DATA Q2THR / 2.25, 20.25, 1.E4 /
+       NF = 3
+       DO 10 K = 1, 3
+       IF (Q2 .GT. Q2THR (K)) THEN
+          NF = NF + 1
+       ELSE
+          GO TO 20
+       END IF
+  10   CONTINUE
+  20   B0 = 11.- 2./3.* NF
+       B0S = B0 * B0
+       IF (FLAG .EQ. 1) THEN
+          B1 = 0.0
+          LAM2 = LAMBDAL (NF) * LAMBDAL (NF)
+       ELSE IF (FLAG .EQ. 2) THEN
+          B1 = 102.- 38./3.* NF
+          LAM2 = LAMBDAH (NF) * LAMBDAH (NF)
+       ELSE
+          ALPHAS = 0.0
+          WRITE (6,15)
+  15      FORMAT (1X,'ALPHAS: WRONG ORDER SPECIFICATION')
+       END IF
+       LQ2 = DLOG (Q2 / LAM2)
+       ALPHAS = 1./ (B0 * LQ2) * (1.- B1 / B0S * DLOG (LQ2) / LQ2)
+       RETURN
+       END
+
+*
+*...DOUBLE PRECISE ADAPTIVE GAUSS INTEGRATION :
+*
+       FUNCTION DINTEG (F, ALFA, BETA, EPS)
+       IMPLICIT DOUBLE PRECISION (A-H, O-Z)
+       EXTERNAL F
+       DIMENSION W(12), X(12)
+       DATA CONST /1.0 D-12/
+       DATA W
+     1  /0.10122 85362 90376, 0.22238 10344 53374, 0.31370 66458 77887,
+     2   0.36268 37833 78362, 0.02715 24594 11754, 0.06225 35239 38647,
+     3   0.09515 85116 82492, 0.12462 89712 55533, 0.14959 59888 16576,
+     4   0.16915 65193 95002, 0.18260 34150 44923, 0.18945 06104 55068/
+       DATA X
+     1  /0.96028 98564 97536, 0.79666 64774 13627, 0.52553 24099 16329,
+     2   0.18343 46424 95650, 0.98940 09349 91649, 0.94457 50230 73232,
+     3   0.86563 12023 87831, 0.75540 44083 55003, 0.61787 62444 02643,
+     4   0.45801 67776 57227, 0.28160 35507 79258, 0.09501 25098 37637/
+       DINTEG = 0.0 D0
+       IF ( ALFA . EQ. BETA ) RETURN
+       A = ALFA
+       B = BETA
+       DELTA = CONST * (DABS(A-B))
+       AA = A
+    1  Y = B - AA
+       IF( DABS(Y) .LE. DELTA) RETURN
+    2  BB = AA + Y
+       C1 = 0.5 D0 * (AA + BB)
+       C2 = C1 - AA
+       S8 = 0.0 D0
+       S16 = 0.0 D0
+       DO 15 I = 1, 4
+         C3 = X(I) * C2
+         S8 = S8 + W(I) * (F(C1+C3) + F(C1-C3))
+   15  CONTINUE
+       DO 16 I = 5, 12
+         C3 = X(I) * C2
+         S16 = S16 + W(I) * (F(C1+C3) + F(C1-C3))
+   16  CONTINUE
+       S8 = S8 * C2
+       S16= S16 * C2
+       IF( DABS(S16-S8) .GT. EPS*DABS(S8)) THEN
+         Y = 0.5 D0 * Y
+         IF ( DABS(Y) .LE. DELTA ) THEN
+           DINTEG = 0.0
+           WRITE (*,10)
+   10      FORMAT (1X,' DINTEG : TOO HIGH ACCURACY REQUIRED')
+         ELSE
+           GOTO 2
+         END IF
+       ELSE
+         DINTEG = DINTEG + S16
+         AA = BB
+         GOTO 1
+       END IF
+       RETURN
+       END
+
+*
+*...BETHE-HEITLER LOWEST ORDER CHARM CONTRIBUTION TO F2 AND FL :
+*   (LO GLUON AND ALPHA(S), SCALE 4.* MC**2)
+*
+c
+c...BB...15.XII.2005 changed the name of F2C --> F2CBB (4 places
+c                                                       altogether)
+c
+       FUNCTION F2CBB (XB, QS, MC)
+       IMPLICIT DOUBLE PRECISION (A - Z)
+       EXTERNAL F2CI
+       COMMON /PAR2/ X, Q2, XM2
+       X  = XB
+       Q2 = QS
+       XM2 = MC * MC
+       A  = 1.+ 4.* XM2 / Q2
+       AX = A * X
+       IF ( AX .GE. 1.D0 ) THEN
+       F2CBB = 0.0
+       ELSE
+       F2CBB = 4./9.* DINTEG (F2CI, AX, 1.D0, 1.D-3)
+       END IF
+       RETURN
+       END
+*
+       FUNCTION F2CI (E)
+       IMPLICIT DOUBLE PRECISION (A - Z)
+       COMMON /PAR2/ X, Q2, XM2
+       Z = X/E
+       SC = 4.* XM2
+       CALL GGRVLO (E, SC, GL)
+       ALS = 0.02216
+*...als = alpha(s)_LO/(4 pi) at 9 GeV^2
+       V = DSQRT (1.-4.* XM2/Q2 * Z/(1.-Z))
+       Z2 = Z * Z
+       MR = XM2 / Q2
+       F2S = V * (8.* Z2 * (1.-Z) - Z - 4.* MR * Z2 * (1.-Z))
+     1   + DLOG ((1.+V)/(1.-V)) * (Z - 2.* Z2 * (1.-Z) + 4.* MR * Z2
+     2   * (1.-3.*Z) - 8.* Z * Z2 * MR * MR)
+       F2CI = 2.* ALS * GL * F2S / E
+       RETURN
+       END
+*
+       FUNCTION FLC (XB, QS, MC)
+       IMPLICIT DOUBLE PRECISION (A - Z)
+       EXTERNAL FLCI
+       COMMON /PAR2/ X, Q2, XM2
+       X  = XB
+       Q2 = QS
+       XM2 = MC * MC
+       A  = 1.+ 4.* XM2 / Q2
+       AX = A * X
+       IF ( AX .GE. 1.D0 ) THEN
+       FLC = 0.0
+       ELSE
+       FLC = 4./9.* DINTEG (FLCI, AX, 1.D0, 1.D-3)
+       END IF
+       RETURN
+       END
+*
+       FUNCTION FLCI (E)
+       IMPLICIT DOUBLE PRECISION (A - Z)
+       COMMON /PAR2/ X, Q2, XM2
+       Z = X/E
+       SC = 4.* XM2
+       CALL GGRVLO (E, SC, GL)
+       ALS = 0.02216
+*...als = alpha(s)_LO/(4 pi) at 9 GeV^2
+       V = DSQRT (1.- 4.* XM2/Q2 * Z/(1.-Z))
+       Z2 = Z * Z
+       MR = XM2 / Q2
+       F2S = V * (8.* Z2 * (1.-Z) - Z - 4.* MR * Z2 * (1.-Z))
+     1   + DLOG ((1.+V)/(1.-V)) * (Z - 2.* Z2 * (1.-Z) + 4.* MR * Z2
+     2   * (1.-3.*Z) - 8.* Z * Z2 * MR * MR)
+       FLS = 2.* Z2*(1.-Z) * V - 4.* MR * Z2*Z * DLOG((1.+V)/(1.-V))
+       FLCI = 4.* ALS * GL * FLS / E
+       RETURN
+       END
+*
+*...LO GLUON PARAMETRIZATION (FOR THE BETHE-HEITLER CALCULATIONS) :
+*
+       SUBROUTINE GGRVLO (X, Q2, GL)
+       IMPLICIT DOUBLE PRECISION (A - Z)
+       MU2  = 0.23
+       LAM2 = 0.2322 * 0.2322
+       S  = DLOG (DLOG(Q2/LAM2) / DLOG(MU2/LAM2))
+       DS = DSQRT (S)
+       S2 = S * S
+       S3 = S2 * S
+       ALG =  0.524
+       BEG =  1.088
+       AKG =  1.742 - 0.930 * S
+       BKG =        - 0.399 * S2
+       AG  =  7.486 - 2.185 * S
+       BG  =  16.69 - 22.74 * S  + 5.779 * S2
+       CG  = -25.59 + 29.71 * S  - 7.296 * S2
+       DG  =  2.792 + 2.215 * S  + 0.422 * S2 - 0.104 * S3
+       EG  =  0.807 + 2.005 * S
+       ESG =  3.841 + 0.316 * S
+       GL  = FW (X, S, ALG, BEG, AKG, BKG, AG, BG, CG, DG, EG, ESG)
+       RETURN
+       END
+
+*
+*From avogt@x4u2.desy.de Wed Oct  4 14:03:41 1995
+*
+*
+* Dear Collegue,
+* please find appended the GRV(94) parametrization as requested.
+* Note that an additional program doing the NLO MS(bar) convolu-
+* tions for F_2, F_L is also available, as well as additional
+* parton sets for different values of Lambda_MS(bar) by one of
+* the authors (A.V.).
+*                              Best regards      Andreas Vogt
+*
+* file: grv94par.f
+*
+*
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+*                                                                 *
+*    G R V  -  P R O T O N  - P A R A M E T R I Z A T I O N S     *
+*                                                                 *
+*                         1994 UPDATE                             *
+*                                                                 *
+*                 FOR A DETAILED EXPLANATION SEE                  *
+*                   M. GLUECK, E.REYA, A.VOGT :                   *
+*                   DO-TH 94/24  =  DESY 94-206                   *
+*              (PUBLISHED IN Z. PHYS. C67 (1995) 433)             *
+*                                                                 *
+*   THE PARAMETRIZATIONS ARE FITTED TO THE EVOLVED PARTONS FOR    *
+*        Q**2 / GEV**2  BETWEEN   0.4   AND  1.E6                 *
+*             X         BETWEEN  1.E-5  AND   1.                  *
+*   LARGE-X REGIONS, WHERE THE DISTRIBUTION UNDER CONSIDERATION   *
+*   IS NEGLIGIBLY SMALL, WERE EXCLUDED FROM THE FIT.              *
+*                                                                 *
+*   HEAVY QUARK THRESHOLDS  Q(H) = M(H)  IN THE BETA FUNCTION :   *
+*                   M(C)  =  1.5,  M(B)  =  4.5                   *
+*   CORRESPONDING LAMBDA(F) VALUES IN GEV FOR  Q**2 > M(H)**2 :   *
+*      LO :   LAMBDA(3)  =  0.232,   LAMBDA(4)  =  0.200,         *
+*             LAMBDA(5)  =  0.153,                                *
+*      NLO :  LAMBDA(3)  =  0.248,   LAMBDA(4)  =  0.200,         *
+*             LAMBDA(5)  =  0.131.                                *
+*   THE NUMBER OF ACTIVE QUARK FLAVOURS IS  NF = 3  EVERYWHERE    *
+*   EXCEPT IN THE BETA FUNCTION, I.E. THE HEAVY QUARKS C,B,...    *
+*   ARE NOT PRESENT AS PARTONS IN THE Q2-EVOLUTION.               *
+*   IF NEEDED, HEAVY QUARK DENSITIES CAN BE TAKEN FROM THE 1991   *
+*   GRV PARAMETRIZATION.                                          *
+*                                                                 *
+*   NLO DISTRIBUTIONS ARE GIVEN IN MS-BAR FACTORIZATION SCHEME    *
+*   (SUBROUTINE GRV94HO) AS WELL AS IN THE DIS SCHEME (GRV94DI),  *
+*   THE LEADING ORDER PARAMETRIZATION IS PROVIDED BY "GRV94LO".   *
+*                                                                 *
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+*
+*...INPUT PARAMETERS :
+*
+*    X   = MOMENTUM FRACTION
+*    Q2  = SCALE Q**2 IN GEV**2
+*
+*...OUTPUT (ALWAYS X TIMES THE DISTRIBUTION) :
+*
+*    UV  = U(VAL) = U - U(BAR)
+*    DV  = D(VAL) = D - D(BAR)
+*    DEL = D(BAR) - U(BAR)
+*    UDB = U(BAR) + D(BAR)
+*    SB  = S = S(BAR)
+*    GL  = GLUON
+*
+*...LO PARAMETRIZATION :
+*
+       SUBROUTINE GRV94LO (X, Q2, UV, DV, DEL, UDB, SB, GL)
+       IMPLICIT DOUBLE PRECISION (A - Z)
+       MU2  = 0.23
+       LAM2 = 0.2322 * 0.2322
+       S  = DLOG (DLOG(Q2/LAM2) / DLOG(MU2/LAM2))
+       DS = DSQRT (S)
+       S2 = S * S
+       S3 = S2 * S
+*...UV :
+       NU  =  2.284 + 0.802 * S + 0.055 * S2
+       AKU =  0.590 - 0.024 * S
+       BKU =  0.131 + 0.063 * S
+       AU  = -0.449 - 0.138 * S - 0.076 * S2
+       BU  =  0.213 + 2.669 * S - 0.728 * S2
+       CU  =  8.854 - 9.135 * S + 1.979 * S2
+       DU  =  2.997 + 0.753 * S - 0.076 * S2
+       UV  = FV (X, NU, AKU, BKU, AU, BU, CU, DU)
+*...DV :
+       ND  =  0.371 + 0.083 * S + 0.039 * S2
+       AKD =  0.376
+       BKD =  0.486 + 0.062 * S
+       AD  = -0.509 + 3.310 * S - 1.248 * S2
+       BD  =  12.41 - 10.52 * S + 2.267 * S2
+       CD  =  6.373 - 6.208 * S + 1.418 * S2
+       DD  =  3.691 + 0.799 * S - 0.071 * S2
+       DV  = FV (X, ND, AKD, BKD, AD, BD, CD, DD)
+*...DEL :
+       NE  =  0.082 + 0.014 * S + 0.008 * S2
+       AKE =  0.409 - 0.005 * S
+       BKE =  0.799 + 0.071 * S
+       AE  = -38.07 + 36.13 * S - 0.656 * S2
+       BE  =  90.31 - 74.15 * S + 7.645 * S2
+       CE  =  0.0
+       DE  =  7.486 + 1.217 * S - 0.159 * S2
+       DEL = FV (X, NE, AKE, BKE, AE, BE, CE, DE)
+*...UDB :
+       ALX =  1.451
+       BEX =  0.271
+       AKX =  0.410 - 0.232 * S
+       BKX =  0.534 - 0.457 * S
+       AGX =  0.890 - 0.140 * S
+       BGX = -0.981
+       CX  =  0.320 + 0.683 * S
+       DX  =  4.752 + 1.164 * S + 0.286 * S2
+       EX  =  4.119 + 1.713 * S
+       ESX =  0.682 + 2.978 * S
+       UDB = FW (X, S, ALX, BEX, AKX, BKX, AGX, BGX, CX, DX, EX, ESX)
+*...SB :
+       ALS =  0.914
+       BES =  0.577
+       AKS =  1.798 - 0.596 * S
+       AS  = -5.548 + 3.669 * DS - 0.616 * S
+       BS  =  18.92 - 16.73 * DS + 5.168 * S
+       DST =  6.379 - 0.350 * S  + 0.142 * S2
+       EST =  3.981 + 1.638 * S
+       ESS =  6.402
+       SB  = FWS (X, S, ALS, BES, AKS, AS, BS, DST, EST, ESS)
+*...GL :
+       ALG =  0.524
+       BEG =  1.088
+       AKG =  1.742 - 0.930 * S
+       BKG =        - 0.399 * S2
+       AG  =  7.486 - 2.185 * S
+       BG  =  16.69 - 22.74 * S  + 5.779 * S2
+       CG  = -25.59 + 29.71 * S  - 7.296 * S2
+       DG  =  2.792 + 2.215 * S  + 0.422 * S2 - 0.104 * S3
+       EG  =  0.807 + 2.005 * S
+       ESG =  3.841 + 0.316 * S
+       GL  = FW (X, S, ALG, BEG, AKG, BKG, AG, BG, CG, DG, EG, ESG)
+       RETURN
+       END
+*
+*...NLO PARAMETRIZATION (MS(BAR)) :
+*
+       SUBROUTINE GRV94HO (X, Q2, UV, DV, DEL, UDB, SB, GL)
+       IMPLICIT DOUBLE PRECISION (A - Z)
+       MU2  = 0.34
+       LAM2 = 0.248 * 0.248
+       S  = DLOG (DLOG(Q2/LAM2) / DLOG(MU2/LAM2))
+       DS = DSQRT (S)
+       S2 = S * S
+       S3 = S2 * S
+*...UV :
+       NU  =  1.304 + 0.863 * S
+       AKU =  0.558 - 0.020 * S
+       BKU =          0.183 * S
+       AU  = -0.113 + 0.283 * S - 0.321 * S2
+       BU  =  6.843 - 5.089 * S + 2.647 * S2 - 0.527 * S3
+       CU  =  7.771 - 10.09 * S + 2.630 * S2
+       DU  =  3.315 + 1.145 * S - 0.583 * S2 + 0.154 * S3
+       UV  = FV (X, NU, AKU, BKU, AU, BU, CU, DU)
+*...DV :
+       ND  =  0.102 - 0.017 * S + 0.005 * S2
+       AKD =  0.270 - 0.019 * S
+       BKD =  0.260
+       AD  =  2.393 + 6.228 * S - 0.881 * S2
+       BD  =  46.06 + 4.673 * S - 14.98 * S2 + 1.331 * S3
+       CD  =  17.83 - 53.47 * S + 21.24 * S2
+       DD  =  4.081 + 0.976 * S - 0.485 * S2 + 0.152 * S3
+       DV  = FV (X, ND, AKD, BKD, AD, BD, CD, DD)
+*...DEL :
+       NE  =  0.070 + 0.042 * S - 0.011 * S2 + 0.004 * S3
+       AKE =  0.409 - 0.007 * S
+       BKE =  0.782 + 0.082 * S
+       AE  = -29.65 + 26.49 * S + 5.429 * S2
+       BE  =  90.20 - 74.97 * S + 4.526 * S2
+       CE  =  0.0
+       DE  =  8.122 + 2.120 * S - 1.088 * S2 + 0.231 * S3
+       DEL = FV (X, NE, AKE, BKE, AE, BE, CE, DE)
+*...UDB :
+       ALX =  0.877
+       BEX =  0.561
+       AKX =  0.275
+       BKX =  0.0
+       AGX =  0.997
+       BGX =  3.210 - 1.866 * S
+       CX  =  7.300
+       DX  =  9.010 + 0.896 * DS + 0.222 * S2
+       EX  =  3.077 + 1.446 * S
+       ESX =  3.173 - 2.445 * DS + 2.207 * S
+       UDB = FW (X, S, ALX, BEX, AKX, BKX, AGX, BGX, CX, DX, EX, ESX)
+*...SB :
+       ALS =  0.756
+       BES =  0.216
+       AKS =  1.690 + 0.650 * DS - 0.922 * S
+       AS  = -4.329 + 1.131 * S
+       BS  =  9.568 - 1.744 * S
+       DST =  9.377 + 1.088 * DS - 1.320 * S + 0.130 * S2
+       EST =  3.031 + 1.639 * S
+       ESS =  5.837 + 0.815 * S
+       SB  = FWS (X, S, ALS, BES, AKS, AS, BS, DST, EST, ESS)
+*...GL :
+       ALG =  1.014
+       BEG =  1.738
+       AKG =  1.724 + 0.157 * S
+       BKG =  0.800 + 1.016 * S
+       AG  =  7.517 - 2.547 * S
+       BG  =  34.09 - 52.21 * DS + 17.47 * S
+       CG  =  4.039 + 1.491 * S
+       DG  =  3.404 + 0.830 * S
+       EG  = -1.112 + 3.438 * S  - 0.302 * S2
+       ESG =  3.256 - 0.436 * S
+       GL  = FW (X, S, ALG, BEG, AKG, BKG, AG, BG, CG, DG, EG, ESG)
+       RETURN
+       END
+*
+*...NLO PARAMETRIZATION (DIS) :
+*
+       SUBROUTINE GRV94DI (X, Q2, UV, DV, DEL, UDB, SB, GL)
+       IMPLICIT DOUBLE PRECISION (A - Z)
+       MU2  = 0.34
+       LAM2 = 0.248 * 0.248
+       S  = DLOG (DLOG(Q2/LAM2) / DLOG(MU2/LAM2))
+       DS = DSQRT (S)
+       S2 = S * S
+       S3 = S2 * S
+*...UV :
+       NU  =  2.484 + 0.116 * S + 0.093 * S2
+       AKU =  0.563 - 0.025 * S
+       BKU =  0.054 + 0.154 * S
+       AU  = -0.326 - 0.058 * S - 0.135 * S2
+       BU  = -3.322 + 8.259 * S - 3.119 * S2 + 0.291 * S3
+       CU  =  11.52 - 12.99 * S + 3.161 * S2
+       DU  =  2.808 + 1.400 * S - 0.557 * S2 + 0.119 * S3
+       UV  = FV (X, NU, AKU, BKU, AU, BU, CU, DU)
+*...DV :
+       ND  =  0.156 - 0.017 * S
+       AKD =  0.299 - 0.022 * S
+       BKD =  0.259 - 0.015 * S
+       AD  =  3.445 + 1.278 * S + 0.326 * S2
+       BD  = -6.934 + 37.45 * S - 18.95 * S2 + 1.463 * S3
+       CD  =  55.45 - 69.92 * S + 20.78 * S2
+       DD  =  3.577 + 1.441 * S - 0.683 * S2 + 0.179 * S3
+       DV  = FV (X, ND, AKD, BKD, AD, BD, CD, DD)
+*...DEL :
+       NE  =  0.099 + 0.019 * S + 0.002 * S2
+       AKE =  0.419 - 0.013 * S
+       BKE =  1.064 - 0.038 * S
+       AE  = -44.00 + 98.70 * S - 14.79 * S2
+       BE  =  28.59 - 40.94 * S - 13.66 * S2 + 2.523 * S3
+       CE  =  84.57 - 108.8 * S + 31.52 * S2
+       DE  =  7.469 + 2.480 * S - 0.866 * S2
+       DEL = FV (X, NE, AKE, BKE, AE, BE, CE, DE)
+*...UDB :
+       ALX =  1.215
+       BEX =  0.466
+       AKX =  0.326 + 0.150 * S
+       BKX =  0.956 + 0.405 * S
+       AGX =  0.272
+       BGX =  3.794 - 2.359 * DS
+       CX  =  2.014
+       DX  =  7.941 + 0.534 * DS - 0.940 * S + 0.410 * S2
+       EX  =  3.049 + 1.597 * S
+       ESX =  4.396 - 4.594 * DS + 3.268 * S
+       UDB = FW (X, S, ALX, BEX, AKX, BKX, AGX, BGX, CX, DX, EX, ESX)
+*...SB :
+       ALS =  0.175
+       BES =  0.344
+       AKS =  1.415 - 0.641 * DS
+       AS  =  0.580 - 9.763 * DS + 6.795 * S  - 0.558 * S2
+       BS  =  5.617 + 5.709 * DS - 3.972 * S
+       DST =  13.78 - 9.581 * S  + 5.370 * S2 - 0.996 * S3
+       EST =  4.546 + 0.372 * S2
+       ESS =  5.053 - 1.070 * S  + 0.805 * S2
+       SB  = FWS (X, S, ALS, BES, AKS, AS, BS, DST, EST, ESS)
+*...GL :
+       ALG =  1.258
+       BEG =  1.846
+       AKG =  2.423
+       BKG =  2.427 + 1.311 * S  - 0.153 * S2
+       AG  =  25.09 - 7.935 * S
+       BG  = -14.84 - 124.3 * DS + 72.18 * S
+       CG  =  590.3 - 173.8 * S
+       DG  =  5.196 + 1.857 * S
+       EG  = -1.648 + 3.988 * S  - 0.432 * S2
+       ESG =  3.232 - 0.542 * S
+       GL  = FW (X, S, ALG, BEG, AKG, BKG, AG, BG, CG, DG, EG, ESG)
+       RETURN
+       END
+*
+*...FUNCTIONAL FORMS OF THE PARAMETRIZATIONS :
+*
+       FUNCTION FV (X, N, AK, BK, A, B, C, D)
+       IMPLICIT DOUBLE PRECISION (A - Z)
+       DX = DSQRT (X)
+       FV = N * X**AK * (1.+ A*X**BK + X * (B + C*DX)) * (1.- X)**D
+       RETURN
+       END
+*
+       FUNCTION FW (X, S, AL, BE, AK, BK, A, B, C, D, E, ES)
+       IMPLICIT DOUBLE PRECISION (A - Z)
+       LX = DLOG (1./X)
+       FW = (X**AK * (A + X * (B + X*C)) * LX**BK + S**AL
+     1      * DEXP (-E + DSQRT (ES * S**BE * LX))) * (1.- X)**D
+       RETURN
+       END
+*
+       FUNCTION FWS (X, S, AL, BE, AK, AG, B, D, E, ES)
+       IMPLICIT DOUBLE PRECISION (A - Z)
+       DX = DSQRT (X)
+       LX = DLOG (1./X)
+       FWS = S**AL / LX**AK * (1.+ AG*DX + B*X) * (1.- X)**D
+     1       * DEXP (-E + DSQRT (ES * S**BE * LX))
+       RETURN
+       END
+
+
+c=====================================================================
+
+
+
+
+c=========================================================================
+c
+c-----function R
+c
+c
+      SUBROUTINE R1990fun(dddX,dddaQ2,dddR,dddDR)
+c
+c...BB...22.XII.2005 body of R1990 replaced by body of R1998
+c...BB...22.XII.2005 from the COMPASS soft page (comments omitted)
+c
+cms SUBROUTINE thanks to:  Cynthia Keppel <keppel@jlab.org>,
+cbb    (look at the end of the code for excerpts from Cynthia's mail with comments)
+cms the orginal code has been changed in order to get
+cms continues values of the R and dR/dQ^2 at Q^2 = 0.4,
+
+
+cms      goodfit variable removed from the orginal subroutine
+cms      SUBROUTINE R1998(X,Q2,R,DR,GOODFIT)
+
+c...BB...had to remove this:       SUBROUTINE R1998(X,Q2,R,DR)
+
+
+!    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+      IMPLICIT NONE
+      REAL QP2,FAC,RLOG,Q2THR,R_A,R_B,R_C,R, D1,D2,D3,DR,DR1998,X,Q2
+      REAL Q2_SAVE
+
+c...BB...
+      double precision dddX,dddaQ2,dddR,dddDR
+c...BB...
+cms  Q2 limit changed from 0.2 -> 0.5
+cms  do not change the limit without changes in:  'low q2 behaviour'
+
+      REAL Q2_LIMIT /0.5/
+      REAL A(6) /4.8520E-02,  5.4704E-01,  2.0621E+00,
+     >          -3.8036E-01,  5.0896E-01, -2.8548E-02/
+      REAL B(6) /4.8051E-02,  6.1130E-01, -3.5081E-01,
+     >          -4.6076E-01,  7.1697E-01, -3.1726E-02/
+      REAL C(6) /5.7654E-02,  4.6441E-01,  1.8288E+00,
+     >           1.2371E+01, -4.3104E+01,  4.1741E+01/
+
+
+cms      LOGICAL GOODFIT
+!    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+c...BB...the next 2 lines added:
+      x = dddx
+      q2 = dddaq2
+
+cms   the next line was added
+
+      Q2_SAVE=Q2_LIMIT
+
+      IF(Q2.LT.Q2_LIMIT) THEN   ! added 11/15 to avoid low Q2 problems caused by RLOG
+       Q2_SAVE = Q2
+       Q2 = Q2_LIMIT
+      ENDIF
+
+
+      FAC = 1.+12.*Q2/(Q2+1.)*(.125**2 /(.125**2+X**2))
+      RLOG  = FAC/LOG(Q2/.04)!   <--- we use natural logarithms only!
+
+
+!Model A
+      QP2 = (A(2)/(Q2**4+A(3)**4)**.25) * (1.+A(4)*X +A(5)*X**2) !1.07   .030
+      R_A   = A(1)*RLOG +QP2*X**A(6)
+!Model B
+      QP2 = (1.+B(4)*X+B(5)*X**2)*(B(2)/Q2 +B(3)/(Q2**2+.09)) !1.06   .042
+      R_B   =  B(1)*RLOG+QP2*X**B(6)
+!Model C
+      Q2thr =C(4)*(X) +c(5)*x**2 +c(6)*X**3
+      QP2 =  C(2)/SQRT((Q2-Q2thr)**2+C(3)**2)
+      R_C   =  C(1)*RLOG+QP2
+
+      R     = (R_A+R_B+R_C)/3.
+
+cms      IF(Q2.LT.Q2_LIMIT) THEN   ! added 11/15 to avoid low Q2 problems caused by RLOG
+cms        R = Q2/Q2_LIMIT * R
+cms      ENDIF
+cms    a bug in the orginal code, should be Q2_SAVE.LT.Q2_LIMIT
+
+C N. PIERRE : D# variables here but not used, DR1998 causes crash at linking so quoted ? No harm ?
+
+C      D1    = DR1998(X,Q2)
+
+C      D2    = SQRT(((R_A-R)**2+(R_B-R)**2+(R_C-R)**2)/2.)
+C      D3    = .023*(1.+.5*R)
+C              IF (Q2.LT.1.OR.X.LT..1) D3 = 1.5*D3
+
+
+
+cms   'low q2 behaviour'
+cms   the forula gives continues R values at Q2 = 0.5 GeV^2
+cms   and continues 1st derivative at x=0.003 <-- COMPASS kinematical range
+cms ---------------------------------------------------------------------
+cms   0.2156 <---- gives correct derivative at Q2=0.4
+cms   1.1854 = 1.0 /(1-exp(-0.4/0.2156) <-- to correct value at Q2=0.4
+cms----------------------------------------------------------------------
+cms   0.2712 <---- gives correct derivative at Q2=0.5
+cms   1.1880 = 1.0 /(1-exp(-0.4/0.2712) <-- to correct value at Q2=0.5
+cms----------------------------------------------------------------------
+cms  note that for Q2=0.4 the variable Q2_LIMIT has to be changed!
+
+
+      IF(Q2_SAVE.LT.Q2_LIMIT) THEN
+        R= 1.1880*R*(1-exp(-Q2_SAVE/0.2712))
+        DR=0.2
+      ENDIF
+
+cms      GOODFIT = .TRUE.
+cms      IF ((X.LT.0.02).OR.(Q2.LT.0.3)) GOODFIT = .FALSE.
+
+
+c...BB...had to add the 2 lines below
+      dddr = dble(r)
+      ddddr = dble(dr)
+
+      RETURN
+      END
+
+c=====================================================================
+
+
+C---------------------------------------------------------
+      SUBROUTINE GARI(Q2,GEP,GMP,GEN,GMN)
+C
+C *** NUCLEON FORM FACTOR OF GARI AND KRUEMPELMANN, Z.PHYS A322 (1985) 689
+C ***
+C *** Michele Arneodo, Oct. 1990
+C ***
+      implicit double precision (a-h,o-z)
+
+      DATA GOFO,AKO,AKS,GRFR,AKR,AKV/0.411,0.163,-0.12,0.377,6.62,3.706/
+      DATA ALQCD,AL1,AL2 /0.0841,0.632025,5.1529/
+      DATA AM2O,AM2R /0.61465,0.602176/
+C
+C     divide by 4*proton mass squared
+      ETAPRO=Q2/3.5214174
+
+C
+C *** FORMULA 7, PAGE 691
+C
+      Q2H =Q2*DLOG((AL2+Q2)/ALQCD)/DLOG(AL2/ALQCD)
+      Z   = (AL2/(AL2+Q2H))
+      F1GK=(AL1/(AL1+Q2H)) * Z
+      F2GK=F1GK * Z
+
+      F1SGK=(AM2O/(AM2O+Q2)) * (GOFO) + (1.0-GOFO)
+      F1SGK=F1SGK*F1GK
+      F2SGK=(AM2O/(AM2O+Q2)) * (GOFO*AKO) + (AKS-AKO*GOFO)
+      F2SGK=F2SGK*F2GK
+      F1VGK=(AM2R/(AM2R+Q2)) * (GRFR) + (1.0-GRFR)
+      F1VGK=F1VGK*F1GK
+      F2VGK=(AM2R/(AM2R+Q2)) * (GRFR*AKR) + (AKV-AKR*GRFR)
+      F2VGK=F2VGK*F2GK
+C
+C *** FORMULA 4, PAGE 690
+C
+      F1P=0.5*(F1SGK+F1VGK)
+      F1N=0.5*(F1SGK-F1VGK)
+      F2P=0.5*(F2SGK+F2VGK)
+      F2N=0.5*(F2SGK-F2VGK)
+C
+C *** FORMULA 3, PAGE 690
+C
+      GEP=F1P-ETAPRO*F2P
+      GMP=F1P+F2P
+C
+      GEN=F1N-ETAPRO*F2N
+      GMN=F1N+F2N
+C
+      RETURN
+      END
+
+C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 C
       SUBROUTINE FIUSER(X,Q2,ZF1,ZF2,IPDFR)
       IMPLICIT DOUBLE PRECISION (A-H,M,O-Z)
@@ -14089,6 +16215,7 @@ C
      *              ,MW2,MZ2,MH2,ME2,MMY2,MTAU2,MU2,MD2,MS2,MC2,MB2,MT2
       COMMON /HSPDFO/ IPDFOP,IFLOPT,LQCD,LTM,LHT
       COMMON /HSNUCL/ HNA,HNZ,INUMOD
+      INTEGER         HNA,HNZ
       COMMON /HYSTFU/ PYSTOP,PYSLAM,NPYMAX,NPYMIN
       REAL            PYSTOP,PYSLAM
       COMMON /HSSTRP/ ICODE,ILIB,ILQMOD,IDPVR
@@ -14206,13 +16333,24 @@ C---DONNACHIE LANDSHOFF with pdf's
          ELSE
           GOTO 1000
         ENDIF
-      ELSEIF (ILQMOD.EQ.10) THEN
-C---STRUCTURE FUNCTIONS FROM USER ROUTINE
+      ELSEIF (ILQMOD.EQ.6) THEN
+C---TERAD OLD (ADDED BY N. PIERRE 24/05/17 FOR TEST PURPOSE)
         DO 6 IB1=1,2
         DO 6 IB2=1,2
         F1(IB1,IB2)=0D0
         F2(IB1,IB2)=0D0
- 6      F3(IB1,IB2)=0D0
+    6   F3(IB1,IB2)=0D0
+        CALL TERAD(X,Q2,ZF1,ZF2)
+        F1(1,1)=ZF1
+        F2(1,1)=ZF2
+        GOTO 2000
+      ELSEIF (ILQMOD.EQ.10) THEN
+C---STRUCTURE FUNCTIONS FROM USER ROUTINE
+        DO 7 IB1=1,2
+        DO 7 IB2=1,2
+        F1(IB1,IB2)=0D0
+        F2(IB1,IB2)=0D0
+ 7      F3(IB1,IB2)=0D0
         CALL FIUSER(X,Q2,ZF1,ZF2,IPDFR)
         IF (IPDFR.EQ.1) GOTO 1000
         F1(1,1)=ZF1
@@ -14354,6 +16492,7 @@ C
       COMMON /HSDELR/ DELTAR,AGF0,DRHOT,DALPMZ,XGMT,ALPQCD,BTOP4,DRPIW2
       COMMON /HSPDFO/ IPDFOP,IFLOPT,LQCD,LTM,LHT
       COMMON /HSNUCL/ HNA,HNZ,INUMOD
+      INTEGER         HNA,HNZ
       COMMON /HYSTFU/ PYSTOP,PYSLAM,NPYMAX,NPYMIN
       REAL            PYSTOP,PYSLAM
       COMMON /HSSTRP/ ICODE,ILIB,ILQMOD,IDPVR
@@ -14590,15 +16729,54 @@ C
         ENDIF
         F2EM=F2(1,1)
         GOTO 2000
-      ELSEIF (ILQMOD.EQ.10) THEN
-C---FOR LOW Q2 ONLY GAMMA EXCHANGE,
-C   STRUCTURE FUNCTIONS FROM USER ROUTINE
-C   PARAMETRIZATION BY DONNACHIE AND LANDSHOFF
+      ELSEIF (ILQMOD.EQ.6) THEN
+C---TERAD ADDED BY N. PIERRE 25/05/17
         DO 10 IB1=1,2
         DO 10 IB2=1,2
         F1(IB1,IB2)=0D0
         F2(IB1,IB2)=0D0
  10     F3(IB1,IB2)=0D0
+        CALL TERAD(X,Q2,ZF1,ZF2)
+        F1(1,1)=ZF1
+        F2(1,1)=ZF2
+C..PHOTON SELF ENERGY
+        IF (LPAR(7).GE.1) THEN
+          CG=HSSRGG(T)
+          PIGGG=DREAL(CG)/T
+        ELSE
+          PIGGG=0D0
+        ENDIF
+        DVACGG=1D0/(1D0+PIGGG)
+C..LEPTONIC QED VERTEX CORRECTIONS INCLUDING SOFT BREMSSTRAHLUNG
+        IF (LPAR(12).GE.1) THEN
+          DVRTXV=HSDQDV(X,Q2)*ALP2PI
+          DVRTXS=HSDQDS(X,Q2)*ALP2PI
+          DVRTX1=DVRTXV-(Q2+4D0*MEI2)/(Q2-2D0*MEI2)*DVRTXS
+          DVRTX2=DVRTXV+
+     *          (2D0*(1D0-Y)+Y*Y/2D0)/(1D0-Y-MPRO2*Q2/SHAT/SHAT)*DVRTXS
+        ELSE
+          DVRTX1=0D0
+          DVRTX2=0D0
+        ENDIF
+C
+        IF (LPAR(3).LT.3) THEN
+        F1(1,1)=F1(1,1)*(DVRTX1+DVACGG*DVACGG)
+        F2(1,1)=F2(1,1)*(DVRTX2+DVACGG*DVACGG)
+        ELSE
+        F1(1,1)=F1(1,1)*(1D0+DVRTX1)*DVACGG*DVACGG
+        F2(1,1)=F2(1,1)*(1D0+DVRTX2)*DVACGG*DVACGG
+        ENDIF
+        F2EM=F2(1,1)
+        GOTO 2000
+      ELSEIF (ILQMOD.EQ.10) THEN
+C---FOR LOW Q2 ONLY GAMMA EXCHANGE,
+C   STRUCTURE FUNCTIONS FROM USER ROUTINE
+C   PARAMETRIZATION BY DONNACHIE AND LANDSHOFF
+        DO 11 IB1=1,2
+        DO 11 IB2=1,2
+        F1(IB1,IB2)=0D0
+        F2(IB1,IB2)=0D0
+ 11     F3(IB1,IB2)=0D0
         CALL FIUSER(X,Q2,ZF1,ZF2,IPDFR)
         IF (IPDFR.EQ.1) GOTO 1000
         F1(1,1)=ZF1
@@ -15718,59 +17896,6 @@ c
       f2p=cbar*ftwo(1)+fv
       f2d=cbar*ftwo(2)+fv
 c
-      return
-      end
-C
-C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-C
-C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-C
-      subroutine sigvmes(viu,sigro,sigfi)
-c
-c-----calculates sigro, sigfi at given energy viu using the energy dependent
-c-----piN and KN total cross-sections
-c
-      data      amk,     ampi,pmbnag,sigpi0, sigk0,   czad,sigpi1,sigpi2
-     *    /0.493646, 0.139567,  2.56, 13.52, 14.17, 0.0102, 22.77, 2.35/
-      data sigk1, alfpi1, alfpi2, alfk1
-     *    /14.75,  0.369,   0.37, 0.515/
-c
-      gampi=viu/ampi
-      gamk=viu/amk
-      gapa=alog(gampi)
-      gaka=alog(gamk)
-      spip=sigpi1*viu**(-alfpi1)
-      spip=spip+sigpi0*(1.+czad*gapa*gapa)
-      spim=sigpi2*viu**(-alfpi2)
-      skp=sigk1*viu**(-alfk1)
-      skp=skp+sigk0*(1.+czad*gaka*gaka)
-      sigro=pmbnag*spip
-      sigfi=pmbnag*(2.*skp-spip-spim)
-      return
-      end
-C
-C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-C
-C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-C
-      subroutine vmesnuc(q2,sigro,sigfi,fvmes2)
-c
-c-----calculates the vector meson contribution to the nucleon (!) f2.
-c
-      dimension vmass(3),vcoupl(3),sigin(3)
-      data pi/3.1415926/, vmass/0.7683, 0.78195, 1.019412/
-      data vcoupl/1.98, 21.07, 13.83/
-c
-      sigin(1)=sigro
-      sigin(2)=sigro
-      sigin(3)=sigfi
-      sumv=0.
-      do 100 l=1,3
-      sv=vmass(l)*vmass(l)
-      denv=pi*vcoupl(l)*(q2+sv)*(q2+sv)
-      sumv=sumv+sv*sv*sigin(l)/denv
-100   continue
-      fvmes2=q2/4./pi*sumv
       return
       end
 C
@@ -17480,6 +19605,7 @@ C
       FUNCTION HSNRAT(X)
       IMPLICIT DOUBLE PRECISION (A-H,M,O-Z)
       COMMON /HSNUCL/ HNA,HNZ,INUMOD
+      INTEGER         HNA,HNZ
       LOGICAL LFIRST
       DATA LFIRST/.TRUE./
       DATA AN1/0.130D0/
@@ -17526,7 +19652,9 @@ C
     1 BUPC(I)=BUP(I)
       ACC=ACCREQ
       INCCC=IFUN
+
       RESULT=GAUSK1(DFNCII,BLOWC(2),BUPC(2),ACCREQ)
+
       ACCFIN=ACCREQ
       IFAIL=0
       RETURN

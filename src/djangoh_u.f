@@ -70,7 +70,7 @@ C
    12   NMIS(I)=0
         CALL TIMEX(RTIME)
         TIMINI=RTIME
-        NEVMOD=10000
+        NEVMOD=100
         N10CNT=0
         GSP=SP-MPRO2-MEI2
       ENDIF
@@ -82,8 +82,8 @@ C...Initialization of user action
  100  CONTINUE
 C-----------------------------------------------------------------------
 C...initialize event
-      DO 13 I=-6,6
-   13  IFLCNT(I)=0
+C      DO 13 I=-6,6
+C   13  IFLCNT(I)=0
 C...initialize hbook
 C      CALL HLIMIT(NWPAWC)
 C      Q2MNL=DLOG10(Q2MIN)
@@ -364,9 +364,9 @@ C... -
       WRITE(31,2302) IDHEP(3)
       WRITE(31,2303) PHEP(1,3),PHEP(2,3),PHEP(3,3),PHEP(4,3),PHEP(5,3)
 
-      OPEN(6,FILE='fort.456',STATUS='REPLACE')
-      CALL LULIST(1)
-      CLOSE(6)
+C      OPEN(6,FILE='fort.456',STATUS='REPLACE')
+C      CALL LULIST(1)
+C      CLOSE(6)
 C... -
  2301 FORMAT(I4)
  2302 FORMAT(I4)

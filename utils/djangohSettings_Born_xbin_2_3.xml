@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!-- For any information concerning codeword block content, refer to Djangoh manual>
+
+<!-- EL-BEAM -->
+<Codeword name="EL-BEAM">
+  <Data name="polari" value="0.0"/>
+  <Data name="beam" value="mu+"/>
+</Codeword>
+
+<!-- KINEM-CUT -->
+<Codeword name="KINEM-CUTS">
+  <Data name="icut" value="3"/>
+  <Data name="ixmin" value="0.008"/>
+  <Data name="ixmax" value="0.01"/>
+  <Data name="iymin" value="0.1"/>
+  <Data name="iymax" value="0.9"/>
+  <Data name="iq2min" value="0.1"/>
+  <Data name="iq2max" value="1e5"/>
+  <Data name="iwmin" value="1.4"/>
+</Codeword>
+
+<!-- GSW-PARAM -->
+<Codeword name="GSW-PARAM">
+    <Data name="lparin1" value="2"/>
+    <Data name="lparin2" value="0"/>
+    <Data name="lparin3" value="3"/>
+    <Data name="lparin4" value="1"/>
+    <Data name="lparin5" value="0"/>
+    <Data name="lparin6" value="0"/>
+    <Data name="lparin7" value="2"/>
+    <Data name="lparin8" value="1"/>
+    <Data name="lparin9" value="1"/>
+    <Data name="lparin10" value="1"/>
+    <Data name="lparin11" value="1"/>
+</Codeword>
+
+<!-- GD-OPT -->
+<Codeword name="GD-OPT">
+    <Data name="gdmean" value="160.0"/>
+    <Data name="gdsddv" value="0"/>
+    <Data name="gdsize" value="1"/>
+</Codeword>
+
+<!-- EGAM-MIN -->
+<Codeword name="EGAM-MIN">
+    <Data name="egam" value="0"/>
+</Codeword>
+
+<!-- INT-OPT-NC -->
+<Codeword name="INT-OPT-NC">
+    <Data name="inc2" value="1"/>
+    <Data name="inc31" value="0"/>
+    <Data name="inc32" value="0"/>
+    <Data name="inc33" value="0"/>
+    <Data name="inc34" value="0"/>
+    <Data name="iel2" value="0"/>
+    <Data name="iel31" value="0"/>
+    <Data name="iel32" value="0"/>
+    <Data name="iel33" value="0"/>
+</Codeword>
+
+<!-- INT-OPT-CC -->
+<Codeword name="INT-OPT-CC">
+    <Data name="icc2" value="0"/>
+    <Data name="icc31" value="0"/>
+    <Data name="icc32" value="0"/>
+    <Data name="icc33" value="0"/>
+</Codeword>
+
+<!-- INT-ONLY -->
+<Codeword name="INT-ONLY">
+    <Data name="ioplot" value="0"/>
+</Codeword>
+
+<!-- INT-POINTS -->
+ <Codeword name="INT-POINTS">
+    <Data name="npoveg" value="3000"/>
+</Codeword>
+
+<!-- SAM_OPT_NC -->
+<Codeword name="SAM-OPT-NC">
+  <Data name="isnc2" value="1"/>
+  <Data name="isnc31" value="0"/>
+  <Data name="isnc32" value="0"/>
+  <Data name="isnc33" value="0"/>
+  <Data name="isnc34" value="0"/>
+  <Data name="isel2" value="0"/>
+  <Data name="isel31" value="0"/>
+  <Data name="isel32" value="0"/>
+  <Data name="isel33" value="0"/>
+</Codeword>
+
+<!-- SAM-OPT-CC -->
+<Codeword name="SAM-OPT-CC">
+  <Data name="iscc2" value="0"/>
+  <Data name="iscc31" value="0"/>
+  <Data name="iscc32" value="0"/>
+  <Data name="iscc33" value="0"/>
+</Codeword>
+
+<!-- NUCLEUS -->
+<Codeword name="NUCLEUS">
+    <Data name="epro" value="0"/>
+    <Data name="hpolar" value="0"/>
+    <Data name="hna" value="1"/>
+    <Data name="hnz" value="1"/>
+</Codeword>
+
+<!-- STRUCTFUNC -->
+<Codeword name="STRUCTFUNC">
+  <Data name="ilqmod" value="0"/>
+  <Data name="ilib" value="2"/>
+  <Data name="icode" value="10150"/>
+</Codeword>
+
+<!-- FLONG -->
+<Codeword name="FLONG">
+  <Data name="iflopt" value="111"/>
+  <Data name="parl11" value="0.01"/>
+  <Data name="parl19" value="0.03"/>
+</Codeword>
+
+<!-- ALFAS -->
+<Codeword name="ALFAS">
+  <Data name="mst111" value="1"/>
+  <Data name="mst115" value="1"/>
+  <Data name="par111" value="0.2"/>
+  <Data name="par112" value="0.235"/>
+</Codeword>
+
+<!-- NFLAVORS -->
+<Codeword name="NFLAVORS">
+  <Data name="npymin" value="0"/>
+  <Data name="npymax" value="3"/>
+</Codeword>
+
+<!-- RNDM-SEEDS -->
+<Codeword name="RNDM-SEEDS">
+  <Data name="isdinp" value="-1"/>
+  <Data name="isdout" value="-1"/>
+</Codeword>
+
+<!-- SOPHIA -->
+<Codeword name="SOPHIA">
+  <Data name="wsophia" value="1.5"/>
+</Codeword>
+
+<!-- OUT-LEP -->
+<Codeword name="OUT-LEP">
+  <Data name="lst4" value="1"/>
+</Codeword>
+
+<!-- FRAME -->
+<Codeword name="FRAME">
+  <Data name="lst5" value="3"/>
+</Codeword>
+
+<!-- FRAG -->
+<Codeword name="FRAG">
+  <Data name="lst7" value="0"/>
+</Codeword>
+
+<!-- CASCADES -->
+<Codeword name="CASCADES">
+  <Data name="lst8" value="12"/>
+</Codeword>
+
+<!-- MAXVIRT -->
+<Codeword name="MAX-VIRT">
+  <Data name="lst9" value="5"/>
+</Codeword>
+
+<!-- BARYON -->
+<Codeword name="BARYON">
+  <Data name="lst14" value="4"/>
+</Codeword>
+
+<!-- KT-PARTON -->
+<Codeword name="KT-PARTON">
+  <Data name="parl3" value="0.44"/>
+</Codeword>
+
+<!-- KT-PARTON -->
+<Codeword name="VERBOZE">
+  <Data name="verboz" value="1"/>
+</Codeword>
