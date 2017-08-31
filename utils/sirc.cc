@@ -153,6 +153,7 @@ int main(int argc,char *argv[])
 
     while(revt >> npart)
     {
+      revt >> npart;
       revt >> E >> xbj >> y >> Q2;
       cout << E << "\txbj : " << xbj << "\ty : " << y << "\tQ2 : " << Q2 << endl;
       for(int i=0; i<npart; i++)
