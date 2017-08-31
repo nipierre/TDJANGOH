@@ -1167,7 +1167,7 @@ void TDjangoh::WriteFSInFile()
   finalState << numpart << endl;
   finalState << hselab_.eele << "\t" << fDjkin->DJX << "\t" << fDjkin->DJY << "\t" << fDjkin->DJQ2 << endl;
 
-  for (Int_t i = 0; i<numpart; i++)
+  for (Int_t i = -1; i<numpart; i++)
   {
     if (fLujets->K[0][i] == 1)
     {
