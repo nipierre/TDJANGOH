@@ -1165,7 +1165,7 @@ void TDjangoh::WriteFSInFile()
   Int_t numpart = fLujets->N;
 
   finalState << numpart << endl;
-  finalState << fDjkin->DJX << "\t" << fDjkin->DJY << "\t" << fDjkin->DJQ2 << endl;
+  finalState << eele << "\t" << fDjkin->DJX << "\t" << fDjkin->DJY << "\t" << fDjkin->DJQ2 << endl;
 
   for (Int_t i = 0; i<numpart; i++)
   {
