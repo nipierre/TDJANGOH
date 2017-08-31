@@ -158,7 +158,7 @@ int main(int argc,char *argv[])
       for(int i=0; i<npart; i++)
       {
         revt >> dummy >> id >> dummy >> dummy >> dummy;
-        cout << dummy << "\t" << id << "\t" << dummy << "\t" << dummy << "\t" << dummy << "\t";
+        cout << dummy << "\tid : " << id << "\t" << dummy << "\t" << dummy << "\t" << dummy << "\t";
         revt >> px >> py >> pz >> Eh;
         cout << px << "\t" << py << "\t" << pz << "\t" << Eh << "\t";
         revt >> dummy >> dummy >> dummy >> dummy;
