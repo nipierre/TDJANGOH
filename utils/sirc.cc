@@ -140,7 +140,7 @@ int main(int argc,char *argv[])
 
   int evtotre, evtotborn;
   int id, npart;
-  double E, E_prime, xbj, y, Q2, px, py, pz, Eh, dummy, pt, ;
+  double E, E_prime, xbj, y, Q2, px, py, pz, Eh, dummy, pt, z;
   double M_pi = 0.13957018;
 
   evtotre = 0;
@@ -250,7 +250,7 @@ int main(int argc,char *argv[])
           else if(0.90<y && y<0.95) y_t_re[0][18]++;
           else y_t_re[0][19]++;
         }
-        if(particle->k[1]!=22 && particle->k[1]!=13 && particle->k[1]<0)
+        if(id!=22 && abs(id)!=13 && id<0)
         {
           pt = sqrt(pow(px,2)+pow(py,2));
           z = sqrt(pow(Eh,2)+pow(M_pi,2))/(E-E_prime);
@@ -448,7 +448,7 @@ int main(int argc,char *argv[])
           else if(0.90<y && y<0.95) y_t_re[0][18]++;
           else y_t_re[0][19]++;
         }
-        if(particle->k[1]!=22 && particle->k[1]!=13 && particle->k[1]<0)
+        if(id!=22 && abs(id)!=13 && id<0)
         {
           pt = sqrt(pow(px,2)+pow(py,2));
           z = sqrt(pow(Eh,2)+pow(M_pi,2))/(E-E_prime);
