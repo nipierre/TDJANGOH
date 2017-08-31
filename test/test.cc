@@ -105,8 +105,7 @@ int main(int argc,char *argv[])
 
   if(finalState)
   {
-    cout << FCYN("Opening file for saving final state") << endl;
-    tDjangoh->OpenFile();
+    tDjangoh->CleanFSFile();
   }
 
   cout << FCYN("\n\nEvents Generation (" << NEVENTS << " events)..") << endl;
@@ -160,11 +159,6 @@ int main(int argc,char *argv[])
     	cout << "Xbj : " << x << " y : " << y << " Q2 : " << Q2 << "\n\n" << endl;
      }
 
-  }
-
-  if(finalState)
-  {
-    tDjangoh->CloseFile();
   }
 
   cout << FCYN("\n\nEvents Generated !") << endl;

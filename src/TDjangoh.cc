@@ -1157,17 +1157,15 @@ void TDjangoh::SetVerboze(int pVerboz)
   hsvrbz_.verboz = pVerboz;
 }
 
-void TDjangoh::OpenFile()
-{
-  ofstream finalState("finalState.txt", std::ofstream::out);
-}
-
 void TDjangoh::WriteFSInFile()
 {
+
+  ofstream finalState("finalState.txt", ofstream::out | ofstream::app);
+
   Int_t numpart = fLujets->N;
 
-  finalState << fDjkin->DJX << "\t" << fDjkin->DJY << "\t" << fDjkin->DJQ2 << endl;
   finalState << numpart << endl;
+  finalState << fDjkin->DJX << "\t" << fDjkin->DJY << "\t" << fDjkin->DJQ2 << endl;
 
   for (Int_t i = 0; i<numpart; i++)
   {
@@ -1188,10 +1186,7 @@ void TDjangoh::WriteFSInFile()
                     fLujets->V[3][i]) << endl;
     }
   }
-}
 
-void TDjangoh::CloseFile()
-{
   finalState.close();
 }
 

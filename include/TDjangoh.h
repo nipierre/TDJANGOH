@@ -287,9 +287,8 @@ public:
 
   // ---------------------------------------------------------------------------
   // Save final state infos in file
-  void        OpenFile();
-  void        CloseFile();
   void        WriteFSInFile();
+  void        CleanFSFile() { remove("finalState.txt"); }
 
   // ---------------------------------------------------------------------------
   // Djangoh inputs modifiers
