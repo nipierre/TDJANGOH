@@ -139,7 +139,8 @@ int main(int argc,char *argv[])
   TGraphErrors* rcy_g[8];
 
   int evtotre, evtotborn;
-  double E, E_prime, xbj, y, Q2, px, py, pz, Eh, dummy;
+  int id, npart;
+  double E, E_prime, xbj, y, Q2, px, py, pz, Eh, dummy, pt, ;
   double M_pi = 0.13957018;
 
   evtotre = 0;
@@ -159,7 +160,7 @@ int main(int argc,char *argv[])
         revt >> dummy >> dummy >> dummy >> dummy;
 
         if(abs(id)==13) E_prime = Eh;
-        if(particle->k[1]!=22 && particle->k[1]!=13 && particle->k[1]>0)
+        if(id!=22 && abs(id)!=13 && id>0)
         {
           pt = sqrt(pow(px,2)+pow(py,2));
           z = sqrt(pow(Eh,2)+pow(M_pi,2))/(E-E_prime);
@@ -207,25 +208,25 @@ int main(int argc,char *argv[])
           else if(2.85<pt && pt<3.00) pt_t_re[0][19]++;
           if(pt>6) cout << "large pt : " << pt << " > 6.0." << endl;
 
-          if(0<xjb && xjb<0.05) x_t_re[0][0]++;
-          else if(0.05<xjb && xjb<0.10) x_t_re[0][1]++;
-          else if(0.10<xjb && xjb<0.15) x_t_re[0][2]++;
-          else if(0.15<xjb && xjb<0.20) x_t_re[0][3]++;
-          else if(0.20<xjb && xjb<0.25) x_t_re[0][4]++;
-          else if(0.25<xjb && xjb<0.30) x_t_re[0][5]++;
-          else if(0.30<xjb && xjb<0.35) x_t_re[0][6]++;
-          else if(0.35<xjb && xjb<0.40) x_t_re[0][7]++;
-          else if(0.40<xjb && xjb<0.45) x_t_re[0][8]++;
-          else if(0.45<xjb && xjb<0.50) x_t_re[0][9]++;
-          else if(0.50<xjb && xjb<0.55) x_t_re[0][10]++;
-          else if(0.55<xjb && xjb<0.60) x_t_re[0][11]++;
-          else if(0.60<xjb && xjb<0.65) x_t_re[0][12]++;
-          else if(0.65<xjb && xjb<0.70) x_t_re[0][13]++;
-          else if(0.70<xjb && xjb<0.75) x_t_re[0][14]++;
-          else if(0.75<xjb && xjb<0.80) x_t_re[0][15]++;
-          else if(0.80<xjb && xjb<0.85) x_t_re[0][16]++;
-          else if(0.85<xjb && xjb<0.90) x_t_re[0][17]++;
-          else if(0.90<xjb && xjb<0.95) x_t_re[0][18]++;
+          if(0<xbj && xbj<0.05) x_t_re[0][0]++;
+          else if(0.05<xbj && xbj<0.10) x_t_re[0][1]++;
+          else if(0.10<xbj && xbj<0.15) x_t_re[0][2]++;
+          else if(0.15<xbj && xbj<0.20) x_t_re[0][3]++;
+          else if(0.20<xbj && xbj<0.25) x_t_re[0][4]++;
+          else if(0.25<xbj && xbj<0.30) x_t_re[0][5]++;
+          else if(0.30<xbj && xbj<0.35) x_t_re[0][6]++;
+          else if(0.35<xbj && xbj<0.40) x_t_re[0][7]++;
+          else if(0.40<xbj && xbj<0.45) x_t_re[0][8]++;
+          else if(0.45<xbj && xbj<0.50) x_t_re[0][9]++;
+          else if(0.50<xbj && xbj<0.55) x_t_re[0][10]++;
+          else if(0.55<xbj && xbj<0.60) x_t_re[0][11]++;
+          else if(0.60<xbj && xbj<0.65) x_t_re[0][12]++;
+          else if(0.65<xbj && xbj<0.70) x_t_re[0][13]++;
+          else if(0.70<xbj && xbj<0.75) x_t_re[0][14]++;
+          else if(0.75<xbj && xbj<0.80) x_t_re[0][15]++;
+          else if(0.80<xbj && xbj<0.85) x_t_re[0][16]++;
+          else if(0.85<xbj && xbj<0.90) x_t_re[0][17]++;
+          else if(0.90<xbj && xbj<0.95) x_t_re[0][18]++;
           else x_t_re[0][19]++;
 
           if(0<y && y<0.05) y_t_re[0][0]++;
@@ -297,25 +298,25 @@ int main(int argc,char *argv[])
           else if(2.85<pt && pt<3.00) pt_t_re[1][19]++;
           if(pt>6) cout << "large pt : " << pt << " > 6.0." << endl;
 
-          if(0<xjb && xjb<0.05) x_t_re[1][0]++;
-          else if(0.05<xjb && xjb<0.10) x_t_re[1][1]++;
-          else if(0.10<xjb && xjb<0.15) x_t_re[1][2]++;
-          else if(0.15<xjb && xjb<0.20) x_t_re[1][3]++;
-          else if(0.20<xjb && xjb<0.25) x_t_re[1][4]++;
-          else if(0.25<xjb && xjb<0.30) x_t_re[1][5]++;
-          else if(0.30<xjb && xjb<0.35) x_t_re[1][6]++;
-          else if(0.35<xjb && xjb<0.40) x_t_re[1][7]++;
-          else if(0.40<xjb && xjb<0.45) x_t_re[1][8]++;
-          else if(0.45<xjb && xjb<0.50) x_t_re[1][9]++;
-          else if(0.50<xjb && xjb<0.55) x_t_re[1][10]++;
-          else if(0.55<xjb && xjb<0.60) x_t_re[1][11]++;
-          else if(0.60<xjb && xjb<0.65) x_t_re[1][12]++;
-          else if(0.65<xjb && xjb<0.70) x_t_re[1][13]++;
-          else if(0.70<xjb && xjb<0.75) x_t_re[1][14]++;
-          else if(0.75<xjb && xjb<0.80) x_t_re[1][15]++;
-          else if(0.80<xjb && xjb<0.85) x_t_re[1][16]++;
-          else if(0.85<xjb && xjb<0.90) x_t_re[1][17]++;
-          else if(0.90<xjb && xjb<0.95) x_t_re[1][18]++;
+          if(0<xbj && xbj<0.05) x_t_re[1][0]++;
+          else if(0.05<xbj && xbj<0.10) x_t_re[1][1]++;
+          else if(0.10<xbj && xbj<0.15) x_t_re[1][2]++;
+          else if(0.15<xbj && xbj<0.20) x_t_re[1][3]++;
+          else if(0.20<xbj && xbj<0.25) x_t_re[1][4]++;
+          else if(0.25<xbj && xbj<0.30) x_t_re[1][5]++;
+          else if(0.30<xbj && xbj<0.35) x_t_re[1][6]++;
+          else if(0.35<xbj && xbj<0.40) x_t_re[1][7]++;
+          else if(0.40<xbj && xbj<0.45) x_t_re[1][8]++;
+          else if(0.45<xbj && xbj<0.50) x_t_re[1][9]++;
+          else if(0.50<xbj && xbj<0.55) x_t_re[1][10]++;
+          else if(0.55<xbj && xbj<0.60) x_t_re[1][11]++;
+          else if(0.60<xbj && xbj<0.65) x_t_re[1][12]++;
+          else if(0.65<xbj && xbj<0.70) x_t_re[1][13]++;
+          else if(0.70<xbj && xbj<0.75) x_t_re[1][14]++;
+          else if(0.75<xbj && xbj<0.80) x_t_re[1][15]++;
+          else if(0.80<xbj && xbj<0.85) x_t_re[1][16]++;
+          else if(0.85<xbj && xbj<0.90) x_t_re[1][17]++;
+          else if(0.90<xbj && xbj<0.95) x_t_re[1][18]++;
           else x_t_re[1][19]++;
 
           if(0<y && y<0.05) y_t_re[1][0]++;
@@ -357,7 +358,7 @@ int main(int argc,char *argv[])
         bevt >> dummy >> dummy >> dummy >> dummy;
 
         if(abs(id)==13) E_prime = Eh;
-        if(particle->k[1]!=22 && particle->k[1]!=13 && particle->k[1]>0)
+        if(id!=22 && abs(id)!=13 && id>0)
         {
           pt = sqrt(pow(px,2)+pow(py,2));
           z = sqrt(pow(Eh,2)+pow(M_pi,2))/(E-E_prime);
@@ -405,25 +406,25 @@ int main(int argc,char *argv[])
           else if(2.85<pt && pt<3.00) pt_t_re[0][19]++;
           if(pt>6) cout << "large pt : " << pt << " > 6.0." << endl;
 
-          if(0<xjb && xjb<0.05) x_t_re[0][0]++;
-          else if(0.05<xjb && xjb<0.10) x_t_re[0][1]++;
-          else if(0.10<xjb && xjb<0.15) x_t_re[0][2]++;
-          else if(0.15<xjb && xjb<0.20) x_t_re[0][3]++;
-          else if(0.20<xjb && xjb<0.25) x_t_re[0][4]++;
-          else if(0.25<xjb && xjb<0.30) x_t_re[0][5]++;
-          else if(0.30<xjb && xjb<0.35) x_t_re[0][6]++;
-          else if(0.35<xjb && xjb<0.40) x_t_re[0][7]++;
-          else if(0.40<xjb && xjb<0.45) x_t_re[0][8]++;
-          else if(0.45<xjb && xjb<0.50) x_t_re[0][9]++;
-          else if(0.50<xjb && xjb<0.55) x_t_re[0][10]++;
-          else if(0.55<xjb && xjb<0.60) x_t_re[0][11]++;
-          else if(0.60<xjb && xjb<0.65) x_t_re[0][12]++;
-          else if(0.65<xjb && xjb<0.70) x_t_re[0][13]++;
-          else if(0.70<xjb && xjb<0.75) x_t_re[0][14]++;
-          else if(0.75<xjb && xjb<0.80) x_t_re[0][15]++;
-          else if(0.80<xjb && xjb<0.85) x_t_re[0][16]++;
-          else if(0.85<xjb && xjb<0.90) x_t_re[0][17]++;
-          else if(0.90<xjb && xjb<0.95) x_t_re[0][18]++;
+          if(0<xbj && xbj<0.05) x_t_re[0][0]++;
+          else if(0.05<xbj && xbj<0.10) x_t_re[0][1]++;
+          else if(0.10<xbj && xbj<0.15) x_t_re[0][2]++;
+          else if(0.15<xbj && xbj<0.20) x_t_re[0][3]++;
+          else if(0.20<xbj && xbj<0.25) x_t_re[0][4]++;
+          else if(0.25<xbj && xbj<0.30) x_t_re[0][5]++;
+          else if(0.30<xbj && xbj<0.35) x_t_re[0][6]++;
+          else if(0.35<xbj && xbj<0.40) x_t_re[0][7]++;
+          else if(0.40<xbj && xbj<0.45) x_t_re[0][8]++;
+          else if(0.45<xbj && xbj<0.50) x_t_re[0][9]++;
+          else if(0.50<xbj && xbj<0.55) x_t_re[0][10]++;
+          else if(0.55<xbj && xbj<0.60) x_t_re[0][11]++;
+          else if(0.60<xbj && xbj<0.65) x_t_re[0][12]++;
+          else if(0.65<xbj && xbj<0.70) x_t_re[0][13]++;
+          else if(0.70<xbj && xbj<0.75) x_t_re[0][14]++;
+          else if(0.75<xbj && xbj<0.80) x_t_re[0][15]++;
+          else if(0.80<xbj && xbj<0.85) x_t_re[0][16]++;
+          else if(0.85<xbj && xbj<0.90) x_t_re[0][17]++;
+          else if(0.90<xbj && xbj<0.95) x_t_re[0][18]++;
           else x_t_re[0][19]++;
 
           if(0<y && y<0.05) y_t_re[0][0]++;
@@ -495,25 +496,25 @@ int main(int argc,char *argv[])
           else if(2.85<pt && pt<3.00) pt_t_re[1][19]++;
           if(pt>6) cout << "large pt : " << pt << " > 6.0." << endl;
 
-          if(0<xjb && xjb<0.05) x_t_re[1][0]++;
-          else if(0.05<xjb && xjb<0.10) x_t_re[1][1]++;
-          else if(0.10<xjb && xjb<0.15) x_t_re[1][2]++;
-          else if(0.15<xjb && xjb<0.20) x_t_re[1][3]++;
-          else if(0.20<xjb && xjb<0.25) x_t_re[1][4]++;
-          else if(0.25<xjb && xjb<0.30) x_t_re[1][5]++;
-          else if(0.30<xjb && xjb<0.35) x_t_re[1][6]++;
-          else if(0.35<xjb && xjb<0.40) x_t_re[1][7]++;
-          else if(0.40<xjb && xjb<0.45) x_t_re[1][8]++;
-          else if(0.45<xjb && xjb<0.50) x_t_re[1][9]++;
-          else if(0.50<xjb && xjb<0.55) x_t_re[1][10]++;
-          else if(0.55<xjb && xjb<0.60) x_t_re[1][11]++;
-          else if(0.60<xjb && xjb<0.65) x_t_re[1][12]++;
-          else if(0.65<xjb && xjb<0.70) x_t_re[1][13]++;
-          else if(0.70<xjb && xjb<0.75) x_t_re[1][14]++;
-          else if(0.75<xjb && xjb<0.80) x_t_re[1][15]++;
-          else if(0.80<xjb && xjb<0.85) x_t_re[1][16]++;
-          else if(0.85<xjb && xjb<0.90) x_t_re[1][17]++;
-          else if(0.90<xjb && xjb<0.95) x_t_re[1][18]++;
+          if(0<xbj && xbj<0.05) x_t_re[1][0]++;
+          else if(0.05<xbj && xbj<0.10) x_t_re[1][1]++;
+          else if(0.10<xbj && xbj<0.15) x_t_re[1][2]++;
+          else if(0.15<xbj && xbj<0.20) x_t_re[1][3]++;
+          else if(0.20<xbj && xbj<0.25) x_t_re[1][4]++;
+          else if(0.25<xbj && xbj<0.30) x_t_re[1][5]++;
+          else if(0.30<xbj && xbj<0.35) x_t_re[1][6]++;
+          else if(0.35<xbj && xbj<0.40) x_t_re[1][7]++;
+          else if(0.40<xbj && xbj<0.45) x_t_re[1][8]++;
+          else if(0.45<xbj && xbj<0.50) x_t_re[1][9]++;
+          else if(0.50<xbj && xbj<0.55) x_t_re[1][10]++;
+          else if(0.55<xbj && xbj<0.60) x_t_re[1][11]++;
+          else if(0.60<xbj && xbj<0.65) x_t_re[1][12]++;
+          else if(0.65<xbj && xbj<0.70) x_t_re[1][13]++;
+          else if(0.70<xbj && xbj<0.75) x_t_re[1][14]++;
+          else if(0.75<xbj && xbj<0.80) x_t_re[1][15]++;
+          else if(0.80<xbj && xbj<0.85) x_t_re[1][16]++;
+          else if(0.85<xbj && xbj<0.90) x_t_re[1][17]++;
+          else if(0.90<xbj && xbj<0.95) x_t_re[1][18]++;
           else x_t_re[1][19]++;
 
           if(0<y && y<0.05) y_t_re[1][0]++;
