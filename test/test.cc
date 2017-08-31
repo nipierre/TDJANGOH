@@ -56,6 +56,7 @@ int main(int argc,char *argv[])
   int VERBOSE=1;
   float base_energy=160;
   float rnd=0;
+  int finalState = 0;
 
   for (int i = 1; i < argc; i++)
   {
@@ -80,6 +81,10 @@ int main(int argc,char *argv[])
         base_energy = atof(argv[i + 1]);
       }
     }
+    if (string(argv[i]) == "-finalstate")
+    {
+      finalState = 1;
+    }
   }
 
   TDjangoh* tDjangoh;
@@ -98,6 +103,12 @@ int main(int argc,char *argv[])
   tDjangoh->Initialize();
   cout << FCYN("Initialized !") << endl;
 
+  if(finalState)
+  {
+    cout << FCYN("Opening file for saving final state") << endl;
+    tDjangoh->OpenFile();
+  }
+
   cout << FCYN("\n\nEvents Generation (" << NEVENTS << " events)..") << endl;
   for(int i=0; i<NEVENTS; i++)
   {
@@ -114,6 +125,11 @@ int main(int argc,char *argv[])
     }
 
     tDjangoh->GenerateEvent();
+
+    if(finalState)
+    {
+      tDjangoh->WriteFSInFile();
+    }
 
     if(VERBOSE>2)
     {
@@ -144,6 +160,11 @@ int main(int argc,char *argv[])
     	cout << "Xbj : " << x << " y : " << y << " Q2 : " << Q2 << "\n\n" << endl;
      }
 
+  }
+
+  if(finalState)
+  {
+    tDjangoh->CloseFile();
   }
 
   cout << FCYN("\n\nEvents Generated !") << endl;

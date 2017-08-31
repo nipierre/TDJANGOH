@@ -286,6 +286,12 @@ public:
   double      GetSigtrr();
 
   // ---------------------------------------------------------------------------
+  // Save final state infos in file
+  void        OpenFile();
+  void        CloseFile();
+  void        WriteFSInFile();
+
+  // ---------------------------------------------------------------------------
   // Djangoh inputs modifiers
 
   void        SetBeam(double pBeamE, double pPol);
