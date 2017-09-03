@@ -182,7 +182,7 @@ int main(int argc,char *argv[])
 //        cout << dummy << "\t" << dummy << "\t" << dummy << "\t" << dummy << endl;
 
         if(abs(id)==13) E_prime = Eh;
-        if(id!=22 && abs(id)!=13 && id>0)
+        if(id!=22 && abs(id)!=13 && id>0 && Eh>0.2)
         {
           pt = sqrt(pow(px,2)+pow(py,2));
           z = sqrt(pow(Eh,2)+pow(M_pi,2))/(E-E_prime);
@@ -272,7 +272,7 @@ int main(int argc,char *argv[])
           else if(0.90<y && y<0.95) y_t_re[0][18]++;
           else y_t_re[0][19]++;
         }
-        if(id!=22 && abs(id)!=13 && id<0)
+        if(id!=22 && abs(id)!=13 && id<0 && Eh>0.2)
         {
           pt = sqrt(pow(px,2)+pow(py,2));
           z = sqrt(pow(Eh,2)+pow(M_pi,2))/(E-E_prime);
@@ -384,7 +384,7 @@ int main(int argc,char *argv[])
 //        cout << dummy << "\t" << dummy << "\t" << dummy << "\t" << dummy << endl;
 
         if(abs(id)==13) E_prime = Eh;
-        if(id!=22 && abs(id)!=13 && id>0)
+        if(id!=22 && abs(id)!=13 && id>0 && Eh>0.2)
         {
           pt = sqrt(pow(px,2)+pow(py,2));
           z = sqrt(pow(Eh,2)+pow(M_pi,2))/(E-E_prime);
@@ -474,7 +474,7 @@ int main(int argc,char *argv[])
           else if(0.90<y && y<0.95) y_t_be[0][18]++;
           else y_t_be[0][19]++;
         }
-        if(id!=22 && abs(id)!=13 && id<0)
+        if(id!=22 && abs(id)!=13 && id<0 && Eh>0.2)
         {
           pt = sqrt(pow(px,2)+pow(py,2));
           z = sqrt(pow(Eh,2)+pow(M_pi,2))/(E-E_prime);
@@ -642,7 +642,7 @@ int main(int argc,char *argv[])
     rcx_g[i]->SetMarkerStyle(22);
     rcx_g[i]->SetMarkerColor(601);
     rcx_g[i]->SetMarkerSize(3);
-    rcx_g[i]->GetYaxis()->SetRangeUser(0.8,1.5);
+    //rcx_g[i]->GetYaxis()->SetRangeUser(0.8,1.5);
     rcx_g[i]->SetFillColor(601);
     rcx_g[i]->SetFillStyle(3001);
     rcx_g[i]->Draw("AP");
