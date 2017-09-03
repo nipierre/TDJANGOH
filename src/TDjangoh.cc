@@ -1169,7 +1169,7 @@ void TDjangoh::WriteFSInFile()
 
   for (Int_t i = 0; i<numpart; i++)
   {
-    if (fLujets->K[0][i] == 1)
+    if (fLujets->K[0][i-1] == 1 && fLujets->K[2][i-1] == 0)
     {
       finalState << fLujets->K[0][i-1] << "\t"
                  << fLujets->K[1][i-1] << "\t" //ID

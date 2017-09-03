@@ -125,13 +125,13 @@ int main(int argc,char *argv[])
                      0.775,0.825,0.875,0.925,0.975};
   string hadron_t[2] = {"h^{+}","h^{-}"};
   TCanvas c1("RC_f(z)","RC_f(z)",3200,1600);
-  c1.Divide(4,2);
+  c1.Divide(2,1);
   TCanvas c2("RC_f(pt)","RC_f(pt)",3200,1600);
-  c2.Divide(4,2);
+  c2.Divide(2,1);
   TCanvas c3("RC_f(x)","RC_f(x)",3200,1600);
-  c3.Divide(4,2);
+  c3.Divide(2,1);
   TCanvas c4("RC_f(y)","RC_f(y)",3200,1600);
-  c4.Divide(4,2);
+  c4.Divide(2,1);
 
   TGraphErrors* rcz_g[8];
   TGraphErrors* rcpt_g[8];
@@ -147,24 +147,39 @@ int main(int argc,char *argv[])
   evtotborn = 0;
   E_prime = 0;
 
+  for(int i=0; i<2; i++)
+  {
+    for(int j=0; j<20; j++)
+    {
+      z_t_re[i][j]=0;
+      z_t_be[i][j]=0;
+      pt_t_re[i][j]=0;
+      pt_t_be[i][j]=0;
+      x_t_re[i][j]=0;
+      x_t_be[i][j]=0;
+      y_t_re[i][j]=0;
+      y_t_be[i][j]=0;
+    }
+  }
+
   if(fileFlag == "-f")
   {
     ifstream revt(FileRC);
 
     while(revt >> npart)
     {
-      cout << npart << endl;
+//      cout << npart << endl;
       revt >> E >> xbj >> y >> Q2;
-      cout << E << "\txbj : " << xbj << "\ty : " << y << "\tQ2 : " << Q2 << endl;
-      cout << "Particles list" << endl;
+//      cout << E << "\txbj : " << xbj << "\ty : " << y << "\tQ2 : " << Q2 << endl;
+//      cout << "Particles list" << endl;
       for(int i=0; i<npart; i++)
       {
         revt >> dummy >> id >> dummy >> dummy >> dummy;
-        cout << dummy << "\tid : " << id << "\t" << dummy << "\t" << dummy << "\t" << dummy << "\t";
+//        cout << dummy << "\tid : " << id << "\t" << dummy << "\t" << dummy << "\t" << dummy << "\t";
         revt >> px >> py >> pz >> Eh;
-        cout << px << "\t" << py << "\t" << pz << "\t" << Eh << "\t";
+//        cout << px << "\t" << py << "\t" << pz << "\t" << Eh << "\t";
         revt >> dummy >> dummy >> dummy >> dummy;
-        cout << dummy << "\t" << dummy << "\t" << dummy << "\t" << dummy << endl;
+//        cout << dummy << "\t" << dummy << "\t" << dummy << "\t" << dummy << endl;
 
         if(abs(id)==13) E_prime = Eh;
         if(id!=22 && abs(id)!=13 && id>0)
@@ -358,15 +373,15 @@ int main(int argc,char *argv[])
     while(bevt >> npart)
     {
       bevt >> E >> xbj >> y >> Q2;
-      cout << E << "\txbj : " << xbj << "\ty : " << y << "\tQ2 : " << Q2 << endl;
+//      cout << E << "\txbj : " << xbj << "\ty : " << y << "\tQ2 : " << Q2 << endl;
       for(int i=0; i<npart; i++)
       {
         bevt >> dummy >> id >> dummy >> dummy >> dummy;
-        cout << dummy << "\tid : " << id << "\t" << dummy << "\t" << dummy << "\t" << dummy << "\t";
+//        cout << dummy << "\tid : " << id << "\t" << dummy << "\t" << dummy << "\t" << dummy << "\t";
         bevt >> px >> py >> pz >> Eh;
-        cout << px << "\t" << py << "\t" << pz << "\t" << Eh << "\t";
+//        cout << px << "\t" << py << "\t" << pz << "\t" << Eh << "\t";
         bevt >> dummy >> dummy >> dummy >> dummy;
-        cout << dummy << "\t" << dummy << "\t" << dummy << "\t" << dummy << endl;
+//        cout << dummy << "\t" << dummy << "\t" << dummy << "\t" << dummy << endl;
 
         if(abs(id)==13) E_prime = Eh;
         if(id!=22 && abs(id)!=13 && id>0)
@@ -374,180 +389,180 @@ int main(int argc,char *argv[])
           pt = sqrt(pow(px,2)+pow(py,2));
           z = sqrt(pow(Eh,2)+pow(M_pi,2))/(E-E_prime);
 
-          if(0<z && z<0.05) z_t_re[0][0]++;
-          else if(0.05<z && z<0.10) z_t_re[0][1]++;
-          else if(0.10<z && z<0.15) z_t_re[0][2]++;
-          else if(0.15<z && z<0.20) z_t_re[0][3]++;
-          else if(0.20<z && z<0.25) z_t_re[0][4]++;
-          else if(0.25<z && z<0.30) z_t_re[0][5]++;
-          else if(0.30<z && z<0.35) z_t_re[0][6]++;
-          else if(0.35<z && z<0.40) z_t_re[0][7]++;
-          else if(0.40<z && z<0.45) z_t_re[0][8]++;
-          else if(0.45<z && z<0.50) z_t_re[0][9]++;
-          else if(0.50<z && z<0.55) z_t_re[0][10]++;
-          else if(0.55<z && z<0.60) z_t_re[0][11]++;
-          else if(0.60<z && z<0.65) z_t_re[0][12]++;
-          else if(0.65<z && z<0.70) z_t_re[0][13]++;
-          else if(0.70<z && z<0.75) z_t_re[0][14]++;
-          else if(0.75<z && z<0.80) z_t_re[0][15]++;
-          else if(0.80<z && z<0.85) z_t_re[0][16]++;
-          else if(0.85<z && z<0.90) z_t_re[0][17]++;
-          else if(0.90<z && z<0.95) z_t_re[0][18]++;
-          else z_t_re[0][19]++;
+          if(0<z && z<0.05) z_t_be[0][0]++;
+          else if(0.05<z && z<0.10) z_t_be[0][1]++;
+          else if(0.10<z && z<0.15) z_t_be[0][2]++;
+          else if(0.15<z && z<0.20) z_t_be[0][3]++;
+          else if(0.20<z && z<0.25) z_t_be[0][4]++;
+          else if(0.25<z && z<0.30) z_t_be[0][5]++;
+          else if(0.30<z && z<0.35) z_t_be[0][6]++;
+          else if(0.35<z && z<0.40) z_t_be[0][7]++;
+          else if(0.40<z && z<0.45) z_t_be[0][8]++;
+          else if(0.45<z && z<0.50) z_t_be[0][9]++;
+          else if(0.50<z && z<0.55) z_t_be[0][10]++;
+          else if(0.55<z && z<0.60) z_t_be[0][11]++;
+          else if(0.60<z && z<0.65) z_t_be[0][12]++;
+          else if(0.65<z && z<0.70) z_t_be[0][13]++;
+          else if(0.70<z && z<0.75) z_t_be[0][14]++;
+          else if(0.75<z && z<0.80) z_t_be[0][15]++;
+          else if(0.80<z && z<0.85) z_t_be[0][16]++;
+          else if(0.85<z && z<0.90) z_t_be[0][17]++;
+          else if(0.90<z && z<0.95) z_t_be[0][18]++;
+          else z_t_be[0][19]++;
 
-          if(0.00<pt && pt<0.15) pt_t_re[0][0]++;
-          else if(0.15<pt && pt<0.30) pt_t_re[0][1]++;
-          else if(0.30<pt && pt<0.45) pt_t_re[0][2]++;
-          else if(0.45<pt && pt<0.60) pt_t_re[0][3]++;
-          else if(0.60<pt && pt<0.75) pt_t_re[0][4]++;
-          else if(0.75<pt && pt<0.90) pt_t_re[0][5]++;
-          else if(0.90<pt && pt<1.05) pt_t_re[0][6]++;
-          else if(1.05<pt && pt<1.20) pt_t_re[0][7]++;
-          else if(1.20<pt && pt<1.35) pt_t_re[0][8]++;
-          else if(1.35<pt && pt<1.50) pt_t_re[0][9]++;
-          else if(1.50<pt && pt<1.65) pt_t_re[0][10]++;
-          else if(1.65<pt && pt<1.80) pt_t_re[0][11]++;
-          else if(1.80<pt && pt<1.95) pt_t_re[0][12]++;
-          else if(1.95<pt && pt<2.10) pt_t_re[0][13]++;
-          else if(2.10<pt && pt<2.25) pt_t_re[0][14]++;
-          else if(2.25<pt && pt<2.40) pt_t_re[0][15]++;
-          else if(2.40<pt && pt<2.55) pt_t_re[0][16]++;
-          else if(2.55<pt && pt<2.70) pt_t_re[0][17]++;
-          else if(2.70<pt && pt<2.85) pt_t_re[0][18]++;
-          else if(2.85<pt && pt<3.00) pt_t_re[0][19]++;
+          if(0.00<pt && pt<0.15) pt_t_be[0][0]++;
+          else if(0.15<pt && pt<0.30) pt_t_be[0][1]++;
+          else if(0.30<pt && pt<0.45) pt_t_be[0][2]++;
+          else if(0.45<pt && pt<0.60) pt_t_be[0][3]++;
+          else if(0.60<pt && pt<0.75) pt_t_be[0][4]++;
+          else if(0.75<pt && pt<0.90) pt_t_be[0][5]++;
+          else if(0.90<pt && pt<1.05) pt_t_be[0][6]++;
+          else if(1.05<pt && pt<1.20) pt_t_be[0][7]++;
+          else if(1.20<pt && pt<1.35) pt_t_be[0][8]++;
+          else if(1.35<pt && pt<1.50) pt_t_be[0][9]++;
+          else if(1.50<pt && pt<1.65) pt_t_be[0][10]++;
+          else if(1.65<pt && pt<1.80) pt_t_be[0][11]++;
+          else if(1.80<pt && pt<1.95) pt_t_be[0][12]++;
+          else if(1.95<pt && pt<2.10) pt_t_be[0][13]++;
+          else if(2.10<pt && pt<2.25) pt_t_be[0][14]++;
+          else if(2.25<pt && pt<2.40) pt_t_be[0][15]++;
+          else if(2.40<pt && pt<2.55) pt_t_be[0][16]++;
+          else if(2.55<pt && pt<2.70) pt_t_be[0][17]++;
+          else if(2.70<pt && pt<2.85) pt_t_be[0][18]++;
+          else if(2.85<pt && pt<3.00) pt_t_be[0][19]++;
           if(pt>6) cout << "large pt : " << pt << " > 6.0." << endl;
 
-          if(0<xbj && xbj<0.05) x_t_re[0][0]++;
-          else if(0.05<xbj && xbj<0.10) x_t_re[0][1]++;
-          else if(0.10<xbj && xbj<0.15) x_t_re[0][2]++;
-          else if(0.15<xbj && xbj<0.20) x_t_re[0][3]++;
-          else if(0.20<xbj && xbj<0.25) x_t_re[0][4]++;
-          else if(0.25<xbj && xbj<0.30) x_t_re[0][5]++;
-          else if(0.30<xbj && xbj<0.35) x_t_re[0][6]++;
-          else if(0.35<xbj && xbj<0.40) x_t_re[0][7]++;
-          else if(0.40<xbj && xbj<0.45) x_t_re[0][8]++;
-          else if(0.45<xbj && xbj<0.50) x_t_re[0][9]++;
-          else if(0.50<xbj && xbj<0.55) x_t_re[0][10]++;
-          else if(0.55<xbj && xbj<0.60) x_t_re[0][11]++;
-          else if(0.60<xbj && xbj<0.65) x_t_re[0][12]++;
-          else if(0.65<xbj && xbj<0.70) x_t_re[0][13]++;
-          else if(0.70<xbj && xbj<0.75) x_t_re[0][14]++;
-          else if(0.75<xbj && xbj<0.80) x_t_re[0][15]++;
-          else if(0.80<xbj && xbj<0.85) x_t_re[0][16]++;
-          else if(0.85<xbj && xbj<0.90) x_t_re[0][17]++;
-          else if(0.90<xbj && xbj<0.95) x_t_re[0][18]++;
-          else x_t_re[0][19]++;
+          if(0<xbj && xbj<0.05) x_t_be[0][0]++;
+          else if(0.05<xbj && xbj<0.10) x_t_be[0][1]++;
+          else if(0.10<xbj && xbj<0.15) x_t_be[0][2]++;
+          else if(0.15<xbj && xbj<0.20) x_t_be[0][3]++;
+          else if(0.20<xbj && xbj<0.25) x_t_be[0][4]++;
+          else if(0.25<xbj && xbj<0.30) x_t_be[0][5]++;
+          else if(0.30<xbj && xbj<0.35) x_t_be[0][6]++;
+          else if(0.35<xbj && xbj<0.40) x_t_be[0][7]++;
+          else if(0.40<xbj && xbj<0.45) x_t_be[0][8]++;
+          else if(0.45<xbj && xbj<0.50) x_t_be[0][9]++;
+          else if(0.50<xbj && xbj<0.55) x_t_be[0][10]++;
+          else if(0.55<xbj && xbj<0.60) x_t_be[0][11]++;
+          else if(0.60<xbj && xbj<0.65) x_t_be[0][12]++;
+          else if(0.65<xbj && xbj<0.70) x_t_be[0][13]++;
+          else if(0.70<xbj && xbj<0.75) x_t_be[0][14]++;
+          else if(0.75<xbj && xbj<0.80) x_t_be[0][15]++;
+          else if(0.80<xbj && xbj<0.85) x_t_be[0][16]++;
+          else if(0.85<xbj && xbj<0.90) x_t_be[0][17]++;
+          else if(0.90<xbj && xbj<0.95) x_t_be[0][18]++;
+          else x_t_be[0][19]++;
 
-          if(0<y && y<0.05) y_t_re[0][0]++;
-          else if(0.05<y && y<0.10) y_t_re[0][1]++;
-          else if(0.10<y && y<0.15) y_t_re[0][2]++;
-          else if(0.15<y && y<0.20) y_t_re[0][3]++;
-          else if(0.20<y && y<0.25) y_t_re[0][4]++;
-          else if(0.25<y && y<0.30) y_t_re[0][5]++;
-          else if(0.30<y && y<0.35) y_t_re[0][6]++;
-          else if(0.35<y && y<0.40) y_t_re[0][7]++;
-          else if(0.40<y && y<0.45) y_t_re[0][8]++;
-          else if(0.45<y && y<0.50) y_t_re[0][9]++;
-          else if(0.50<y && y<0.55) y_t_re[0][10]++;
-          else if(0.55<y && y<0.60) y_t_re[0][11]++;
-          else if(0.60<y && y<0.65) y_t_re[0][12]++;
-          else if(0.65<y && y<0.70) y_t_re[0][13]++;
-          else if(0.70<y && y<0.75) y_t_re[0][14]++;
-          else if(0.75<y && y<0.80) y_t_re[0][15]++;
-          else if(0.80<y && y<0.85) y_t_re[0][16]++;
-          else if(0.85<y && y<0.90) y_t_re[0][17]++;
-          else if(0.90<y && y<0.95) y_t_re[0][18]++;
-          else y_t_re[0][19]++;
+          if(0<y && y<0.05) y_t_be[0][0]++;
+          else if(0.05<y && y<0.10) y_t_be[0][1]++;
+          else if(0.10<y && y<0.15) y_t_be[0][2]++;
+          else if(0.15<y && y<0.20) y_t_be[0][3]++;
+          else if(0.20<y && y<0.25) y_t_be[0][4]++;
+          else if(0.25<y && y<0.30) y_t_be[0][5]++;
+          else if(0.30<y && y<0.35) y_t_be[0][6]++;
+          else if(0.35<y && y<0.40) y_t_be[0][7]++;
+          else if(0.40<y && y<0.45) y_t_be[0][8]++;
+          else if(0.45<y && y<0.50) y_t_be[0][9]++;
+          else if(0.50<y && y<0.55) y_t_be[0][10]++;
+          else if(0.55<y && y<0.60) y_t_be[0][11]++;
+          else if(0.60<y && y<0.65) y_t_be[0][12]++;
+          else if(0.65<y && y<0.70) y_t_be[0][13]++;
+          else if(0.70<y && y<0.75) y_t_be[0][14]++;
+          else if(0.75<y && y<0.80) y_t_be[0][15]++;
+          else if(0.80<y && y<0.85) y_t_be[0][16]++;
+          else if(0.85<y && y<0.90) y_t_be[0][17]++;
+          else if(0.90<y && y<0.95) y_t_be[0][18]++;
+          else y_t_be[0][19]++;
         }
         if(id!=22 && abs(id)!=13 && id<0)
         {
           pt = sqrt(pow(px,2)+pow(py,2));
           z = sqrt(pow(Eh,2)+pow(M_pi,2))/(E-E_prime);
 
-          if(0<z && z<0.05) z_t_re[1][0]++;
-          else if(0.05<z && z<0.10) z_t_re[1][1]++;
-          else if(0.10<z && z<0.15) z_t_re[1][2]++;
-          else if(0.15<z && z<0.20) z_t_re[1][3]++;
-          else if(0.20<z && z<0.25) z_t_re[1][4]++;
-          else if(0.25<z && z<0.30) z_t_re[1][5]++;
-          else if(0.30<z && z<0.35) z_t_re[1][6]++;
-          else if(0.35<z && z<0.40) z_t_re[1][7]++;
-          else if(0.40<z && z<0.45) z_t_re[1][8]++;
-          else if(0.45<z && z<0.50) z_t_re[1][9]++;
-          else if(0.50<z && z<0.55) z_t_re[1][10]++;
-          else if(0.55<z && z<0.60) z_t_re[1][11]++;
-          else if(0.60<z && z<0.65) z_t_re[1][12]++;
-          else if(0.65<z && z<0.70) z_t_re[1][13]++;
-          else if(0.70<z && z<0.75) z_t_re[1][14]++;
-          else if(0.75<z && z<0.80) z_t_re[1][15]++;
-          else if(0.80<z && z<0.85) z_t_re[1][16]++;
-          else if(0.85<z && z<0.90) z_t_re[1][17]++;
-          else if(0.90<z && z<0.95) z_t_re[1][18]++;
-          else z_t_re[1][19]++;
+          if(0<z && z<0.05) z_t_be[1][0]++;
+          else if(0.05<z && z<0.10) z_t_be[1][1]++;
+          else if(0.10<z && z<0.15) z_t_be[1][2]++;
+          else if(0.15<z && z<0.20) z_t_be[1][3]++;
+          else if(0.20<z && z<0.25) z_t_be[1][4]++;
+          else if(0.25<z && z<0.30) z_t_be[1][5]++;
+          else if(0.30<z && z<0.35) z_t_be[1][6]++;
+          else if(0.35<z && z<0.40) z_t_be[1][7]++;
+          else if(0.40<z && z<0.45) z_t_be[1][8]++;
+          else if(0.45<z && z<0.50) z_t_be[1][9]++;
+          else if(0.50<z && z<0.55) z_t_be[1][10]++;
+          else if(0.55<z && z<0.60) z_t_be[1][11]++;
+          else if(0.60<z && z<0.65) z_t_be[1][12]++;
+          else if(0.65<z && z<0.70) z_t_be[1][13]++;
+          else if(0.70<z && z<0.75) z_t_be[1][14]++;
+          else if(0.75<z && z<0.80) z_t_be[1][15]++;
+          else if(0.80<z && z<0.85) z_t_be[1][16]++;
+          else if(0.85<z && z<0.90) z_t_be[1][17]++;
+          else if(0.90<z && z<0.95) z_t_be[1][18]++;
+          else z_t_be[1][19]++;
 
-          if(0.00<pt && pt<0.15) pt_t_re[1][0]++;
-          else if(0.15<pt && pt<0.30) pt_t_re[1][1]++;
-          else if(0.30<pt && pt<0.45) pt_t_re[1][2]++;
-          else if(0.45<pt && pt<0.60) pt_t_re[1][3]++;
-          else if(0.60<pt && pt<0.75) pt_t_re[1][4]++;
-          else if(0.75<pt && pt<0.90) pt_t_re[1][5]++;
-          else if(0.90<pt && pt<1.05) pt_t_re[1][6]++;
-          else if(1.05<pt && pt<1.20) pt_t_re[1][7]++;
-          else if(1.20<pt && pt<1.35) pt_t_re[1][8]++;
-          else if(1.35<pt && pt<1.50) pt_t_re[1][9]++;
-          else if(1.50<pt && pt<1.65) pt_t_re[1][10]++;
-          else if(1.65<pt && pt<1.80) pt_t_re[1][11]++;
-          else if(1.80<pt && pt<1.95) pt_t_re[1][12]++;
-          else if(1.95<pt && pt<2.10) pt_t_re[1][13]++;
-          else if(2.10<pt && pt<2.25) pt_t_re[1][14]++;
-          else if(2.25<pt && pt<2.40) pt_t_re[1][15]++;
-          else if(2.40<pt && pt<2.55) pt_t_re[1][16]++;
-          else if(2.55<pt && pt<2.70) pt_t_re[1][17]++;
-          else if(2.70<pt && pt<2.85) pt_t_re[1][18]++;
-          else if(2.85<pt && pt<3.00) pt_t_re[1][19]++;
+          if(0.00<pt && pt<0.15) pt_t_be[1][0]++;
+          else if(0.15<pt && pt<0.30) pt_t_be[1][1]++;
+          else if(0.30<pt && pt<0.45) pt_t_be[1][2]++;
+          else if(0.45<pt && pt<0.60) pt_t_be[1][3]++;
+          else if(0.60<pt && pt<0.75) pt_t_be[1][4]++;
+          else if(0.75<pt && pt<0.90) pt_t_be[1][5]++;
+          else if(0.90<pt && pt<1.05) pt_t_be[1][6]++;
+          else if(1.05<pt && pt<1.20) pt_t_be[1][7]++;
+          else if(1.20<pt && pt<1.35) pt_t_be[1][8]++;
+          else if(1.35<pt && pt<1.50) pt_t_be[1][9]++;
+          else if(1.50<pt && pt<1.65) pt_t_be[1][10]++;
+          else if(1.65<pt && pt<1.80) pt_t_be[1][11]++;
+          else if(1.80<pt && pt<1.95) pt_t_be[1][12]++;
+          else if(1.95<pt && pt<2.10) pt_t_be[1][13]++;
+          else if(2.10<pt && pt<2.25) pt_t_be[1][14]++;
+          else if(2.25<pt && pt<2.40) pt_t_be[1][15]++;
+          else if(2.40<pt && pt<2.55) pt_t_be[1][16]++;
+          else if(2.55<pt && pt<2.70) pt_t_be[1][17]++;
+          else if(2.70<pt && pt<2.85) pt_t_be[1][18]++;
+          else if(2.85<pt && pt<3.00) pt_t_be[1][19]++;
           if(pt>6) cout << "large pt : " << pt << " > 6.0." << endl;
 
-          if(0<xbj && xbj<0.05) x_t_re[1][0]++;
-          else if(0.05<xbj && xbj<0.10) x_t_re[1][1]++;
-          else if(0.10<xbj && xbj<0.15) x_t_re[1][2]++;
-          else if(0.15<xbj && xbj<0.20) x_t_re[1][3]++;
-          else if(0.20<xbj && xbj<0.25) x_t_re[1][4]++;
-          else if(0.25<xbj && xbj<0.30) x_t_re[1][5]++;
-          else if(0.30<xbj && xbj<0.35) x_t_re[1][6]++;
-          else if(0.35<xbj && xbj<0.40) x_t_re[1][7]++;
-          else if(0.40<xbj && xbj<0.45) x_t_re[1][8]++;
-          else if(0.45<xbj && xbj<0.50) x_t_re[1][9]++;
-          else if(0.50<xbj && xbj<0.55) x_t_re[1][10]++;
-          else if(0.55<xbj && xbj<0.60) x_t_re[1][11]++;
-          else if(0.60<xbj && xbj<0.65) x_t_re[1][12]++;
-          else if(0.65<xbj && xbj<0.70) x_t_re[1][13]++;
-          else if(0.70<xbj && xbj<0.75) x_t_re[1][14]++;
-          else if(0.75<xbj && xbj<0.80) x_t_re[1][15]++;
-          else if(0.80<xbj && xbj<0.85) x_t_re[1][16]++;
-          else if(0.85<xbj && xbj<0.90) x_t_re[1][17]++;
-          else if(0.90<xbj && xbj<0.95) x_t_re[1][18]++;
-          else x_t_re[1][19]++;
+          if(0<xbj && xbj<0.05) x_t_be[1][0]++;
+          else if(0.05<xbj && xbj<0.10) x_t_be[1][1]++;
+          else if(0.10<xbj && xbj<0.15) x_t_be[1][2]++;
+          else if(0.15<xbj && xbj<0.20) x_t_be[1][3]++;
+          else if(0.20<xbj && xbj<0.25) x_t_be[1][4]++;
+          else if(0.25<xbj && xbj<0.30) x_t_be[1][5]++;
+          else if(0.30<xbj && xbj<0.35) x_t_be[1][6]++;
+          else if(0.35<xbj && xbj<0.40) x_t_be[1][7]++;
+          else if(0.40<xbj && xbj<0.45) x_t_be[1][8]++;
+          else if(0.45<xbj && xbj<0.50) x_t_be[1][9]++;
+          else if(0.50<xbj && xbj<0.55) x_t_be[1][10]++;
+          else if(0.55<xbj && xbj<0.60) x_t_be[1][11]++;
+          else if(0.60<xbj && xbj<0.65) x_t_be[1][12]++;
+          else if(0.65<xbj && xbj<0.70) x_t_be[1][13]++;
+          else if(0.70<xbj && xbj<0.75) x_t_be[1][14]++;
+          else if(0.75<xbj && xbj<0.80) x_t_be[1][15]++;
+          else if(0.80<xbj && xbj<0.85) x_t_be[1][16]++;
+          else if(0.85<xbj && xbj<0.90) x_t_be[1][17]++;
+          else if(0.90<xbj && xbj<0.95) x_t_be[1][18]++;
+          else x_t_be[1][19]++;
 
-          if(0<y && y<0.05) y_t_re[1][0]++;
-          else if(0.05<y && y<0.10) y_t_re[1][1]++;
-          else if(0.10<y && y<0.15) y_t_re[1][2]++;
-          else if(0.15<y && y<0.20) y_t_re[1][3]++;
-          else if(0.20<y && y<0.25) y_t_re[1][4]++;
-          else if(0.25<y && y<0.30) y_t_re[1][5]++;
-          else if(0.30<y && y<0.35) y_t_re[1][6]++;
-          else if(0.35<y && y<0.40) y_t_re[1][7]++;
-          else if(0.40<y && y<0.45) y_t_re[1][8]++;
-          else if(0.45<y && y<0.50) y_t_re[1][9]++;
-          else if(0.50<y && y<0.55) y_t_re[1][10]++;
-          else if(0.55<y && y<0.60) y_t_re[1][11]++;
-          else if(0.60<y && y<0.65) y_t_re[1][12]++;
-          else if(0.65<y && y<0.70) y_t_re[1][13]++;
-          else if(0.70<y && y<0.75) y_t_re[1][14]++;
-          else if(0.75<y && y<0.80) y_t_re[1][15]++;
-          else if(0.80<y && y<0.85) y_t_re[1][16]++;
-          else if(0.85<y && y<0.90) y_t_re[1][17]++;
-          else if(0.90<y && y<0.95) y_t_re[1][18]++;
-          else y_t_re[1][19]++;
+          if(0<y && y<0.05) y_t_be[1][0]++;
+          else if(0.05<y && y<0.10) y_t_be[1][1]++;
+          else if(0.10<y && y<0.15) y_t_be[1][2]++;
+          else if(0.15<y && y<0.20) y_t_be[1][3]++;
+          else if(0.20<y && y<0.25) y_t_be[1][4]++;
+          else if(0.25<y && y<0.30) y_t_be[1][5]++;
+          else if(0.30<y && y<0.35) y_t_be[1][6]++;
+          else if(0.35<y && y<0.40) y_t_be[1][7]++;
+          else if(0.40<y && y<0.45) y_t_be[1][8]++;
+          else if(0.45<y && y<0.50) y_t_be[1][9]++;
+          else if(0.50<y && y<0.55) y_t_be[1][10]++;
+          else if(0.55<y && y<0.60) y_t_be[1][11]++;
+          else if(0.60<y && y<0.65) y_t_be[1][12]++;
+          else if(0.65<y && y<0.70) y_t_be[1][13]++;
+          else if(0.70<y && y<0.75) y_t_be[1][14]++;
+          else if(0.75<y && y<0.80) y_t_be[1][15]++;
+          else if(0.80<y && y<0.85) y_t_be[1][16]++;
+          else if(0.85<y && y<0.90) y_t_be[1][17]++;
+          else if(0.90<y && y<0.95) y_t_be[1][18]++;
+          else y_t_be[1][19]++;
         }
       }
       evtotborn++;
@@ -558,13 +573,21 @@ int main(int argc,char *argv[])
   {
     for(int j=0; j<20; j++)
     {
+      cout << z_t_re[i][j] << endl;
       sigre_z[i][j] = double(z_t_re[i][j])*double(sigtotre)/double(evtotre);
+      cout << z_t_be[i][j] << endl;
       sigborn_z[i][j] = double(z_t_be[i][j])*double(sigtotborn)/double(evtotborn);
+      cout << pt_t_re[i][j] << endl;
       sigre_pt[i][j] = double(pt_t_re[i][j])*double(sigtotre)/double(evtotre);
+      cout << pt_t_be[i][j] << endl;
       sigborn_pt[i][j] = double(pt_t_be[i][j])*double(sigtotborn)/double(evtotborn);
+      cout << x_t_re[i][j] << endl;
       sigre_x[i][j] = double(x_t_re[i][j])*double(sigtotre)/double(evtotre);
+      cout << x_t_be[i][j] << endl;
       sigborn_x[i][j] = double(x_t_be[i][j])*double(sigtotborn)/double(evtotborn);
+      cout << y_t_re[i][j] << endl;
       sigre_y[i][j] = double(y_t_re[i][j])*double(sigtotre)/double(evtotre);
+      cout << y_t_be[i][j] << endl;
       sigborn_y[i][j] = double(y_t_be[i][j])*double(sigtotborn)/double(evtotborn);
       rcz[i][j] = double(sigre_z[i][j])/double(sigborn_z[i][j]);
       rcze[i][j] = double((z_t_re[i][j] ? 1/sqrt(z_t_re[i][j]) : 0)+(z_t_be[i][j] ? 1/sqrt(z_t_be[i][j]) : 0));
