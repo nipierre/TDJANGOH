@@ -88,11 +88,13 @@ int main(int argc,char *argv[])
                      .08,.1,.15,.2,.3,.4,.5,.6,.7,.8,.9};
   double xmid[20] = {.005,.007,.009,.0115,.0145,.018,.025,.035,.05,
                     .07,.09,.125,.175,.25,.35,.45,.55,.65,.75,.85};
+  double xtabred[10] = {.004,.01,.02,.03,.04,.06,.1,.14,.18,.4};
   double xmidred[9] = {.007,.015,.025,.035,.05,.08,.12,.16,.29};
   double ytab[17] = {.1,.15,.2,.25,.3,.35,.4,.45,.5,.55,.6,
                     .65,.7,.75,.8,.85,.9};
   double ymid[16] = {.125,.175,.225,.275,.325,.375,.425,.475,
                      .525,.575,.625,.675,.725,.775,.825,.875};
+  double ytabred[6] = {.1,.15,.2,.3,.5,.7};
   double ymidred[5] = {.125,.175,.25,.4,.6};
   double xtable[30] = {.000050,.000070,.000100,.000200,.000300,.000500,
                        .000700,.001000,.002000,.004000,.006000,.008000,
@@ -125,6 +127,8 @@ int main(int argc,char *argv[])
   double rcy_eb[21][17];
   double rc_table[19][30];
   double rc_table_y[30][19];
+  double rc_tablered[18][29];
+  double rc_tablered_y[29][18];
   double born_ratio[19][30];
   int re[16][20];
   int born[16][20];
@@ -556,6 +560,16 @@ int main(int argc,char *argv[])
       }
     }
     table.close();
+
+    for(int i=0; i<18; i++)
+    {
+      for(int j=0; j<29; j++)
+      {
+        rc_tablered[i][j] = (rc_table[i][j]+rc_table[i+1][j])/2;
+        rc_tablered_y[j][i] = (rc_table_y[j][i]+rc_table_y[j+1][i])/2;
+      }
+    }
+
     ifstream sircf(TempFile);
     for(int i=0; i<9; i++)
     {
@@ -584,10 +598,8 @@ int main(int argc,char *argv[])
 
     TGraph* six_g[5];
     TGraph* siy_g[9];
-    TGraph* sixtu_g[5];
-    TGraph* sixtd_g[5];
-    TGraph* siytu_g[9];
-    TGraph* siytd_g[9];
+    TGraph* sixt_g[5];
+    TGraph* siyt_g[9];
 
     for(int i=0; i<5; i++)
     {
@@ -599,22 +611,18 @@ int main(int argc,char *argv[])
       six_g[i]->SetFillStyle(3001);
       six_g[i]->SetMinimum(.8);
       six_g[i]->SetMaximum(1.);
+      six_g[i]->SetTitle(Form("RC @ %f < y < %f",ytabred[i],ytabred[i+1]));
+      six_g[i]->GetXaxis()->SetTitle("x_{Bj}");
+      six_g[i]->GetYaxis()->SetTitle("#eta(x_{Bj})");
       c11.cd(i+1);
       six_g[i]->Draw("SAMEAP");
       c11.Update();
-      sixtu_g[i] = new TGraph(30,xtable,rc_table[ysw[i+1]]);
-      sixtu_g[i]->SetLineColor(2);
-      sixtu_g[i]->SetFillColor(601);
-      sixtu_g[i]->SetFillStyle(3001);
+      sixt_g[i] = new TGraph(30,xtable,rc_tablered[ysw[i]]);
+      sixt_g[i]->SetLineColor(3);
+      sixt_g[i]->SetFillColor(601);
+      sixt_g[i]->SetFillStyle(3001);
       c11.cd(i+1);
-      sixtu_g[i]->Draw("SAMEL");
-      c11.Update();
-      sixtd_g[i] = new TGraph(30,xtable,rc_table[ysw[i]]);
-      sixtd_g[i]->SetLineColor(3);
-      sixtd_g[i]->SetFillColor(601);
-      sixtd_g[i]->SetFillStyle(3001);
-      c11.cd(i+1);
-      sixtd_g[i]->Draw("SAMEL");
+      sixt_g[i]->Draw("SAMEL");
       c11.Update();
     }
 
@@ -628,22 +636,17 @@ int main(int argc,char *argv[])
       siy_g[i]->SetFillStyle(3001);
       siy_g[i]->SetMinimum(.8);
       siy_g[i]->SetMaximum(1.);
+      siy_g[i]->GetXaxis()->SetTitle("y");
+      siy_g[i]->SetTitle(Form("RC @ %f < x < %f",xtabred[i],xtabred[i+1]));
       c12.cd(i+1);
       siy_g[i]->Draw("SAMEAP");
       c12.Update();
-      siytu_g[i] = new TGraph(19,ytable,rc_table_y[xsw[i+1]]);
-      siytu_g[i]->SetLineColor(2);
-      siytu_g[i]->SetFillColor(601);
-      siytu_g[i]->SetFillStyle(3001);
+      siyt_g[i] = new TGraph(19,ytable,rc_tablered_y[xsw[i]]);
+      siyt_g[i]->SetLineColor(3);
+      siyt_g[i]->SetFillColor(601);
+      siyt_g[i]->SetFillStyle(3001);
       c12.cd(i+1);
-      siytu_g[i]->Draw("SAMEL");
-      c12.Update();
-      siytd_g[i] = new TGraph(19,ytable,rc_table_y[xsw[i]]);
-      siytd_g[i]->SetLineColor(3);
-      siytd_g[i]->SetFillColor(601);
-      siytd_g[i]->SetFillStyle(3001);
-      c12.cd(i+1);
-      siytd_g[i]->Draw("SAMEL");
+      siyt_g[i]->Draw("SAMEL");
       c12.Update();
     }
 
