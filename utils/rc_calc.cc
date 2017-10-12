@@ -32,6 +32,8 @@
 #define BRy_pdf "BRy.pdf"
 #define BRy_scat_pdf "BRy_scat.pdf"
 #define TERy_pdf "TERy.pdf"
+#define SIx_pdf "SIx.pdf"
+#define SIy_pdf "SIy.pdf"
 #define OUTFILE "rc.txt"
 
 // COLORS
@@ -86,10 +88,12 @@ int main(int argc,char *argv[])
                      .08,.1,.15,.2,.3,.4,.5,.6,.7,.8,.9};
   double xmid[20] = {.005,.007,.009,.0115,.0145,.018,.025,.035,.05,
                     .07,.09,.125,.175,.25,.35,.45,.55,.65,.75,.85};
+  double xmidred[9] = {.007,.015,.025,.035,.05,.08,.12,.16,.29};
   double ytab[17] = {.1,.15,.2,.25,.3,.35,.4,.45,.5,.55,.6,
                     .65,.7,.75,.8,.85,.9};
   double ymid[16] = {.125,.175,.225,.275,.325,.375,.425,.475,
                      .525,.575,.625,.675,.725,.775,.825,.875};
+  double ymidred[5] = {.125,.175,.25,.4,.6};
   double xtable[30] = {.000050,.000070,.000100,.000200,.000300,.000500,
                        .000700,.001000,.002000,.004000,.006000,.008000,
                        .010000,.013000,.016000,.020000,.030000,.040000,
@@ -99,6 +103,9 @@ int main(int argc,char *argv[])
                        .350000,.400000,.450000,.500000,.550000,.600000,
                        .650000,.700000,.750000,.800000,.850000,.900000,
                        .950000};
+  int xsw[10] = {9,12,15,16,17,18,20,21,22,24};
+  int ysw[6] = {1,2,3,5,9,13};
+  double z_size[14] = {.2,.05,.05,.05,.05,.05,.05,.05,.05,.05,.05,.05,.1,.15};
 
   double rcx[16][20];
   double rcxb[17][21];
@@ -137,6 +144,9 @@ int main(int argc,char *argv[])
   double sigbornb[17][21];
   double br[17][21];
   double br_y[21][17];
+  double sirc[5][9];
+  double sircy[9][5];
+  double sircz, ztotsize;
 
   int qel=0;
   string TempFile, FileRC, FileBorn, fileFlag;
@@ -160,28 +170,33 @@ int main(int argc,char *argv[])
     }
     if (i+1 < argc)
     {
-      if (string(argv[i]) == "-l" && fileFlag != "-f" && fileFlag != "-sigf" && string(argv[i]) != "-bornratio")
+      if (string(argv[i]) == "-l" && fileFlag != "-f" && fileFlag != "-sigf" && string(argv[i]) != "-bornratio" && fileFlag != "-sirc")
       {
         TempFile = argv[i + 1];
         fileFlag = "-l";
         XRANGE=20; YRANGE=16;
       }
-      if (string(argv[i]) == "-bornratio" && fileFlag != "-f" && fileFlag != "-sigf" && fileFlag != "-l")
+      if (string(argv[i]) == "-bornratio" && fileFlag != "-f" && fileFlag != "-sigf" && fileFlag != "-l" && fileFlag != "-sirc")
       {
         FileBorn = argv[i + 1];
         fileFlag = "-bornratio";
       }
+      if (string(argv[i]) == "-sirc" && fileFlag != "-f" && fileFlag != "-sigf" && fileFlag != "-l" && fileFlag != "-sirc")
+      {
+        TempFile = argv[i + 1];
+        fileFlag = "-sirc";
+      }
     }
     if(i+2 < argc)
     {
-      if (string(argv[i]) == "-f" && fileFlag != "-l" && fileFlag != "-sigf" && string(argv[i]) != "-bornratio")
+      if (string(argv[i]) == "-f" && fileFlag != "-l" && fileFlag != "-sigf" && string(argv[i]) != "-bornratio" && fileFlag != "-sirc")
       {
         FileRC = argv[i+1];
         FileBorn = argv[i+2];
         fileFlag = "-f";
         XRANGE=20; YRANGE=16;
       }
-      if (string(argv[i]) == "-sigf" && fileFlag != "-l" && fileFlag != "-f" && string(argv[i]) != "-bornratio")
+      if (string(argv[i]) == "-sigf" && fileFlag != "-l" && fileFlag != "-f" && string(argv[i]) != "-bornratio" && fileFlag != "-sirc")
       {
         FileRC = argv[i+1];
         FileBorn = argv[i+2];
@@ -191,7 +206,7 @@ int main(int argc,char *argv[])
     }
   }
 
-  if(fileFlag != "-l" && fileFlag != "-f" && fileFlag != "-sigf" && fileFlag != "-bornratio")
+  if(fileFlag != "-l" && fileFlag != "-f" && fileFlag != "-sigf" && fileFlag != "-bornratio" && fileFlag != "-sirc")
   {
     cout << BOLD(FRED("ERROR : expected some flags")) << endl;
     cout << BOLD(FRED("Expected -f or -l for input files !")) << endl;
@@ -519,6 +534,124 @@ int main(int argc,char *argv[])
     bevt.close();
   }
 
+  if(fileFlag == "-sirc")
+  {
+    ifstream table("data/hh160_r1998_f2tulay_compass_grv_had.asy_hcorr.txt");
+    for(int i=0; i<19; i++)
+    {
+      for(int j=0; j<5; j++)
+      {
+        table >> sdum;
+         cout << sdum << "\t";
+
+        for(int k=0; k<6; k++)
+        {
+          table >> rc_table[i][k+j*6] >> sdum;
+          cout << " " << rc_table[i][k+j*6] << sdum;
+          rc_table[i][k+j*6] = 1/rc_table[i][k+j*6];
+          rc_table_y[k+j*6][i]=rc_table[i][k+j*6];
+        }
+
+        cout << endl;
+      }
+    }
+    table.close();
+    ifstream sircf(TempFile);
+    for(int i=0; i<9; i++)
+    {
+      for(int j=0; j<5; j++)
+      {
+        ztotsize = 0;
+        for(int k=0; k<14; k++)
+        {
+          for(int l=0; l<7; l++) sircf >> dummy;
+          sircf >> sircz >> dummy;
+          cout << sircz << " ";
+          sircy[i][j] += sircz*z_size[k];
+          if(sircz) ztotsize += z_size[k];
+        }
+        cout << endl;
+        if(ztotsize) sircy[i][j] /= ztotsize;
+        sirc[j][i] = sircy[i][j];
+      }
+    }
+    sircf.close();
+
+    TCanvas c11("SI_RC_xy_f(x)","SI_RC_xy_f(x)",3200,1600);
+    TCanvas c12("SI_RC_xy_f(y)","SI_RC_xy_f(y)",3200,1600);
+    c11.Divide(3,2);
+    c12.Divide(3,3);
+
+    TGraph* six_g[5];
+    TGraph* siy_g[9];
+    TGraph* sixtu_g[5];
+    TGraph* sixtd_g[5];
+    TGraph* siytu_g[9];
+    TGraph* siytd_g[9];
+
+    for(int i=0; i<5; i++)
+    {
+      six_g[i] = new TGraph(9,xmidred,sirc[i]);
+      six_g[i]->SetMarkerStyle(22);
+      six_g[i]->SetMarkerColor(601);
+      six_g[i]->SetMarkerSize(3);
+      six_g[i]->SetFillColor(601);
+      six_g[i]->SetFillStyle(3001);
+      six_g[i]->SetMinimum(.8);
+      six_g[i]->SetMaximum(1.);
+      c11.cd(i+1);
+      six_g[i]->Draw("SAMEAP");
+      c11.Update();
+      sixtu_g[i] = new TGraph(30,xtable,rc_table[ysw[i+1]]);
+      sixtu_g[i]->SetLineColor(2);
+      sixtu_g[i]->SetFillColor(601);
+      sixtu_g[i]->SetFillStyle(3001);
+      c11.cd(i+1);
+      sixtu_g[i]->Draw("SAMEL");
+      c11.Update();
+      sixtd_g[i] = new TGraph(30,xtable,rc_table[ysw[i]]);
+      sixtd_g[i]->SetLineColor(3);
+      sixtd_g[i]->SetFillColor(601);
+      sixtd_g[i]->SetFillStyle(3001);
+      c11.cd(i+1);
+      sixtd_g[i]->Draw("SAMEL");
+      c11.Update();
+    }
+
+    for(int i=0; i<9; i++)
+    {
+      siy_g[i] = new TGraph(5,ymidred,sircy[i]);
+      siy_g[i]->SetMarkerStyle(22);
+      siy_g[i]->SetMarkerColor(601);
+      siy_g[i]->SetMarkerSize(3);
+      siy_g[i]->SetFillColor(601);
+      siy_g[i]->SetFillStyle(3001);
+      siy_g[i]->SetMinimum(.8);
+      siy_g[i]->SetMaximum(1.);
+      c12.cd(i+1);
+      siy_g[i]->Draw("SAMEAP");
+      c12.Update();
+      siytu_g[i] = new TGraph(19,ytable,rc_table_y[xsw[i+1]]);
+      siytu_g[i]->SetLineColor(2);
+      siytu_g[i]->SetFillColor(601);
+      siytu_g[i]->SetFillStyle(3001);
+      c12.cd(i+1);
+      siytu_g[i]->Draw("SAMEL");
+      c12.Update();
+      siytd_g[i] = new TGraph(19,ytable,rc_table_y[xsw[i]]);
+      siytd_g[i]->SetLineColor(3);
+      siytd_g[i]->SetFillColor(601);
+      siytd_g[i]->SetFillStyle(3001);
+      c12.cd(i+1);
+      siytd_g[i]->Draw("SAMEL");
+      c12.Update();
+    }
+
+    c11.Print(SIx_pdf);
+    c12.Print(SIy_pdf);
+
+    return 0;
+  }
   if(fileFlag == "-bornratio")
   {
     ifstream table("data/hh160_r1998_f2tulay_compass_grv.new_table.txt");
@@ -590,7 +723,7 @@ int main(int argc,char *argv[])
       // bry_g[i]->GetXaxis()->SetTitle("y");
       // bry_g[i]->GetYaxis()->SetTitle("BR[BORN_DJANGOH/BORN_TERAD]");
       bg_y->Add(bry_g[i],"AP");
-    
+
       if(i%2==0 && i<17)
       {
         c9.cd(i/2+1);
@@ -608,7 +741,7 @@ int main(int argc,char *argv[])
 
     c8.cd(1);
     bg_y->SetTitle(Form("BR[BORN_DJANGOH/BORN_TERAD] @ x = %g",xtab[0]));
-    
+
     bg_y->Draw("AP");
     bg_y->GetXaxis()->SetTitle("y");
     bg_y->GetYaxis()->SetTitle("(Born_{DJANGOH}/Born_{TERAD})");
