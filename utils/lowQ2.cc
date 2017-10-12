@@ -35,7 +35,7 @@ int main()
 	ifstream f2c("F2_cteq.dat");
 
         while(f2c >> cCx && i<5000)
-        {	
+        {
                 f2c >> cCQ2 >> cCF2;
 //		cout << cCx << " " << cCQ2 << " " << cCF2 << endl;
                 if(cCQ2<0.2)
@@ -55,7 +55,7 @@ int main()
 
 	TCanvas c1("c1","c1",0,0,3200,1600);
 	c1.Divide(2,1);
-	TCanvas c2("c2","c2",0,0,3200,1600);       
+	TCanvas c2("c2","c2",0,0,3200,1600);
 	c2.Divide(1,1);
 	TCanvas c3("c3","c3",0,0,3200,1600);
 	c3.Divide(1,1);
@@ -65,7 +65,7 @@ int main()
 	terad->GetXaxis()->SetTitle("x");
 	terad->GetYaxis()->SetRangeUser(0,0.2);
 	terad->GetYaxis()->SetTitle("Q2");
-	
+
 	c2.cd(1);
         terad->Draw("TRI1");
         c2.Update();
@@ -77,7 +77,7 @@ int main()
 	TGraph2D *cteq  = new TGraph2D("CTEQ","CTEQ",int(Cx.size()),&(Cx[0]),&(CQ2[0]),&(CF2[0]));
 	cteq->GetXaxis()->SetRangeUser(0,0.16);
 	cteq->GetXaxis()->SetTitle("x");
-        cteq->GetYaxis()->SetRangeUser(0,0.2);
+  cteq->GetYaxis()->SetRangeUser(0,0.2);
 	cteq->GetYaxis()->SetTitle("Q2");
 
 	c3.cd(1);
