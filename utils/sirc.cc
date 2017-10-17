@@ -1396,10 +1396,10 @@ int main(int argc,char *argv[])
           if(fBornMult[i][j][k].tab[c][0][3]<0) fBornMult[i][j][k].tab[c][0][3]=0;
 
 
-          fMult[i][j][k].tab[c][0][0] = ((fReMult[i][j][k].tab[c][0][0] && fBornMult[i][j][k].tab[c][0][0]) ? (fReMult[i][j][k].tab[c][0][0]/fBornMult[i][j][k].tab[c][0][0]) : 0);
-          fMult[i][j][k].tab[c][0][1] = ((fReMult[i][j][k].tab[c][0][1] && fBornMult[i][j][k].tab[c][0][1]) ? (fReMult[i][j][k].tab[c][0][1]/fBornMult[i][j][k].tab[c][0][1]) : 0);
-          fMult[i][j][k].tab[c][0][2] = ((fReMult[i][j][k].tab[c][0][2] && fBornMult[i][j][k].tab[c][0][2]) ? (fReMult[i][j][k].tab[c][0][2]/fBornMult[i][j][k].tab[c][0][2]) : 0);
-          fMult[i][j][k].tab[c][0][3] = ((fReMult[i][j][k].tab[c][0][3] && fBornMult[i][j][k].tab[c][0][3]) ? (fReMult[i][j][k].tab[c][0][3]/fBornMult[i][j][k].tab[c][0][3]) : 0);
+          fMult[i][j][k].tab[c][0][0] = ((fReMult[i][j][k].tab[c][0][0] && fBornMult[i][j][k].tab[c][0][0]) ? (fBornMult[i][j][k].tab[c][0][0]/fReMult[i][j][k].tab[c][0][0]) : 0);
+          fMult[i][j][k].tab[c][0][1] = ((fReMult[i][j][k].tab[c][0][1] && fBornMult[i][j][k].tab[c][0][1]) ? (fBornMult[i][j][k].tab[c][0][1]/fReMult[i][j][k].tab[c][0][1]) : 0);
+          fMult[i][j][k].tab[c][0][2] = ((fReMult[i][j][k].tab[c][0][2] && fBornMult[i][j][k].tab[c][0][2]) ? (fBornMult[i][j][k].tab[c][0][2]/fReMult[i][j][k].tab[c][0][2]) : 0);
+          fMult[i][j][k].tab[c][0][3] = ((fReMult[i][j][k].tab[c][0][3] && fBornMult[i][j][k].tab[c][0][3]) ? (fBornMult[i][j][k].tab[c][0][3]/fReMult[i][j][k].tab[c][0][3]) : 0);
 
 
           if(fReMult[i][j][k].tab[c][0][0]==0) fReMult[i][j][k].tab[c][1][0]=0;
@@ -1522,10 +1522,10 @@ int main(int argc,char *argv[])
           if(fBornptMult[i][j][k].tab[c][0][2]<0) fBornptMult[i][j][k].tab[c][0][2]=0;
           if(fBornptMult[i][j][k].tab[c][0][3]<0) fBornptMult[i][j][k].tab[c][0][3]=0;
 
-          fPtMult[i][j][k].tab[c][0][0] = ((fReptMult[i][j][k].tab[c][0][0] && fBornptMult[i][j][k].tab[c][0][0]) ? (fReptMult[i][j][k].tab[c][0][0]/fBornptMult[i][j][k].tab[c][0][0])+j*0.1 : 0);
-          fPtMult[i][j][k].tab[c][0][1] = ((fReptMult[i][j][k].tab[c][0][1] && fBornptMult[i][j][k].tab[c][0][1]) ? (fReptMult[i][j][k].tab[c][0][1]/fBornptMult[i][j][k].tab[c][0][1])+j*0.1 : 0);
-          fPtMult[i][j][k].tab[c][0][2] = ((fReptMult[i][j][k].tab[c][0][2] && fBornptMult[i][j][k].tab[c][0][2]) ? (fReptMult[i][j][k].tab[c][0][2]/fBornptMult[i][j][k].tab[c][0][2])+j*0.1 : 0);
-          fPtMult[i][j][k].tab[c][0][3] = ((fReptMult[i][j][k].tab[c][0][3] && fBornptMult[i][j][k].tab[c][0][3]) ? (fReptMult[i][j][k].tab[c][0][3]/fBornptMult[i][j][k].tab[c][0][3])+j*0.1 : 0);
+          fPtMult[i][j][k].tab[c][0][0] = ((fReptMult[i][j][k].tab[c][0][0] && fBornptMult[i][j][k].tab[c][0][0]) ? (fBornptMult[i][j][k].tab[c][0][0]/fReptMult[i][j][k].tab[c][0][0])+j*0.1 : 0);
+          fPtMult[i][j][k].tab[c][0][1] = ((fReptMult[i][j][k].tab[c][0][1] && fBornptMult[i][j][k].tab[c][0][1]) ? (fBornptMult[i][j][k].tab[c][0][1]/fReptMult[i][j][k].tab[c][0][1])+j*0.1 : 0);
+          fPtMult[i][j][k].tab[c][0][2] = ((fReptMult[i][j][k].tab[c][0][2] && fBornptMult[i][j][k].tab[c][0][2]) ? (fBornptMult[i][j][k].tab[c][0][2]/fReptMult[i][j][k].tab[c][0][2])+j*0.1 : 0);
+          fPtMult[i][j][k].tab[c][0][3] = ((fReptMult[i][j][k].tab[c][0][3] && fBornptMult[i][j][k].tab[c][0][3]) ? (fBornptMult[i][j][k].tab[c][0][3]/fReptMult[i][j][k].tab[c][0][3])+j*0.1 : 0);
 
           if(fReptMult[i][j][k].tab[c][0][0]==0) fReptMult[i][j][k].tab[c][1][0]=0;
           else fReptMult[i][j][k].tab[c][1][0] = sqrt(pow(1/sqrt(fRept[i][j][k].tab[c][0][0]),2)+pow(1/sqrt(max_el),2));
