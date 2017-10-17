@@ -14807,7 +14807,8 @@ c-- Only for proton target
 
       SUBROUTINE TERAD(X,Q2,ZF1,ZF2)
       IMPLICIT DOUBLE PRECISION (A-H,M,O-Z)
-      COMMON /TERADINI/ IFRSTM
+      COMMON /SFINI/ IFRSTM
+      SAVE /SFINI/
       ZF1=0D0
       ZF2=0D0
 
@@ -14816,22 +14817,19 @@ C     One time initialization w/ IFRSTM flag
         WRITE(6,*) 'INITIALISATION TERAD PARAMETRISATION'
         call rfitpar
         call inijkb
-        x=	0.000070
-        Q2=	0.0011
-        call getjkb(X,Q2,ZF2)
-        WRITE(6,*) X, Q2, ZF2
-        x=	0.000070
-        Q2=	0.0147
-        call getjkb(X,Q2,ZF2)
-        WRITE(6,*) X, Q2, ZF2
-        x=	0.000500
-        Q2=	0.1351
-        call getjkb(X,Q2,ZF2)
-        WRITE(6,*) X, Q2, ZF2
-        x=	0.010000
-        Q2=	0.1501
-        call getjkb(X,Q2,ZF2)
-        WRITE(6,*) X, Q2, ZF2
+C        DO 1222 DXR=0.004,0.4,0.002
+C          DO 1223 DQ2R=0.01,20,0.01
+C            X=DXR
+C            Q2=DQ2R
+C            if (Q2 .lt. 0.2d0) then
+C              call getjkb(X,Q2,ZF2)
+C            else
+C              call df2p15(X,Q2,ZF2)
+C            endif
+C            ZF1 = ((1+(0.938272*0.938272)*4*X*X/Q2)*ZF2)/(2*X*(1+DR))
+C            WRITE(33,*) X, Q2, ZF1, ZF2
+C 1223     CONTINUE
+C 1222   CONTINUE
         IFRSTM=1
       ENDIF
 
@@ -16215,6 +16213,8 @@ C
 C...HSRADF USED IN SUBROUTINE STRFBS (CALL TO STEIN OR BRASSE)
       COMMON /HSRADC/ AMP , AMP2,RPI ,RPI2 , ALFA, AML , AML2
       COMMON /HSRADF/ AP,AP2,AP4,AL2,AL4,ALPS,CALPI,W2PIT,W2TR,TTR
+      COMMON /SFINI/ IFRSTM
+      SAVE /SFINI/
       DIMENSION DSBOS(2)
       LOGICAL LFIRST
       DATA LFIRST/.TRUE./
@@ -16435,6 +16435,41 @@ C---polarized
      &                   /4D0*DSBOS(IB1)*DSBOS(IB2) /2D0
          G4(IB1,IB2) = 2D0*X*G3(IB1,IB2)
  10   CONTINUE
+C      IF (IFRSTM.NE.1) THEN
+C        DO 1222 DXR=0.004,0.4,0.002
+C          DO 1223 DQ2R=0.01,20,0.01
+C            X=DXR
+C            Q2=DQ2R
+C            CALL HSPVER(X,Q2)
+C            IF (INT(HNA).EQ.1.AND.INT(HNZ).EQ.1) THEN
+C---PROTON TARGET
+C---unpolarized
+C             QUT=QU+QC+QT
+C             QDT=QD+QS+QB
+C             QUBT=QBU+QBC+QBT
+C             QDBT=QBD+QBS+QBB
+C---polarized
+C             DQUT=DQU+DQC+DQT
+C             DQDT=DQD+DQS+DQB
+C             DQUBT=DQBU+DQBC+DQBT
+C             DQDBT=DQBD+DQBS+DQBB
+C            ENDIF
+C            DO 11 IB1=1,2
+C              DO 11 IB2=1,2
+C---unpolarized
+C                F1(IB1,IB2) = (AFIJ(2,IB1,IB2)*(QUT+QUBT)
+C     &                  +AFIJ(3,IB1,IB2)*(QDT+QDBT))
+C     &                  /4D0*DSBOS(IB1)*DSBOS(IB2)  /2D0
+C                F2(IB1,IB2) = 2D0*X*F1(IB1,IB2)
+C                F3(IB1,IB2) = (BFIJ(2,IB1,IB2)*(QUT-QUBT)
+C     &                    +BFIJ(3,IB1,IB2)*(QDT-QDBT))
+C     &                     /4D0*DSBOS(IB1)*DSBOS(IB2)
+C 11         CONTINUE
+C          WRITE(33,*) X, Q2, F1(1,1), F2(1,1)
+C 1223     CONTINUE
+C 1222   CONTINUE
+C        IFRSTM=1
+C      ENDIF
 
 C---INCLUDE LONGITUDINAL STRUCTURE FUNCTION
  2000 CONTINUE
