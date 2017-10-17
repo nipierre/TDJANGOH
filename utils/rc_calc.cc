@@ -609,8 +609,8 @@ int main(int argc,char *argv[])
       six_g[i]->SetMarkerSize(3);
       six_g[i]->SetFillColor(601);
       six_g[i]->SetFillStyle(3001);
-      six_g[i]->SetMinimum(.8);
-      six_g[i]->SetMaximum(1.);
+      six_g[i]->SetMinimum(.95);
+      six_g[i]->SetMaximum(1.15);
       six_g[i]->SetTitle(Form("RC @ %f < y < %f",ytabred[i],ytabred[i+1]));
       six_g[i]->GetXaxis()->SetTitle("x_{Bj}");
       six_g[i]->GetYaxis()->SetTitle("#eta(x_{Bj})");
@@ -634,8 +634,8 @@ int main(int argc,char *argv[])
       siy_g[i]->SetMarkerSize(3);
       siy_g[i]->SetFillColor(601);
       siy_g[i]->SetFillStyle(3001);
-      siy_g[i]->SetMinimum(.8);
-      siy_g[i]->SetMaximum(1.);
+      siy_g[i]->SetMinimum(.95);
+      siy_g[i]->SetMaximum(1.15);
       siy_g[i]->GetXaxis()->SetTitle("y");
       siy_g[i]->SetTitle(Form("RC @ %f < x < %f",xtabred[i],xtabred[i+1]));
       c12.cd(i+1);
@@ -690,7 +690,7 @@ int main(int argc,char *argv[])
       for(int i=0; i<21; i++)
       {
         br[j][i] = sigbornb[j][i]/(born_ratio[j+1][i+9]);
-	br[j][i] /= norm;
+	      br[j][i] /= norm;
         // cout << "j=" << j << ", i=" << i << "  br[j][i] : " << br[j][i] << "  sigbornb[j][i] : " << sigbornb[j][i] << "  born_ratio[j+1][i+9] : " << born_ratio[j+1][i+9] << endl;
       }
 
@@ -771,7 +771,7 @@ int main(int argc,char *argv[])
         {
           table >> rc_table[i][k+j*6] >> sdum;
           // cout << " " << rc_table[i][k+j*6] << sdum;
-          // rc_table[i][k+j*6] = 1/rc_table[i][k+j*6];
+          rc_table[i][k+j*6] = 1/rc_table[i][k+j*6];
           rc_table_y[k+j*6][i]=rc_table[i][k+j*6];
         }
 
@@ -793,7 +793,7 @@ int main(int argc,char *argv[])
         for(int k=0; k<6; k++)
         {
           table >> rc_table[i][k+j*6] >> sdum;
-          //rc_table[i][k+j*6] = 1/rc_table[i][k+j*6];
+          rc_table[i][k+j*6] = 1/rc_table[i][k+j*6];
           cout << "(" << xtable[k+j*6] << "," << ytable[i] << ") : " << rc_table[i][k+j*6] << endl;
           rc_table_y[k+j*6][i]=rc_table[i][k+j*6];
         }
@@ -853,7 +853,7 @@ int main(int argc,char *argv[])
             sigre[i][j] = double(re[i][j])*double(sigtotre_t[j])/double(evtotre_t[j]);
             sigborn[i][j] = double(born[i][j])*double(sigtotborn_t[j])/double(evtotborn_t[j]);
           }
-          rcx[i][j] = double(sigre[i][j])/double(sigborn[i][j]);
+          rcx[i][j] = double(sigborn[i][j])/double(sigre[i][j]);
           rcx_e[i][j] = double(1/sqrt(born[i][j]))+double(1/sqrt(re[i][j]));
           erx[i][j] = (rcx[i][j]-(rc_table[1+i][9+j]
                                   +rc_table[1+i+1][9+j+1]
@@ -871,7 +871,7 @@ int main(int argc,char *argv[])
         }
         else if(fileFlag == "-sigf")
         {
-          rcxb[i][j] = double(sigreb[i][j])/double(sigbornb[i][j]);
+          rcxb[i][j] = double(sigbornb[i][j])/double(sigreb[i][j]);
           //rcxb[i][j] = 1/rcxb[i][j];
           rcx_eb[i][j] = double(erborn[i][j])+double(erre[i][j]);
           erxb[i][j] = rcxb[i][j]-rc_table[1+i][9+j];
@@ -922,7 +922,7 @@ int main(int argc,char *argv[])
     rcx_g[i]->SetMarkerStyle(22);
     rcx_g[i]->SetMarkerColor(601);
     rcx_g[i]->SetMarkerSize(3);
-    rcx_g[i]->GetYaxis()->SetRangeUser(0.8,1.5);
+    rcx_g[i]->GetYaxis()->SetRangeUser(0.6,1.2);
     rcx_g[i]->SetFillColor(601);
     rcx_g[i]->SetFillStyle(3001);
     rcx_g[i]->Draw("A3");
@@ -988,18 +988,14 @@ int main(int argc,char *argv[])
       {
         if(fileFlag == "-f" || fileFlag == "-l")
         {
-          rcy[i][j] = double(sigre[j][i])/double(sigborn[j][i]);
-          rcy_e[i][j] = double(1/sqrt(born[j][i]))+double(1/sqrt(re[j][i]));
-          ery[i][j] = erx[j][i];
-          errey[i][j] = errex[j][i];
-          rcy[i][j] = double(sigre[j][i])/double(sigborn[j][i]);
+          rcy[i][j] = double(sigborn[j][i])/double(sigre[j][i]);
           rcy_e[i][j] = double(1/sqrt(born[j][i]))+double(1/sqrt(re[j][i]));
           ery[i][j] = erx[j][i];
           errey[i][j] = errex[j][i];
         }
         else if(fileFlag == "-sigf")
         {
-          rcyb[i][j] = double(sigreb[j][i])/double(sigbornb[j][i]);
+          rcyb[i][j] = double(sigbornb[j][i])/double(sigreb[j][i]);
           //rcyb[i][j] = 1/rcyb[i][j];
           rcy_eb[i][j] = double(erborn[i][j])+double(erre[i][j]);
           eryb[i][j] = erxb[j][i];
@@ -1046,7 +1042,7 @@ int main(int argc,char *argv[])
     rcy_g[i]->SetMarkerStyle(22);
     rcy_g[i]->SetMarkerColor(601);
     rcy_g[i]->SetMarkerSize(3);
-    rcy_g[i]->GetYaxis()->SetRangeUser(0.8,1.4);
+    rcy_g[i]->GetYaxis()->SetRangeUser(0.6,1.2);
     rcy_g[i]->GetXaxis()->SetTitleSize(.05);
     rcy_g[i]->GetYaxis()->SetTitleSize(.05);
     rcy_g[i]->SetFillColor(601);
