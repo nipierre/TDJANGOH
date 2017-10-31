@@ -7,7 +7,7 @@ You can find several different programs :
 - An other is `rc_calc` and is used for plotting the radiative correction factors. The usage is the following :
   - `./rc_calc -f [RC_file] [Born_file]` : computes incl. corr. from two files.
   - or `./rc_calc -l [filename_template]` : computes incl. corr. from list of files.
-  - or `./rc_calc -sigf [RC_file] [Born_file]` : computes incl. corr. from cross-section files produced by `xsgen` (Best method !)
+  - or `./rc_calc -sigf [RC_file] [Born_file]` : computes incl. corr. from cross-section files produced by `xsgen` (Best method ! +1)
   - or `./rc_calc -bornratio [Born_file]` : compares born cross-section with TERAD's.
   - or `./rc_calc -sirc [input_file]` : plots semi-incl. corr. issued by `sirc`.
   - Other flags can be :

@@ -4,8 +4,11 @@
 ## Requirements
 
 GCC > 4.4.7 with build-in GFORTRAN
+
 ROOT > 5.34/32
+
 LHAPDF 5.9.1 (in any case lower than LHAPDF 6.x.x) [Download LHAPDF 5.x.x](https://www.hepforge.org/downloads/lhapdf)
+
 CERNLIB (2006) [Download CERNLIB](http://cernlib.web.cern.ch/cernlib/version.html)
 
 (Tested on LXPLUS and CCAGE)
