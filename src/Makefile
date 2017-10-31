@@ -9,7 +9,11 @@ CCFlags         = -g -O1 -fPIC -w
 FFFlags					= -fno-automatic
 ROOTFLAGS 	= `root-config --cflags`
 INCDIR		= -I`root-config --incdir` -I../include/
+ifeq ($(SITE),CCIN2P3)
 LDFLAGS		= `root-config --libs --evelibs --glibs` -L$(LHAPDF5_LIB) -lLHAPDF -L/usr/lib/gcc/x86_64-redhat-linux/3.4.6/ -lg2c -L/afs/in2p3.fr/cernlib/@sys/pro/lib/ -Wl,-lmathlib -lpacklib -lkernlib -Wl,-dy -lm -lnsl -lcrypt -ldl
+else
+LDFLAGS		= `root-config --libs --evelibs --glibs` -L$(LHAPDF5_LIB) -lLHAPDF -L/usr/lib/gcc/x86_64-redhat-linux/3.4.6/ -lg2c $(shell cernlib) -Wl,-lmathlib -lpacklib -lkernlib -Wl,-dy -lm -lnsl -lcrypt -ldl
+endif
 #DevFlags	=
 
 all: modules libDjangoh
