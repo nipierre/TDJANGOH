@@ -1,4 +1,4 @@
-# Test programs
+# Utils programs
 
 You can find several different programs :
 - One is `pdist` and gives a large panel of information about radiative photon production as the energy, angle.. The usage is the following :
