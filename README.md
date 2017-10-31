@@ -32,7 +32,7 @@ See more on [test programs](test/TESTPROGRAMS.md)..
 
 ## Utilities Programs
 
-See more on [utilities programs](test/UTILSPROGRAMS.md)..
+See more on [utilities programs](utils/UTILSPROGRAMS.md)..
 
 ## More informations on Djangoh
 
