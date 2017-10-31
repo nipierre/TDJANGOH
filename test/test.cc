@@ -49,7 +49,7 @@ int main(int argc,char *argv[])
   {
     cout << BOLD(FRED("ERROR : Wrong number of arguments")) << endl;
     cout << BOLD(FRED("At least expected 3, received " << argc << " !")) << endl;
-    cout << BOLD(FRED("USAGE : \n ./rc_calc input_file nb_evts + flags")) << endl;
+    cout << BOLD(FRED("USAGE : \n ./test input_file nb_evts + flags")) << endl;
     return 1;
   }
 
