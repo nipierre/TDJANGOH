@@ -1,4 +1,4 @@
-all: src
+all: src test utils
 
 src::
 	$(MAKE) -C $@
