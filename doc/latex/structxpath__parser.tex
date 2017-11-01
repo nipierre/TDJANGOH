@@ -1,0 +1,96 @@
+\hypertarget{structxpath__parser}{}\section{xpath\+\_\+parser Struct Reference}
+\label{structxpath__parser}\index{xpath\+\_\+parser@{xpath\+\_\+parser}}
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structxpath__parser_1_1binary__op__t}{binary\+\_\+op\+\_\+t}
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{structxpath__parser_a043353db574741cd4f460a042a0b22c6}\label{structxpath__parser_a043353db574741cd4f460a042a0b22c6}} 
+void {\bfseries throw\+\_\+error} (const char $\ast$message)
+\item 
+\mbox{\Hypertarget{structxpath__parser_aeb5c7d7a6f8c5705a769297f42960c3e}\label{structxpath__parser_aeb5c7d7a6f8c5705a769297f42960c3e}} 
+void {\bfseries throw\+\_\+error\+\_\+oom} ()
+\item 
+\mbox{\Hypertarget{structxpath__parser_ae33adcc8eb125124967d95297daff351}\label{structxpath__parser_ae33adcc8eb125124967d95297daff351}} 
+void $\ast$ {\bfseries alloc\+\_\+node} ()
+\item 
+\mbox{\Hypertarget{structxpath__parser_a109e4c472bb76911a2b49ee741d400af}\label{structxpath__parser_a109e4c472bb76911a2b49ee741d400af}} 
+const char\+\_\+t $\ast$ {\bfseries alloc\+\_\+string} (const \hyperlink{structxpath__lexer__string}{xpath\+\_\+lexer\+\_\+string} \&value)
+\item 
+\mbox{\Hypertarget{structxpath__parser_a21a1a2579c610e0ebd76247b9d325bb1}\label{structxpath__parser_a21a1a2579c610e0ebd76247b9d325bb1}} 
+\hyperlink{classxpath__ast__node}{xpath\+\_\+ast\+\_\+node} $\ast$ {\bfseries parse\+\_\+function\+\_\+helper} (ast\+\_\+type\+\_\+t type0, ast\+\_\+type\+\_\+t type1, size\+\_\+t argc, \hyperlink{classxpath__ast__node}{xpath\+\_\+ast\+\_\+node} $\ast$args\mbox{[}2\mbox{]})
+\item 
+\mbox{\Hypertarget{structxpath__parser_a7acb32147ef3aac058f94257b57ff14f}\label{structxpath__parser_a7acb32147ef3aac058f94257b57ff14f}} 
+\hyperlink{classxpath__ast__node}{xpath\+\_\+ast\+\_\+node} $\ast$ {\bfseries parse\+\_\+function} (const \hyperlink{structxpath__lexer__string}{xpath\+\_\+lexer\+\_\+string} \&name, size\+\_\+t argc, \hyperlink{classxpath__ast__node}{xpath\+\_\+ast\+\_\+node} $\ast$args\mbox{[}2\mbox{]})
+\item 
+\mbox{\Hypertarget{structxpath__parser_ad67ec26e0e286ca1bb5144a79e3a3583}\label{structxpath__parser_ad67ec26e0e286ca1bb5144a79e3a3583}} 
+axis\+\_\+t {\bfseries parse\+\_\+axis\+\_\+name} (const \hyperlink{structxpath__lexer__string}{xpath\+\_\+lexer\+\_\+string} \&name, bool \&specified)
+\item 
+\mbox{\Hypertarget{structxpath__parser_a7b4555d7bfdb90971333c46963d5d791}\label{structxpath__parser_a7b4555d7bfdb90971333c46963d5d791}} 
+nodetest\+\_\+t {\bfseries parse\+\_\+node\+\_\+test\+\_\+type} (const \hyperlink{structxpath__lexer__string}{xpath\+\_\+lexer\+\_\+string} \&name)
+\item 
+\mbox{\Hypertarget{structxpath__parser_a320728b83e426c4874066d633ffe65d9}\label{structxpath__parser_a320728b83e426c4874066d633ffe65d9}} 
+\hyperlink{classxpath__ast__node}{xpath\+\_\+ast\+\_\+node} $\ast$ {\bfseries parse\+\_\+primary\+\_\+expression} ()
+\item 
+\mbox{\Hypertarget{structxpath__parser_a0530aefc1445c4eac4614e895dd0a219}\label{structxpath__parser_a0530aefc1445c4eac4614e895dd0a219}} 
+\hyperlink{classxpath__ast__node}{xpath\+\_\+ast\+\_\+node} $\ast$ {\bfseries parse\+\_\+filter\+\_\+expression} ()
+\item 
+\mbox{\Hypertarget{structxpath__parser_a7daf146822e199d8ad564be25daa49db}\label{structxpath__parser_a7daf146822e199d8ad564be25daa49db}} 
+\hyperlink{classxpath__ast__node}{xpath\+\_\+ast\+\_\+node} $\ast$ {\bfseries parse\+\_\+step} (\hyperlink{classxpath__ast__node}{xpath\+\_\+ast\+\_\+node} $\ast$set)
+\item 
+\mbox{\Hypertarget{structxpath__parser_ab50d8b75f78b7e2eb77a1cf6872daa00}\label{structxpath__parser_ab50d8b75f78b7e2eb77a1cf6872daa00}} 
+\hyperlink{classxpath__ast__node}{xpath\+\_\+ast\+\_\+node} $\ast$ {\bfseries parse\+\_\+relative\+\_\+location\+\_\+path} (\hyperlink{classxpath__ast__node}{xpath\+\_\+ast\+\_\+node} $\ast$set)
+\item 
+\mbox{\Hypertarget{structxpath__parser_aae61a2931ba0b0c713b5d043f1cef6d4}\label{structxpath__parser_aae61a2931ba0b0c713b5d043f1cef6d4}} 
+\hyperlink{classxpath__ast__node}{xpath\+\_\+ast\+\_\+node} $\ast$ {\bfseries parse\+\_\+location\+\_\+path} ()
+\item 
+\mbox{\Hypertarget{structxpath__parser_a9f5cab421e931c46b0598ecec60c5591}\label{structxpath__parser_a9f5cab421e931c46b0598ecec60c5591}} 
+\hyperlink{classxpath__ast__node}{xpath\+\_\+ast\+\_\+node} $\ast$ {\bfseries parse\+\_\+path\+\_\+or\+\_\+unary\+\_\+expression} ()
+\item 
+\mbox{\Hypertarget{structxpath__parser_adfd2ab26b101a03ed79d7c3041539115}\label{structxpath__parser_adfd2ab26b101a03ed79d7c3041539115}} 
+\hyperlink{classxpath__ast__node}{xpath\+\_\+ast\+\_\+node} $\ast$ {\bfseries parse\+\_\+expression\+\_\+rec} (\hyperlink{classxpath__ast__node}{xpath\+\_\+ast\+\_\+node} $\ast$lhs, int limit)
+\item 
+\mbox{\Hypertarget{structxpath__parser_adb814ff3b99621d2a1c8e788ffd1c1c5}\label{structxpath__parser_adb814ff3b99621d2a1c8e788ffd1c1c5}} 
+\hyperlink{classxpath__ast__node}{xpath\+\_\+ast\+\_\+node} $\ast$ {\bfseries parse\+\_\+expression} ()
+\item 
+\mbox{\Hypertarget{structxpath__parser_a3f5b4a04f4d0a0a44962d9825a86ed0d}\label{structxpath__parser_a3f5b4a04f4d0a0a44962d9825a86ed0d}} 
+{\bfseries xpath\+\_\+parser} (const char\+\_\+t $\ast$query, xpath\+\_\+variable\+\_\+set $\ast$variables, \hyperlink{classxpath__allocator}{xpath\+\_\+allocator} $\ast$alloc, xpath\+\_\+parse\+\_\+result $\ast$result)
+\item 
+\mbox{\Hypertarget{structxpath__parser_a581e576958037e1ab682fb952b3ada38}\label{structxpath__parser_a581e576958037e1ab682fb952b3ada38}} 
+\hyperlink{classxpath__ast__node}{xpath\+\_\+ast\+\_\+node} $\ast$ {\bfseries parse} ()
+\end{DoxyCompactItemize}
+\subsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{structxpath__parser_ab865a9a777b466365b3c4bd50290189d}\label{structxpath__parser_ab865a9a777b466365b3c4bd50290189d}} 
+static \hyperlink{classxpath__ast__node}{xpath\+\_\+ast\+\_\+node} $\ast$ {\bfseries parse} (const char\+\_\+t $\ast$query, xpath\+\_\+variable\+\_\+set $\ast$variables, \hyperlink{classxpath__allocator}{xpath\+\_\+allocator} $\ast$alloc, xpath\+\_\+parse\+\_\+result $\ast$result)
+\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{structxpath__parser_ac34f5b21ef406bec944286eee2f45836}\label{structxpath__parser_ac34f5b21ef406bec944286eee2f45836}} 
+\hyperlink{classxpath__allocator}{xpath\+\_\+allocator} $\ast$ {\bfseries \+\_\+alloc}
+\item 
+\mbox{\Hypertarget{structxpath__parser_a50106db584946e67acd080ef5391a0f4}\label{structxpath__parser_a50106db584946e67acd080ef5391a0f4}} 
+\hyperlink{classxpath__lexer}{xpath\+\_\+lexer} {\bfseries \+\_\+lexer}
+\item 
+\mbox{\Hypertarget{structxpath__parser_aaf5ea5d5be97cdd93adc7a719d8edc1c}\label{structxpath__parser_aaf5ea5d5be97cdd93adc7a719d8edc1c}} 
+const char\+\_\+t $\ast$ {\bfseries \+\_\+query}
+\item 
+\mbox{\Hypertarget{structxpath__parser_a3e0adfea7cc81c08b97ee1375831df6c}\label{structxpath__parser_a3e0adfea7cc81c08b97ee1375831df6c}} 
+xpath\+\_\+variable\+\_\+set $\ast$ {\bfseries \+\_\+variables}
+\item 
+\mbox{\Hypertarget{structxpath__parser_a9370fb875bfc49ca6e35f3165ecb1692}\label{structxpath__parser_a9370fb875bfc49ca6e35f3165ecb1692}} 
+xpath\+\_\+parse\+\_\+result $\ast$ {\bfseries \+\_\+result}
+\item 
+\mbox{\Hypertarget{structxpath__parser_aa9180a17c8ec28977928c815c3425a79}\label{structxpath__parser_aa9180a17c8ec28977928c815c3425a79}} 
+char\+\_\+t {\bfseries \+\_\+scratch} \mbox{[}32\mbox{]}
+\end{DoxyCompactItemize}
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+src/pugixml.\+cpp\end{DoxyCompactItemize}

@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['alfas',['alfas',['../class_t_djangoh.html#a74cbc9b27daed09c9b853b2f72669a71',1,'TDjangoh']]]
+  ['cthcon',['cthcon',['../structhstcut.html#a43b3ea1fd439a6c36041412816928c88',1,'hstcut']]],
+  ['cthmin',['cthmin',['../structhstcut.html#afbbf3d36b0eeb040c7e470538b8b3c54',1,'hstcut']]]
 ];

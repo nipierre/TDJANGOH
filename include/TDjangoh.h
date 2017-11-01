@@ -5,7 +5,7 @@
     \brief                        Interface class to Djangoh generator
     \author                       Nicolas PIERRE
     \version                      1.1
-    \date                         14/06/16
+    \date                         14/06/17
     Support :                     mail to : nicolas.pierre@cern.ch
 
     TDjangoh is an interface class to DJANGOH
@@ -50,7 +50,7 @@ protected:
   static  TDjangoh* fgInstance; /*!< Instance of TDjangoh. Only one at a time permitted */
 
   Lujets_t*  fLujets; /*!< Container of the lujets_ common block */
-  Djkin_t*   fDjkin;
+  Djkin_t*   fDjkin; /*!< Container of the djkin_ common block */
 
   /*!
   * \class TDjangohCleaner

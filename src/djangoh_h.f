@@ -2,11 +2,11 @@ C
 C***********************************************************************
 C
 C
-C                     H E R A C L E S
+C> @brief                    H E R A C L E S
 C
 C
-C     EVENT GENERATOR FOR DEEP-INELASTIC E/M-P SCATTERING
-C     INCLUDING RADIATIVE CORRECTIONS
+C>          Event generator for Deep-Inelastic lp scattering
+C>          including radiative corrections
 C
 C***********************************************************************
 C
@@ -43,6 +43,10 @@ C  S   HSEGEN   prepare event generation                             *
 C  S   HSEVTG   generate event                                       *
 C*********************************************************************
 
+C> Read input from C-counterpart TDJANGOH, initialize DJANGOH
+C> and calculates cross-section grid with respect to the
+C> specification of the configuration file transported
+C> to TDJANGOH
       SUBROUTINE HSINPT()
 C
       USE xSectionModule
@@ -1935,6 +1939,8 @@ C***********************************************************************
 C***********************************************************************
 C***********************************************************************
 
+C> Prepare event generation by recalculating variables
+C> sensitive to input energy changes.
       SUBROUTINE HSEGEN()
 
       USE xSectionModule
@@ -2319,6 +2325,8 @@ C---ERROR WHILE WRITING HERACLES DATA FILE
 C***********************************************************************
 C***********************************************************************
 
+C> Do a recapitulation of the run undergone by calling SUBROUTINE
+C> HSUSER
       SUBROUTINE HSRCAP()
 
       USE xSectionModule
@@ -2352,6 +2360,7 @@ C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 C
 C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+C> Block data for default values
       BLOCK DATA HSBLKD
       IMPLICIT DOUBLE PRECISION (A-H,M,O-Z)
       COMMON /VGASIO/ NINP,NOUTP
@@ -2664,8 +2673,8 @@ C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 C
 C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+C> Initialization of kinematics and setting of parameters
       SUBROUTINE HSPRLG
-C---INITIALIZATION OF KINEMATICS / SETTING OF PARAMETERS
 C
       IMPLICIT DOUBLE PRECISION (A-H,M,O-Z)
 C
@@ -3205,8 +3214,9 @@ C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 C
 C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+C> Setting of electroweak parameters
       SUBROUTINE HSSETP
-C---SETTING OF ELECTROWEAK PARAMETERS
+
 C*****
 C   MODIFIED VERSION
 C   HJM 1/12/89
@@ -3511,11 +3521,10 @@ C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 C
 C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+C> Event sampling, fractions from different contributions
+C> according to cross-sections
       SUBROUTINE HSEVTG()
-C---
-C   EVENT SAMPLING
-C   FRACTIONS FROM DIFFERENT CONTRIBUTIONS ACCORDING TO CROSS SECTIONS
-C---
+
       use xSectionModule
 
       IMPLICIT DOUBLE PRECISION (A-H,M,O-Z)
@@ -4046,7 +4055,7 @@ C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 C
 C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 C
-C      SUBROUTINE HSDTIN (!!!!!!!! NOT USED ANYMORE)
+C      SUBROUTINE HSDTIN (C>C>C>C> NOT USED ANYMORE)
 
 C      IMPLICIT DOUBLE PRECISION (A-H,O-Z)
 C      COMMON /HSOPTN/ INT2(5),INT3(15),ISAM2(5),ISAM3(15),
@@ -4827,7 +4836,7 @@ C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 C
 C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 C
-C      SUBROUTINE HSTPAR (!!!!! NOT USED ANYMORE)
+C      SUBROUTINE HSTPAR (C>C>! NOT USED ANYMORE)
 C---
 C   TEST CURRENTLY DEFINED RUN PARAMETERS
 C   AGAINST THE INPUT READ FROM UNIT LUNDAT
@@ -5016,7 +5025,7 @@ C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 C
 C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 C
-C      SUBROUTINE HSWRPA (!!!!!! NOT USED ANYMORE)
+C      SUBROUTINE HSWRPA (C>C>C> NOT USED ANYMORE)
 C---
 C   WRITE PARAMETER DEFINITIONS OF THE CURRENT RUN
 C   FOR ALL CHANNELS TO UNIT LUNDAT
@@ -5071,7 +5080,7 @@ C     &                  SIG,SIGE,TGMAX,NDOX,TLMAX,NM,XX,
 C     &                  FFGOX,DNCGX,FFLOX,DNCLX,GOLDX,
 C     &                  NTOTX,NCALX,NCA1X,NCA2X,IBIMX,JCORX,
 C     &                  LGLOX,LLOCX,
-C     &                  IT,SI,SI2,SWGT,SCHI) (!!!!! NOT USED ANYMORE)
+C     &                  IT,SI,SI2,SWGT,SCHI) (C>C>! NOT USED ANYMORE)
 C---
 C   WRITE INFORMATION FOR SAMPLING FOR ONE CONTRIBUTION TO UNIT LUNDAT
 C   ISET.GT.0 : RADIATIVE CHANNELS (INTEGRATION INFORMATION FROM VEGAS)
@@ -5127,6 +5136,7 @@ C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 C
 C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 C
+C> Initialization for lp event generation
       SUBROUTINE HSINIT(IFUN,EPSO,NBIN2,NDO2,SIG2,SIG2E,XX2)
 C
 C   LAST CHANGE  18/04/90  HJM
@@ -5134,7 +5144,6 @@ C   LAST CHANGE  24/07/90  HJM
 C   LAST CHANGE  13/12/90  HJM         EXTENSION FOR CHARGED CURRENT
 C   Last change  22/01/97  HS          NC / CC corrected: FUN -> IFUN
 C******************
-C   INITIALIZATION FOR EP EVENT GENERATION
 C   2 --> 2 PROCESS WITH SOFT AND VIRTUAL CORRECTIONS FROM H.SP.
 C           (CROSS SECTION IN NANOBARN)
 C
@@ -5462,12 +5471,10 @@ C
 C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 C
 C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-C
+C> Performs N-Dimensional Monte-Carlo integration
+C> by G.P. Lepage Sept. 1976 (REV) APR 1978
       SUBROUTINE VEGAS(FXN,ACC,NDIM,NCALL,ITMX,NPRN,IGRAPH,
      &                 NDO,IT,SI,SI2,SWGT,SCHI,XI)
-C
-C  SUBROUTINE PERFORMS N-DIMENSIONAL MONTE CARLO INTEG*N
-C    - BY G.P.  LEPAGE  SEPT 1976/ (REV) APR 1978
 C
 C    -FTN5 VERSION 21-8-1984
 C    -HBOOK/HPLOT INTERFACE 6-1-1985
@@ -6024,7 +6031,75 @@ C
       END
 C
 C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-C
+
+C> Cross-section calculation subroutine
+C>  @param F : ACTUAL DISTRIBUTION FUNCTION FOR SAMPLING
+C>
+C>  @paramNCONT : ACTUAL NUMBER OF THE CORRESPONDING CONTRIBUTION
+C>               TO THE MATRIX ELEMENT
+C>
+C>  @param NDIM  : DIMENSION OF THE COORDINATE VECTOR
+C>
+C>  @param NEVENT: NUMBER OF EVENTS TO BE SAMPLED
+C>
+C>  @param ICONTI = 1   NEW SEQUENCE OF EVENTS TO BE SAMPLED,
+C>                I.E. INFORMATION FROM POTENTIAL PREVIOUS SAMPLING RUNS
+C>                     IS TO BE DISCARDED
+C>          = 2   EXTENSION OF AN EXISTING EVENT SAMPLE
+C>
+C>  @param FFMAX : ESTIMATED GLOBAL MAXIMUM
+C>
+C>  @param FMAX  : ESTIMATES FOR LOCAL MAXIMA (FIELD)
+C>
+C>  @param GLAST : LAST CALCULATED FUNCTION VALUE
+C>                (NEEDED FOR CONTINUED SAMPLING, ICONTI=1)
+C>
+C>  @param NTOT  : EFFECTIVE TOTAL NUMBER OF TRIALS FOR SAMPLING
+C>
+C>  @param NM(I) : NUMBER OF TRIALS IN REGION I
+C>
+C>  @param NCALL : TOTAL NUMBER OF ACTUAL FUNCTION EVALUATIONS
+C>
+C>  @param MCALL1 :NUMBER OF FUNCTION EVALUATIONS DURING CORRECTION
+C>                PROCEDURE FOR WRONG LOCAL MAXIMUM
+C>
+C>  @param MCALL2 :NUMBER OF FUNCTION EVALUATIONS DURING CORRECTION
+C>                PROCEDURE FOR WRONG GLOBAL MAXIMUM
+C>
+C>  @param IBIMAX :NUMBER OF THE BIN CONTAINING THE CURRENT GLOBAL MAXIMUM
+C>
+C>  @param FFMOLD :GLOBAL MAXIMUM FROM LAST SAMPLING RUN
+C>                (NOT YET CORRECTED EVEN IF NECESSARY!)
+C>
+C>  @param FMLOLD :LOCAL MAXIMUM FOR THE BIN SELECTED FOR THE LAST EVENT
+C>                IN THE PREVIOUS SAMPLING RUN
+C>                (NOT YET CORRECTED EVEN IF NECESSARY!)
+C>
+C>  @param DNCGLO :NUMBER OF EVENTS TO BE ADDITIONALLY SAMPLED
+C>                TO CONTINUE THE CORRECTION PROCEDURE
+C>                FOR WRONG ESTIMATION OF GLOBAL MAXIMUM
+C>                (INFORMATION FROM POTENTIAL PREVIOUS RUN)
+C>
+C>  @param DNCLOC :NUMBER OF EVENTS TO BE ADDITIONALLY SAMPLED
+C>                IN REGION **JCOR** TO CONTINUE THE CORRECTION PROCEDURE
+C>                FOR WRONG ESTIMATION OF LOCAL MAXIMUM
+C>                (INFORMATION FROM POTENTIAL PREVIOUS RUN)
+C>
+C>  @param LGLOB : (LOGICAL) IF TRUE CORRECTION FOR WRONG ESTIMATE OF
+C>                GLOBAL MAXIMUM NECESSARY
+C>
+C>  @param LLOCAL :(LOGICAL) IF TRUE CORRECTION FOR WRONG ESTIMATE OF
+C>                LOCAL MAXIMUM NECESSARY
+C>
+C>  @param XI    : ACTUAL SUBDIVISION OF NDIM-DIMENSIONAL COORDINATE SPACE
+C>                AS PROVIDED BY VEGAS
+C>
+C>  @param NDO   : NUMBER OF INTERVALS PER COORDINATE AXIS FROM VEGAS
+C>                FROM VEGAS-SUBDIVISION
+C>
+C>  @param MBIN  : NUMBER OF BINS PER AXIS FOR SUBVOLUMES USED IN EVENT
+C>                SAMPLING TO INCREASE THE SAMPLING EFFICIENCY
+
       SUBROUTINE HSGENM(F,NCONT,NDIM,NEVENT,ICONTI,FFMAX,FMAX,GLAST,
      &                  FFMOLD,FMLOLD,DNCGLO,DNCLOC,LLOCAL,LGLOB,
      &                  NTOT,NM,NCALL,MCALL1,MCALL2,IBIMAX,JCOR,
@@ -6039,79 +6114,6 @@ C                LAST CHANGE  23/07/90  HJM
 C                MODIFIED 12/02/97 HS
 C
 C---------------------------------------------------------------------
-C
-C   VARIABLES:
-C   **********
-C
-C   F :          ACTUAL DISTRIBUTION FUNCTION FOR SAMPLING
-C
-C   NCONT :      ACTUAL NUMBER OF THE CORRESPONDING CONTRIBUTION
-C                TO THE MATRIX ELEMENT
-C
-C   NDIM  :      DIMENSION OF THE COORDINATE VECTOR
-C
-C   NEVENT:      NUMBER OF EVENTS TO BE SAMPLED
-C
-C   ICONTI = 1   NEW SEQUENCE OF EVENTS TO BE SAMPLED,
-C                I.E. INFORMATION FROM POTENTIAL PREVIOUS SAMPLING RUNS
-C                     IS TO BE DISCARDED
-C          = 2   EXTENSION OF AN EXISTING EVENT SAMPLE
-C
-C   FFMAX :      ESTIMATED GLOBAL MAXIMUM
-C
-C   FMAX  :      ESTIMATES FOR LOCAL MAXIMA (FIELD)
-C
-C   GLAST :      LAST CALCULATED FUNCTION VALUE
-C                (NEEDED FOR CONTINUED SAMPLING, ICONTI=1)
-C
-C   NTOT  :      EFFECTIVE TOTAL NUMBER OF TRIALS FOR SAMPLING
-C
-C   NM(I) :      NUMBER OF TRIALS IN REGION I
-C
-C   NCALL :      TOTAL NUMBER OF ACTUAL FUNCTION EVALUATIONS
-C
-C   MCALL1 :     NUMBER OF FUNCTION EVALUATIONS DURING CORRECTION
-C                PROCEDURE FOR WRONG LOCAL MAXIMUM
-C
-C   MCALL2 :     NUMBER OF FUNCTION EVALUATIONS DURING CORRECTION
-C                PROCEDURE FOR WRONG GLOBAL MAXIMUM
-C
-C   IBIMAX :     NUMBER OF THE BIN CONTAINING THE CURRENT GLOBAL MAXIMUM
-C
-C   FFMOLD :     GLOBAL MAXIMUM FROM LAST SAMPLING RUN
-C                (NOT YET CORRECTED EVEN IF NECESSARY!)
-C
-C   FMLOLD :     LOCAL MAXIMUM FOR THE BIN SELECTED FOR THE LAST EVENT
-C                IN THE PREVIOUS SAMPLING RUN
-C                (NOT YET CORRECTED EVEN IF NECESSARY!)
-C
-C   DNCGLO :     NUMBER OF EVENTS TO BE ADDITIONALLY SAMPLED
-C                TO CONTINUE THE CORRECTION PROCEDURE
-C                FOR WRONG ESTIMATION OF GLOBAL MAXIMUM
-C                (INFORMATION FROM POTENTIAL PREVIOUS RUN)
-C
-C   DNCLOC :     NUMBER OF EVENTS TO BE ADDITIONALLY SAMPLED
-C                IN REGION **JCOR** TO CONTINUE THE CORRECTION PROCEDURE
-C                FOR WRONG ESTIMATION OF LOCAL MAXIMUM
-C                (INFORMATION FROM POTENTIAL PREVIOUS RUN)
-C
-C   LGLOB :      (LOGICAL) IF TRUE CORRECTION FOR WRONG ESTIMATE OF
-C                GLOBAL MAXIMUM NECESSARY
-C
-C   LLOCAL :     (LOGICAL) IF TRUE CORRECTION FOR WRONG ESTIMATE OF
-C                LOCAL MAXIMUM NECESSARY
-C
-C   XI    :      ACTUAL SUBDIVISION OF NDIM-DIMENSIONAL COORDINATE SPACE
-C                AS PROVIDED BY VEGAS
-C
-C   NDO   :      NUMBER OF INTERVALS PER COORDINATE AXIS FROM VEGAS
-C                FROM VEGAS-SUBDIVISION
-C
-C   MBIN  :      NUMBER OF BINS PER AXIS FOR SUBVOLUMES USED IN EVENT
-C                SAMPLING TO INCREASE THE SAMPLING EFFICIENCY
-C
-C---------------------------------------------------------------------
-C
       IMPLICIT DOUBLE PRECISION (A-H,O-Z)
       EXTERNAL F
       COMMON /HSOPTN/ INT2(5),INT3(15),ISAM2(5),ISAM3(15),
@@ -6549,6 +6551,10 @@ C
       RETURN
       END
 C===========================================================
+C> Initialize the generator, must be called before using
+C> HSRNDM
+C> @param NA1, NA2, NA3, NB1 : values for initializing the
+C> generator.
       SUBROUTINE HSRNST(NA1,NA2,NA3,NB1)
 C     REAL*4 U,C,CD,CM
       IMPLICIT DOUBLE PRECISION (A-H,O-Z)
@@ -6578,6 +6584,10 @@ C
       RETURN
       END
 C==========================================================
+!C> Puts seed to generator (brings generator in the same
+C> status as after the last HSRNOU call)
+C> @param U,C,CD,CM,I,J : seed values as taken from
+C> HSRNOU
       SUBROUTINE HSRNIN(UIN,CIN,CDIN,CMIN,IIN,JIN)
       IMPLICIT DOUBLE PRECISION (A-H,O-Z)
 C
@@ -6597,6 +6607,9 @@ C
       RETURN
       END
 C==========================================================
+C> Takes seed from generator
+C> @param U,C,CD,CM,I,J : seed values as taken from
+C> HSRNOU
       SUBROUTINE HSRNOU(UOUT,COUT,CDOUT,CMOUT,IOUT,JOUT)
 C
       IMPLICIT DOUBLE PRECISION (A-H,O-Z)
@@ -6616,6 +6629,12 @@ C
       RETURN
       END
 C==========================================================
+C> Test of the generator. It uses HSRNIN and HSRNOU
+C> to bring generator to same stage as before call
+C> of HSRNTE
+C> @param IO : defines output
+C>             =0 output only if an error is detected
+C>             =1 output independend on an error
       SUBROUTINE HSRNTE(IO)
 C
       IMPLICIT DOUBLE PRECISION (A-H,O-Z)
@@ -6651,7 +6670,8 @@ C==END OF RANDOM GENERATOR PACKAGE==========================
       END
 C
 C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-C
+C> Subroutine of FLUKA to give sin and cos of a random
+C> angle uniformly distributed between 0 and 2*Pi
       SUBROUTINE SFECFE(SFE,CFE)
       ENTRY         COSI(SFE,CFE)
 C
@@ -7078,9 +7098,7 @@ C
 C***********************************************************************
 C
 C***********************************************************************
-C
-C   GIVE EXTERNAL WEIGHT TO EVENT
-C
+C> Give external weight to event
       SUBROUTINE HSWGTX(X,Y,IACPT)
       IMPLICIT DOUBLE PRECISION (A-H,M,O-Z)
       COMMON /HSELAB/ SP,EELE,PELE,EPRO,PPRO
@@ -7116,11 +7134,9 @@ C
 C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 C
 C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-C
+C> Choose flavour of struck quark and corresponding flavour
+C> of the target remnant jet
       SUBROUTINE HSFLAV(W2,IFL,IFLR)
-
-C...Choose flavour of struck quark and the
-C...corresponding flavour of the target remnant jet.
 
       COMMON /HSCUMS/  CQP(12)
       DOUBLE PRECISION CQP,HSRNDM,R
@@ -7318,9 +7334,7 @@ C
       END
 C
 C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-C   PARAMETERS OF THE HERA-LAB-SYSTEM REAL*8
-C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-C
+C>   Parameters of the HERA-Lab-System REAL*8
       SUBROUTINE HSFLAB(X,Y,XS)
       IMPLICIT DOUBLE PRECISION (A-H,M,O-Z)
       COMMON /HSELAB/ SP,EELE,PELE,EPRO,PPRO
@@ -7345,10 +7359,8 @@ C
       END
 C
 C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-C   PARAMETERS OF THE HERA-LAB-SYSTEM REAL*8 (FOR CC)
-C   FROM CCLABEA (epcctot.f, 28/08/98)
-C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-C
+C>   Parameters of The HERA-Lab-System REAL*8 (for CC)
+C>   FROM CCLABEA (epcctot.f, 28/08/98)
       SUBROUTINE HSCLAB(X,Y,XS)
       IMPLICIT DOUBLE PRECISION (A-H,M,O-Z)
       COMMON /HSELAB/ SP,EELE,PELE,EPRO,PPRO
@@ -7378,9 +7390,7 @@ C
       END
 C
 C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-C   PARAMETERS OF THE PSEUDO-CMS
-C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-C
+C>   Parameters of the PSEUDO-CMS
       SUBROUTINE HSFCMS(X,Y,XS)
       IMPLICIT DOUBLE PRECISION (A-H,M,O-Z)
       COMMON /HSELAB/ SP,EELE,PELE,EPRO,PPRO
@@ -7429,10 +7439,8 @@ C
       END
 C
 C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-C   PARAMETERS OF THE PSEUDO-CMS (FOR CC)
-C   FROM CCMSEA (epcctot.f, 28/08/98)
-C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-C
+C>   Parameters of the PSEUDO-CMS (FOR CC)
+C>   FROM CCMSEA (epcctot.f, 28/08/98)
       SUBROUTINE HSCCMS(X,Y,XS)
       IMPLICIT DOUBLE PRECISION (A-H,M,O-Z)
       COMMON /HSELAB/ SP,EELE,PELE,EPRO,PPRO
@@ -7477,9 +7485,7 @@ C
       END
 C
 C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-C   INVARIANTS CALCULATED IN KP - CMS - SYSTEM
-C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-C
+C>   Invariants calculated in KP - CMS - SYSTEM
       SUBROUTINE HSFIV1(X,Y,XS,A1,TTS)
       IMPLICIT DOUBLE PRECISION (A-H,M,O-Z)
       COMMON /HSCMSP/ EQ,PQ,EEL,PEL,ES,PS,COSE,SINE,OMEGA
@@ -7499,9 +7505,7 @@ C
       END
 C
 C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-C   INVARIANTS CALCULATED IN KPS - CMS - SYSTEM
-C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-C
+C>   Invariants calculated in KPS - CMS - SYSTEM
       SUBROUTINE HSFIV2(X,Y,XS,A2,TTS)
       IMPLICIT DOUBLE PRECISION (A-H,M,O-Z)
       COMMON /HSCMSP/ EQ,PQ,EEL,PEL,ES,PS,COSE,SINE,OMEGA
@@ -7521,9 +7525,7 @@ C
       END
 C
 C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-C   INVARIANTS CALCULATED IN KQ - CMS - SYSTEM
-C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-C
+C>   Invariants calculated in KQ - CMS - SYSTEM
       SUBROUTINE HSFIV3(X,Y,XS,A1,A3)
       IMPLICIT DOUBLE PRECISION (A-H,M,O-Z)
       COMMON /HSCMSP/ EQ,PQ,EEL,PEL,ES,PS,COSE,SINE,OMEGA
@@ -7544,9 +7546,7 @@ C
       END
 C
 C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-C   MANDELSTAM INVARIANTS
-C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-C
+C>   Mandelstam invariants
       SUBROUTINE HSFIVM(X,Y,XS)
       IMPLICIT DOUBLE PRECISION (A-H,M,O-Z)
       COMMON /HSIKP/  S,T,U,SS,TS,US,DKP,DKPS,DKQ,DKQS
@@ -7559,9 +7559,7 @@ C
       END
 C
 C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-C   CAPITAL INVARIANTS
-C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-C
+C>   Capital invariants
       SUBROUTINE HSFIVC(X,Y)
       IMPLICIT DOUBLE PRECISION (A-H,M,O-Z)
       COMMON /HSIKP/  S,T,U,SS,TS,US,DKP,DKPS,DKQ,DKQS
@@ -7576,9 +7574,7 @@ C
       END
 C
 C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-C   INTEGRAND OF KP TERM (INITIAL STATE RADIATION)
-C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-C
+C>   Integrand of KP term (INITIAL STATE RADIATION)
       FUNCTION HSTSK1(X)
 C
 C  X(1) -->  XX
@@ -8015,9 +8011,7 @@ C                                  INCLUDING F_L
       END
 C
 C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-C   LIMITS FOR COS(THETA(K,P)) FOR KP-PARAMETRIZATION
-C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-C
+C>   Limits for COS(THETA(K,P)) for KP-Parametrization
       SUBROUTINE HSLZK1(ZMIN,ZMAX)
       IMPLICIT DOUBLE PRECISION (A-H,M,O-Z)
       COMMON /HSIRCT/ DELEPS,DELTA,EGMIN,IOPEGM
@@ -8090,9 +8084,7 @@ C
       END
 C
 C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-C   LIMITS FOR TS FOR KP - PART
-C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-C
+C>   Limits for TS for KP-part
       SUBROUTINE HSLTS1(A1,XX,Y,XS,TSMIN,TSMAX,TSM,TSP,CFKP)
       IMPLICIT DOUBLE PRECISION (A-H,M,O-Z)
       COMMON /HSOPTN/ INT2(5),INT3(15),ISAM2(5),ISAM3(15),
@@ -8600,9 +8592,7 @@ C                                  INCLUDING F_L
       END
 C
 C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-C   LIMITS FOR COS(THETA(K,PS)) FOR KPS-PARAMETRIZATION
-C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-C
+C>   Limits for COS(THETA(K,PS)) for KPS-Parametrization
       SUBROUTINE HSLZK2(ZMIN,ZMAX)
       IMPLICIT DOUBLE PRECISION (A-H,M,O-Z)
       COMMON /HSIRCT/ DELEPS,DELTA,EGMIN,IOPEGM
@@ -8673,9 +8663,7 @@ C
       END
 C
 C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-C   LIMITS FOR TS FOR KPS - PART
-C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-C
+C>   Limits for TS for KPS-part
       SUBROUTINE HSLTS2(A2,XX,Y,XS,TSMIN,TSMAX,TSM,TSP,CFKPS)
       IMPLICIT DOUBLE PRECISION (A-H,M,O-Z)
       COMMON /HSOPTN/ INT2(5),INT3(15),ISAM2(5),ISAM3(15),
@@ -9216,9 +9204,7 @@ C                                  INCLUDING F_L
       END
 C
 C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-C   LIMITS FOR COS(THETA(K,P)) FOR KPS-KP PARAMETRIZATION
-C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-C
+C>   Limits for COS(THETA(K,P)) for KPS-KP parametrization
       SUBROUTINE HSLZTS(ZMIN,ZMAX)
       IMPLICIT DOUBLE PRECISION (A-H,M,O-Z)
       COMMON /HSIRCT/ DELEPS,DELTA,EGMIN,IOPEGM
@@ -9325,9 +9311,7 @@ C-----
       END
 C
 C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-C   LIMITS FOR A1 AS FUNCTION OF TS
-C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-C
+C>   Limits for A1 as function of TS
       SUBROUTINE HSL1TS(TTS,XX,Y,XS,A1MIN,A1MAX,A1M,A1P,CFKP)
       IMPLICIT DOUBLE PRECISION (A-H,M,O-Z)
       COMMON /HSLABP/ EH,PH,EQH,PQH,ESH,PSH,COSEH,SINEH
@@ -9747,9 +9731,7 @@ C---SUBTRACTION OF FINAL STATE MASS SINGULARITY
       END
 C
 C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-C   LIMITS FOR COS(THETA(K,Q)) FOR KQ-PARAMETRIZATION
-C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-C
+C>   Limits for COS(THETA(K,Q)) for KQ-Parametrization
       SUBROUTINE HSLZK3(ZMIN,ZMAX)
       IMPLICIT DOUBLE PRECISION (A-H,M,O-Z)
       COMMON /HSIRCT/ DELEPS,DELTA,EGMIN,IOPEGM
@@ -9821,9 +9803,7 @@ C
       END
 C
 C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-C   LIMITS FOR A1 AS FUNCTION OF A3
-C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-C
+C>   Limits for A1 as function of A3
       SUBROUTINE HSL1K3(A3,XX,Y,XS,A1MIN,A1MAX,A1M,A1P,CFKP)
       IMPLICIT DOUBLE PRECISION (A-H,M,O-Z)
       COMMON /HSLABP/ EH,PH,EQH,PQH,ESH,PSH,COSEH,SINEH
@@ -10231,7 +10211,7 @@ C
 C
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 CCCCCC 22. 9. 86   CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC H. SPIESBERGER CCC
-C
+C> Born cross section for DIS lq scattering
       SUBROUTINE HSSAB0(X,Y,POL,HPOL,LQ,A1,A3,B1,B3)
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C
@@ -10287,7 +10267,9 @@ C
       RETURN
       END
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
-C
+C> Form factors, recalculate effective coupling constants including
+C> self energy running alpha, effective SW2, form factor kappa
+C> (from PI_Z)
       SUBROUTINE HSSETF(T)
 C---FORM FACTORS
 C   RECALCULATE EFFECTIVE COUPLING CONSTANTS INCLUDING SELF ENERGIES
@@ -10424,7 +10406,7 @@ C
       END
 C
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
-C
+C> One-Loop virtual correction to DIS lq scattering
       SUBROUTINE HSSAB1(X,Y,LL,POL,HPOL,LQ,RA1,RA3,RB1,RB3)
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C
@@ -12170,10 +12152,8 @@ C
       END
 C
 C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-C   LIMITS FOR AZIMUTH (1/KP-PARAMETRIZATION FOR CC)
-C   FROM CPHPLM (epcctot.f, 28/08/98)
-C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-C
+C>   Limits for azimuth (1/KP-Parametrization for CC)
+C>   FROM CPHPLM (epcctot.f, 28/08/98)
       SUBROUTINE HSCPHL(XS,Z,PHPMIN)
       IMPLICIT double precision (A-H,M,O-Z)
       COMMON /HSKNST/ PI,ALPHA,ALP1PI,ALP2PI,ALP4PI,E,GF,SXNORM,SX1NRM
@@ -13353,11 +13333,7 @@ C---WEAK PART
       END
 C
 C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-C
-C   INTERFACE FOR CALLS OF PARTON DISTRIBUTIONS FROM HERACLES
-C
-C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-C
+C>   Interface for calls of Parton Distributions from HERACLES
       SUBROUTINE HSPVER(X,Q2)
       DOUBLE PRECISION QU,QBU,QD,QBD,QS,QBS,QC,QBC,QB,QBB,QT,QBT
       DOUBLE PRECISION X,Q2
@@ -13387,11 +13363,7 @@ C...USE PYSTFU ROUTINES via LYSTFU from LEPTO 6.5
       END
 C
 C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-C
-C   INTERFACE FOR CALLS OF POLARIZED PARTON DISTRIBUTIONS
-C
-C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-C
+C>   Interface for calls of polarized parton distributions
       SUBROUTINE HSDPVR(X,Q2)
       DOUBLE PRECISION X,Q2
       DOUBLE PRECISION DQU,DQBU,DQD,DQBD,DQS,DQBS,DQC,DQBC,DQB,DQBB,
@@ -13501,11 +13473,7 @@ c      DGLU=DGLU/X
       END
 C
 C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-C
-C   ISOSPIN ROTATION FOR NUCLEAR TARGETS (NEEDED FOR IPDFOP=1)
-C
-C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-C
+C>   Isospin rotation for nuclear targets (needed for IPDFOP=1)
       SUBROUTINE HSIROT
       IMPLICIT DOUBLE PRECISION (A-H,M,O-Z)
       COMMON /HSPDFQ/ QU,QBU,QD,QBD,QS,QBS,QC,QBC,QB,QBB,QT,QBT
@@ -13590,14 +13558,9 @@ C
 C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 C
 ************************************************************************
-C
-C   SUBROUTINES FOR THE INCLUSION OF THE LONGITUDINAL STRUCTURE
-C   FUNCTION IN HERACLES, since VERSION 4.5
-C
-C   TAKEN / MODIFIED FROM LEPTO 6.1 BY G.INGELMAN
-C
-************************************************************************
-
+C>   Subroutines for the inclusion of the longitudinal structure
+C>   function in HERACLES, since VERSION 4.5,
+C>   taken/modified from LEPTO 6.1 BY G.INGELMAN
       SUBROUTINE HSLUFL(XA,Q2A,F2EM,FL)
       IMPLICIT DOUBLE PRECISION (A-H,M,O-Z)
 C...COMMON BLOCKS FROM HERACLES (NOTE: NAMES HAVE PARTLY BEEN CHANGED)
@@ -13688,8 +13651,7 @@ C...KINEMATIC LIMITS
       END
 
 C*********************************************************************
-C...translate input from ALFAS input
-
+C>   Translate input from ALFAS input
       SUBROUTINE DIALFS
       COMMON /HSALFS/ PAR111,PAR112,PARL11,PARL19,MST111,MST115
       COMMON/LUDAT1/MSTU(200),PARU(200),MSTJ(200),PARJ(200)
@@ -13703,8 +13665,7 @@ C...translate input from ALFAS input
       END
 
 C*********************************************************************
-C...Translate input from FLONG input flag
-
+C>   Translate input from FLONG input flag
       SUBROUTINE DIFLOP
       COMMON /HSALFS/ PAR111,PAR112,PARL11,PARL19,MST111,MST115
       COMMON/LUDAT1/MSTU(200),PARU(200),MSTJ(200),PARJ(200)
@@ -13719,8 +13680,8 @@ C
 C***********************************************************************
 C
 C **********************************************************************
-C
-
+C>   Integrates the longitudinal structure function, store on grid
+C>   in x, Q**2.
       SUBROUTINE FLTABL
 
 C...Integrates the longitudinal structure function, store on grid
@@ -13853,11 +13814,10 @@ C        NPASS=0
       END
 
 C **********************************************************************
-
+C>  QCD and target mass contributions to longitudinal structure function
+C>  from interpolation on x,Q2 grid.
       SUBROUTINE FLIPOL(FLQ,FLG,FLM)
 
-C...QCD and target mass contributions to longitudinal structure function
-C...from interpolation on x,Q2 grid.
 chs..transfer true center-of-mass energy from HERACLES, use the true
 c....value to determine limits of grid also in the case of initial
 c....state radiation with reduced effective S stored on PARL(21)
@@ -13936,11 +13896,9 @@ ckc..format for 'x=' and 'Q2=' changed
       END
 
 C **********************************************************************
-
+C>  Event-by-event calculation of contribution to longitudinal
+C>  structure function from QCD and target mass effects.
       SUBROUTINE FLINTG(CFLQ,CFLG,CFLM)
-
-C...Event-by-event calculation of contribution to longitudinal
-C...structure function from QCD and target mass effects.
 
       COMMON /LEPTOU/ CUT(14),LST(40),PARL(30),X,Y,W2,Q2,U
       COMMON /LINTEG/ NTOT,NPASS
@@ -14064,23 +14022,19 @@ C...quark longitudinal structure function
       END
 
 C#######################################################################
-C
-C   One- and two-dimensional adaptive Gaussian integration routines.
-C
-C **********************************************************************
-
+C>   One- and two-dimensional adaptive Gaussian integration routines.
+C>   @param A0    : lower limit (INPUT,REAL)
+C>   @param B0    : upper limit (INPUT,REAL)
+C>   @param F     : function F(X) to be integrated. Must be supplied
+C>                  by user. (INPUT,REAL FUNCTION)
+C>   @param EPS   : Desired relative accuracy. if sum us small eps
+C>                  will be absolute accuracy instead. (INPUT,REAL)
+C>   @param SUM   : calculated value for the integral (OUTPUT,REAL)
       SUBROUTINE GADAP(A0,B0,F,EPS,SUM)
 C
 C   PURPOSE           - INTEGRATE A FUNCTION F(X)
 C   METHOD            - ADAPTIVE GAUSSIAN
 C   USAGE             - CALL GADAP(A0,B0,F,EPS,SUM)
-C   PARAMETERS  A0    - LOWER LIMIT (INPUT,REAL)
-C               B0    - UPPER LIMIT (INPUT,REAL)
-C               F     - FUNCTION F(X) TO BE INTEGRATED. MUST BE
-C                       SUPPLIED BY THE USER. (INPUT,REAL FUNCTION)
-C               EPS   - DESIRED RELATIVE ACCURACY. IF SUM IS SMALL EPS
-C                       WILL BE ABSOLUTE ACCURACY INSTEAD. (INPUT,REAL)
-C               SUM   - CALCULATED VALUE FOR THE INTEGRAL (OUTPUT,REAL)
 C   PRECISION         - SINGLE
 C   REQ'D PROG'S      - F
 C   AUTHOR            - T. JOHANSSON, LUND UNIV. COMPUTER CENTER, 1973
@@ -14153,11 +14107,8 @@ C
 
 C######################################################################
 C
-C   Various routines to give structure function parametrizations.
-C
-C ********************************************************************
-
-c...hs taken from LEPTO 6.5 (modified)
+C>   Various routines to give structure function parametrizations.
+C>   Taken from LEPTO 6.5 (modified)
       SUBROUTINE LYSTFU(KF,X,Q2,XPQ)
 
 C...Interface to PYSTFU in PYTHIA 5.7 to get parton density distributions,
@@ -14317,10 +14268,9 @@ C
 C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 C
 C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-C
+C> Check consistency of parton distribution or structure function
+C> inputs and write chosen options
       SUBROUTINE HSWPDF
-C---CHECK CONSISTENCY OF PARTON DISTRIBUTION OR STRUCTURE FUNCTION
-C   INPUT AND WRITE CHOSEN OPTIONS
 C
       IMPLICIT DOUBLE PRECISION (A-H,M,O-Z)
       COMMON /HSOPTN/ INT2(5),INT3(15),ISAM2(5),ISAM3(15),
@@ -14708,9 +14658,8 @@ C
 C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 C
 C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-C
+C> Write final statistics for calls to HSDVPR with x, Q2 out of range
       SUBROUTINE HSCPDF(IMOD)
-C---Write final statistics for calls to HSDVPR with x, Q2 out of range
 C
       IMPLICIT DOUBLE PRECISION (A-H,M,O-Z)
       COMMON /HSOPTN/ INT2(5),INT3(15),ISAM2(5),ISAM3(15),
@@ -14802,9 +14751,8 @@ C
 C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 C
 C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-C-- TERAD PARAMETRISATION ADDED BY N. PIERRE (24/05/17) FOR TEST PURPOSE
-c-- Only for proton target
-
+C> TERAD parameterization added by N. PIERRE (24/05/17)
+C> Only for proton target !
       SUBROUTINE TERAD(X,Q2,ZF1,ZF2)
       IMPLICIT DOUBLE PRECISION (A-H,M,O-Z)
       COMMON /SFINI/ IFRSTM
@@ -14850,9 +14798,8 @@ C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 C FOLLOWS THE NECESSARY CODE FOR TERAD PARAMETRISATION
 
 c===================================
-c-----F2 parameterisation parameters
-c-----parameters are put to the common block "fitpar", array "dpf2(15)"
-
+C> F2 parameterisation parameters
+C> parameters are put to the common block "fitpar", array "dpf2(15)"
       subroutine rfitpar
       implicit double precision (a-h,o-z)
       common /fitpar/ dpf2(15),if2typ,nf2p
@@ -14882,8 +14829,7 @@ c-----parameters are put to the common block "fitpar", array "dpf2(15)"
 
 c===================================
 c===================================
-
-
+C> TERAD F2 for Q2>0.2
       SUBROUTINE df2p15(DX,DQ2,df2)
       IMPLICIT DOUBLE PRECISION (a-h,o-z)
       common /fitpar/ dpf2(15),if2typ,nf2p
@@ -14923,7 +14869,7 @@ c
 
 c
 c
-c
+C> TERAD F2 for Q2<0.2
       SUBROUTINE df2aaa(dx,dq2,df2)
       IMPLICIT DOUBLE PRECISION (a-h,o-z)
       common /fitpar/ dpf2(15),if2typ,nf2p
@@ -15012,12 +14958,11 @@ C      +   print *,'============ x,q2 in GETJKB ===== ',x,q2
 c
 c=====================================================================
 
-c
+C> A code to calculate the nucleon structure function F2 in the
+C> low q2 and low x region within the GVMD inspired model described in
+C> B.Badelek and J.Kwiecinski, Phys. Lett. B295 (1992) 263.
       subroutine f2pd(mode,x,q2,f2p,f2d,fv)
 c
-c --- A code to calculate the nucleon structure function F2 in the
-c --- low q2 and low x region within the GVMD inspired model described in
-c --- B.Badelek and J.Kwiecinski, Phys. Lett. B295 (1992) 263.
 c --- The structure functions F2 corresponding to the QCD improved
 c --- parton model are obtained from the interpolation formula based on
 c --- Tchebyshev polynomials. The vector meson contributions are calculated
@@ -15056,7 +15001,7 @@ c                  (e.g.mode=2 for file f2mod2.dat),
 c        q2,x:     the usual kinematic variables,
 c        f2p,f2d   str. functions for the proton and for the deuteron
 c                  (returned values);
-c !!!    deteron here is (proton+neutron)/2 ie no shadowing effects. !!!!!!!!!!
+c C>!    deteron here is (proton+neutron)/2 ie no shadowing effects. C>C>C>C>C>
 c        fv:       contribution of GVMD in the final F2 (return value)
 c
 c --- Example of the usage of the subroutine is given above.
@@ -15187,11 +15132,9 @@ c
       end
 
 c==========================================================================
-c
+C> Calculates sigro, sigfi at given energy viu using the energy dependent
+C> piN and KN total cross-sections
       subroutine sigvmes(viu,sigro,sigfi)
-c
-c-----calculates sigro, sigfi at given energy viu using the energy dependent
-c-----piN and KN total cross-sections
 c
       implicit double precision (a-h,o-z)
       data      amk,     ampi,pmbnag,sigpi0, sigk0,   czad,sigpi1,sigpi2
@@ -15212,10 +15155,9 @@ c
       sigfi=pmbnag*(2.*skp-spip-spim)
       return
       end
-c
+
+C> Calculates the vector meson contribution to the nucleon (!) f2.
       subroutine vmesnuc(q2,sigro,sigfi,fvmes2)
-c
-c-----calculates the vector meson contribution to the nucleon (!) f2.
 c
       implicit double precision (a-h,o-z)
       dimension vmass(3),vcoupl(3),gama2(3),sigin(3)
@@ -15263,6 +15205,8 @@ c=====================================================================
 *   FILE "grv94par.f", THE OUTPUT IS WRITTEN ON THE FILE "grv94str.erg".
 *
 *bbb      subroutine grv(xxx,qqq2,f2p,f2pd,f2pl,f2bh)
+C> Calculation of nucleon structure functions from the GRV('94')
+C> parametrization
           subroutine grv(xxx,qqq2,f2, f2d, f2l, f2bh, inucl)
 *bb       PROGRAM MAIN
        IMPLICIT DOUBLE PRECISION (A - Z)
@@ -15438,10 +15382,8 @@ C      WRITE (6,10) X, FLP, FLBH, FLP+FLBH
        RETURN
        END
 
-*
-*...COEFFICIENT FUNCTIONS FOR F2, F3 (IN MS(BAR)) and FL :
 *    (THE NOTATION IS AS IN FLORATOS ET. AL. (1981))
-*
+C> Coefficient functions for F2, F3 (in MS(BAR)) and FL.
        SUBROUTINE COEFF (E2Q2, E2Q3, E3Q2, E3Q3, ELQ2, E2G2, ELG2, Z)
        IMPLICIT DOUBLE PRECISION (A - Z)
        CF = 4./3.
@@ -15634,8 +15576,7 @@ c
        RETURN
        END
 *
-*...LO GLUON PARAMETRIZATION (FOR THE BETHE-HEITLER CALCULATIONS) :
-*
+C> LO gluon parametrization (for the Bethe-Heitler contribution) :
        SUBROUTINE GGRVLO (X, Q2, GL)
        IMPLICIT DOUBLE PRECISION (A - Z)
        MU2  = 0.23
@@ -15724,7 +15665,7 @@ c
 *    GL  = GLUON
 *
 *...LO PARAMETRIZATION :
-*
+C> GRV LO Parametrization
        SUBROUTINE GRV94LO (X, Q2, UV, DV, DEL, UDB, SB, GL)
        IMPLICIT DOUBLE PRECISION (A - Z)
        MU2  = 0.23
@@ -15798,7 +15739,7 @@ c
        END
 *
 *...NLO PARAMETRIZATION (MS(BAR)) :
-*
+C> GRV NLO Parametrization (MS(BAR))
        SUBROUTINE GRV94HO (X, Q2, UV, DV, DEL, UDB, SB, GL)
        IMPLICIT DOUBLE PRECISION (A - Z)
        MU2  = 0.34
@@ -15872,7 +15813,7 @@ c
        END
 *
 *...NLO PARAMETRIZATION (DIS) :
-*
+C> GRV NLO Parametrization (DIS)
        SUBROUTINE GRV94DI (X, Q2, UV, DV, DEL, UDB, SB, GL)
        IMPLICIT DOUBLE PRECISION (A - Z)
        MU2  = 0.34
@@ -15979,9 +15920,7 @@ c=====================================================================
 
 c=========================================================================
 c
-c-----function R
-c
-c
+C> TERAD R function
       SUBROUTINE R1990fun(dddX,dddaQ2,dddR,dddDR)
 c
 c...BB...22.XII.2005 body of R1990 replaced by body of R1998
@@ -16098,9 +16037,7 @@ c...BB...had to add the 2 lines below
       END
 
 c=====================================================================
-
-
-C---------------------------------------------------------
+C> Nucleon form factor of GARI and KRUEMPELMANN
       SUBROUTINE GARI(Q2,GEP,GMP,GEN,GMN)
 C
 C *** NUCLEON FORM FACTOR OF GARI AND KRUEMPELMANN, Z.PHYS A322 (1985) 689
@@ -16152,7 +16089,7 @@ C
       END
 
 C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-C
+C> Model for adding your personal structure functions parametrization
       SUBROUTINE FIUSER(X,Q2,ZF1,ZF2,IPDFR)
       IMPLICIT DOUBLE PRECISION (A-H,M,O-Z)
       ZF1=0D0
@@ -16186,7 +16123,7 @@ C
 C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 C
 C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-C
+C> Calculation of Structure Functions
       SUBROUTINE HSSTRF(X,Q2)
       IMPLICIT DOUBLE PRECISION (A-H,M,O-Z)
       COMMON /HSPARL/ LPAR(20),LPARIN(12)
@@ -16493,11 +16430,8 @@ C   MOVED TO LYSTFU
       END
 C
 C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-C   SUBROUTINE FOR STRUCTURE FUNCTIONS INCLUDING SELF ENERGIES
-C   AND LEPTONIC QED CORRECTIONS
-C   CALCULATED FROM PARTON DISTRIBUTION FUNCTIONS
-C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-C
+C> Subroutine for structure functions including self energies
+C> and leptonic QED corrections calculated from PDFs
       SUBROUTINE HSSTR1(X,Q2)
       IMPLICIT DOUBLE PRECISION (A-H,M,O-Z)
       COMPLEX*16 HSSRGG,HSSRGZ,HSSRZZ,CG,CM,CZ
@@ -17223,7 +17157,7 @@ C
 C    THE REST OF THE CODE CONTAINS PARAMETRIZATIONS FOR
 C    STRUCTURE FUNCTIONS
 C    (COURTESY TO D.Y.BARDIN, G.LEVMAN)
-C
+C> SF parametrization Stein/Brasse
       SUBROUTINE STRFBS(X,Q2,AF1,AF2)
 C
 C   CALLED FOR IPART > 2000
@@ -17318,7 +17252,7 @@ C
 C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 C
 C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-C
+C> SF parametrization Stein
       SUBROUTINE STEIN(Q2,W2,F1,F2)
       IMPLICIT DOUBLE PRECISION (A-H,M,O-Z)
       COMMON /HSRADC/ AMP , AMP2, PI , PI2 , ALFA, AML , AML2
@@ -17355,7 +17289,7 @@ C
 C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 C
 C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-C
+C> SF parametrization Brasse
       SUBROUTINE BRASSE(ZT,ZAMF2,ZF1,ZF2)
       IMPLICIT DOUBLE PRECISION (Z)
       COMMON /HSSINC/ S,AP,AMP2,W2PIT,W2MIN,W2TR
@@ -17549,7 +17483,7 @@ C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 C
 C   Interface to the parametrization of ALLM for F2 (1997 update)
 C   H.Abramowicz, A.Levy, DESY 97-251 (Dec.1997) (hep-ph/9712415)
-C
+C> SF parametrization of ALLM
       SUBROUTINE HSSTAL(X,Q2,F1R,F2R)
       DOUBLE PRECISION X,Q2,F1R,F2R
       double precision xmp2,w2,gdfit10
@@ -17787,7 +17721,7 @@ C
 C   Interface to the parametrization of BK for F2, F1
 C   B.Badelek and J.Kwiecinski, Nucl.Phys. B295 (1992) 263
 C   See comments in HSF2BK below
-C
+C> SF parametrization of BK
       SUBROUTINE HSSTBK(DX,DQ2,ZF1,ZF2)
       DOUBLE PRECISION DX,DQ2,ZF1,ZF2
       LOGICAL LFIRST
@@ -17834,7 +17768,7 @@ C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 C
 C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 C
-
+C> SF parametrization of BK
       SUBROUTINE HSF2BK(MODE,X,Q2,F2P,F2D)
 C     SUBROUTINE F2PD(MODE,X,Q2,F2P,F2D)
 c
@@ -17933,7 +17867,7 @@ C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 C
 C...INPUT FOR BADELEK/KWIECINSKI PARAMETRIZATION
 C   NEW VERSION VALID FOR EXTENDED KINEMATIC RANGE (DEC. 93)
-
+C> Input for BK parametrization
       SUBROUTINE HSBKIN
       COMMON //H1(2,20,20)
       DIMENSION H(2,20,20)
@@ -18455,7 +18389,7 @@ C
 C   Interface to the parametrization of DL for F2
 C   A.Donnachie and P.Landshoff, DAMTP 93-23 and M/C-TH 93/11
 C   Published in Z.Phys.C61 (1994) (hep-ph/9305319)
-
+C> SF parametrization of DL
       SUBROUTINE HSSTDL(X,Q2,ZF1,ZF2)
       DOUBLE PRECISION X,Q2,ZF1,ZF2,HSF2DL
       ZF2=HSF2DL(Q2,X)
@@ -18561,7 +18495,7 @@ C
 C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 C
 C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-C
+C> Initialization for elastic lp event generation
       SUBROUTINE HSINIL(FUN,EPSO,NBIN2,NDO2,SIG2,SIG2E,XX2)
 C
 C   INITIALIZATION FOR ELASTIC EP EVENT GENERATION
@@ -19299,10 +19233,8 @@ C
       END
 C
 C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-C   ELASTIC FORM FACTORS FOR THE PROTON
-C   TAKEN FROM STEIN ET AL. (PRD 12 (1975) 1884)
-C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-C
+C> Elastic form factors for the proton taken from Stein et al.
+C> (PRD 12 (1975) 1884)
       SUBROUTINE HSFIE0(Q2,F1EL,F2EL)
       IMPLICIT DOUBLE PRECISION (A-H,M,O-Z)
       COMMON /HSKNST/ PI,ALPHA,ALP1PI,ALP2PI,ALP4PI,E,GF,SXNORM,SX1NRM
@@ -19404,11 +19336,9 @@ C...STRUCTURE FUNCTIONS W1EL, W2EL -> F1,F2
       END
 C
 C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-C   ELASTIC FORM FACTORS FOR THE PROTON
-C   TAKEN FROM STEIN ET AL. (PRD 12 (1975) 1884)
-C   INCLUDING VIRTUAL&SOFT CORRECTIONS AND VACUUM POLARIZATION
-C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-C
+C> Elastic form factors for the proton taken from Stein et al.
+C> (PRD 12 (1975) 1884)
+C> Including virtual and soft corrections and vacuum polarization
       SUBROUTINE HSFIEL(Q2,F1EL,F2EL)
       IMPLICIT DOUBLE PRECISION (A-H,M,O-Z)
       COMPLEX*16 HSSRGG,CG
@@ -19667,7 +19597,7 @@ C     Note: The function to be integrated is identified by
 C     INTEGER IFUN = 1: Neutral Current
 C                  = 2: Charged Current
 C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-C
+C> Integration subroutine
       SUBROUTINE DX1FCF(BLOW,BUP,IFUN,ACCREQ,ACCFIN,RESULT,IFAIL)
       IMPLICIT DOUBLE PRECISION (A-H,O-Z)
       DIMENSION BLOW(2),BUP(2),BLOWC(2),BUPC(2)
@@ -19715,7 +19645,7 @@ C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 C     INTEGRATION SUBROUTINE
 C     SUBSTITUTE FOR THE NAGLIB ROUTINE D01AJF
 C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-C
+C> Integration subroutine
       SUBROUTINE D01AJF(F,BLOW,BUP,ACCREL,RESULT,ACCFIN,IFAIL)
       IMPLICIT DOUBLE PRECISION (A-H,O-Z)
 C      EXTERNAL HSELG1

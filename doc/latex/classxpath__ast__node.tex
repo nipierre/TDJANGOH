@@ -1,0 +1,154 @@
+\hypertarget{classxpath__ast__node}{}\section{xpath\+\_\+ast\+\_\+node Class Reference}
+\label{classxpath__ast__node}\index{xpath\+\_\+ast\+\_\+node@{xpath\+\_\+ast\+\_\+node}}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classxpath__ast__node_af155d17a4477a693d37f4e34957dcc21}\label{classxpath__ast__node_af155d17a4477a693d37f4e34957dcc21}} 
+{\bfseries xpath\+\_\+ast\+\_\+node} (ast\+\_\+type\+\_\+t type, xpath\+\_\+value\+\_\+type rettype\+\_\+, const char\+\_\+t $\ast$value)
+\item 
+\mbox{\Hypertarget{classxpath__ast__node_ada97458f3fc7d6c87cf70d8084117b0d}\label{classxpath__ast__node_ada97458f3fc7d6c87cf70d8084117b0d}} 
+{\bfseries xpath\+\_\+ast\+\_\+node} (ast\+\_\+type\+\_\+t type, xpath\+\_\+value\+\_\+type rettype\+\_\+, double value)
+\item 
+\mbox{\Hypertarget{classxpath__ast__node_a8de4244f7b9fc7626049197ddc0afab7}\label{classxpath__ast__node_a8de4244f7b9fc7626049197ddc0afab7}} 
+{\bfseries xpath\+\_\+ast\+\_\+node} (ast\+\_\+type\+\_\+t type, xpath\+\_\+value\+\_\+type rettype\+\_\+, xpath\+\_\+variable $\ast$value)
+\item 
+\mbox{\Hypertarget{classxpath__ast__node_af6f4ffea3f3c7fdb6ef1e759d4b070f4}\label{classxpath__ast__node_af6f4ffea3f3c7fdb6ef1e759d4b070f4}} 
+{\bfseries xpath\+\_\+ast\+\_\+node} (ast\+\_\+type\+\_\+t type, xpath\+\_\+value\+\_\+type rettype\+\_\+, \hyperlink{classxpath__ast__node}{xpath\+\_\+ast\+\_\+node} $\ast$left=0, \hyperlink{classxpath__ast__node}{xpath\+\_\+ast\+\_\+node} $\ast$right=0)
+\item 
+\mbox{\Hypertarget{classxpath__ast__node_a7cf74b277deba86a6575796c727fe458}\label{classxpath__ast__node_a7cf74b277deba86a6575796c727fe458}} 
+{\bfseries xpath\+\_\+ast\+\_\+node} (ast\+\_\+type\+\_\+t type, \hyperlink{classxpath__ast__node}{xpath\+\_\+ast\+\_\+node} $\ast$left, axis\+\_\+t axis, nodetest\+\_\+t test, const char\+\_\+t $\ast$contents)
+\item 
+\mbox{\Hypertarget{classxpath__ast__node_aef76c6d41da27404909e62437fc9f02c}\label{classxpath__ast__node_aef76c6d41da27404909e62437fc9f02c}} 
+{\bfseries xpath\+\_\+ast\+\_\+node} (ast\+\_\+type\+\_\+t type, \hyperlink{classxpath__ast__node}{xpath\+\_\+ast\+\_\+node} $\ast$left, \hyperlink{classxpath__ast__node}{xpath\+\_\+ast\+\_\+node} $\ast$right, predicate\+\_\+t test)
+\item 
+\mbox{\Hypertarget{classxpath__ast__node_a2764184d076834284eb3ff3182b845cc}\label{classxpath__ast__node_a2764184d076834284eb3ff3182b845cc}} 
+void {\bfseries set\+\_\+next} (\hyperlink{classxpath__ast__node}{xpath\+\_\+ast\+\_\+node} $\ast$value)
+\item 
+\mbox{\Hypertarget{classxpath__ast__node_afe044146db852b7d4dbf188fd2ff6c75}\label{classxpath__ast__node_afe044146db852b7d4dbf188fd2ff6c75}} 
+void {\bfseries set\+\_\+right} (\hyperlink{classxpath__ast__node}{xpath\+\_\+ast\+\_\+node} $\ast$value)
+\item 
+\mbox{\Hypertarget{classxpath__ast__node_ab7f965a92023bc2704b8e6fd9f3d7c14}\label{classxpath__ast__node_ab7f965a92023bc2704b8e6fd9f3d7c14}} 
+bool {\bfseries eval\+\_\+boolean} (const \hyperlink{structxpath__context}{xpath\+\_\+context} \&c, const \hyperlink{structxpath__stack}{xpath\+\_\+stack} \&stack)
+\item 
+\mbox{\Hypertarget{classxpath__ast__node_a92dd7048e28d486bc7f382d1fc6f1de6}\label{classxpath__ast__node_a92dd7048e28d486bc7f382d1fc6f1de6}} 
+double {\bfseries eval\+\_\+number} (const \hyperlink{structxpath__context}{xpath\+\_\+context} \&c, const \hyperlink{structxpath__stack}{xpath\+\_\+stack} \&stack)
+\item 
+\mbox{\Hypertarget{classxpath__ast__node_aaf931a091af0fb91c25e90b205363b4e}\label{classxpath__ast__node_aaf931a091af0fb91c25e90b205363b4e}} 
+\hyperlink{classxpath__string}{xpath\+\_\+string} {\bfseries eval\+\_\+string\+\_\+concat} (const \hyperlink{structxpath__context}{xpath\+\_\+context} \&c, const \hyperlink{structxpath__stack}{xpath\+\_\+stack} \&stack)
+\item 
+\mbox{\Hypertarget{classxpath__ast__node_a6b675237a590548b68d0e0b97518b6df}\label{classxpath__ast__node_a6b675237a590548b68d0e0b97518b6df}} 
+\hyperlink{classxpath__string}{xpath\+\_\+string} {\bfseries eval\+\_\+string} (const \hyperlink{structxpath__context}{xpath\+\_\+context} \&c, const \hyperlink{structxpath__stack}{xpath\+\_\+stack} \&stack)
+\item 
+\mbox{\Hypertarget{classxpath__ast__node_a68cace396dd4eeae67ecfcd34a3a8285}\label{classxpath__ast__node_a68cace396dd4eeae67ecfcd34a3a8285}} 
+\hyperlink{classxpath__node__set__raw}{xpath\+\_\+node\+\_\+set\+\_\+raw} {\bfseries eval\+\_\+node\+\_\+set} (const \hyperlink{structxpath__context}{xpath\+\_\+context} \&c, const \hyperlink{structxpath__stack}{xpath\+\_\+stack} \&stack, nodeset\+\_\+eval\+\_\+t eval)
+\item 
+\mbox{\Hypertarget{classxpath__ast__node_a950534fc7de08fe40d897ebea84c1d6d}\label{classxpath__ast__node_a950534fc7de08fe40d897ebea84c1d6d}} 
+void {\bfseries optimize} (\hyperlink{classxpath__allocator}{xpath\+\_\+allocator} $\ast$alloc)
+\item 
+\mbox{\Hypertarget{classxpath__ast__node_a3eb089927cabd867a3a9d1b723aece0d}\label{classxpath__ast__node_a3eb089927cabd867a3a9d1b723aece0d}} 
+void {\bfseries optimize\+\_\+self} (\hyperlink{classxpath__allocator}{xpath\+\_\+allocator} $\ast$alloc)
+\item 
+\mbox{\Hypertarget{classxpath__ast__node_a4a5fe9e58381f9a303db4baedda59b67}\label{classxpath__ast__node_a4a5fe9e58381f9a303db4baedda59b67}} 
+bool {\bfseries is\+\_\+posinv\+\_\+expr} () const
+\item 
+\mbox{\Hypertarget{classxpath__ast__node_aac1162512c42ef38e35a9ba7ce994b91}\label{classxpath__ast__node_aac1162512c42ef38e35a9ba7ce994b91}} 
+bool {\bfseries is\+\_\+posinv\+\_\+step} () const
+\item 
+\mbox{\Hypertarget{classxpath__ast__node_a2c12e34a46db2a3d0052f9f38bcf1bb6}\label{classxpath__ast__node_a2c12e34a46db2a3d0052f9f38bcf1bb6}} 
+xpath\+\_\+value\+\_\+type {\bfseries rettype} () const
+\end{DoxyCompactItemize}
+\subsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classxpath__ast__node_ae5a059e41b41505bef1f7dbebda8070b}\label{classxpath__ast__node_ae5a059e41b41505bef1f7dbebda8070b}} 
+{\bfseries xpath\+\_\+ast\+\_\+node} (const \hyperlink{classxpath__ast__node}{xpath\+\_\+ast\+\_\+node} \&)
+\item 
+\mbox{\Hypertarget{classxpath__ast__node_a60fddea92b095c2b8705f12f7309e6aa}\label{classxpath__ast__node_a60fddea92b095c2b8705f12f7309e6aa}} 
+\hyperlink{classxpath__ast__node}{xpath\+\_\+ast\+\_\+node} \& {\bfseries operator=} (const \hyperlink{classxpath__ast__node}{xpath\+\_\+ast\+\_\+node} \&)
+\item 
+\mbox{\Hypertarget{classxpath__ast__node_a7e35f265c9e0712a16e1d8a9db4c7672}\label{classxpath__ast__node_a7e35f265c9e0712a16e1d8a9db4c7672}} 
+void {\bfseries apply\+\_\+predicate} (\hyperlink{classxpath__node__set__raw}{xpath\+\_\+node\+\_\+set\+\_\+raw} \&ns, size\+\_\+t first, const \hyperlink{structxpath__stack}{xpath\+\_\+stack} \&stack, bool once)
+\item 
+\mbox{\Hypertarget{classxpath__ast__node_af025a480dab7dd0bab21157fb9dd3e73}\label{classxpath__ast__node_af025a480dab7dd0bab21157fb9dd3e73}} 
+void {\bfseries apply\+\_\+predicates} (\hyperlink{classxpath__node__set__raw}{xpath\+\_\+node\+\_\+set\+\_\+raw} \&ns, size\+\_\+t first, const \hyperlink{structxpath__stack}{xpath\+\_\+stack} \&stack, nodeset\+\_\+eval\+\_\+t eval)
+\item 
+\mbox{\Hypertarget{classxpath__ast__node_a4f7aaa038105a1d98a7505606ca2b5a2}\label{classxpath__ast__node_a4f7aaa038105a1d98a7505606ca2b5a2}} 
+bool {\bfseries step\+\_\+push} (\hyperlink{classxpath__node__set__raw}{xpath\+\_\+node\+\_\+set\+\_\+raw} \&ns, xml\+\_\+attribute\+\_\+struct $\ast$a, xml\+\_\+node\+\_\+struct $\ast$parent, \hyperlink{classxpath__allocator}{xpath\+\_\+allocator} $\ast$alloc)
+\item 
+\mbox{\Hypertarget{classxpath__ast__node_a29d639296f3cd2726e6967b1ba277928}\label{classxpath__ast__node_a29d639296f3cd2726e6967b1ba277928}} 
+bool {\bfseries step\+\_\+push} (\hyperlink{classxpath__node__set__raw}{xpath\+\_\+node\+\_\+set\+\_\+raw} \&ns, xml\+\_\+node\+\_\+struct $\ast$n, \hyperlink{classxpath__allocator}{xpath\+\_\+allocator} $\ast$alloc)
+\item 
+\mbox{\Hypertarget{classxpath__ast__node_acbc4f5ec0e4d48444564d5101890416e}\label{classxpath__ast__node_acbc4f5ec0e4d48444564d5101890416e}} 
+{\footnotesize template$<$class T $>$ }\\void {\bfseries step\+\_\+fill} (\hyperlink{classxpath__node__set__raw}{xpath\+\_\+node\+\_\+set\+\_\+raw} \&ns, xml\+\_\+node\+\_\+struct $\ast$n, \hyperlink{classxpath__allocator}{xpath\+\_\+allocator} $\ast$alloc, bool once, T)
+\item 
+\mbox{\Hypertarget{classxpath__ast__node_aca100722d72e30f12c7276e8b2616587}\label{classxpath__ast__node_aca100722d72e30f12c7276e8b2616587}} 
+{\footnotesize template$<$class T $>$ }\\void {\bfseries step\+\_\+fill} (\hyperlink{classxpath__node__set__raw}{xpath\+\_\+node\+\_\+set\+\_\+raw} \&ns, xml\+\_\+attribute\+\_\+struct $\ast$a, xml\+\_\+node\+\_\+struct $\ast$p, \hyperlink{classxpath__allocator}{xpath\+\_\+allocator} $\ast$alloc, bool once, T v)
+\item 
+\mbox{\Hypertarget{classxpath__ast__node_ad1bf00f367027a353dc253900e85c036}\label{classxpath__ast__node_ad1bf00f367027a353dc253900e85c036}} 
+{\footnotesize template$<$class T $>$ }\\void {\bfseries step\+\_\+fill} (\hyperlink{classxpath__node__set__raw}{xpath\+\_\+node\+\_\+set\+\_\+raw} \&ns, const xpath\+\_\+node \&xn, \hyperlink{classxpath__allocator}{xpath\+\_\+allocator} $\ast$alloc, bool once, T v)
+\item 
+\mbox{\Hypertarget{classxpath__ast__node_a3258c05ab9aaa78e154d2ff63fe56906}\label{classxpath__ast__node_a3258c05ab9aaa78e154d2ff63fe56906}} 
+{\footnotesize template$<$class T $>$ }\\\hyperlink{classxpath__node__set__raw}{xpath\+\_\+node\+\_\+set\+\_\+raw} {\bfseries step\+\_\+do} (const \hyperlink{structxpath__context}{xpath\+\_\+context} \&c, const \hyperlink{structxpath__stack}{xpath\+\_\+stack} \&stack, nodeset\+\_\+eval\+\_\+t eval, T v)
+\end{DoxyCompactItemize}
+\subsection*{Static Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classxpath__ast__node_a98dd7f6e67fe2c56c63056eed835d6a4}\label{classxpath__ast__node_a98dd7f6e67fe2c56c63056eed835d6a4}} 
+{\footnotesize template$<$class Comp $>$ }\\static bool {\bfseries compare\+\_\+eq} (\hyperlink{classxpath__ast__node}{xpath\+\_\+ast\+\_\+node} $\ast$lhs, \hyperlink{classxpath__ast__node}{xpath\+\_\+ast\+\_\+node} $\ast$rhs, const \hyperlink{structxpath__context}{xpath\+\_\+context} \&c, const \hyperlink{structxpath__stack}{xpath\+\_\+stack} \&stack, const Comp \&comp)
+\item 
+\mbox{\Hypertarget{classxpath__ast__node_a35ad012fc33cf3dc51468a67c04aac54}\label{classxpath__ast__node_a35ad012fc33cf3dc51468a67c04aac54}} 
+static bool {\bfseries eval\+\_\+once} (xpath\+\_\+node\+\_\+set\+::type\+\_\+t type, nodeset\+\_\+eval\+\_\+t eval)
+\item 
+\mbox{\Hypertarget{classxpath__ast__node_abb6e4c529276eaf882233dbb6e04e111}\label{classxpath__ast__node_abb6e4c529276eaf882233dbb6e04e111}} 
+{\footnotesize template$<$class Comp $>$ }\\static bool {\bfseries compare\+\_\+rel} (\hyperlink{classxpath__ast__node}{xpath\+\_\+ast\+\_\+node} $\ast$lhs, \hyperlink{classxpath__ast__node}{xpath\+\_\+ast\+\_\+node} $\ast$rhs, const \hyperlink{structxpath__context}{xpath\+\_\+context} \&c, const \hyperlink{structxpath__stack}{xpath\+\_\+stack} \&stack, const Comp \&comp)
+\item 
+\mbox{\Hypertarget{classxpath__ast__node_ab4e5bbd3f2e83c86a43349374b4bfc22}\label{classxpath__ast__node_ab4e5bbd3f2e83c86a43349374b4bfc22}} 
+static void {\bfseries apply\+\_\+predicate\+\_\+boolean} (\hyperlink{classxpath__node__set__raw}{xpath\+\_\+node\+\_\+set\+\_\+raw} \&ns, size\+\_\+t first, \hyperlink{classxpath__ast__node}{xpath\+\_\+ast\+\_\+node} $\ast$expr, const \hyperlink{structxpath__stack}{xpath\+\_\+stack} \&stack, bool once)
+\item 
+\mbox{\Hypertarget{classxpath__ast__node_abf2d4b745493f63aebc1c89d9fde8eed}\label{classxpath__ast__node_abf2d4b745493f63aebc1c89d9fde8eed}} 
+static void {\bfseries apply\+\_\+predicate\+\_\+number} (\hyperlink{classxpath__node__set__raw}{xpath\+\_\+node\+\_\+set\+\_\+raw} \&ns, size\+\_\+t first, \hyperlink{classxpath__ast__node}{xpath\+\_\+ast\+\_\+node} $\ast$expr, const \hyperlink{structxpath__stack}{xpath\+\_\+stack} \&stack, bool once)
+\item 
+\mbox{\Hypertarget{classxpath__ast__node_a8cedd7e15623b9fa431788b8843f1463}\label{classxpath__ast__node_a8cedd7e15623b9fa431788b8843f1463}} 
+static void {\bfseries apply\+\_\+predicate\+\_\+number\+\_\+const} (\hyperlink{classxpath__node__set__raw}{xpath\+\_\+node\+\_\+set\+\_\+raw} \&ns, size\+\_\+t first, \hyperlink{classxpath__ast__node}{xpath\+\_\+ast\+\_\+node} $\ast$expr, const \hyperlink{structxpath__stack}{xpath\+\_\+stack} \&stack)
+\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classxpath__ast__node_ad285f423090a0aaee3c4126da65066d1}\label{classxpath__ast__node_ad285f423090a0aaee3c4126da65066d1}} 
+char {\bfseries \+\_\+type}
+\item 
+\mbox{\Hypertarget{classxpath__ast__node_ab84a640f3a0f00d4d611d8cdd1f5c029}\label{classxpath__ast__node_ab84a640f3a0f00d4d611d8cdd1f5c029}} 
+char {\bfseries \+\_\+rettype}
+\item 
+\mbox{\Hypertarget{classxpath__ast__node_a97b21db6df156c37ef7f2e6f69478b77}\label{classxpath__ast__node_a97b21db6df156c37ef7f2e6f69478b77}} 
+char {\bfseries \+\_\+axis}
+\item 
+\mbox{\Hypertarget{classxpath__ast__node_a421f6ed5f666ced9d6fe3692e84d7b89}\label{classxpath__ast__node_a421f6ed5f666ced9d6fe3692e84d7b89}} 
+char {\bfseries \+\_\+test}
+\item 
+\mbox{\Hypertarget{classxpath__ast__node_ad229146ced94be21eb5e4921b43a7ebb}\label{classxpath__ast__node_ad229146ced94be21eb5e4921b43a7ebb}} 
+\hyperlink{classxpath__ast__node}{xpath\+\_\+ast\+\_\+node} $\ast$ {\bfseries \+\_\+left}
+\item 
+\mbox{\Hypertarget{classxpath__ast__node_ab3935ea7e83f4421b20840cd84f0b37d}\label{classxpath__ast__node_ab3935ea7e83f4421b20840cd84f0b37d}} 
+\hyperlink{classxpath__ast__node}{xpath\+\_\+ast\+\_\+node} $\ast$ {\bfseries \+\_\+right}
+\item 
+\mbox{\Hypertarget{classxpath__ast__node_a10059a66ecff3384e175e00d9fa2afcd}\label{classxpath__ast__node_a10059a66ecff3384e175e00d9fa2afcd}} 
+\hyperlink{classxpath__ast__node}{xpath\+\_\+ast\+\_\+node} $\ast$ {\bfseries \+\_\+next}
+\item 
+\mbox{\Hypertarget{classxpath__ast__node_a4a44839b652d66262d384347c529c7c0}\label{classxpath__ast__node_a4a44839b652d66262d384347c529c7c0}} 
+\begin{tabbing}
+xx\=xx\=xx\=xx\=xx\=xx\=xx\=xx\=xx\=\kill
+union \{\\
+\>const char\_t $\ast$ {\bfseries string}\\
+\>double {\bfseries number}\\
+\>xpath\_variable $\ast$ {\bfseries variable}\\
+\>const char\_t $\ast$ {\bfseries nodetest}\\
+\>const unsigned char $\ast$ {\bfseries table}\\
+\} {\bfseries \_data}\\
+
+\end{tabbing}\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+src/pugixml.\+cpp\end{DoxyCompactItemize}

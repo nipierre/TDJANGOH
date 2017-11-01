@@ -1,0 +1,26 @@
+You can find several different programs \+:
+\begin{DoxyItemize}
+\item One is {\ttfamily pdist} and gives a large panel of information about radiative photon production as the energy, angle.. The usage is the following \+:
+\begin{DoxyItemize}
+\item {\ttfamily ./pdist \mbox{[}inputfile\mbox{]}}
+\item The input file is one of the {\ttfamily T\+Djangoh\+\_\+evt.\+dat} file produced with the {\ttfamily test} program.
+\end{DoxyItemize}
+\item An other is {\ttfamily rc\+\_\+calc} and is used for plotting the radiative correction factors. The usage is the following \+:
+\begin{DoxyItemize}
+\item {\ttfamily ./rc\+\_\+calc -\/f \mbox{[}R\+C\+\_\+file\mbox{]} \mbox{[}Born\+\_\+file\mbox{]}} \+: computes incl. corr. from two files.
+\item or {\ttfamily ./rc\+\_\+calc -\/l \mbox{[}filename\+\_\+template\mbox{]}} \+: computes incl. corr. from list of files.
+\item or {\ttfamily ./rc\+\_\+calc -\/sigf \mbox{[}R\+C\+\_\+file\mbox{]} \mbox{[}Born\+\_\+file\mbox{]}} \+: computes incl. corr. from cross-\/section files produced by {\ttfamily xsgen} (Best method ! \+:+1\+:)
+\item or {\ttfamily ./rc\+\_\+calc -\/bornratio \mbox{[}Born\+\_\+file\mbox{]}} \+: compares born cross-\/section with T\+E\+R\+AD\textquotesingle{}s.
+\item or {\ttfamily ./rc\+\_\+calc -\/sirc \mbox{[}input\+\_\+file\mbox{]}} \+: plots semi-\/incl. corr. issued by {\ttfamily sirc}.
+\item Other flags can be \+:
+\begin{DoxyItemize}
+\item {\ttfamily -\/qel \mbox{[}q\mbox{]}} 0/1, exclude/include elastic/quasi-\/elastic contribution from T\+E\+R\+AD corrections.
+\end{DoxyItemize}
+\end{DoxyItemize}
+\item An other is {\ttfamily sirc} and is computing semi-\/inclusive corrections.
+\begin{DoxyItemize}
+\item {\ttfamily ./sirc -\/f \mbox{[}R\+C\+\_\+file\mbox{]} \mbox{[}Born\+\_\+file\mbox{]}} \+: computes semi-\/incl. corr. from two files.
+\item {\ttfamily ./sirc -\/l \mbox{[}R\+C\+\_\+filelist\mbox{]} \mbox{[}Born\+\_\+filelist\mbox{]}} \+: computes semi-\/incl. corr. from lists of files.
+\end{DoxyItemize}
+\item A last is {\ttfamily low\+Q2} and is comparing structure functions for different parametrizations. 
+\end{DoxyItemize}

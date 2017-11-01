@@ -1,3 +1,22 @@
+//==============================================================================
+/*!
+
+    \file                         TDjangohCalls.h
+    \brief                        Storage of C++ structure mimicking FORTRAN
+                                  common blocks
+    \author                       Nicolas PIERRE
+    \version                      1.1
+    \date                         14/06/17
+    Support :                     mail to : nicolas.pierre@cern.ch
+
+    Contact : nicolas.pierre@cern.ch
+
+    Djangoh event generator, written by H.Spiesberger.
+    For the details about the generator look at djangoh manual :
+      http://wwwthep.physik.uni-mainz.de/~hspiesb/djangoh/djangoh.html
+
+*/
+//==============================================================================
 /* @(#)root/djangoh:$Id$ */
 
 #ifndef ROOT_TDjangohCalls

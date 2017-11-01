@@ -1,0 +1,19 @@
+You can find two different programs \+:
+\begin{DoxyItemize}
+\item One is {\ttfamily test} and is used to test the generator. The usage is the following \+:
+\begin{DoxyItemize}
+\item {\ttfamily ./test \mbox{[}inputfile\mbox{]} \mbox{[}nb\+\_\+evts\mbox{]} + flags}
+\item The input file is a specified .xml config file. You can find a template in {\ttfamily utils/}
+\item Flags can be \+:
+\begin{DoxyItemize}
+\item {\ttfamily -\/energy \mbox{[}e\mbox{]}} \+: nominal energy of the beam.
+\item {\ttfamily -\/verbose \mbox{[}v\mbox{]}} \+: v=0/1/2, default is 1. Use 0 when in batch mode.
+\item {\ttfamily -\/rand \mbox{[}r\mbox{]}} \+: r=0/1, gaussian randomization of input energy within ±40 GeV relative to nominal energy.
+\item {\ttfamily -\/finalstate} \+: save the final states inside a file (eg. for semi-\/inclusive correction calculation)
+\end{DoxyItemize}
+\end{DoxyItemize}
+\item The other is {\ttfamily xsgen} and is used for inclusive cross-\/section generation. The usage is the following \+:
+\begin{DoxyItemize}
+\item {\ttfamily ./xsgen \mbox{[}inputfile\mbox{]} \mbox{[}R\+C(1)/\+Born(0)\mbox{]}} 
+\end{DoxyItemize}
+\end{DoxyItemize}

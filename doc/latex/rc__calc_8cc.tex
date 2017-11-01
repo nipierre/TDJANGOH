@@ -1,0 +1,321 @@
+\hypertarget{rc__calc_8cc}{}\section{utils/rc\+\_\+calc.cc File Reference}
+\label{rc__calc_8cc}\index{utils/rc\+\_\+calc.\+cc@{utils/rc\+\_\+calc.\+cc}}
+{\ttfamily \#include $<$iostream$>$}\newline
+{\ttfamily \#include $<$fstream$>$}\newline
+{\ttfamily \#include $<$T\+File.\+h$>$}\newline
+{\ttfamily \#include $<$T\+H1\+F.\+h$>$}\newline
+{\ttfamily \#include $<$T\+H2\+F.\+h$>$}\newline
+{\ttfamily \#include $<$T\+Canvas.\+h$>$}\newline
+{\ttfamily \#include $<$T\+Matrix\+D.\+h$>$}\newline
+{\ttfamily \#include $<$T\+Matrix\+T\+Utils.\+h$>$}\newline
+{\ttfamily \#include $<$T\+Tree.\+h$>$}\newline
+{\ttfamily \#include $<$T\+Branch.\+h$>$}\newline
+{\ttfamily \#include $<$T\+Leaf.\+h$>$}\newline
+{\ttfamily \#include $<$T\+Graph.\+h$>$}\newline
+{\ttfamily \#include $<$T\+Multi\+Graph.\+h$>$}\newline
+{\ttfamily \#include $<$T\+Graph\+Errors.\+h$>$}\newline
+{\ttfamily \#include $<$T\+Arrow.\+h$>$}\newline
+{\ttfamily \#include $<$T\+Axis.\+h$>$}\newline
+{\ttfamily \#include $<$T\+Line.\+h$>$}\newline
+{\ttfamily \#include $<$vector$>$}\newline
+{\ttfamily \#include $<$math.\+h$>$}\newline
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{rc__calc_8cc_a525335710b53cb064ca56b936120431e}{\+\_\+\+U\+S\+E\+\_\+\+M\+A\+T\+H\+\_\+\+D\+E\+F\+I\+N\+ES}
+\item 
+\#define \hyperlink{rc__calc_8cc_a4f0aed445da19ed980f564f8b2da1bc5}{R\+Cx\+\_\+pdf}~\char`\"{}R\+Cx.\+pdf\char`\"{}
+\item 
+\#define \hyperlink{rc__calc_8cc_a15ba1e0fb46c08a5f34a444b8280390e}{R\+Cy\+\_\+pdf}~\char`\"{}R\+Cy.\+pdf\char`\"{}
+\item 
+\#define \hyperlink{rc__calc_8cc_a7b5c9ae3f4dedc4a5eb3c23906cf863c}{E\+Rx\+\_\+pdf}~\char`\"{}E\+Rx.\+pdf\char`\"{}
+\item 
+\#define \hyperlink{rc__calc_8cc_a00097f7302dbb152043ef7db522c78d1}{E\+Ry\+\_\+pdf}~\char`\"{}E\+Ry.\+pdf\char`\"{}
+\item 
+\#define \hyperlink{rc__calc_8cc_ac01686589418493aefe5819df78c2771}{E\+Ry\+\_\+scat\+\_\+pdf}~\char`\"{}E\+Ry\+\_\+scat.\+pdf\char`\"{}
+\item 
+\#define \hyperlink{rc__calc_8cc_a5786ce017c51bbca09a395b9866eb980}{E\+R\+R\+Ex\+\_\+pdf}~\char`\"{}E\+R\+R\+Ex.\+pdf\char`\"{}
+\item 
+\#define \hyperlink{rc__calc_8cc_a556d04b4ef75114249b8a5642eeb22eb}{E\+R\+R\+Ey\+\_\+pdf}~\char`\"{}E\+R\+R\+Ey.\+pdf\char`\"{}
+\item 
+\#define \hyperlink{rc__calc_8cc_ac6a10ce1d014c50bb97a036883bc3172}{B\+Rx\+\_\+pdf}~\char`\"{}B\+Rx.\+pdf\char`\"{}
+\item 
+\#define \hyperlink{rc__calc_8cc_a72c5cb3dea220bf102c9c3c592e3cff1}{B\+Ry\+\_\+pdf}~\char`\"{}B\+Ry.\+pdf\char`\"{}
+\item 
+\#define \hyperlink{rc__calc_8cc_a19a928c6affa050c7f95fc07c31625b7}{B\+Ry\+\_\+scat\+\_\+pdf}~\char`\"{}B\+Ry\+\_\+scat.\+pdf\char`\"{}
+\item 
+\#define \hyperlink{rc__calc_8cc_a827fa1f01250b1dbf5903941513842fb}{T\+E\+Ry\+\_\+pdf}~\char`\"{}T\+E\+Ry.\+pdf\char`\"{}
+\item 
+\#define \hyperlink{rc__calc_8cc_aad41eb90bd83a5a66891e1118756ea14}{S\+Ix\+\_\+pdf}~\char`\"{}S\+Ix.\+pdf\char`\"{}
+\item 
+\#define \hyperlink{rc__calc_8cc_a51b97d89ad133f870f7d3267b78d3795}{S\+Iy\+\_\+pdf}~\char`\"{}S\+Iy.\+pdf\char`\"{}
+\item 
+\#define \hyperlink{rc__calc_8cc_a32cc9d976eaa3b33e3cdbc87e47c72a1}{O\+U\+T\+F\+I\+LE}~\char`\"{}rc.\+txt\char`\"{}
+\item 
+\#define \hyperlink{rc__calc_8cc_ac5d957e4fd3dc11cd97a54cf9ca057a4}{R\+ST}~\char`\"{}\textbackslash{}x1B\mbox{[}0m\char`\"{}
+\item 
+\#define \hyperlink{rc__calc_8cc_a66290957baed5df3930ada4cb8caccf1}{K\+R\+ED}~\char`\"{}\textbackslash{}x1B\mbox{[}31m\char`\"{}
+\item 
+\#define \hyperlink{rc__calc_8cc_ac081c83b067273757f7a2e54a5957d41}{K\+G\+RN}~\char`\"{}\textbackslash{}x1B\mbox{[}32m\char`\"{}
+\item 
+\#define \hyperlink{rc__calc_8cc_a897b10d246533c95ba86cb79f92e465a}{K\+Y\+EL}~\char`\"{}\textbackslash{}x1B\mbox{[}33m\char`\"{}
+\item 
+\#define \hyperlink{rc__calc_8cc_a3f838f2fc3a9a3b434be606fc908964b}{K\+B\+LU}~\char`\"{}\textbackslash{}x1B\mbox{[}34m\char`\"{}
+\item 
+\#define \hyperlink{rc__calc_8cc_a6825f05d3b9d619d91d79d0ef18bb8b2}{K\+M\+AG}~\char`\"{}\textbackslash{}x1B\mbox{[}35m\char`\"{}
+\item 
+\#define \hyperlink{rc__calc_8cc_a32036c94dbb166a3f874b7efc169841f}{K\+C\+YN}~\char`\"{}\textbackslash{}x1B\mbox{[}36m\char`\"{}
+\item 
+\#define \hyperlink{rc__calc_8cc_af0036c8022c9980079ab17e5c87fd478}{K\+W\+HT}~\char`\"{}\textbackslash{}x1B\mbox{[}37m\char`\"{}
+\item 
+\#define \hyperlink{rc__calc_8cc_ae5b789f4a8f720ec20a544c58f9c204d}{F\+R\+ED}(x)~\hyperlink{rc__calc_8cc_a66290957baed5df3930ada4cb8caccf1}{K\+R\+ED} x \hyperlink{rc__calc_8cc_ac5d957e4fd3dc11cd97a54cf9ca057a4}{R\+ST}
+\item 
+\#define \hyperlink{rc__calc_8cc_ab3968f7b5009845811dc102a5b53d898}{F\+G\+RN}(x)~\hyperlink{rc__calc_8cc_ac081c83b067273757f7a2e54a5957d41}{K\+G\+RN} x \hyperlink{rc__calc_8cc_ac5d957e4fd3dc11cd97a54cf9ca057a4}{R\+ST}
+\item 
+\#define \hyperlink{rc__calc_8cc_a4bae6c5147cf3957a90c9c6f5b37faac}{F\+Y\+EL}(x)~\hyperlink{rc__calc_8cc_a897b10d246533c95ba86cb79f92e465a}{K\+Y\+EL} x \hyperlink{rc__calc_8cc_ac5d957e4fd3dc11cd97a54cf9ca057a4}{R\+ST}
+\item 
+\#define \hyperlink{rc__calc_8cc_a7efc4f68a50a41c6a93ece87dd6c7dec}{F\+B\+LU}(x)~\hyperlink{rc__calc_8cc_a3f838f2fc3a9a3b434be606fc908964b}{K\+B\+LU} x \hyperlink{rc__calc_8cc_ac5d957e4fd3dc11cd97a54cf9ca057a4}{R\+ST}
+\item 
+\#define \hyperlink{rc__calc_8cc_a957ecba768167bfb215a4bf97e7a0533}{F\+M\+AG}(x)~\hyperlink{rc__calc_8cc_a6825f05d3b9d619d91d79d0ef18bb8b2}{K\+M\+AG} x \hyperlink{rc__calc_8cc_ac5d957e4fd3dc11cd97a54cf9ca057a4}{R\+ST}
+\item 
+\#define \hyperlink{rc__calc_8cc_a707fab975ef99b4f89ff740f55d14602}{F\+C\+YN}(x)~\hyperlink{rc__calc_8cc_a32036c94dbb166a3f874b7efc169841f}{K\+C\+YN} x \hyperlink{rc__calc_8cc_ac5d957e4fd3dc11cd97a54cf9ca057a4}{R\+ST}
+\item 
+\#define \hyperlink{rc__calc_8cc_a312c671f34e0d7a772e43cd63bc0f31b}{F\+W\+HT}(x)~\hyperlink{rc__calc_8cc_af0036c8022c9980079ab17e5c87fd478}{K\+W\+HT} x \hyperlink{rc__calc_8cc_ac5d957e4fd3dc11cd97a54cf9ca057a4}{R\+ST}
+\item 
+\#define \hyperlink{rc__calc_8cc_a8d6c06f3e6f93ac985b046d40b63ae43}{B\+O\+LD}(x)~\char`\"{}\textbackslash{}x1B\mbox{[}1m\char`\"{} x R\+ST
+\item 
+\#define \hyperlink{rc__calc_8cc_a83010912e47c70954b461dd1013b2d4e}{U\+N\+DL}(x)~\char`\"{}\textbackslash{}x1B\mbox{[}4m\char`\"{} x R\+ST
+\item 
+\#define \hyperlink{rc__calc_8cc_a93f03159397f25c687840129b18c972d}{P\+B\+S\+TR}~\char`\"{}$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$\char`\"{}
+\item 
+\#define \hyperlink{rc__calc_8cc_a69793e71975c25754a8236df29896e15}{P\+B\+W\+I\+D\+TH}~60
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{rc__calc_8cc_a3af59cb8d0ce70431b79697ce6a6ad53}{print\+Progress} (int event, int total)
+\item 
+int \hyperlink{rc__calc_8cc_a0ddf1224851353fc92bfbff6f499fa97}{main} (int argc, char $\ast$argv\mbox{[}$\,$\mbox{]})
+\end{DoxyCompactItemize}
+
+
+\subsection{Macro Definition Documentation}
+\mbox{\Hypertarget{rc__calc_8cc_a525335710b53cb064ca56b936120431e}\label{rc__calc_8cc_a525335710b53cb064ca56b936120431e}} 
+\index{rc\+\_\+calc.\+cc@{rc\+\_\+calc.\+cc}!\+\_\+\+U\+S\+E\+\_\+\+M\+A\+T\+H\+\_\+\+D\+E\+F\+I\+N\+ES@{\+\_\+\+U\+S\+E\+\_\+\+M\+A\+T\+H\+\_\+\+D\+E\+F\+I\+N\+ES}}
+\index{\+\_\+\+U\+S\+E\+\_\+\+M\+A\+T\+H\+\_\+\+D\+E\+F\+I\+N\+ES@{\+\_\+\+U\+S\+E\+\_\+\+M\+A\+T\+H\+\_\+\+D\+E\+F\+I\+N\+ES}!rc\+\_\+calc.\+cc@{rc\+\_\+calc.\+cc}}
+\subsubsection{\texorpdfstring{\+\_\+\+U\+S\+E\+\_\+\+M\+A\+T\+H\+\_\+\+D\+E\+F\+I\+N\+ES}{\_USE\_MATH\_DEFINES}}
+{\footnotesize\ttfamily \#define \+\_\+\+U\+S\+E\+\_\+\+M\+A\+T\+H\+\_\+\+D\+E\+F\+I\+N\+ES}
+
+\mbox{\Hypertarget{rc__calc_8cc_a8d6c06f3e6f93ac985b046d40b63ae43}\label{rc__calc_8cc_a8d6c06f3e6f93ac985b046d40b63ae43}} 
+\index{rc\+\_\+calc.\+cc@{rc\+\_\+calc.\+cc}!B\+O\+LD@{B\+O\+LD}}
+\index{B\+O\+LD@{B\+O\+LD}!rc\+\_\+calc.\+cc@{rc\+\_\+calc.\+cc}}
+\subsubsection{\texorpdfstring{B\+O\+LD}{BOLD}}
+{\footnotesize\ttfamily \#define B\+O\+LD(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~\char`\"{}\textbackslash{}x1B\mbox{[}1m\char`\"{} x R\+ST}
+
+\mbox{\Hypertarget{rc__calc_8cc_ac6a10ce1d014c50bb97a036883bc3172}\label{rc__calc_8cc_ac6a10ce1d014c50bb97a036883bc3172}} 
+\index{rc\+\_\+calc.\+cc@{rc\+\_\+calc.\+cc}!B\+Rx\+\_\+pdf@{B\+Rx\+\_\+pdf}}
+\index{B\+Rx\+\_\+pdf@{B\+Rx\+\_\+pdf}!rc\+\_\+calc.\+cc@{rc\+\_\+calc.\+cc}}
+\subsubsection{\texorpdfstring{B\+Rx\+\_\+pdf}{BRx\_pdf}}
+{\footnotesize\ttfamily \#define B\+Rx\+\_\+pdf~\char`\"{}B\+Rx.\+pdf\char`\"{}}
+
+\mbox{\Hypertarget{rc__calc_8cc_a72c5cb3dea220bf102c9c3c592e3cff1}\label{rc__calc_8cc_a72c5cb3dea220bf102c9c3c592e3cff1}} 
+\index{rc\+\_\+calc.\+cc@{rc\+\_\+calc.\+cc}!B\+Ry\+\_\+pdf@{B\+Ry\+\_\+pdf}}
+\index{B\+Ry\+\_\+pdf@{B\+Ry\+\_\+pdf}!rc\+\_\+calc.\+cc@{rc\+\_\+calc.\+cc}}
+\subsubsection{\texorpdfstring{B\+Ry\+\_\+pdf}{BRy\_pdf}}
+{\footnotesize\ttfamily \#define B\+Ry\+\_\+pdf~\char`\"{}B\+Ry.\+pdf\char`\"{}}
+
+\mbox{\Hypertarget{rc__calc_8cc_a19a928c6affa050c7f95fc07c31625b7}\label{rc__calc_8cc_a19a928c6affa050c7f95fc07c31625b7}} 
+\index{rc\+\_\+calc.\+cc@{rc\+\_\+calc.\+cc}!B\+Ry\+\_\+scat\+\_\+pdf@{B\+Ry\+\_\+scat\+\_\+pdf}}
+\index{B\+Ry\+\_\+scat\+\_\+pdf@{B\+Ry\+\_\+scat\+\_\+pdf}!rc\+\_\+calc.\+cc@{rc\+\_\+calc.\+cc}}
+\subsubsection{\texorpdfstring{B\+Ry\+\_\+scat\+\_\+pdf}{BRy\_scat\_pdf}}
+{\footnotesize\ttfamily \#define B\+Ry\+\_\+scat\+\_\+pdf~\char`\"{}B\+Ry\+\_\+scat.\+pdf\char`\"{}}
+
+\mbox{\Hypertarget{rc__calc_8cc_a5786ce017c51bbca09a395b9866eb980}\label{rc__calc_8cc_a5786ce017c51bbca09a395b9866eb980}} 
+\index{rc\+\_\+calc.\+cc@{rc\+\_\+calc.\+cc}!E\+R\+R\+Ex\+\_\+pdf@{E\+R\+R\+Ex\+\_\+pdf}}
+\index{E\+R\+R\+Ex\+\_\+pdf@{E\+R\+R\+Ex\+\_\+pdf}!rc\+\_\+calc.\+cc@{rc\+\_\+calc.\+cc}}
+\subsubsection{\texorpdfstring{E\+R\+R\+Ex\+\_\+pdf}{ERREx\_pdf}}
+{\footnotesize\ttfamily \#define E\+R\+R\+Ex\+\_\+pdf~\char`\"{}E\+R\+R\+Ex.\+pdf\char`\"{}}
+
+\mbox{\Hypertarget{rc__calc_8cc_a556d04b4ef75114249b8a5642eeb22eb}\label{rc__calc_8cc_a556d04b4ef75114249b8a5642eeb22eb}} 
+\index{rc\+\_\+calc.\+cc@{rc\+\_\+calc.\+cc}!E\+R\+R\+Ey\+\_\+pdf@{E\+R\+R\+Ey\+\_\+pdf}}
+\index{E\+R\+R\+Ey\+\_\+pdf@{E\+R\+R\+Ey\+\_\+pdf}!rc\+\_\+calc.\+cc@{rc\+\_\+calc.\+cc}}
+\subsubsection{\texorpdfstring{E\+R\+R\+Ey\+\_\+pdf}{ERREy\_pdf}}
+{\footnotesize\ttfamily \#define E\+R\+R\+Ey\+\_\+pdf~\char`\"{}E\+R\+R\+Ey.\+pdf\char`\"{}}
+
+\mbox{\Hypertarget{rc__calc_8cc_a7b5c9ae3f4dedc4a5eb3c23906cf863c}\label{rc__calc_8cc_a7b5c9ae3f4dedc4a5eb3c23906cf863c}} 
+\index{rc\+\_\+calc.\+cc@{rc\+\_\+calc.\+cc}!E\+Rx\+\_\+pdf@{E\+Rx\+\_\+pdf}}
+\index{E\+Rx\+\_\+pdf@{E\+Rx\+\_\+pdf}!rc\+\_\+calc.\+cc@{rc\+\_\+calc.\+cc}}
+\subsubsection{\texorpdfstring{E\+Rx\+\_\+pdf}{ERx\_pdf}}
+{\footnotesize\ttfamily \#define E\+Rx\+\_\+pdf~\char`\"{}E\+Rx.\+pdf\char`\"{}}
+
+\mbox{\Hypertarget{rc__calc_8cc_a00097f7302dbb152043ef7db522c78d1}\label{rc__calc_8cc_a00097f7302dbb152043ef7db522c78d1}} 
+\index{rc\+\_\+calc.\+cc@{rc\+\_\+calc.\+cc}!E\+Ry\+\_\+pdf@{E\+Ry\+\_\+pdf}}
+\index{E\+Ry\+\_\+pdf@{E\+Ry\+\_\+pdf}!rc\+\_\+calc.\+cc@{rc\+\_\+calc.\+cc}}
+\subsubsection{\texorpdfstring{E\+Ry\+\_\+pdf}{ERy\_pdf}}
+{\footnotesize\ttfamily \#define E\+Ry\+\_\+pdf~\char`\"{}E\+Ry.\+pdf\char`\"{}}
+
+\mbox{\Hypertarget{rc__calc_8cc_ac01686589418493aefe5819df78c2771}\label{rc__calc_8cc_ac01686589418493aefe5819df78c2771}} 
+\index{rc\+\_\+calc.\+cc@{rc\+\_\+calc.\+cc}!E\+Ry\+\_\+scat\+\_\+pdf@{E\+Ry\+\_\+scat\+\_\+pdf}}
+\index{E\+Ry\+\_\+scat\+\_\+pdf@{E\+Ry\+\_\+scat\+\_\+pdf}!rc\+\_\+calc.\+cc@{rc\+\_\+calc.\+cc}}
+\subsubsection{\texorpdfstring{E\+Ry\+\_\+scat\+\_\+pdf}{ERy\_scat\_pdf}}
+{\footnotesize\ttfamily \#define E\+Ry\+\_\+scat\+\_\+pdf~\char`\"{}E\+Ry\+\_\+scat.\+pdf\char`\"{}}
+
+\mbox{\Hypertarget{rc__calc_8cc_a7efc4f68a50a41c6a93ece87dd6c7dec}\label{rc__calc_8cc_a7efc4f68a50a41c6a93ece87dd6c7dec}} 
+\index{rc\+\_\+calc.\+cc@{rc\+\_\+calc.\+cc}!F\+B\+LU@{F\+B\+LU}}
+\index{F\+B\+LU@{F\+B\+LU}!rc\+\_\+calc.\+cc@{rc\+\_\+calc.\+cc}}
+\subsubsection{\texorpdfstring{F\+B\+LU}{FBLU}}
+{\footnotesize\ttfamily \#define F\+B\+LU(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~\hyperlink{rc__calc_8cc_a3f838f2fc3a9a3b434be606fc908964b}{K\+B\+LU} x \hyperlink{rc__calc_8cc_ac5d957e4fd3dc11cd97a54cf9ca057a4}{R\+ST}}
+
+\mbox{\Hypertarget{rc__calc_8cc_a707fab975ef99b4f89ff740f55d14602}\label{rc__calc_8cc_a707fab975ef99b4f89ff740f55d14602}} 
+\index{rc\+\_\+calc.\+cc@{rc\+\_\+calc.\+cc}!F\+C\+YN@{F\+C\+YN}}
+\index{F\+C\+YN@{F\+C\+YN}!rc\+\_\+calc.\+cc@{rc\+\_\+calc.\+cc}}
+\subsubsection{\texorpdfstring{F\+C\+YN}{FCYN}}
+{\footnotesize\ttfamily \#define F\+C\+YN(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~\hyperlink{rc__calc_8cc_a32036c94dbb166a3f874b7efc169841f}{K\+C\+YN} x \hyperlink{rc__calc_8cc_ac5d957e4fd3dc11cd97a54cf9ca057a4}{R\+ST}}
+
+\mbox{\Hypertarget{rc__calc_8cc_ab3968f7b5009845811dc102a5b53d898}\label{rc__calc_8cc_ab3968f7b5009845811dc102a5b53d898}} 
+\index{rc\+\_\+calc.\+cc@{rc\+\_\+calc.\+cc}!F\+G\+RN@{F\+G\+RN}}
+\index{F\+G\+RN@{F\+G\+RN}!rc\+\_\+calc.\+cc@{rc\+\_\+calc.\+cc}}
+\subsubsection{\texorpdfstring{F\+G\+RN}{FGRN}}
+{\footnotesize\ttfamily \#define F\+G\+RN(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~\hyperlink{rc__calc_8cc_ac081c83b067273757f7a2e54a5957d41}{K\+G\+RN} x \hyperlink{rc__calc_8cc_ac5d957e4fd3dc11cd97a54cf9ca057a4}{R\+ST}}
+
+\mbox{\Hypertarget{rc__calc_8cc_a957ecba768167bfb215a4bf97e7a0533}\label{rc__calc_8cc_a957ecba768167bfb215a4bf97e7a0533}} 
+\index{rc\+\_\+calc.\+cc@{rc\+\_\+calc.\+cc}!F\+M\+AG@{F\+M\+AG}}
+\index{F\+M\+AG@{F\+M\+AG}!rc\+\_\+calc.\+cc@{rc\+\_\+calc.\+cc}}
+\subsubsection{\texorpdfstring{F\+M\+AG}{FMAG}}
+{\footnotesize\ttfamily \#define F\+M\+AG(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~\hyperlink{rc__calc_8cc_a6825f05d3b9d619d91d79d0ef18bb8b2}{K\+M\+AG} x \hyperlink{rc__calc_8cc_ac5d957e4fd3dc11cd97a54cf9ca057a4}{R\+ST}}
+
+\mbox{\Hypertarget{rc__calc_8cc_ae5b789f4a8f720ec20a544c58f9c204d}\label{rc__calc_8cc_ae5b789f4a8f720ec20a544c58f9c204d}} 
+\index{rc\+\_\+calc.\+cc@{rc\+\_\+calc.\+cc}!F\+R\+ED@{F\+R\+ED}}
+\index{F\+R\+ED@{F\+R\+ED}!rc\+\_\+calc.\+cc@{rc\+\_\+calc.\+cc}}
+\subsubsection{\texorpdfstring{F\+R\+ED}{FRED}}
+{\footnotesize\ttfamily \#define F\+R\+ED(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~\hyperlink{rc__calc_8cc_a66290957baed5df3930ada4cb8caccf1}{K\+R\+ED} x \hyperlink{rc__calc_8cc_ac5d957e4fd3dc11cd97a54cf9ca057a4}{R\+ST}}
+
+\mbox{\Hypertarget{rc__calc_8cc_a312c671f34e0d7a772e43cd63bc0f31b}\label{rc__calc_8cc_a312c671f34e0d7a772e43cd63bc0f31b}} 
+\index{rc\+\_\+calc.\+cc@{rc\+\_\+calc.\+cc}!F\+W\+HT@{F\+W\+HT}}
+\index{F\+W\+HT@{F\+W\+HT}!rc\+\_\+calc.\+cc@{rc\+\_\+calc.\+cc}}
+\subsubsection{\texorpdfstring{F\+W\+HT}{FWHT}}
+{\footnotesize\ttfamily \#define F\+W\+HT(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~\hyperlink{rc__calc_8cc_af0036c8022c9980079ab17e5c87fd478}{K\+W\+HT} x \hyperlink{rc__calc_8cc_ac5d957e4fd3dc11cd97a54cf9ca057a4}{R\+ST}}
+
+\mbox{\Hypertarget{rc__calc_8cc_a4bae6c5147cf3957a90c9c6f5b37faac}\label{rc__calc_8cc_a4bae6c5147cf3957a90c9c6f5b37faac}} 
+\index{rc\+\_\+calc.\+cc@{rc\+\_\+calc.\+cc}!F\+Y\+EL@{F\+Y\+EL}}
+\index{F\+Y\+EL@{F\+Y\+EL}!rc\+\_\+calc.\+cc@{rc\+\_\+calc.\+cc}}
+\subsubsection{\texorpdfstring{F\+Y\+EL}{FYEL}}
+{\footnotesize\ttfamily \#define F\+Y\+EL(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~\hyperlink{rc__calc_8cc_a897b10d246533c95ba86cb79f92e465a}{K\+Y\+EL} x \hyperlink{rc__calc_8cc_ac5d957e4fd3dc11cd97a54cf9ca057a4}{R\+ST}}
+
+\mbox{\Hypertarget{rc__calc_8cc_a3f838f2fc3a9a3b434be606fc908964b}\label{rc__calc_8cc_a3f838f2fc3a9a3b434be606fc908964b}} 
+\index{rc\+\_\+calc.\+cc@{rc\+\_\+calc.\+cc}!K\+B\+LU@{K\+B\+LU}}
+\index{K\+B\+LU@{K\+B\+LU}!rc\+\_\+calc.\+cc@{rc\+\_\+calc.\+cc}}
+\subsubsection{\texorpdfstring{K\+B\+LU}{KBLU}}
+{\footnotesize\ttfamily \#define K\+B\+LU~\char`\"{}\textbackslash{}x1B\mbox{[}34m\char`\"{}}
+
+\mbox{\Hypertarget{rc__calc_8cc_a32036c94dbb166a3f874b7efc169841f}\label{rc__calc_8cc_a32036c94dbb166a3f874b7efc169841f}} 
+\index{rc\+\_\+calc.\+cc@{rc\+\_\+calc.\+cc}!K\+C\+YN@{K\+C\+YN}}
+\index{K\+C\+YN@{K\+C\+YN}!rc\+\_\+calc.\+cc@{rc\+\_\+calc.\+cc}}
+\subsubsection{\texorpdfstring{K\+C\+YN}{KCYN}}
+{\footnotesize\ttfamily \#define K\+C\+YN~\char`\"{}\textbackslash{}x1B\mbox{[}36m\char`\"{}}
+
+\mbox{\Hypertarget{rc__calc_8cc_ac081c83b067273757f7a2e54a5957d41}\label{rc__calc_8cc_ac081c83b067273757f7a2e54a5957d41}} 
+\index{rc\+\_\+calc.\+cc@{rc\+\_\+calc.\+cc}!K\+G\+RN@{K\+G\+RN}}
+\index{K\+G\+RN@{K\+G\+RN}!rc\+\_\+calc.\+cc@{rc\+\_\+calc.\+cc}}
+\subsubsection{\texorpdfstring{K\+G\+RN}{KGRN}}
+{\footnotesize\ttfamily \#define K\+G\+RN~\char`\"{}\textbackslash{}x1B\mbox{[}32m\char`\"{}}
+
+\mbox{\Hypertarget{rc__calc_8cc_a6825f05d3b9d619d91d79d0ef18bb8b2}\label{rc__calc_8cc_a6825f05d3b9d619d91d79d0ef18bb8b2}} 
+\index{rc\+\_\+calc.\+cc@{rc\+\_\+calc.\+cc}!K\+M\+AG@{K\+M\+AG}}
+\index{K\+M\+AG@{K\+M\+AG}!rc\+\_\+calc.\+cc@{rc\+\_\+calc.\+cc}}
+\subsubsection{\texorpdfstring{K\+M\+AG}{KMAG}}
+{\footnotesize\ttfamily \#define K\+M\+AG~\char`\"{}\textbackslash{}x1B\mbox{[}35m\char`\"{}}
+
+\mbox{\Hypertarget{rc__calc_8cc_a66290957baed5df3930ada4cb8caccf1}\label{rc__calc_8cc_a66290957baed5df3930ada4cb8caccf1}} 
+\index{rc\+\_\+calc.\+cc@{rc\+\_\+calc.\+cc}!K\+R\+ED@{K\+R\+ED}}
+\index{K\+R\+ED@{K\+R\+ED}!rc\+\_\+calc.\+cc@{rc\+\_\+calc.\+cc}}
+\subsubsection{\texorpdfstring{K\+R\+ED}{KRED}}
+{\footnotesize\ttfamily \#define K\+R\+ED~\char`\"{}\textbackslash{}x1B\mbox{[}31m\char`\"{}}
+
+\mbox{\Hypertarget{rc__calc_8cc_af0036c8022c9980079ab17e5c87fd478}\label{rc__calc_8cc_af0036c8022c9980079ab17e5c87fd478}} 
+\index{rc\+\_\+calc.\+cc@{rc\+\_\+calc.\+cc}!K\+W\+HT@{K\+W\+HT}}
+\index{K\+W\+HT@{K\+W\+HT}!rc\+\_\+calc.\+cc@{rc\+\_\+calc.\+cc}}
+\subsubsection{\texorpdfstring{K\+W\+HT}{KWHT}}
+{\footnotesize\ttfamily \#define K\+W\+HT~\char`\"{}\textbackslash{}x1B\mbox{[}37m\char`\"{}}
+
+\mbox{\Hypertarget{rc__calc_8cc_a897b10d246533c95ba86cb79f92e465a}\label{rc__calc_8cc_a897b10d246533c95ba86cb79f92e465a}} 
+\index{rc\+\_\+calc.\+cc@{rc\+\_\+calc.\+cc}!K\+Y\+EL@{K\+Y\+EL}}
+\index{K\+Y\+EL@{K\+Y\+EL}!rc\+\_\+calc.\+cc@{rc\+\_\+calc.\+cc}}
+\subsubsection{\texorpdfstring{K\+Y\+EL}{KYEL}}
+{\footnotesize\ttfamily \#define K\+Y\+EL~\char`\"{}\textbackslash{}x1B\mbox{[}33m\char`\"{}}
+
+\mbox{\Hypertarget{rc__calc_8cc_a32cc9d976eaa3b33e3cdbc87e47c72a1}\label{rc__calc_8cc_a32cc9d976eaa3b33e3cdbc87e47c72a1}} 
+\index{rc\+\_\+calc.\+cc@{rc\+\_\+calc.\+cc}!O\+U\+T\+F\+I\+LE@{O\+U\+T\+F\+I\+LE}}
+\index{O\+U\+T\+F\+I\+LE@{O\+U\+T\+F\+I\+LE}!rc\+\_\+calc.\+cc@{rc\+\_\+calc.\+cc}}
+\subsubsection{\texorpdfstring{O\+U\+T\+F\+I\+LE}{OUTFILE}}
+{\footnotesize\ttfamily \#define O\+U\+T\+F\+I\+LE~\char`\"{}rc.\+txt\char`\"{}}
+
+\mbox{\Hypertarget{rc__calc_8cc_a93f03159397f25c687840129b18c972d}\label{rc__calc_8cc_a93f03159397f25c687840129b18c972d}} 
+\index{rc\+\_\+calc.\+cc@{rc\+\_\+calc.\+cc}!P\+B\+S\+TR@{P\+B\+S\+TR}}
+\index{P\+B\+S\+TR@{P\+B\+S\+TR}!rc\+\_\+calc.\+cc@{rc\+\_\+calc.\+cc}}
+\subsubsection{\texorpdfstring{P\+B\+S\+TR}{PBSTR}}
+{\footnotesize\ttfamily \#define P\+B\+S\+TR~\char`\"{}$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$$\vert$\char`\"{}}
+
+\mbox{\Hypertarget{rc__calc_8cc_a69793e71975c25754a8236df29896e15}\label{rc__calc_8cc_a69793e71975c25754a8236df29896e15}} 
+\index{rc\+\_\+calc.\+cc@{rc\+\_\+calc.\+cc}!P\+B\+W\+I\+D\+TH@{P\+B\+W\+I\+D\+TH}}
+\index{P\+B\+W\+I\+D\+TH@{P\+B\+W\+I\+D\+TH}!rc\+\_\+calc.\+cc@{rc\+\_\+calc.\+cc}}
+\subsubsection{\texorpdfstring{P\+B\+W\+I\+D\+TH}{PBWIDTH}}
+{\footnotesize\ttfamily \#define P\+B\+W\+I\+D\+TH~60}
+
+\mbox{\Hypertarget{rc__calc_8cc_a4f0aed445da19ed980f564f8b2da1bc5}\label{rc__calc_8cc_a4f0aed445da19ed980f564f8b2da1bc5}} 
+\index{rc\+\_\+calc.\+cc@{rc\+\_\+calc.\+cc}!R\+Cx\+\_\+pdf@{R\+Cx\+\_\+pdf}}
+\index{R\+Cx\+\_\+pdf@{R\+Cx\+\_\+pdf}!rc\+\_\+calc.\+cc@{rc\+\_\+calc.\+cc}}
+\subsubsection{\texorpdfstring{R\+Cx\+\_\+pdf}{RCx\_pdf}}
+{\footnotesize\ttfamily \#define R\+Cx\+\_\+pdf~\char`\"{}R\+Cx.\+pdf\char`\"{}}
+
+\mbox{\Hypertarget{rc__calc_8cc_a15ba1e0fb46c08a5f34a444b8280390e}\label{rc__calc_8cc_a15ba1e0fb46c08a5f34a444b8280390e}} 
+\index{rc\+\_\+calc.\+cc@{rc\+\_\+calc.\+cc}!R\+Cy\+\_\+pdf@{R\+Cy\+\_\+pdf}}
+\index{R\+Cy\+\_\+pdf@{R\+Cy\+\_\+pdf}!rc\+\_\+calc.\+cc@{rc\+\_\+calc.\+cc}}
+\subsubsection{\texorpdfstring{R\+Cy\+\_\+pdf}{RCy\_pdf}}
+{\footnotesize\ttfamily \#define R\+Cy\+\_\+pdf~\char`\"{}R\+Cy.\+pdf\char`\"{}}
+
+\mbox{\Hypertarget{rc__calc_8cc_ac5d957e4fd3dc11cd97a54cf9ca057a4}\label{rc__calc_8cc_ac5d957e4fd3dc11cd97a54cf9ca057a4}} 
+\index{rc\+\_\+calc.\+cc@{rc\+\_\+calc.\+cc}!R\+ST@{R\+ST}}
+\index{R\+ST@{R\+ST}!rc\+\_\+calc.\+cc@{rc\+\_\+calc.\+cc}}
+\subsubsection{\texorpdfstring{R\+ST}{RST}}
+{\footnotesize\ttfamily \#define R\+ST~\char`\"{}\textbackslash{}x1B\mbox{[}0m\char`\"{}}
+
+\mbox{\Hypertarget{rc__calc_8cc_aad41eb90bd83a5a66891e1118756ea14}\label{rc__calc_8cc_aad41eb90bd83a5a66891e1118756ea14}} 
+\index{rc\+\_\+calc.\+cc@{rc\+\_\+calc.\+cc}!S\+Ix\+\_\+pdf@{S\+Ix\+\_\+pdf}}
+\index{S\+Ix\+\_\+pdf@{S\+Ix\+\_\+pdf}!rc\+\_\+calc.\+cc@{rc\+\_\+calc.\+cc}}
+\subsubsection{\texorpdfstring{S\+Ix\+\_\+pdf}{SIx\_pdf}}
+{\footnotesize\ttfamily \#define S\+Ix\+\_\+pdf~\char`\"{}S\+Ix.\+pdf\char`\"{}}
+
+\mbox{\Hypertarget{rc__calc_8cc_a51b97d89ad133f870f7d3267b78d3795}\label{rc__calc_8cc_a51b97d89ad133f870f7d3267b78d3795}} 
+\index{rc\+\_\+calc.\+cc@{rc\+\_\+calc.\+cc}!S\+Iy\+\_\+pdf@{S\+Iy\+\_\+pdf}}
+\index{S\+Iy\+\_\+pdf@{S\+Iy\+\_\+pdf}!rc\+\_\+calc.\+cc@{rc\+\_\+calc.\+cc}}
+\subsubsection{\texorpdfstring{S\+Iy\+\_\+pdf}{SIy\_pdf}}
+{\footnotesize\ttfamily \#define S\+Iy\+\_\+pdf~\char`\"{}S\+Iy.\+pdf\char`\"{}}
+
+\mbox{\Hypertarget{rc__calc_8cc_a827fa1f01250b1dbf5903941513842fb}\label{rc__calc_8cc_a827fa1f01250b1dbf5903941513842fb}} 
+\index{rc\+\_\+calc.\+cc@{rc\+\_\+calc.\+cc}!T\+E\+Ry\+\_\+pdf@{T\+E\+Ry\+\_\+pdf}}
+\index{T\+E\+Ry\+\_\+pdf@{T\+E\+Ry\+\_\+pdf}!rc\+\_\+calc.\+cc@{rc\+\_\+calc.\+cc}}
+\subsubsection{\texorpdfstring{T\+E\+Ry\+\_\+pdf}{TERy\_pdf}}
+{\footnotesize\ttfamily \#define T\+E\+Ry\+\_\+pdf~\char`\"{}T\+E\+Ry.\+pdf\char`\"{}}
+
+\mbox{\Hypertarget{rc__calc_8cc_a83010912e47c70954b461dd1013b2d4e}\label{rc__calc_8cc_a83010912e47c70954b461dd1013b2d4e}} 
+\index{rc\+\_\+calc.\+cc@{rc\+\_\+calc.\+cc}!U\+N\+DL@{U\+N\+DL}}
+\index{U\+N\+DL@{U\+N\+DL}!rc\+\_\+calc.\+cc@{rc\+\_\+calc.\+cc}}
+\subsubsection{\texorpdfstring{U\+N\+DL}{UNDL}}
+{\footnotesize\ttfamily \#define U\+N\+DL(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~\char`\"{}\textbackslash{}x1B\mbox{[}4m\char`\"{} x R\+ST}
+
+
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{rc__calc_8cc_a0ddf1224851353fc92bfbff6f499fa97}\label{rc__calc_8cc_a0ddf1224851353fc92bfbff6f499fa97}} 
+\index{rc\+\_\+calc.\+cc@{rc\+\_\+calc.\+cc}!main@{main}}
+\index{main@{main}!rc\+\_\+calc.\+cc@{rc\+\_\+calc.\+cc}}
+\subsubsection{\texorpdfstring{main()}{main()}}
+{\footnotesize\ttfamily int main (\begin{DoxyParamCaption}\item[{int}]{argc,  }\item[{char $\ast$}]{argv\mbox{[}$\,$\mbox{]} }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{rc__calc_8cc_a3af59cb8d0ce70431b79697ce6a6ad53}\label{rc__calc_8cc_a3af59cb8d0ce70431b79697ce6a6ad53}} 
+\index{rc\+\_\+calc.\+cc@{rc\+\_\+calc.\+cc}!print\+Progress@{print\+Progress}}
+\index{print\+Progress@{print\+Progress}!rc\+\_\+calc.\+cc@{rc\+\_\+calc.\+cc}}
+\subsubsection{\texorpdfstring{print\+Progress()}{printProgress()}}
+{\footnotesize\ttfamily void print\+Progress (\begin{DoxyParamCaption}\item[{int}]{event,  }\item[{int}]{total }\end{DoxyParamCaption})}
+

@@ -1,0 +1,214 @@
+\hypertarget{pdist_8cc}{}\section{utils/pdist.cc File Reference}
+\label{pdist_8cc}\index{utils/pdist.\+cc@{utils/pdist.\+cc}}
+{\ttfamily \#include $<$iostream$>$}\newline
+{\ttfamily \#include $<$fstream$>$}\newline
+{\ttfamily \#include $<$T\+File.\+h$>$}\newline
+{\ttfamily \#include $<$T\+H1\+F.\+h$>$}\newline
+{\ttfamily \#include $<$T\+H2\+F.\+h$>$}\newline
+{\ttfamily \#include $<$T\+Canvas.\+h$>$}\newline
+{\ttfamily \#include $<$T\+Matrix\+D.\+h$>$}\newline
+{\ttfamily \#include $<$T\+Matrix\+T\+Utils.\+h$>$}\newline
+{\ttfamily \#include $<$T\+Tree.\+h$>$}\newline
+{\ttfamily \#include $<$T\+Branch.\+h$>$}\newline
+{\ttfamily \#include $<$T\+Leaf.\+h$>$}\newline
+{\ttfamily \#include $<$T\+Graph.\+h$>$}\newline
+{\ttfamily \#include $<$T\+Arrow.\+h$>$}\newline
+{\ttfamily \#include $<$T\+Axis.\+h$>$}\newline
+{\ttfamily \#include $<$vector$>$}\newline
+{\ttfamily \#include $<$math.\+h$>$}\newline
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{pdist_8cc_a525335710b53cb064ca56b936120431e}{\+\_\+\+U\+S\+E\+\_\+\+M\+A\+T\+H\+\_\+\+D\+E\+F\+I\+N\+ES}
+\item 
+\#define \hyperlink{pdist_8cc_a409b5370d8086d05e5ae15eb82b2fd37}{E\+\_\+distribution\+\_\+pdf}~\char`\"{}pmdist\+\_\+\+E.\+pdf\char`\"{}
+\item 
+\#define \hyperlink{pdist_8cc_ae8b1fccb29e37e469c97e19e663d3715}{t\+\_\+distribution\+\_\+pdf}~\char`\"{}pmdist\+\_\+t.\+pdf\char`\"{}
+\item 
+\#define \hyperlink{pdist_8cc_a4b2e9d0f3bf33cc13150c53757487324}{Photon\+\_\+p\+\_\+distribution\+\_\+pdf}~\char`\"{}pdist\+\_\+p.\+pdf\char`\"{}
+\item 
+\#define \hyperlink{pdist_8cc_a3899e734ee1b7fc7eb12bc769120a159}{Photon\+\_\+t\+\_\+spread\+\_\+pdf}~\char`\"{}pspread\+\_\+t.\+pdf\char`\"{}
+\item 
+\#define \hyperlink{pdist_8cc_a85cc1f2e1daa84cb7c691aa51c5c27e5}{Photon\+\_\+\+E\+\_\+spread\+\_\+y\+\_\+pdf}~\char`\"{}pspready\+\_\+\+E.\+pdf\char`\"{}
+\item 
+\#define \hyperlink{pdist_8cc_a2db67b73245be9353c8e4fdc1163509d}{Photon\+\_\+\+E\+\_\+spread\+\_\+x\+\_\+pdf}~\char`\"{}pspreadx\+\_\+\+E.\+pdf\char`\"{}
+\item 
+\#define \hyperlink{pdist_8cc_ac9ff65c80f3c871470ea203a38fb6211}{Photon\+\_\+\+E\+\_\+norm\+\_\+pdf}~\char`\"{}pnorm\+\_\+\+E.\+pdf\char`\"{}
+\item 
+\#define \hyperlink{pdist_8cc_a9a586aa7c18ef1bf8ce2d8cba4e6965a}{t\+\_\+quark\+\_\+pdf}~\char`\"{}pdist\+\_\+q.\+pdf\char`\"{}
+\item 
+\#define \hyperlink{pdist_8cc_a33ccf167060cda9515affb4e415861f8}{p\+\_\+quark\+\_\+pdf}~\char`\"{}pdist\+\_\+pq.\+pdf\char`\"{}
+\item 
+\#define \hyperlink{pdist_8cc_afb15778f31f5351100845accb75735d4}{pt\+\_\+quark\+\_\+pdf}~\char`\"{}pt\+\_\+q.\+pdf\char`\"{}
+\item 
+\#define \hyperlink{pdist_8cc_a7c36a77bb83ba671497f74242991229e}{Q2\+\_\+pdf}~\char`\"{}p\+Q2\+\_\+lh.\+pdf\char`\"{}
+\item 
+\#define \hyperlink{pdist_8cc_a8a72edcf7502e0ea36f04142f9af25ca}{Ef\+\_\+pdf}~\char`\"{}p\+E\+\_\+f.\+pdf\char`\"{}
+\item 
+\#define \hyperlink{pdist_8cc_abe2331cd1451da82325e023ba6b58a00}{E\+M\+IN}~0
+\item 
+\#define \hyperlink{pdist_8cc_a41d94b7212c0ecfdd55d6d100e4079aa}{E\+M\+AX}~160
+\item 
+\#define \hyperlink{pdist_8cc_a6aee779504f876f9bed834f36b392da9}{X\+M\+IN}~0.\+004
+\item 
+\#define \hyperlink{pdist_8cc_a0312cb6d6cbc719075d4e5380c387ab3}{X\+M\+AX}~0.\+4
+\item 
+\#define \hyperlink{pdist_8cc_aa025181dff552575490c5148a493ff65}{Y\+M\+IN}~0.\+1
+\item 
+\#define \hyperlink{pdist_8cc_a610d6ad95b18966b70b6845de2a9c56b}{Y\+M\+AX}~0.\+7
+\item 
+\#define \hyperlink{pdist_8cc_a46e5a63ff5122273a3fc736714ef3fab}{Q2\+M\+IN}~1
+\item 
+\#define \hyperlink{pdist_8cc_ad32abc7c9185678e6b6cbf10391bf45e}{Q2\+M\+AX}~70
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{pdist_8cc_a7d576650eeab9f1d5b10f78c92ad56c5}{Bin\+LogX} (T\+H1 $\ast$h)
+\item 
+int \hyperlink{pdist_8cc_a0ddf1224851353fc92bfbff6f499fa97}{main} (int argc, char $\ast$argv\mbox{[}$\,$\mbox{]})
+\end{DoxyCompactItemize}
+
+
+\subsection{Macro Definition Documentation}
+\mbox{\Hypertarget{pdist_8cc_a525335710b53cb064ca56b936120431e}\label{pdist_8cc_a525335710b53cb064ca56b936120431e}} 
+\index{pdist.\+cc@{pdist.\+cc}!\+\_\+\+U\+S\+E\+\_\+\+M\+A\+T\+H\+\_\+\+D\+E\+F\+I\+N\+ES@{\+\_\+\+U\+S\+E\+\_\+\+M\+A\+T\+H\+\_\+\+D\+E\+F\+I\+N\+ES}}
+\index{\+\_\+\+U\+S\+E\+\_\+\+M\+A\+T\+H\+\_\+\+D\+E\+F\+I\+N\+ES@{\+\_\+\+U\+S\+E\+\_\+\+M\+A\+T\+H\+\_\+\+D\+E\+F\+I\+N\+ES}!pdist.\+cc@{pdist.\+cc}}
+\subsubsection{\texorpdfstring{\+\_\+\+U\+S\+E\+\_\+\+M\+A\+T\+H\+\_\+\+D\+E\+F\+I\+N\+ES}{\_USE\_MATH\_DEFINES}}
+{\footnotesize\ttfamily \#define \+\_\+\+U\+S\+E\+\_\+\+M\+A\+T\+H\+\_\+\+D\+E\+F\+I\+N\+ES}
+
+\mbox{\Hypertarget{pdist_8cc_a409b5370d8086d05e5ae15eb82b2fd37}\label{pdist_8cc_a409b5370d8086d05e5ae15eb82b2fd37}} 
+\index{pdist.\+cc@{pdist.\+cc}!E\+\_\+distribution\+\_\+pdf@{E\+\_\+distribution\+\_\+pdf}}
+\index{E\+\_\+distribution\+\_\+pdf@{E\+\_\+distribution\+\_\+pdf}!pdist.\+cc@{pdist.\+cc}}
+\subsubsection{\texorpdfstring{E\+\_\+distribution\+\_\+pdf}{E\_distribution\_pdf}}
+{\footnotesize\ttfamily \#define E\+\_\+distribution\+\_\+pdf~\char`\"{}pmdist\+\_\+\+E.\+pdf\char`\"{}}
+
+\mbox{\Hypertarget{pdist_8cc_a8a72edcf7502e0ea36f04142f9af25ca}\label{pdist_8cc_a8a72edcf7502e0ea36f04142f9af25ca}} 
+\index{pdist.\+cc@{pdist.\+cc}!Ef\+\_\+pdf@{Ef\+\_\+pdf}}
+\index{Ef\+\_\+pdf@{Ef\+\_\+pdf}!pdist.\+cc@{pdist.\+cc}}
+\subsubsection{\texorpdfstring{Ef\+\_\+pdf}{Ef\_pdf}}
+{\footnotesize\ttfamily \#define Ef\+\_\+pdf~\char`\"{}p\+E\+\_\+f.\+pdf\char`\"{}}
+
+\mbox{\Hypertarget{pdist_8cc_a41d94b7212c0ecfdd55d6d100e4079aa}\label{pdist_8cc_a41d94b7212c0ecfdd55d6d100e4079aa}} 
+\index{pdist.\+cc@{pdist.\+cc}!E\+M\+AX@{E\+M\+AX}}
+\index{E\+M\+AX@{E\+M\+AX}!pdist.\+cc@{pdist.\+cc}}
+\subsubsection{\texorpdfstring{E\+M\+AX}{EMAX}}
+{\footnotesize\ttfamily \#define E\+M\+AX~160}
+
+\mbox{\Hypertarget{pdist_8cc_abe2331cd1451da82325e023ba6b58a00}\label{pdist_8cc_abe2331cd1451da82325e023ba6b58a00}} 
+\index{pdist.\+cc@{pdist.\+cc}!E\+M\+IN@{E\+M\+IN}}
+\index{E\+M\+IN@{E\+M\+IN}!pdist.\+cc@{pdist.\+cc}}
+\subsubsection{\texorpdfstring{E\+M\+IN}{EMIN}}
+{\footnotesize\ttfamily \#define E\+M\+IN~0}
+
+\mbox{\Hypertarget{pdist_8cc_a33ccf167060cda9515affb4e415861f8}\label{pdist_8cc_a33ccf167060cda9515affb4e415861f8}} 
+\index{pdist.\+cc@{pdist.\+cc}!p\+\_\+quark\+\_\+pdf@{p\+\_\+quark\+\_\+pdf}}
+\index{p\+\_\+quark\+\_\+pdf@{p\+\_\+quark\+\_\+pdf}!pdist.\+cc@{pdist.\+cc}}
+\subsubsection{\texorpdfstring{p\+\_\+quark\+\_\+pdf}{p\_quark\_pdf}}
+{\footnotesize\ttfamily \#define p\+\_\+quark\+\_\+pdf~\char`\"{}pdist\+\_\+pq.\+pdf\char`\"{}}
+
+\mbox{\Hypertarget{pdist_8cc_ac9ff65c80f3c871470ea203a38fb6211}\label{pdist_8cc_ac9ff65c80f3c871470ea203a38fb6211}} 
+\index{pdist.\+cc@{pdist.\+cc}!Photon\+\_\+\+E\+\_\+norm\+\_\+pdf@{Photon\+\_\+\+E\+\_\+norm\+\_\+pdf}}
+\index{Photon\+\_\+\+E\+\_\+norm\+\_\+pdf@{Photon\+\_\+\+E\+\_\+norm\+\_\+pdf}!pdist.\+cc@{pdist.\+cc}}
+\subsubsection{\texorpdfstring{Photon\+\_\+\+E\+\_\+norm\+\_\+pdf}{Photon\_E\_norm\_pdf}}
+{\footnotesize\ttfamily \#define Photon\+\_\+\+E\+\_\+norm\+\_\+pdf~\char`\"{}pnorm\+\_\+\+E.\+pdf\char`\"{}}
+
+\mbox{\Hypertarget{pdist_8cc_a2db67b73245be9353c8e4fdc1163509d}\label{pdist_8cc_a2db67b73245be9353c8e4fdc1163509d}} 
+\index{pdist.\+cc@{pdist.\+cc}!Photon\+\_\+\+E\+\_\+spread\+\_\+x\+\_\+pdf@{Photon\+\_\+\+E\+\_\+spread\+\_\+x\+\_\+pdf}}
+\index{Photon\+\_\+\+E\+\_\+spread\+\_\+x\+\_\+pdf@{Photon\+\_\+\+E\+\_\+spread\+\_\+x\+\_\+pdf}!pdist.\+cc@{pdist.\+cc}}
+\subsubsection{\texorpdfstring{Photon\+\_\+\+E\+\_\+spread\+\_\+x\+\_\+pdf}{Photon\_E\_spread\_x\_pdf}}
+{\footnotesize\ttfamily \#define Photon\+\_\+\+E\+\_\+spread\+\_\+x\+\_\+pdf~\char`\"{}pspreadx\+\_\+\+E.\+pdf\char`\"{}}
+
+\mbox{\Hypertarget{pdist_8cc_a85cc1f2e1daa84cb7c691aa51c5c27e5}\label{pdist_8cc_a85cc1f2e1daa84cb7c691aa51c5c27e5}} 
+\index{pdist.\+cc@{pdist.\+cc}!Photon\+\_\+\+E\+\_\+spread\+\_\+y\+\_\+pdf@{Photon\+\_\+\+E\+\_\+spread\+\_\+y\+\_\+pdf}}
+\index{Photon\+\_\+\+E\+\_\+spread\+\_\+y\+\_\+pdf@{Photon\+\_\+\+E\+\_\+spread\+\_\+y\+\_\+pdf}!pdist.\+cc@{pdist.\+cc}}
+\subsubsection{\texorpdfstring{Photon\+\_\+\+E\+\_\+spread\+\_\+y\+\_\+pdf}{Photon\_E\_spread\_y\_pdf}}
+{\footnotesize\ttfamily \#define Photon\+\_\+\+E\+\_\+spread\+\_\+y\+\_\+pdf~\char`\"{}pspready\+\_\+\+E.\+pdf\char`\"{}}
+
+\mbox{\Hypertarget{pdist_8cc_a4b2e9d0f3bf33cc13150c53757487324}\label{pdist_8cc_a4b2e9d0f3bf33cc13150c53757487324}} 
+\index{pdist.\+cc@{pdist.\+cc}!Photon\+\_\+p\+\_\+distribution\+\_\+pdf@{Photon\+\_\+p\+\_\+distribution\+\_\+pdf}}
+\index{Photon\+\_\+p\+\_\+distribution\+\_\+pdf@{Photon\+\_\+p\+\_\+distribution\+\_\+pdf}!pdist.\+cc@{pdist.\+cc}}
+\subsubsection{\texorpdfstring{Photon\+\_\+p\+\_\+distribution\+\_\+pdf}{Photon\_p\_distribution\_pdf}}
+{\footnotesize\ttfamily \#define Photon\+\_\+p\+\_\+distribution\+\_\+pdf~\char`\"{}pdist\+\_\+p.\+pdf\char`\"{}}
+
+\mbox{\Hypertarget{pdist_8cc_a3899e734ee1b7fc7eb12bc769120a159}\label{pdist_8cc_a3899e734ee1b7fc7eb12bc769120a159}} 
+\index{pdist.\+cc@{pdist.\+cc}!Photon\+\_\+t\+\_\+spread\+\_\+pdf@{Photon\+\_\+t\+\_\+spread\+\_\+pdf}}
+\index{Photon\+\_\+t\+\_\+spread\+\_\+pdf@{Photon\+\_\+t\+\_\+spread\+\_\+pdf}!pdist.\+cc@{pdist.\+cc}}
+\subsubsection{\texorpdfstring{Photon\+\_\+t\+\_\+spread\+\_\+pdf}{Photon\_t\_spread\_pdf}}
+{\footnotesize\ttfamily \#define Photon\+\_\+t\+\_\+spread\+\_\+pdf~\char`\"{}pspread\+\_\+t.\+pdf\char`\"{}}
+
+\mbox{\Hypertarget{pdist_8cc_afb15778f31f5351100845accb75735d4}\label{pdist_8cc_afb15778f31f5351100845accb75735d4}} 
+\index{pdist.\+cc@{pdist.\+cc}!pt\+\_\+quark\+\_\+pdf@{pt\+\_\+quark\+\_\+pdf}}
+\index{pt\+\_\+quark\+\_\+pdf@{pt\+\_\+quark\+\_\+pdf}!pdist.\+cc@{pdist.\+cc}}
+\subsubsection{\texorpdfstring{pt\+\_\+quark\+\_\+pdf}{pt\_quark\_pdf}}
+{\footnotesize\ttfamily \#define pt\+\_\+quark\+\_\+pdf~\char`\"{}pt\+\_\+q.\+pdf\char`\"{}}
+
+\mbox{\Hypertarget{pdist_8cc_a7c36a77bb83ba671497f74242991229e}\label{pdist_8cc_a7c36a77bb83ba671497f74242991229e}} 
+\index{pdist.\+cc@{pdist.\+cc}!Q2\+\_\+pdf@{Q2\+\_\+pdf}}
+\index{Q2\+\_\+pdf@{Q2\+\_\+pdf}!pdist.\+cc@{pdist.\+cc}}
+\subsubsection{\texorpdfstring{Q2\+\_\+pdf}{Q2\_pdf}}
+{\footnotesize\ttfamily \#define Q2\+\_\+pdf~\char`\"{}p\+Q2\+\_\+lh.\+pdf\char`\"{}}
+
+\mbox{\Hypertarget{pdist_8cc_ad32abc7c9185678e6b6cbf10391bf45e}\label{pdist_8cc_ad32abc7c9185678e6b6cbf10391bf45e}} 
+\index{pdist.\+cc@{pdist.\+cc}!Q2\+M\+AX@{Q2\+M\+AX}}
+\index{Q2\+M\+AX@{Q2\+M\+AX}!pdist.\+cc@{pdist.\+cc}}
+\subsubsection{\texorpdfstring{Q2\+M\+AX}{Q2MAX}}
+{\footnotesize\ttfamily \#define Q2\+M\+AX~70}
+
+\mbox{\Hypertarget{pdist_8cc_a46e5a63ff5122273a3fc736714ef3fab}\label{pdist_8cc_a46e5a63ff5122273a3fc736714ef3fab}} 
+\index{pdist.\+cc@{pdist.\+cc}!Q2\+M\+IN@{Q2\+M\+IN}}
+\index{Q2\+M\+IN@{Q2\+M\+IN}!pdist.\+cc@{pdist.\+cc}}
+\subsubsection{\texorpdfstring{Q2\+M\+IN}{Q2MIN}}
+{\footnotesize\ttfamily \#define Q2\+M\+IN~1}
+
+\mbox{\Hypertarget{pdist_8cc_ae8b1fccb29e37e469c97e19e663d3715}\label{pdist_8cc_ae8b1fccb29e37e469c97e19e663d3715}} 
+\index{pdist.\+cc@{pdist.\+cc}!t\+\_\+distribution\+\_\+pdf@{t\+\_\+distribution\+\_\+pdf}}
+\index{t\+\_\+distribution\+\_\+pdf@{t\+\_\+distribution\+\_\+pdf}!pdist.\+cc@{pdist.\+cc}}
+\subsubsection{\texorpdfstring{t\+\_\+distribution\+\_\+pdf}{t\_distribution\_pdf}}
+{\footnotesize\ttfamily \#define t\+\_\+distribution\+\_\+pdf~\char`\"{}pmdist\+\_\+t.\+pdf\char`\"{}}
+
+\mbox{\Hypertarget{pdist_8cc_a9a586aa7c18ef1bf8ce2d8cba4e6965a}\label{pdist_8cc_a9a586aa7c18ef1bf8ce2d8cba4e6965a}} 
+\index{pdist.\+cc@{pdist.\+cc}!t\+\_\+quark\+\_\+pdf@{t\+\_\+quark\+\_\+pdf}}
+\index{t\+\_\+quark\+\_\+pdf@{t\+\_\+quark\+\_\+pdf}!pdist.\+cc@{pdist.\+cc}}
+\subsubsection{\texorpdfstring{t\+\_\+quark\+\_\+pdf}{t\_quark\_pdf}}
+{\footnotesize\ttfamily \#define t\+\_\+quark\+\_\+pdf~\char`\"{}pdist\+\_\+q.\+pdf\char`\"{}}
+
+\mbox{\Hypertarget{pdist_8cc_a0312cb6d6cbc719075d4e5380c387ab3}\label{pdist_8cc_a0312cb6d6cbc719075d4e5380c387ab3}} 
+\index{pdist.\+cc@{pdist.\+cc}!X\+M\+AX@{X\+M\+AX}}
+\index{X\+M\+AX@{X\+M\+AX}!pdist.\+cc@{pdist.\+cc}}
+\subsubsection{\texorpdfstring{X\+M\+AX}{XMAX}}
+{\footnotesize\ttfamily \#define X\+M\+AX~0.\+4}
+
+\mbox{\Hypertarget{pdist_8cc_a6aee779504f876f9bed834f36b392da9}\label{pdist_8cc_a6aee779504f876f9bed834f36b392da9}} 
+\index{pdist.\+cc@{pdist.\+cc}!X\+M\+IN@{X\+M\+IN}}
+\index{X\+M\+IN@{X\+M\+IN}!pdist.\+cc@{pdist.\+cc}}
+\subsubsection{\texorpdfstring{X\+M\+IN}{XMIN}}
+{\footnotesize\ttfamily \#define X\+M\+IN~0.\+004}
+
+\mbox{\Hypertarget{pdist_8cc_a610d6ad95b18966b70b6845de2a9c56b}\label{pdist_8cc_a610d6ad95b18966b70b6845de2a9c56b}} 
+\index{pdist.\+cc@{pdist.\+cc}!Y\+M\+AX@{Y\+M\+AX}}
+\index{Y\+M\+AX@{Y\+M\+AX}!pdist.\+cc@{pdist.\+cc}}
+\subsubsection{\texorpdfstring{Y\+M\+AX}{YMAX}}
+{\footnotesize\ttfamily \#define Y\+M\+AX~0.\+7}
+
+\mbox{\Hypertarget{pdist_8cc_aa025181dff552575490c5148a493ff65}\label{pdist_8cc_aa025181dff552575490c5148a493ff65}} 
+\index{pdist.\+cc@{pdist.\+cc}!Y\+M\+IN@{Y\+M\+IN}}
+\index{Y\+M\+IN@{Y\+M\+IN}!pdist.\+cc@{pdist.\+cc}}
+\subsubsection{\texorpdfstring{Y\+M\+IN}{YMIN}}
+{\footnotesize\ttfamily \#define Y\+M\+IN~0.\+1}
+
+
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{pdist_8cc_a7d576650eeab9f1d5b10f78c92ad56c5}\label{pdist_8cc_a7d576650eeab9f1d5b10f78c92ad56c5}} 
+\index{pdist.\+cc@{pdist.\+cc}!Bin\+LogX@{Bin\+LogX}}
+\index{Bin\+LogX@{Bin\+LogX}!pdist.\+cc@{pdist.\+cc}}
+\subsubsection{\texorpdfstring{Bin\+Log\+X()}{BinLogX()}}
+{\footnotesize\ttfamily void Bin\+LogX (\begin{DoxyParamCaption}\item[{T\+H1 $\ast$}]{h }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{pdist_8cc_a0ddf1224851353fc92bfbff6f499fa97}\label{pdist_8cc_a0ddf1224851353fc92bfbff6f499fa97}} 
+\index{pdist.\+cc@{pdist.\+cc}!main@{main}}
+\index{main@{main}!pdist.\+cc@{pdist.\+cc}}
+\subsubsection{\texorpdfstring{main()}{main()}}
+{\footnotesize\ttfamily int main (\begin{DoxyParamCaption}\item[{int}]{argc,  }\item[{char $\ast$}]{argv\mbox{[}$\,$\mbox{]} }\end{DoxyParamCaption})}
+

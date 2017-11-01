@@ -1,0 +1,93 @@
+\hypertarget{classpugi_1_1xml__document}{}\section{pugi\+:\+:xml\+\_\+document Class Reference}
+\label{classpugi_1_1xml__document}\index{pugi\+::xml\+\_\+document@{pugi\+::xml\+\_\+document}}
+Inheritance diagram for pugi\+:\+:xml\+\_\+document\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classpugi_1_1xml__document}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classpugi_1_1xml__document_acf2b9daf1d12e12048796118b7a7685d}\label{classpugi_1_1xml__document_acf2b9daf1d12e12048796118b7a7685d}} 
+void {\bfseries reset} ()
+\item 
+\mbox{\Hypertarget{classpugi_1_1xml__document_a4230de3de88f4fe481c4c3d5312aa5cf}\label{classpugi_1_1xml__document_a4230de3de88f4fe481c4c3d5312aa5cf}} 
+void {\bfseries reset} (const \hyperlink{classpugi_1_1xml__document}{xml\+\_\+document} \&proto)
+\item 
+\mbox{\Hypertarget{classpugi_1_1xml__document_abb7db3882f94ac35b870510789a87778}\label{classpugi_1_1xml__document_abb7db3882f94ac35b870510789a87778}} 
+\hyperlink{structpugi_1_1xml__parse__result}{xml\+\_\+parse\+\_\+result} {\bfseries load} (std\+::basic\+\_\+istream$<$ char, std\+::char\+\_\+traits$<$ char $>$ $>$ \&stream, unsigned int options=parse\+\_\+default, xml\+\_\+encoding encoding=encoding\+\_\+auto)
+\item 
+\mbox{\Hypertarget{classpugi_1_1xml__document_a36131b6f1a80a1248666f4e7fe352685}\label{classpugi_1_1xml__document_a36131b6f1a80a1248666f4e7fe352685}} 
+\hyperlink{structpugi_1_1xml__parse__result}{xml\+\_\+parse\+\_\+result} {\bfseries load} (std\+::basic\+\_\+istream$<$ wchar\+\_\+t, std\+::char\+\_\+traits$<$ wchar\+\_\+t $>$ $>$ \&stream, unsigned int options=parse\+\_\+default)
+\item 
+\mbox{\Hypertarget{classpugi_1_1xml__document_ae17a77772fa21a40f3d91d9c79e60d0b}\label{classpugi_1_1xml__document_ae17a77772fa21a40f3d91d9c79e60d0b}} 
+\hyperlink{structpugi_1_1xml__parse__result}{xml\+\_\+parse\+\_\+result} {\bfseries load} (const char\+\_\+t $\ast$contents, unsigned int options=parse\+\_\+default)
+\item 
+\mbox{\Hypertarget{classpugi_1_1xml__document_a706a276ee3d5010f2bb8c7eacb75a891}\label{classpugi_1_1xml__document_a706a276ee3d5010f2bb8c7eacb75a891}} 
+\hyperlink{structpugi_1_1xml__parse__result}{xml\+\_\+parse\+\_\+result} {\bfseries load\+\_\+string} (const char\+\_\+t $\ast$contents, unsigned int options=parse\+\_\+default)
+\item 
+\mbox{\Hypertarget{classpugi_1_1xml__document_aad350209a4a91589fbd7e8cdaf79e010}\label{classpugi_1_1xml__document_aad350209a4a91589fbd7e8cdaf79e010}} 
+\hyperlink{structpugi_1_1xml__parse__result}{xml\+\_\+parse\+\_\+result} {\bfseries load\+\_\+file} (const char $\ast$path, unsigned int options=parse\+\_\+default, xml\+\_\+encoding encoding=encoding\+\_\+auto)
+\item 
+\mbox{\Hypertarget{classpugi_1_1xml__document_ac5a29d9c9e754120a5e0c072b332a25a}\label{classpugi_1_1xml__document_ac5a29d9c9e754120a5e0c072b332a25a}} 
+\hyperlink{structpugi_1_1xml__parse__result}{xml\+\_\+parse\+\_\+result} {\bfseries load\+\_\+file} (const wchar\+\_\+t $\ast$path, unsigned int options=parse\+\_\+default, xml\+\_\+encoding encoding=encoding\+\_\+auto)
+\item 
+\mbox{\Hypertarget{classpugi_1_1xml__document_ab29840790e26b2166a395c63a2b2d9bd}\label{classpugi_1_1xml__document_ab29840790e26b2166a395c63a2b2d9bd}} 
+\hyperlink{structpugi_1_1xml__parse__result}{xml\+\_\+parse\+\_\+result} {\bfseries load\+\_\+buffer} (const void $\ast$contents, size\+\_\+t size, unsigned int options=parse\+\_\+default, xml\+\_\+encoding encoding=encoding\+\_\+auto)
+\item 
+\mbox{\Hypertarget{classpugi_1_1xml__document_a3e20650182ccbdd175ca069dd5e08632}\label{classpugi_1_1xml__document_a3e20650182ccbdd175ca069dd5e08632}} 
+\hyperlink{structpugi_1_1xml__parse__result}{xml\+\_\+parse\+\_\+result} {\bfseries load\+\_\+buffer\+\_\+inplace} (void $\ast$contents, size\+\_\+t size, unsigned int options=parse\+\_\+default, xml\+\_\+encoding encoding=encoding\+\_\+auto)
+\item 
+\mbox{\Hypertarget{classpugi_1_1xml__document_a9da4bdcdc4ad914fb0f4680b02983502}\label{classpugi_1_1xml__document_a9da4bdcdc4ad914fb0f4680b02983502}} 
+\hyperlink{structpugi_1_1xml__parse__result}{xml\+\_\+parse\+\_\+result} {\bfseries load\+\_\+buffer\+\_\+inplace\+\_\+own} (void $\ast$contents, size\+\_\+t size, unsigned int options=parse\+\_\+default, xml\+\_\+encoding encoding=encoding\+\_\+auto)
+\item 
+\mbox{\Hypertarget{classpugi_1_1xml__document_a3a116c9b2725e49b60a5b671b3242e8e}\label{classpugi_1_1xml__document_a3a116c9b2725e49b60a5b671b3242e8e}} 
+void {\bfseries save} (\hyperlink{classpugi_1_1xml__writer}{xml\+\_\+writer} \&writer, const char\+\_\+t $\ast$indent=P\+U\+G\+I\+X\+M\+L\+\_\+\+T\+E\+XT(\char`\"{}\textbackslash{}), unsigned int flags=format\+\_\+default, xml\+\_\+encoding encoding=encoding\+\_\+auto) const
+\item 
+\mbox{\Hypertarget{classpugi_1_1xml__document_a9cb952680df859df98f0eede7c3daa18}\label{classpugi_1_1xml__document_a9cb952680df859df98f0eede7c3daa18}} 
+void {\bfseries save} (std\+::basic\+\_\+ostream$<$ char, std\+::char\+\_\+traits$<$ char $>$ $>$ \&stream, const char\+\_\+t $\ast$indent=P\+U\+G\+I\+X\+M\+L\+\_\+\+T\+E\+XT(\char`\"{}\textbackslash{}), unsigned int flags=format\+\_\+default, xml\+\_\+encoding encoding=encoding\+\_\+auto) const
+\item 
+\mbox{\Hypertarget{classpugi_1_1xml__document_a0fb8706fb61aec51c3ee007f83d55042}\label{classpugi_1_1xml__document_a0fb8706fb61aec51c3ee007f83d55042}} 
+void {\bfseries save} (std\+::basic\+\_\+ostream$<$ wchar\+\_\+t, std\+::char\+\_\+traits$<$ wchar\+\_\+t $>$ $>$ \&stream, const char\+\_\+t $\ast$indent=P\+U\+G\+I\+X\+M\+L\+\_\+\+T\+E\+XT(\char`\"{}\textbackslash{}), unsigned int flags=format\+\_\+default) const
+\item 
+\mbox{\Hypertarget{classpugi_1_1xml__document_a314173ef14ee2fbf1b5e05db0f40f1b0}\label{classpugi_1_1xml__document_a314173ef14ee2fbf1b5e05db0f40f1b0}} 
+bool {\bfseries save\+\_\+file} (const char $\ast$path, const char\+\_\+t $\ast$indent=P\+U\+G\+I\+X\+M\+L\+\_\+\+T\+E\+XT(\char`\"{}\textbackslash{}), unsigned int flags=format\+\_\+default, xml\+\_\+encoding encoding=encoding\+\_\+auto) const
+\item 
+\mbox{\Hypertarget{classpugi_1_1xml__document_ad8888bece50ac49111eb4a87a15eeb22}\label{classpugi_1_1xml__document_ad8888bece50ac49111eb4a87a15eeb22}} 
+bool {\bfseries save\+\_\+file} (const wchar\+\_\+t $\ast$path, const char\+\_\+t $\ast$indent=P\+U\+G\+I\+X\+M\+L\+\_\+\+T\+E\+XT(\char`\"{}\textbackslash{}), unsigned int flags=format\+\_\+default, xml\+\_\+encoding encoding=encoding\+\_\+auto) const
+\item 
+\mbox{\Hypertarget{classpugi_1_1xml__document_a6da98e50116c4c434de41e0a6c83170a}\label{classpugi_1_1xml__document_a6da98e50116c4c434de41e0a6c83170a}} 
+\hyperlink{classpugi_1_1xml__node}{xml\+\_\+node} {\bfseries document\+\_\+element} () const
+\end{DoxyCompactItemize}
+\subsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classpugi_1_1xml__document_a518e0f2e1919b6cb1003b7dec1012ed9}\label{classpugi_1_1xml__document_a518e0f2e1919b6cb1003b7dec1012ed9}} 
+{\bfseries xml\+\_\+document} (const \hyperlink{classpugi_1_1xml__document}{xml\+\_\+document} \&)
+\item 
+\mbox{\Hypertarget{classpugi_1_1xml__document_af8e921993cb396b96e1e3c025d21b469}\label{classpugi_1_1xml__document_af8e921993cb396b96e1e3c025d21b469}} 
+\hyperlink{classpugi_1_1xml__document}{xml\+\_\+document} \& {\bfseries operator=} (const \hyperlink{classpugi_1_1xml__document}{xml\+\_\+document} \&)
+\item 
+\mbox{\Hypertarget{classpugi_1_1xml__document_aaa5e251b120dee273b1f46995648fbcb}\label{classpugi_1_1xml__document_aaa5e251b120dee273b1f46995648fbcb}} 
+void {\bfseries \+\_\+create} ()
+\item 
+\mbox{\Hypertarget{classpugi_1_1xml__document_a5ae4c55b15c15eaa0640b4969948e0ea}\label{classpugi_1_1xml__document_a5ae4c55b15c15eaa0640b4969948e0ea}} 
+void {\bfseries \+\_\+destroy} ()
+\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classpugi_1_1xml__document_ae0308876ff5f791287aa1199c98ae69b}\label{classpugi_1_1xml__document_ae0308876ff5f791287aa1199c98ae69b}} 
+char\+\_\+t $\ast$ {\bfseries \+\_\+buffer}
+\item 
+\mbox{\Hypertarget{classpugi_1_1xml__document_a5b6b5b7c0f0e8f5f772b962fd49fbe1f}\label{classpugi_1_1xml__document_a5b6b5b7c0f0e8f5f772b962fd49fbe1f}} 
+char {\bfseries \+\_\+memory} \mbox{[}192\mbox{]}
+\end{DoxyCompactItemize}
+\subsection*{Additional Inherited Members}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+src/pugixml.\+hpp\item 
+src/pugixml.\+cpp\end{DoxyCompactItemize}

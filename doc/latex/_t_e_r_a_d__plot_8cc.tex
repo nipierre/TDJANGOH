@@ -1,0 +1,64 @@
+\hypertarget{_t_e_r_a_d__plot_8cc}{}\section{utils/\+T\+E\+R\+A\+D\+\_\+plot.cc File Reference}
+\label{_t_e_r_a_d__plot_8cc}\index{utils/\+T\+E\+R\+A\+D\+\_\+plot.\+cc@{utils/\+T\+E\+R\+A\+D\+\_\+plot.\+cc}}
+{\ttfamily \#include $<$iostream$>$}\newline
+{\ttfamily \#include $<$fstream$>$}\newline
+{\ttfamily \#include $<$T\+File.\+h$>$}\newline
+{\ttfamily \#include $<$T\+H1\+F.\+h$>$}\newline
+{\ttfamily \#include $<$T\+H2\+F.\+h$>$}\newline
+{\ttfamily \#include $<$T\+Canvas.\+h$>$}\newline
+{\ttfamily \#include $<$T\+Matrix\+D.\+h$>$}\newline
+{\ttfamily \#include $<$T\+Matrix\+T\+Utils.\+h$>$}\newline
+{\ttfamily \#include $<$T\+Tree.\+h$>$}\newline
+{\ttfamily \#include $<$T\+Branch.\+h$>$}\newline
+{\ttfamily \#include $<$T\+Leaf.\+h$>$}\newline
+{\ttfamily \#include $<$T\+Graph.\+h$>$}\newline
+{\ttfamily \#include $<$T\+Graph\+Errors.\+h$>$}\newline
+{\ttfamily \#include $<$T\+Arrow.\+h$>$}\newline
+{\ttfamily \#include $<$T\+Axis.\+h$>$}\newline
+{\ttfamily \#include $<$T\+Line.\+h$>$}\newline
+{\ttfamily \#include $<$vector$>$}\newline
+{\ttfamily \#include $<$math.\+h$>$}\newline
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{_t_e_r_a_d__plot_8cc_a525335710b53cb064ca56b936120431e}{\+\_\+\+U\+S\+E\+\_\+\+M\+A\+T\+H\+\_\+\+D\+E\+F\+I\+N\+ES}
+\item 
+\#define \hyperlink{_t_e_r_a_d__plot_8cc_a9371444adb84801ad17a063b06e6db53}{T\+E\+R\+A\+Dx\+\_\+pdf}~\char`\"{}T\+E\+R\+A\+Dx.\+pdf\char`\"{}
+\item 
+\#define \hyperlink{_t_e_r_a_d__plot_8cc_a811401bc87e733eb1c80a3e6c8913f24}{T\+E\+R\+A\+Dy\+\_\+pdf}~\char`\"{}T\+E\+R\+A\+Dy.\+pdf\char`\"{}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{_t_e_r_a_d__plot_8cc_a0ddf1224851353fc92bfbff6f499fa97}{main} (int argc, char $\ast$argv\mbox{[}$\,$\mbox{]})
+\end{DoxyCompactItemize}
+
+
+\subsection{Macro Definition Documentation}
+\mbox{\Hypertarget{_t_e_r_a_d__plot_8cc_a525335710b53cb064ca56b936120431e}\label{_t_e_r_a_d__plot_8cc_a525335710b53cb064ca56b936120431e}} 
+\index{T\+E\+R\+A\+D\+\_\+plot.\+cc@{T\+E\+R\+A\+D\+\_\+plot.\+cc}!\+\_\+\+U\+S\+E\+\_\+\+M\+A\+T\+H\+\_\+\+D\+E\+F\+I\+N\+ES@{\+\_\+\+U\+S\+E\+\_\+\+M\+A\+T\+H\+\_\+\+D\+E\+F\+I\+N\+ES}}
+\index{\+\_\+\+U\+S\+E\+\_\+\+M\+A\+T\+H\+\_\+\+D\+E\+F\+I\+N\+ES@{\+\_\+\+U\+S\+E\+\_\+\+M\+A\+T\+H\+\_\+\+D\+E\+F\+I\+N\+ES}!T\+E\+R\+A\+D\+\_\+plot.\+cc@{T\+E\+R\+A\+D\+\_\+plot.\+cc}}
+\subsubsection{\texorpdfstring{\+\_\+\+U\+S\+E\+\_\+\+M\+A\+T\+H\+\_\+\+D\+E\+F\+I\+N\+ES}{\_USE\_MATH\_DEFINES}}
+{\footnotesize\ttfamily \#define \+\_\+\+U\+S\+E\+\_\+\+M\+A\+T\+H\+\_\+\+D\+E\+F\+I\+N\+ES}
+
+\mbox{\Hypertarget{_t_e_r_a_d__plot_8cc_a9371444adb84801ad17a063b06e6db53}\label{_t_e_r_a_d__plot_8cc_a9371444adb84801ad17a063b06e6db53}} 
+\index{T\+E\+R\+A\+D\+\_\+plot.\+cc@{T\+E\+R\+A\+D\+\_\+plot.\+cc}!T\+E\+R\+A\+Dx\+\_\+pdf@{T\+E\+R\+A\+Dx\+\_\+pdf}}
+\index{T\+E\+R\+A\+Dx\+\_\+pdf@{T\+E\+R\+A\+Dx\+\_\+pdf}!T\+E\+R\+A\+D\+\_\+plot.\+cc@{T\+E\+R\+A\+D\+\_\+plot.\+cc}}
+\subsubsection{\texorpdfstring{T\+E\+R\+A\+Dx\+\_\+pdf}{TERADx\_pdf}}
+{\footnotesize\ttfamily \#define T\+E\+R\+A\+Dx\+\_\+pdf~\char`\"{}T\+E\+R\+A\+Dx.\+pdf\char`\"{}}
+
+\mbox{\Hypertarget{_t_e_r_a_d__plot_8cc_a811401bc87e733eb1c80a3e6c8913f24}\label{_t_e_r_a_d__plot_8cc_a811401bc87e733eb1c80a3e6c8913f24}} 
+\index{T\+E\+R\+A\+D\+\_\+plot.\+cc@{T\+E\+R\+A\+D\+\_\+plot.\+cc}!T\+E\+R\+A\+Dy\+\_\+pdf@{T\+E\+R\+A\+Dy\+\_\+pdf}}
+\index{T\+E\+R\+A\+Dy\+\_\+pdf@{T\+E\+R\+A\+Dy\+\_\+pdf}!T\+E\+R\+A\+D\+\_\+plot.\+cc@{T\+E\+R\+A\+D\+\_\+plot.\+cc}}
+\subsubsection{\texorpdfstring{T\+E\+R\+A\+Dy\+\_\+pdf}{TERADy\_pdf}}
+{\footnotesize\ttfamily \#define T\+E\+R\+A\+Dy\+\_\+pdf~\char`\"{}T\+E\+R\+A\+Dy.\+pdf\char`\"{}}
+
+
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{_t_e_r_a_d__plot_8cc_a0ddf1224851353fc92bfbff6f499fa97}\label{_t_e_r_a_d__plot_8cc_a0ddf1224851353fc92bfbff6f499fa97}} 
+\index{T\+E\+R\+A\+D\+\_\+plot.\+cc@{T\+E\+R\+A\+D\+\_\+plot.\+cc}!main@{main}}
+\index{main@{main}!T\+E\+R\+A\+D\+\_\+plot.\+cc@{T\+E\+R\+A\+D\+\_\+plot.\+cc}}
+\subsubsection{\texorpdfstring{main()}{main()}}
+{\footnotesize\ttfamily int main (\begin{DoxyParamCaption}\item[{int}]{argc,  }\item[{char $\ast$}]{argv\mbox{[}$\,$\mbox{]} }\end{DoxyParamCaption})}
+

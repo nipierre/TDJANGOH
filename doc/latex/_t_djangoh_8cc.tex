@@ -1,32 +1,202 @@
-\hypertarget{_t_djangoh_8cc}{\section{T\+Djangoh/\+T\+Djangoh.cc File Reference}
-\label{_t_djangoh_8cc}\index{T\+Djangoh/\+T\+Djangoh.\+cc@{T\+Djangoh/\+T\+Djangoh.\+cc}}
-}
+\hypertarget{_t_djangoh_8cc}{}\section{src/\+T\+Djangoh.cc File Reference}
+\label{_t_djangoh_8cc}\index{src/\+T\+Djangoh.\+cc@{src/\+T\+Djangoh.\+cc}}
 
 
 Interface class to Djangoh generator.  
 
 
-{\ttfamily \#include $<$iostream$>$}\\*
-{\ttfamily \#include $<$fstream$>$}\\*
-{\ttfamily \#include \char`\"{}T\+Djangoh.\+h\char`\"{}}\\*
-{\ttfamily \#include \char`\"{}T\+Clones\+Array.\+h\char`\"{}}\\*
-{\ttfamily \#include \char`\"{}T\+M\+C\+Particle.\+h\char`\"{}}\\*
-{\ttfamily \#include \char`\"{}T\+Particle.\+h\char`\"{}}\\*
-{\ttfamily \#include \char`\"{}T\+String.\+h\char`\"{}}\\*
+{\ttfamily \#include $<$iostream$>$}\newline
+{\ttfamily \#include $<$fstream$>$}\newline
+{\ttfamily \#include $<$cstring$>$}\newline
+{\ttfamily \#include \char`\"{}../include/\+T\+Djangoh.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}T\+Clones\+Array.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../include/\+T\+M\+C\+Particle.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}T\+Particle.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}T\+String.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}pugixml.\+hpp\char`\"{}}\newline
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structihscw}{ihscw}
+\item 
+struct \hyperlink{structhsvrbz}{hsvrbz}
+\item 
+struct \hyperlink{structhselab}{hselab}
+\item 
+struct \hyperlink{structihscut}{ihscut}
+\item 
+struct \hyperlink{structhstcut}{hstcut}
+\item 
+struct \hyperlink{structhspcut}{hspcut}
+\item 
+struct \hyperlink{structhsisgm}{hsisgm}
+\item 
+struct \hyperlink{structhsparl}{hsparl}
+\item 
+struct \hyperlink{structhsstrp}{hsstrp}
+\item 
+struct \hyperlink{structhspdfo}{hspdfo}
+\item 
+struct \hyperlink{structhselep}{hselep}
+\item 
+struct \hyperlink{structhsnucl}{hsnucl}
+\item 
+struct \hyperlink{structhsparm}{hsparm}
+\item 
+struct \hyperlink{structhswgtc}{hswgtc}
+\item 
+struct \hyperlink{structhsirct}{hsirct}
+\item 
+struct \hyperlink{structhsalfs}{hsalfs}
+\item 
+struct \hyperlink{structhsintnc}{hsintnc}
+\item 
+struct \hyperlink{structhsintcc}{hsintcc}
+\item 
+struct \hyperlink{structhssamnc}{hssamnc}
+\item 
+struct \hyperlink{structhssamcc}{hssamcc}
+\item 
+struct \hyperlink{structhslptu}{hslptu}
+\item 
+struct \hyperlink{structhsrdio}{hsrdio}
+\item 
+struct \hyperlink{structhsvglp}{hsvglp}
+\item 
+struct \hyperlink{structhystfu}{hystfu}
+\item 
+struct \hyperlink{structhsoptn}{hsoptn}
+\item 
+struct \hyperlink{structhsnume}{hsnume}
+\item 
+struct \hyperlink{structhsgrid}{hsgrid}
+\item 
+struct \hyperlink{structsophct}{sophct}
+\item 
+struct \hyperlink{structlhapdfc}{lhapdfc}
+\item 
+struct \hyperlink{structhsoutf}{hsoutf}
+\end{DoxyCompactItemize}
 \subsection*{Macros}
 \begin{DoxyCompactItemize}
 \item 
 \#define \hyperlink{_t_djangoh_8cc_aa1c2e64708a5f94518ab43b6311e7ad2}{type\+\_\+of\+\_\+call}~\+\_\+stdcall
+\item 
+\#define \hyperlink{_t_djangoh_8cc_a1c6d5de492ac61ad29aec7aa9a436bbf}{V\+E\+R\+S\+I\+ON}~1
+\item 
+\#define \hyperlink{_t_djangoh_8cc_a494dfbd3d5cb64aaae52c3c065ff6add}{S\+U\+B\+V\+E\+R\+S\+I\+ON}~1
+\item 
+\#define \hyperlink{_t_djangoh_8cc_ac5d957e4fd3dc11cd97a54cf9ca057a4}{R\+ST}~\char`\"{}\textbackslash{}x1B\mbox{[}0m\char`\"{}
+\item 
+\#define \hyperlink{_t_djangoh_8cc_a66290957baed5df3930ada4cb8caccf1}{K\+R\+ED}~\char`\"{}\textbackslash{}x1B\mbox{[}31m\char`\"{}
+\item 
+\#define \hyperlink{_t_djangoh_8cc_ac081c83b067273757f7a2e54a5957d41}{K\+G\+RN}~\char`\"{}\textbackslash{}x1B\mbox{[}32m\char`\"{}
+\item 
+\#define \hyperlink{_t_djangoh_8cc_a897b10d246533c95ba86cb79f92e465a}{K\+Y\+EL}~\char`\"{}\textbackslash{}x1B\mbox{[}33m\char`\"{}
+\item 
+\#define \hyperlink{_t_djangoh_8cc_a3f838f2fc3a9a3b434be606fc908964b}{K\+B\+LU}~\char`\"{}\textbackslash{}x1B\mbox{[}34m\char`\"{}
+\item 
+\#define \hyperlink{_t_djangoh_8cc_a6825f05d3b9d619d91d79d0ef18bb8b2}{K\+M\+AG}~\char`\"{}\textbackslash{}x1B\mbox{[}35m\char`\"{}
+\item 
+\#define \hyperlink{_t_djangoh_8cc_a32036c94dbb166a3f874b7efc169841f}{K\+C\+YN}~\char`\"{}\textbackslash{}x1B\mbox{[}36m\char`\"{}
+\item 
+\#define \hyperlink{_t_djangoh_8cc_af0036c8022c9980079ab17e5c87fd478}{K\+W\+HT}~\char`\"{}\textbackslash{}x1B\mbox{[}37m\char`\"{}
+\item 
+\#define \hyperlink{_t_djangoh_8cc_ae5b789f4a8f720ec20a544c58f9c204d}{F\+R\+ED}(x)~\hyperlink{_t_djangoh_8cc_a66290957baed5df3930ada4cb8caccf1}{K\+R\+ED} x \hyperlink{_t_djangoh_8cc_ac5d957e4fd3dc11cd97a54cf9ca057a4}{R\+ST}
+\item 
+\#define \hyperlink{_t_djangoh_8cc_ab3968f7b5009845811dc102a5b53d898}{F\+G\+RN}(x)~\hyperlink{_t_djangoh_8cc_ac081c83b067273757f7a2e54a5957d41}{K\+G\+RN} x \hyperlink{_t_djangoh_8cc_ac5d957e4fd3dc11cd97a54cf9ca057a4}{R\+ST}
+\item 
+\#define \hyperlink{_t_djangoh_8cc_a4bae6c5147cf3957a90c9c6f5b37faac}{F\+Y\+EL}(x)~\hyperlink{_t_djangoh_8cc_a897b10d246533c95ba86cb79f92e465a}{K\+Y\+EL} x \hyperlink{_t_djangoh_8cc_ac5d957e4fd3dc11cd97a54cf9ca057a4}{R\+ST}
+\item 
+\#define \hyperlink{_t_djangoh_8cc_a7efc4f68a50a41c6a93ece87dd6c7dec}{F\+B\+LU}(x)~\hyperlink{_t_djangoh_8cc_a3f838f2fc3a9a3b434be606fc908964b}{K\+B\+LU} x \hyperlink{_t_djangoh_8cc_ac5d957e4fd3dc11cd97a54cf9ca057a4}{R\+ST}
+\item 
+\#define \hyperlink{_t_djangoh_8cc_a957ecba768167bfb215a4bf97e7a0533}{F\+M\+AG}(x)~\hyperlink{_t_djangoh_8cc_a6825f05d3b9d619d91d79d0ef18bb8b2}{K\+M\+AG} x \hyperlink{_t_djangoh_8cc_ac5d957e4fd3dc11cd97a54cf9ca057a4}{R\+ST}
+\item 
+\#define \hyperlink{_t_djangoh_8cc_a707fab975ef99b4f89ff740f55d14602}{F\+C\+YN}(x)~\hyperlink{_t_djangoh_8cc_a32036c94dbb166a3f874b7efc169841f}{K\+C\+YN} x \hyperlink{_t_djangoh_8cc_ac5d957e4fd3dc11cd97a54cf9ca057a4}{R\+ST}
+\item 
+\#define \hyperlink{_t_djangoh_8cc_a312c671f34e0d7a772e43cd63bc0f31b}{F\+W\+HT}(x)~\hyperlink{_t_djangoh_8cc_af0036c8022c9980079ab17e5c87fd478}{K\+W\+HT} x \hyperlink{_t_djangoh_8cc_ac5d957e4fd3dc11cd97a54cf9ca057a4}{R\+ST}
+\item 
+\#define \hyperlink{_t_djangoh_8cc_a8d6c06f3e6f93ac985b046d40b63ae43}{B\+O\+LD}(x)~\char`\"{}\textbackslash{}x1B\mbox{[}1m\char`\"{} x R\+ST
+\item 
+\#define \hyperlink{_t_djangoh_8cc_a83010912e47c70954b461dd1013b2d4e}{U\+N\+DL}(x)~\char`\"{}\textbackslash{}x1B\mbox{[}4m\char`\"{} x R\+ST
 \end{DoxyCompactItemize}
 \subsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
-void \hyperlink{_t_djangoh_8cc_ac1cf6ad49e4b83a54ab8e5c08197a30d}{hsmain\+\_\+} (char $\ast$inputfile, int $\ast$len)
+void \hyperlink{_t_djangoh_8cc_a953645e288b52005f33f96b93d0fff8c}{hsinpt\+\_\+} ()
+\item 
+void \hyperlink{_t_djangoh_8cc_a72ae7dc986f10b6877b62e3aa3bc4018}{hsegen\+\_\+} ()
+\item 
+void \hyperlink{_t_djangoh_8cc_a7c6ddad6ef214c0e9d4fa9372c39ef43}{hsrcap\+\_\+} ()
+\item 
+void \hyperlink{_t_djangoh_8cc_acdb96b0d1fc67ef1a96a84b7712adea7}{Convert\+To\+Fortran} (char $\ast$fstring, std\+::size\+\_\+t fstring\+\_\+len, const char $\ast$cstring)
 \end{DoxyCompactItemize}
 \subsection*{Variables}
 \begin{DoxyCompactItemize}
 \item 
 \hyperlink{struct_lujets__t}{Lujets\+\_\+t} \hyperlink{_t_djangoh_8cc_a4c1d28cf9fc720f1ea8f7c329502ce13}{lujets\+\_\+}
+\item 
+\hyperlink{struct_djkin__t}{Djkin\+\_\+t} \hyperlink{_t_djangoh_8cc_a5c131239b1cd6c762cccbb45a5b5dec7}{djkin\+\_\+}
+\item 
+struct \hyperlink{structihscw}{ihscw} \hyperlink{_t_djangoh_8cc_a9096e2bcfc580d38ff13b08b4df85692}{ihscw\+\_\+}
+\item 
+struct \hyperlink{structhsvrbz}{hsvrbz} \hyperlink{_t_djangoh_8cc_a9c635273ba67d930682b950eb7f84080}{hsvrbz\+\_\+}
+\item 
+struct \hyperlink{structhselab}{hselab} \hyperlink{_t_djangoh_8cc_aa09660f8a316efbb8e33bd76d227787e}{hselab\+\_\+}
+\item 
+struct \hyperlink{structihscut}{ihscut} \hyperlink{_t_djangoh_8cc_a644d6c89d494fef65edc7ae23e28c39f}{ihscut\+\_\+}
+\item 
+struct \hyperlink{structhstcut}{hstcut} \hyperlink{_t_djangoh_8cc_a283b343d76dc57b46b7e43e34f0c7add}{hstcut\+\_\+}
+\item 
+struct \hyperlink{structhspcut}{hspcut} \hyperlink{_t_djangoh_8cc_a0f93a924699ede9bc3fb06bc9f237523}{hspcut\+\_\+}
+\item 
+struct \hyperlink{structhsisgm}{hsisgm} \hyperlink{_t_djangoh_8cc_a5ec4d1fce773666a9f29bd7e43afac35}{hsisgm\+\_\+}
+\item 
+struct \hyperlink{structhsparl}{hsparl} \hyperlink{_t_djangoh_8cc_a42e405a81ccdd1473f324672dd1609fd}{hsparl\+\_\+}
+\item 
+struct \hyperlink{structhsstrp}{hsstrp} \hyperlink{_t_djangoh_8cc_a352a4b25493aa0e562fc2f1a10e2fbcd}{hsstrp\+\_\+}
+\item 
+struct \hyperlink{structhspdfo}{hspdfo} \hyperlink{_t_djangoh_8cc_aa7fb3eac524d3c60d73f6ab4920fc544}{hspdfo\+\_\+}
+\item 
+struct \hyperlink{structhselep}{hselep} \hyperlink{_t_djangoh_8cc_a7fec324aa388f61f65a07f101148e08e}{hselep\+\_\+}
+\item 
+struct \hyperlink{structhsnucl}{hsnucl} \hyperlink{_t_djangoh_8cc_a25f6525d3857abc798cd08ca3480af02}{hsnucl\+\_\+}
+\item 
+struct \hyperlink{structhsparm}{hsparm} \hyperlink{_t_djangoh_8cc_a18cbf8ace1806c827e79a6b34497c6e3}{hsparm\+\_\+}
+\item 
+struct \hyperlink{structhswgtc}{hswgtc} \hyperlink{_t_djangoh_8cc_aedf24c17670d92ce595eac9e33f71633}{hswgtc\+\_\+}
+\item 
+struct \hyperlink{structhsirct}{hsirct} \hyperlink{_t_djangoh_8cc_a176f22901537863ce47ee097f3729144}{hsirct\+\_\+}
+\item 
+struct \hyperlink{structhsalfs}{hsalfs} \hyperlink{_t_djangoh_8cc_a3ad55f8faf0c5bf7b44a361577a0bc3b}{hsalfs\+\_\+}
+\item 
+struct \hyperlink{structhsintnc}{hsintnc} \hyperlink{_t_djangoh_8cc_a2b88d4c88bce729d10286a20042ec0dc}{hsintnc\+\_\+}
+\item 
+struct \hyperlink{structhsintcc}{hsintcc} \hyperlink{_t_djangoh_8cc_a1efcbc21ecb59be75d10c6ff28bd814e}{hsintcc\+\_\+}
+\item 
+struct \hyperlink{structhssamnc}{hssamnc} \hyperlink{_t_djangoh_8cc_a82048c2ffca5ab36f4e08c6028b5a918}{hssamnc\+\_\+}
+\item 
+struct \hyperlink{structhssamcc}{hssamcc} \hyperlink{_t_djangoh_8cc_a02e148b7f35241f94dd00b0fa4a01c9a}{hssamcc\+\_\+}
+\item 
+struct \hyperlink{structhslptu}{hslptu} \hyperlink{_t_djangoh_8cc_af2f17c33ffae74706f95099a32df21ce}{hslptu\+\_\+}
+\item 
+struct \hyperlink{structhsrdio}{hsrdio} \hyperlink{_t_djangoh_8cc_a27f8b53126eb6f107aae0383f3336ccd}{hsrdio\+\_\+}
+\item 
+struct \hyperlink{structhsvglp}{hsvglp} \hyperlink{_t_djangoh_8cc_a5f2e3be7d32f73fe34070c1e35e1673b}{hsvglp\+\_\+}
+\item 
+struct \hyperlink{structhystfu}{hystfu} \hyperlink{_t_djangoh_8cc_a2bcb2f6d96727c2022c803736720a2d5}{hystfu\+\_\+}
+\item 
+struct \hyperlink{structhsoptn}{hsoptn} \hyperlink{_t_djangoh_8cc_a6b104df03c000c8f5d7c1fff6ff303e9}{hsoptn\+\_\+}
+\item 
+struct \hyperlink{structhsnume}{hsnume} \hyperlink{_t_djangoh_8cc_a228d17b9f743b60675ab4e7971e03a8e}{hsnume\+\_\+}
+\item 
+struct \hyperlink{structhsgrid}{hsgrid} \hyperlink{_t_djangoh_8cc_a568534688e505600f0e98676865305eb}{hsgrid\+\_\+}
+\item 
+struct \hyperlink{structsophct}{sophct} \hyperlink{_t_djangoh_8cc_a50f48a0d4a033e9cc3b283abf0f060df}{sophct\+\_\+}
+\item 
+struct \hyperlink{structlhapdfc}{lhapdfc} \hyperlink{_t_djangoh_8cc_ac1c66cad51d0e97e08f3e527c2348571}{lhapdfc\+\_\+}
+\item 
+struct \hyperlink{structhsoutf}{hsoutf} \hyperlink{_t_djangoh_8cc_a199fdfc754803f289e8f4b1f7734a823}{hsoutf\+\_\+}
 \end{DoxyCompactItemize}
 
 
@@ -34,34 +204,356 @@ void \hyperlink{_t_djangoh_8cc_ac1cf6ad49e4b83a54ab8e5c08197a30d}{hsmain\+\_\+} 
 Interface class to Djangoh generator. 
 
 \begin{DoxyAuthor}{Author}
-Nicolas P\+I\+E\+R\+R\+E 
+Nicolas P\+I\+E\+R\+RE 
 \end{DoxyAuthor}
 \begin{DoxyVersion}{Version}
-0.\+1 
+1.\+1 
 \end{DoxyVersion}
 \begin{DoxyDate}{Date}
-28/10/16 Support \+: mail to \+: \href{mailto:nicolas.pierre@cern.ch}{\tt nicolas.\+pierre@cern.\+ch} 
+14/06/16 Support \+: mail to \+: \href{mailto:nicolas.pierre@cern.ch}{\tt nicolas.\+pierre@cern.\+ch} 
 \end{DoxyDate}
 
 
 \subsection{Macro Definition Documentation}
-\hypertarget{_t_djangoh_8cc_aa1c2e64708a5f94518ab43b6311e7ad2}{\index{T\+Djangoh.\+cc@{T\+Djangoh.\+cc}!type\+\_\+of\+\_\+call@{type\+\_\+of\+\_\+call}}
+\mbox{\Hypertarget{_t_djangoh_8cc_a8d6c06f3e6f93ac985b046d40b63ae43}\label{_t_djangoh_8cc_a8d6c06f3e6f93ac985b046d40b63ae43}} 
+\index{T\+Djangoh.\+cc@{T\+Djangoh.\+cc}!B\+O\+LD@{B\+O\+LD}}
+\index{B\+O\+LD@{B\+O\+LD}!T\+Djangoh.\+cc@{T\+Djangoh.\+cc}}
+\subsubsection{\texorpdfstring{B\+O\+LD}{BOLD}}
+{\footnotesize\ttfamily \#define B\+O\+LD(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~\char`\"{}\textbackslash{}x1B\mbox{[}1m\char`\"{} x R\+ST}
+
+\mbox{\Hypertarget{_t_djangoh_8cc_a7efc4f68a50a41c6a93ece87dd6c7dec}\label{_t_djangoh_8cc_a7efc4f68a50a41c6a93ece87dd6c7dec}} 
+\index{T\+Djangoh.\+cc@{T\+Djangoh.\+cc}!F\+B\+LU@{F\+B\+LU}}
+\index{F\+B\+LU@{F\+B\+LU}!T\+Djangoh.\+cc@{T\+Djangoh.\+cc}}
+\subsubsection{\texorpdfstring{F\+B\+LU}{FBLU}}
+{\footnotesize\ttfamily \#define F\+B\+LU(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~\hyperlink{_t_djangoh_8cc_a3f838f2fc3a9a3b434be606fc908964b}{K\+B\+LU} x \hyperlink{_t_djangoh_8cc_ac5d957e4fd3dc11cd97a54cf9ca057a4}{R\+ST}}
+
+\mbox{\Hypertarget{_t_djangoh_8cc_a707fab975ef99b4f89ff740f55d14602}\label{_t_djangoh_8cc_a707fab975ef99b4f89ff740f55d14602}} 
+\index{T\+Djangoh.\+cc@{T\+Djangoh.\+cc}!F\+C\+YN@{F\+C\+YN}}
+\index{F\+C\+YN@{F\+C\+YN}!T\+Djangoh.\+cc@{T\+Djangoh.\+cc}}
+\subsubsection{\texorpdfstring{F\+C\+YN}{FCYN}}
+{\footnotesize\ttfamily \#define F\+C\+YN(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~\hyperlink{_t_djangoh_8cc_a32036c94dbb166a3f874b7efc169841f}{K\+C\+YN} x \hyperlink{_t_djangoh_8cc_ac5d957e4fd3dc11cd97a54cf9ca057a4}{R\+ST}}
+
+\mbox{\Hypertarget{_t_djangoh_8cc_ab3968f7b5009845811dc102a5b53d898}\label{_t_djangoh_8cc_ab3968f7b5009845811dc102a5b53d898}} 
+\index{T\+Djangoh.\+cc@{T\+Djangoh.\+cc}!F\+G\+RN@{F\+G\+RN}}
+\index{F\+G\+RN@{F\+G\+RN}!T\+Djangoh.\+cc@{T\+Djangoh.\+cc}}
+\subsubsection{\texorpdfstring{F\+G\+RN}{FGRN}}
+{\footnotesize\ttfamily \#define F\+G\+RN(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~\hyperlink{_t_djangoh_8cc_ac081c83b067273757f7a2e54a5957d41}{K\+G\+RN} x \hyperlink{_t_djangoh_8cc_ac5d957e4fd3dc11cd97a54cf9ca057a4}{R\+ST}}
+
+\mbox{\Hypertarget{_t_djangoh_8cc_a957ecba768167bfb215a4bf97e7a0533}\label{_t_djangoh_8cc_a957ecba768167bfb215a4bf97e7a0533}} 
+\index{T\+Djangoh.\+cc@{T\+Djangoh.\+cc}!F\+M\+AG@{F\+M\+AG}}
+\index{F\+M\+AG@{F\+M\+AG}!T\+Djangoh.\+cc@{T\+Djangoh.\+cc}}
+\subsubsection{\texorpdfstring{F\+M\+AG}{FMAG}}
+{\footnotesize\ttfamily \#define F\+M\+AG(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~\hyperlink{_t_djangoh_8cc_a6825f05d3b9d619d91d79d0ef18bb8b2}{K\+M\+AG} x \hyperlink{_t_djangoh_8cc_ac5d957e4fd3dc11cd97a54cf9ca057a4}{R\+ST}}
+
+\mbox{\Hypertarget{_t_djangoh_8cc_ae5b789f4a8f720ec20a544c58f9c204d}\label{_t_djangoh_8cc_ae5b789f4a8f720ec20a544c58f9c204d}} 
+\index{T\+Djangoh.\+cc@{T\+Djangoh.\+cc}!F\+R\+ED@{F\+R\+ED}}
+\index{F\+R\+ED@{F\+R\+ED}!T\+Djangoh.\+cc@{T\+Djangoh.\+cc}}
+\subsubsection{\texorpdfstring{F\+R\+ED}{FRED}}
+{\footnotesize\ttfamily \#define F\+R\+ED(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~\hyperlink{_t_djangoh_8cc_a66290957baed5df3930ada4cb8caccf1}{K\+R\+ED} x \hyperlink{_t_djangoh_8cc_ac5d957e4fd3dc11cd97a54cf9ca057a4}{R\+ST}}
+
+\mbox{\Hypertarget{_t_djangoh_8cc_a312c671f34e0d7a772e43cd63bc0f31b}\label{_t_djangoh_8cc_a312c671f34e0d7a772e43cd63bc0f31b}} 
+\index{T\+Djangoh.\+cc@{T\+Djangoh.\+cc}!F\+W\+HT@{F\+W\+HT}}
+\index{F\+W\+HT@{F\+W\+HT}!T\+Djangoh.\+cc@{T\+Djangoh.\+cc}}
+\subsubsection{\texorpdfstring{F\+W\+HT}{FWHT}}
+{\footnotesize\ttfamily \#define F\+W\+HT(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~\hyperlink{_t_djangoh_8cc_af0036c8022c9980079ab17e5c87fd478}{K\+W\+HT} x \hyperlink{_t_djangoh_8cc_ac5d957e4fd3dc11cd97a54cf9ca057a4}{R\+ST}}
+
+\mbox{\Hypertarget{_t_djangoh_8cc_a4bae6c5147cf3957a90c9c6f5b37faac}\label{_t_djangoh_8cc_a4bae6c5147cf3957a90c9c6f5b37faac}} 
+\index{T\+Djangoh.\+cc@{T\+Djangoh.\+cc}!F\+Y\+EL@{F\+Y\+EL}}
+\index{F\+Y\+EL@{F\+Y\+EL}!T\+Djangoh.\+cc@{T\+Djangoh.\+cc}}
+\subsubsection{\texorpdfstring{F\+Y\+EL}{FYEL}}
+{\footnotesize\ttfamily \#define F\+Y\+EL(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~\hyperlink{_t_djangoh_8cc_a897b10d246533c95ba86cb79f92e465a}{K\+Y\+EL} x \hyperlink{_t_djangoh_8cc_ac5d957e4fd3dc11cd97a54cf9ca057a4}{R\+ST}}
+
+\mbox{\Hypertarget{_t_djangoh_8cc_a3f838f2fc3a9a3b434be606fc908964b}\label{_t_djangoh_8cc_a3f838f2fc3a9a3b434be606fc908964b}} 
+\index{T\+Djangoh.\+cc@{T\+Djangoh.\+cc}!K\+B\+LU@{K\+B\+LU}}
+\index{K\+B\+LU@{K\+B\+LU}!T\+Djangoh.\+cc@{T\+Djangoh.\+cc}}
+\subsubsection{\texorpdfstring{K\+B\+LU}{KBLU}}
+{\footnotesize\ttfamily \#define K\+B\+LU~\char`\"{}\textbackslash{}x1B\mbox{[}34m\char`\"{}}
+
+\mbox{\Hypertarget{_t_djangoh_8cc_a32036c94dbb166a3f874b7efc169841f}\label{_t_djangoh_8cc_a32036c94dbb166a3f874b7efc169841f}} 
+\index{T\+Djangoh.\+cc@{T\+Djangoh.\+cc}!K\+C\+YN@{K\+C\+YN}}
+\index{K\+C\+YN@{K\+C\+YN}!T\+Djangoh.\+cc@{T\+Djangoh.\+cc}}
+\subsubsection{\texorpdfstring{K\+C\+YN}{KCYN}}
+{\footnotesize\ttfamily \#define K\+C\+YN~\char`\"{}\textbackslash{}x1B\mbox{[}36m\char`\"{}}
+
+\mbox{\Hypertarget{_t_djangoh_8cc_ac081c83b067273757f7a2e54a5957d41}\label{_t_djangoh_8cc_ac081c83b067273757f7a2e54a5957d41}} 
+\index{T\+Djangoh.\+cc@{T\+Djangoh.\+cc}!K\+G\+RN@{K\+G\+RN}}
+\index{K\+G\+RN@{K\+G\+RN}!T\+Djangoh.\+cc@{T\+Djangoh.\+cc}}
+\subsubsection{\texorpdfstring{K\+G\+RN}{KGRN}}
+{\footnotesize\ttfamily \#define K\+G\+RN~\char`\"{}\textbackslash{}x1B\mbox{[}32m\char`\"{}}
+
+\mbox{\Hypertarget{_t_djangoh_8cc_a6825f05d3b9d619d91d79d0ef18bb8b2}\label{_t_djangoh_8cc_a6825f05d3b9d619d91d79d0ef18bb8b2}} 
+\index{T\+Djangoh.\+cc@{T\+Djangoh.\+cc}!K\+M\+AG@{K\+M\+AG}}
+\index{K\+M\+AG@{K\+M\+AG}!T\+Djangoh.\+cc@{T\+Djangoh.\+cc}}
+\subsubsection{\texorpdfstring{K\+M\+AG}{KMAG}}
+{\footnotesize\ttfamily \#define K\+M\+AG~\char`\"{}\textbackslash{}x1B\mbox{[}35m\char`\"{}}
+
+\mbox{\Hypertarget{_t_djangoh_8cc_a66290957baed5df3930ada4cb8caccf1}\label{_t_djangoh_8cc_a66290957baed5df3930ada4cb8caccf1}} 
+\index{T\+Djangoh.\+cc@{T\+Djangoh.\+cc}!K\+R\+ED@{K\+R\+ED}}
+\index{K\+R\+ED@{K\+R\+ED}!T\+Djangoh.\+cc@{T\+Djangoh.\+cc}}
+\subsubsection{\texorpdfstring{K\+R\+ED}{KRED}}
+{\footnotesize\ttfamily \#define K\+R\+ED~\char`\"{}\textbackslash{}x1B\mbox{[}31m\char`\"{}}
+
+\mbox{\Hypertarget{_t_djangoh_8cc_af0036c8022c9980079ab17e5c87fd478}\label{_t_djangoh_8cc_af0036c8022c9980079ab17e5c87fd478}} 
+\index{T\+Djangoh.\+cc@{T\+Djangoh.\+cc}!K\+W\+HT@{K\+W\+HT}}
+\index{K\+W\+HT@{K\+W\+HT}!T\+Djangoh.\+cc@{T\+Djangoh.\+cc}}
+\subsubsection{\texorpdfstring{K\+W\+HT}{KWHT}}
+{\footnotesize\ttfamily \#define K\+W\+HT~\char`\"{}\textbackslash{}x1B\mbox{[}37m\char`\"{}}
+
+\mbox{\Hypertarget{_t_djangoh_8cc_a897b10d246533c95ba86cb79f92e465a}\label{_t_djangoh_8cc_a897b10d246533c95ba86cb79f92e465a}} 
+\index{T\+Djangoh.\+cc@{T\+Djangoh.\+cc}!K\+Y\+EL@{K\+Y\+EL}}
+\index{K\+Y\+EL@{K\+Y\+EL}!T\+Djangoh.\+cc@{T\+Djangoh.\+cc}}
+\subsubsection{\texorpdfstring{K\+Y\+EL}{KYEL}}
+{\footnotesize\ttfamily \#define K\+Y\+EL~\char`\"{}\textbackslash{}x1B\mbox{[}33m\char`\"{}}
+
+\mbox{\Hypertarget{_t_djangoh_8cc_ac5d957e4fd3dc11cd97a54cf9ca057a4}\label{_t_djangoh_8cc_ac5d957e4fd3dc11cd97a54cf9ca057a4}} 
+\index{T\+Djangoh.\+cc@{T\+Djangoh.\+cc}!R\+ST@{R\+ST}}
+\index{R\+ST@{R\+ST}!T\+Djangoh.\+cc@{T\+Djangoh.\+cc}}
+\subsubsection{\texorpdfstring{R\+ST}{RST}}
+{\footnotesize\ttfamily \#define R\+ST~\char`\"{}\textbackslash{}x1B\mbox{[}0m\char`\"{}}
+
+\mbox{\Hypertarget{_t_djangoh_8cc_a494dfbd3d5cb64aaae52c3c065ff6add}\label{_t_djangoh_8cc_a494dfbd3d5cb64aaae52c3c065ff6add}} 
+\index{T\+Djangoh.\+cc@{T\+Djangoh.\+cc}!S\+U\+B\+V\+E\+R\+S\+I\+ON@{S\+U\+B\+V\+E\+R\+S\+I\+ON}}
+\index{S\+U\+B\+V\+E\+R\+S\+I\+ON@{S\+U\+B\+V\+E\+R\+S\+I\+ON}!T\+Djangoh.\+cc@{T\+Djangoh.\+cc}}
+\subsubsection{\texorpdfstring{S\+U\+B\+V\+E\+R\+S\+I\+ON}{SUBVERSION}}
+{\footnotesize\ttfamily \#define S\+U\+B\+V\+E\+R\+S\+I\+ON~1}
+
+\mbox{\Hypertarget{_t_djangoh_8cc_aa1c2e64708a5f94518ab43b6311e7ad2}\label{_t_djangoh_8cc_aa1c2e64708a5f94518ab43b6311e7ad2}} 
+\index{T\+Djangoh.\+cc@{T\+Djangoh.\+cc}!type\+\_\+of\+\_\+call@{type\+\_\+of\+\_\+call}}
 \index{type\+\_\+of\+\_\+call@{type\+\_\+of\+\_\+call}!T\+Djangoh.\+cc@{T\+Djangoh.\+cc}}
-\subsubsection[{type\+\_\+of\+\_\+call}]{\setlength{\rightskip}{0pt plus 5cm}\#define type\+\_\+of\+\_\+call~\+\_\+stdcall}}\label{_t_djangoh_8cc_aa1c2e64708a5f94518ab43b6311e7ad2}
+\subsubsection{\texorpdfstring{type\+\_\+of\+\_\+call}{type\_of\_call}}
+{\footnotesize\ttfamily \#define type\+\_\+of\+\_\+call~\+\_\+stdcall}
+
+\mbox{\Hypertarget{_t_djangoh_8cc_a83010912e47c70954b461dd1013b2d4e}\label{_t_djangoh_8cc_a83010912e47c70954b461dd1013b2d4e}} 
+\index{T\+Djangoh.\+cc@{T\+Djangoh.\+cc}!U\+N\+DL@{U\+N\+DL}}
+\index{U\+N\+DL@{U\+N\+DL}!T\+Djangoh.\+cc@{T\+Djangoh.\+cc}}
+\subsubsection{\texorpdfstring{U\+N\+DL}{UNDL}}
+{\footnotesize\ttfamily \#define U\+N\+DL(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~\char`\"{}\textbackslash{}x1B\mbox{[}4m\char`\"{} x R\+ST}
+
+\mbox{\Hypertarget{_t_djangoh_8cc_a1c6d5de492ac61ad29aec7aa9a436bbf}\label{_t_djangoh_8cc_a1c6d5de492ac61ad29aec7aa9a436bbf}} 
+\index{T\+Djangoh.\+cc@{T\+Djangoh.\+cc}!V\+E\+R\+S\+I\+ON@{V\+E\+R\+S\+I\+ON}}
+\index{V\+E\+R\+S\+I\+ON@{V\+E\+R\+S\+I\+ON}!T\+Djangoh.\+cc@{T\+Djangoh.\+cc}}
+\subsubsection{\texorpdfstring{V\+E\+R\+S\+I\+ON}{VERSION}}
+{\footnotesize\ttfamily \#define V\+E\+R\+S\+I\+ON~1}
+
 
 
 \subsection{Function Documentation}
-\hypertarget{_t_djangoh_8cc_ac1cf6ad49e4b83a54ab8e5c08197a30d}{\index{T\+Djangoh.\+cc@{T\+Djangoh.\+cc}!hsmain\+\_\+@{hsmain\+\_\+}}
-\index{hsmain\+\_\+@{hsmain\+\_\+}!T\+Djangoh.\+cc@{T\+Djangoh.\+cc}}
-\subsubsection[{hsmain\+\_\+}]{\setlength{\rightskip}{0pt plus 5cm}void hsmain\+\_\+ (
-\begin{DoxyParamCaption}
-\item[{char $\ast$}]{inputfile, }
-\item[{int $\ast$}]{len}
-\end{DoxyParamCaption}
-)}}\label{_t_djangoh_8cc_ac1cf6ad49e4b83a54ab8e5c08197a30d}
+\mbox{\Hypertarget{_t_djangoh_8cc_acdb96b0d1fc67ef1a96a84b7712adea7}\label{_t_djangoh_8cc_acdb96b0d1fc67ef1a96a84b7712adea7}} 
+\index{T\+Djangoh.\+cc@{T\+Djangoh.\+cc}!Convert\+To\+Fortran@{Convert\+To\+Fortran}}
+\index{Convert\+To\+Fortran@{Convert\+To\+Fortran}!T\+Djangoh.\+cc@{T\+Djangoh.\+cc}}
+\subsubsection{\texorpdfstring{Convert\+To\+Fortran()}{ConvertToFortran()}}
+{\footnotesize\ttfamily void Convert\+To\+Fortran (\begin{DoxyParamCaption}\item[{char $\ast$}]{fstring,  }\item[{std\+::size\+\_\+t}]{fstring\+\_\+len,  }\item[{const char $\ast$}]{cstring }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{_t_djangoh_8cc_a72ae7dc986f10b6877b62e3aa3bc4018}\label{_t_djangoh_8cc_a72ae7dc986f10b6877b62e3aa3bc4018}} 
+\index{T\+Djangoh.\+cc@{T\+Djangoh.\+cc}!hsegen\+\_\+@{hsegen\+\_\+}}
+\index{hsegen\+\_\+@{hsegen\+\_\+}!T\+Djangoh.\+cc@{T\+Djangoh.\+cc}}
+\subsubsection{\texorpdfstring{hsegen\+\_\+()}{hsegen\_()}}
+{\footnotesize\ttfamily void hsegen\+\_\+ (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{_t_djangoh_8cc_a953645e288b52005f33f96b93d0fff8c}\label{_t_djangoh_8cc_a953645e288b52005f33f96b93d0fff8c}} 
+\index{T\+Djangoh.\+cc@{T\+Djangoh.\+cc}!hsinpt\+\_\+@{hsinpt\+\_\+}}
+\index{hsinpt\+\_\+@{hsinpt\+\_\+}!T\+Djangoh.\+cc@{T\+Djangoh.\+cc}}
+\subsubsection{\texorpdfstring{hsinpt\+\_\+()}{hsinpt\_()}}
+{\footnotesize\ttfamily void hsinpt\+\_\+ (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{_t_djangoh_8cc_a7c6ddad6ef214c0e9d4fa9372c39ef43}\label{_t_djangoh_8cc_a7c6ddad6ef214c0e9d4fa9372c39ef43}} 
+\index{T\+Djangoh.\+cc@{T\+Djangoh.\+cc}!hsrcap\+\_\+@{hsrcap\+\_\+}}
+\index{hsrcap\+\_\+@{hsrcap\+\_\+}!T\+Djangoh.\+cc@{T\+Djangoh.\+cc}}
+\subsubsection{\texorpdfstring{hsrcap\+\_\+()}{hsrcap\_()}}
+{\footnotesize\ttfamily void hsrcap\+\_\+ (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
 
 
 \subsection{Variable Documentation}
-\hypertarget{_t_djangoh_8cc_a4c1d28cf9fc720f1ea8f7c329502ce13}{\index{T\+Djangoh.\+cc@{T\+Djangoh.\+cc}!lujets\+\_\+@{lujets\+\_\+}}
+\mbox{\Hypertarget{_t_djangoh_8cc_a5c131239b1cd6c762cccbb45a5b5dec7}\label{_t_djangoh_8cc_a5c131239b1cd6c762cccbb45a5b5dec7}} 
+\index{T\+Djangoh.\+cc@{T\+Djangoh.\+cc}!djkin\+\_\+@{djkin\+\_\+}}
+\index{djkin\+\_\+@{djkin\+\_\+}!T\+Djangoh.\+cc@{T\+Djangoh.\+cc}}
+\subsubsection{\texorpdfstring{djkin\+\_\+}{djkin\_}}
+{\footnotesize\ttfamily \hyperlink{struct_djkin__t}{Djkin\+\_\+t} djkin\+\_\+}
+
+\mbox{\Hypertarget{_t_djangoh_8cc_a3ad55f8faf0c5bf7b44a361577a0bc3b}\label{_t_djangoh_8cc_a3ad55f8faf0c5bf7b44a361577a0bc3b}} 
+\index{T\+Djangoh.\+cc@{T\+Djangoh.\+cc}!hsalfs\+\_\+@{hsalfs\+\_\+}}
+\index{hsalfs\+\_\+@{hsalfs\+\_\+}!T\+Djangoh.\+cc@{T\+Djangoh.\+cc}}
+\subsubsection{\texorpdfstring{hsalfs\+\_\+}{hsalfs\_}}
+{\footnotesize\ttfamily struct \hyperlink{structhsalfs}{hsalfs}  hsalfs\+\_\+}
+
+\mbox{\Hypertarget{_t_djangoh_8cc_aa09660f8a316efbb8e33bd76d227787e}\label{_t_djangoh_8cc_aa09660f8a316efbb8e33bd76d227787e}} 
+\index{T\+Djangoh.\+cc@{T\+Djangoh.\+cc}!hselab\+\_\+@{hselab\+\_\+}}
+\index{hselab\+\_\+@{hselab\+\_\+}!T\+Djangoh.\+cc@{T\+Djangoh.\+cc}}
+\subsubsection{\texorpdfstring{hselab\+\_\+}{hselab\_}}
+{\footnotesize\ttfamily struct \hyperlink{structhselab}{hselab}  hselab\+\_\+}
+
+\mbox{\Hypertarget{_t_djangoh_8cc_a7fec324aa388f61f65a07f101148e08e}\label{_t_djangoh_8cc_a7fec324aa388f61f65a07f101148e08e}} 
+\index{T\+Djangoh.\+cc@{T\+Djangoh.\+cc}!hselep\+\_\+@{hselep\+\_\+}}
+\index{hselep\+\_\+@{hselep\+\_\+}!T\+Djangoh.\+cc@{T\+Djangoh.\+cc}}
+\subsubsection{\texorpdfstring{hselep\+\_\+}{hselep\_}}
+{\footnotesize\ttfamily struct \hyperlink{structhselep}{hselep}  hselep\+\_\+}
+
+\mbox{\Hypertarget{_t_djangoh_8cc_a568534688e505600f0e98676865305eb}\label{_t_djangoh_8cc_a568534688e505600f0e98676865305eb}} 
+\index{T\+Djangoh.\+cc@{T\+Djangoh.\+cc}!hsgrid\+\_\+@{hsgrid\+\_\+}}
+\index{hsgrid\+\_\+@{hsgrid\+\_\+}!T\+Djangoh.\+cc@{T\+Djangoh.\+cc}}
+\subsubsection{\texorpdfstring{hsgrid\+\_\+}{hsgrid\_}}
+{\footnotesize\ttfamily struct \hyperlink{structhsgrid}{hsgrid}  hsgrid\+\_\+}
+
+\mbox{\Hypertarget{_t_djangoh_8cc_a1efcbc21ecb59be75d10c6ff28bd814e}\label{_t_djangoh_8cc_a1efcbc21ecb59be75d10c6ff28bd814e}} 
+\index{T\+Djangoh.\+cc@{T\+Djangoh.\+cc}!hsintcc\+\_\+@{hsintcc\+\_\+}}
+\index{hsintcc\+\_\+@{hsintcc\+\_\+}!T\+Djangoh.\+cc@{T\+Djangoh.\+cc}}
+\subsubsection{\texorpdfstring{hsintcc\+\_\+}{hsintcc\_}}
+{\footnotesize\ttfamily struct \hyperlink{structhsintcc}{hsintcc}  hsintcc\+\_\+}
+
+\mbox{\Hypertarget{_t_djangoh_8cc_a2b88d4c88bce729d10286a20042ec0dc}\label{_t_djangoh_8cc_a2b88d4c88bce729d10286a20042ec0dc}} 
+\index{T\+Djangoh.\+cc@{T\+Djangoh.\+cc}!hsintnc\+\_\+@{hsintnc\+\_\+}}
+\index{hsintnc\+\_\+@{hsintnc\+\_\+}!T\+Djangoh.\+cc@{T\+Djangoh.\+cc}}
+\subsubsection{\texorpdfstring{hsintnc\+\_\+}{hsintnc\_}}
+{\footnotesize\ttfamily struct \hyperlink{structhsintnc}{hsintnc}  hsintnc\+\_\+}
+
+\mbox{\Hypertarget{_t_djangoh_8cc_a176f22901537863ce47ee097f3729144}\label{_t_djangoh_8cc_a176f22901537863ce47ee097f3729144}} 
+\index{T\+Djangoh.\+cc@{T\+Djangoh.\+cc}!hsirct\+\_\+@{hsirct\+\_\+}}
+\index{hsirct\+\_\+@{hsirct\+\_\+}!T\+Djangoh.\+cc@{T\+Djangoh.\+cc}}
+\subsubsection{\texorpdfstring{hsirct\+\_\+}{hsirct\_}}
+{\footnotesize\ttfamily struct \hyperlink{structhsirct}{hsirct}  hsirct\+\_\+}
+
+\mbox{\Hypertarget{_t_djangoh_8cc_a5ec4d1fce773666a9f29bd7e43afac35}\label{_t_djangoh_8cc_a5ec4d1fce773666a9f29bd7e43afac35}} 
+\index{T\+Djangoh.\+cc@{T\+Djangoh.\+cc}!hsisgm\+\_\+@{hsisgm\+\_\+}}
+\index{hsisgm\+\_\+@{hsisgm\+\_\+}!T\+Djangoh.\+cc@{T\+Djangoh.\+cc}}
+\subsubsection{\texorpdfstring{hsisgm\+\_\+}{hsisgm\_}}
+{\footnotesize\ttfamily struct \hyperlink{structhsisgm}{hsisgm}  hsisgm\+\_\+}
+
+\mbox{\Hypertarget{_t_djangoh_8cc_af2f17c33ffae74706f95099a32df21ce}\label{_t_djangoh_8cc_af2f17c33ffae74706f95099a32df21ce}} 
+\index{T\+Djangoh.\+cc@{T\+Djangoh.\+cc}!hslptu\+\_\+@{hslptu\+\_\+}}
+\index{hslptu\+\_\+@{hslptu\+\_\+}!T\+Djangoh.\+cc@{T\+Djangoh.\+cc}}
+\subsubsection{\texorpdfstring{hslptu\+\_\+}{hslptu\_}}
+{\footnotesize\ttfamily struct \hyperlink{structhslptu}{hslptu}  hslptu\+\_\+}
+
+\mbox{\Hypertarget{_t_djangoh_8cc_a25f6525d3857abc798cd08ca3480af02}\label{_t_djangoh_8cc_a25f6525d3857abc798cd08ca3480af02}} 
+\index{T\+Djangoh.\+cc@{T\+Djangoh.\+cc}!hsnucl\+\_\+@{hsnucl\+\_\+}}
+\index{hsnucl\+\_\+@{hsnucl\+\_\+}!T\+Djangoh.\+cc@{T\+Djangoh.\+cc}}
+\subsubsection{\texorpdfstring{hsnucl\+\_\+}{hsnucl\_}}
+{\footnotesize\ttfamily struct \hyperlink{structhsnucl}{hsnucl}  hsnucl\+\_\+}
+
+\mbox{\Hypertarget{_t_djangoh_8cc_a228d17b9f743b60675ab4e7971e03a8e}\label{_t_djangoh_8cc_a228d17b9f743b60675ab4e7971e03a8e}} 
+\index{T\+Djangoh.\+cc@{T\+Djangoh.\+cc}!hsnume\+\_\+@{hsnume\+\_\+}}
+\index{hsnume\+\_\+@{hsnume\+\_\+}!T\+Djangoh.\+cc@{T\+Djangoh.\+cc}}
+\subsubsection{\texorpdfstring{hsnume\+\_\+}{hsnume\_}}
+{\footnotesize\ttfamily struct \hyperlink{structhsnume}{hsnume}  hsnume\+\_\+}
+
+\mbox{\Hypertarget{_t_djangoh_8cc_a6b104df03c000c8f5d7c1fff6ff303e9}\label{_t_djangoh_8cc_a6b104df03c000c8f5d7c1fff6ff303e9}} 
+\index{T\+Djangoh.\+cc@{T\+Djangoh.\+cc}!hsoptn\+\_\+@{hsoptn\+\_\+}}
+\index{hsoptn\+\_\+@{hsoptn\+\_\+}!T\+Djangoh.\+cc@{T\+Djangoh.\+cc}}
+\subsubsection{\texorpdfstring{hsoptn\+\_\+}{hsoptn\_}}
+{\footnotesize\ttfamily struct \hyperlink{structhsoptn}{hsoptn}  hsoptn\+\_\+}
+
+\mbox{\Hypertarget{_t_djangoh_8cc_a199fdfc754803f289e8f4b1f7734a823}\label{_t_djangoh_8cc_a199fdfc754803f289e8f4b1f7734a823}} 
+\index{T\+Djangoh.\+cc@{T\+Djangoh.\+cc}!hsoutf\+\_\+@{hsoutf\+\_\+}}
+\index{hsoutf\+\_\+@{hsoutf\+\_\+}!T\+Djangoh.\+cc@{T\+Djangoh.\+cc}}
+\subsubsection{\texorpdfstring{hsoutf\+\_\+}{hsoutf\_}}
+{\footnotesize\ttfamily struct \hyperlink{structhsoutf}{hsoutf}  hsoutf\+\_\+}
+
+\mbox{\Hypertarget{_t_djangoh_8cc_a42e405a81ccdd1473f324672dd1609fd}\label{_t_djangoh_8cc_a42e405a81ccdd1473f324672dd1609fd}} 
+\index{T\+Djangoh.\+cc@{T\+Djangoh.\+cc}!hsparl\+\_\+@{hsparl\+\_\+}}
+\index{hsparl\+\_\+@{hsparl\+\_\+}!T\+Djangoh.\+cc@{T\+Djangoh.\+cc}}
+\subsubsection{\texorpdfstring{hsparl\+\_\+}{hsparl\_}}
+{\footnotesize\ttfamily struct \hyperlink{structhsparl}{hsparl}  hsparl\+\_\+}
+
+\mbox{\Hypertarget{_t_djangoh_8cc_a18cbf8ace1806c827e79a6b34497c6e3}\label{_t_djangoh_8cc_a18cbf8ace1806c827e79a6b34497c6e3}} 
+\index{T\+Djangoh.\+cc@{T\+Djangoh.\+cc}!hsparm\+\_\+@{hsparm\+\_\+}}
+\index{hsparm\+\_\+@{hsparm\+\_\+}!T\+Djangoh.\+cc@{T\+Djangoh.\+cc}}
+\subsubsection{\texorpdfstring{hsparm\+\_\+}{hsparm\_}}
+{\footnotesize\ttfamily struct \hyperlink{structhsparm}{hsparm}  hsparm\+\_\+}
+
+\mbox{\Hypertarget{_t_djangoh_8cc_a0f93a924699ede9bc3fb06bc9f237523}\label{_t_djangoh_8cc_a0f93a924699ede9bc3fb06bc9f237523}} 
+\index{T\+Djangoh.\+cc@{T\+Djangoh.\+cc}!hspcut\+\_\+@{hspcut\+\_\+}}
+\index{hspcut\+\_\+@{hspcut\+\_\+}!T\+Djangoh.\+cc@{T\+Djangoh.\+cc}}
+\subsubsection{\texorpdfstring{hspcut\+\_\+}{hspcut\_}}
+{\footnotesize\ttfamily struct \hyperlink{structhspcut}{hspcut}  hspcut\+\_\+}
+
+\mbox{\Hypertarget{_t_djangoh_8cc_aa7fb3eac524d3c60d73f6ab4920fc544}\label{_t_djangoh_8cc_aa7fb3eac524d3c60d73f6ab4920fc544}} 
+\index{T\+Djangoh.\+cc@{T\+Djangoh.\+cc}!hspdfo\+\_\+@{hspdfo\+\_\+}}
+\index{hspdfo\+\_\+@{hspdfo\+\_\+}!T\+Djangoh.\+cc@{T\+Djangoh.\+cc}}
+\subsubsection{\texorpdfstring{hspdfo\+\_\+}{hspdfo\_}}
+{\footnotesize\ttfamily struct \hyperlink{structhspdfo}{hspdfo}  hspdfo\+\_\+}
+
+\mbox{\Hypertarget{_t_djangoh_8cc_a27f8b53126eb6f107aae0383f3336ccd}\label{_t_djangoh_8cc_a27f8b53126eb6f107aae0383f3336ccd}} 
+\index{T\+Djangoh.\+cc@{T\+Djangoh.\+cc}!hsrdio\+\_\+@{hsrdio\+\_\+}}
+\index{hsrdio\+\_\+@{hsrdio\+\_\+}!T\+Djangoh.\+cc@{T\+Djangoh.\+cc}}
+\subsubsection{\texorpdfstring{hsrdio\+\_\+}{hsrdio\_}}
+{\footnotesize\ttfamily struct \hyperlink{structhsrdio}{hsrdio}  hsrdio\+\_\+}
+
+\mbox{\Hypertarget{_t_djangoh_8cc_a02e148b7f35241f94dd00b0fa4a01c9a}\label{_t_djangoh_8cc_a02e148b7f35241f94dd00b0fa4a01c9a}} 
+\index{T\+Djangoh.\+cc@{T\+Djangoh.\+cc}!hssamcc\+\_\+@{hssamcc\+\_\+}}
+\index{hssamcc\+\_\+@{hssamcc\+\_\+}!T\+Djangoh.\+cc@{T\+Djangoh.\+cc}}
+\subsubsection{\texorpdfstring{hssamcc\+\_\+}{hssamcc\_}}
+{\footnotesize\ttfamily struct \hyperlink{structhssamcc}{hssamcc}  hssamcc\+\_\+}
+
+\mbox{\Hypertarget{_t_djangoh_8cc_a82048c2ffca5ab36f4e08c6028b5a918}\label{_t_djangoh_8cc_a82048c2ffca5ab36f4e08c6028b5a918}} 
+\index{T\+Djangoh.\+cc@{T\+Djangoh.\+cc}!hssamnc\+\_\+@{hssamnc\+\_\+}}
+\index{hssamnc\+\_\+@{hssamnc\+\_\+}!T\+Djangoh.\+cc@{T\+Djangoh.\+cc}}
+\subsubsection{\texorpdfstring{hssamnc\+\_\+}{hssamnc\_}}
+{\footnotesize\ttfamily struct \hyperlink{structhssamnc}{hssamnc}  hssamnc\+\_\+}
+
+\mbox{\Hypertarget{_t_djangoh_8cc_a352a4b25493aa0e562fc2f1a10e2fbcd}\label{_t_djangoh_8cc_a352a4b25493aa0e562fc2f1a10e2fbcd}} 
+\index{T\+Djangoh.\+cc@{T\+Djangoh.\+cc}!hsstrp\+\_\+@{hsstrp\+\_\+}}
+\index{hsstrp\+\_\+@{hsstrp\+\_\+}!T\+Djangoh.\+cc@{T\+Djangoh.\+cc}}
+\subsubsection{\texorpdfstring{hsstrp\+\_\+}{hsstrp\_}}
+{\footnotesize\ttfamily struct \hyperlink{structhsstrp}{hsstrp}  hsstrp\+\_\+}
+
+\mbox{\Hypertarget{_t_djangoh_8cc_a283b343d76dc57b46b7e43e34f0c7add}\label{_t_djangoh_8cc_a283b343d76dc57b46b7e43e34f0c7add}} 
+\index{T\+Djangoh.\+cc@{T\+Djangoh.\+cc}!hstcut\+\_\+@{hstcut\+\_\+}}
+\index{hstcut\+\_\+@{hstcut\+\_\+}!T\+Djangoh.\+cc@{T\+Djangoh.\+cc}}
+\subsubsection{\texorpdfstring{hstcut\+\_\+}{hstcut\_}}
+{\footnotesize\ttfamily struct \hyperlink{structhstcut}{hstcut}  hstcut\+\_\+}
+
+\mbox{\Hypertarget{_t_djangoh_8cc_a5f2e3be7d32f73fe34070c1e35e1673b}\label{_t_djangoh_8cc_a5f2e3be7d32f73fe34070c1e35e1673b}} 
+\index{T\+Djangoh.\+cc@{T\+Djangoh.\+cc}!hsvglp\+\_\+@{hsvglp\+\_\+}}
+\index{hsvglp\+\_\+@{hsvglp\+\_\+}!T\+Djangoh.\+cc@{T\+Djangoh.\+cc}}
+\subsubsection{\texorpdfstring{hsvglp\+\_\+}{hsvglp\_}}
+{\footnotesize\ttfamily struct \hyperlink{structhsvglp}{hsvglp}  hsvglp\+\_\+}
+
+\mbox{\Hypertarget{_t_djangoh_8cc_a9c635273ba67d930682b950eb7f84080}\label{_t_djangoh_8cc_a9c635273ba67d930682b950eb7f84080}} 
+\index{T\+Djangoh.\+cc@{T\+Djangoh.\+cc}!hsvrbz\+\_\+@{hsvrbz\+\_\+}}
+\index{hsvrbz\+\_\+@{hsvrbz\+\_\+}!T\+Djangoh.\+cc@{T\+Djangoh.\+cc}}
+\subsubsection{\texorpdfstring{hsvrbz\+\_\+}{hsvrbz\_}}
+{\footnotesize\ttfamily struct \hyperlink{structhsvrbz}{hsvrbz}  hsvrbz\+\_\+}
+
+\mbox{\Hypertarget{_t_djangoh_8cc_aedf24c17670d92ce595eac9e33f71633}\label{_t_djangoh_8cc_aedf24c17670d92ce595eac9e33f71633}} 
+\index{T\+Djangoh.\+cc@{T\+Djangoh.\+cc}!hswgtc\+\_\+@{hswgtc\+\_\+}}
+\index{hswgtc\+\_\+@{hswgtc\+\_\+}!T\+Djangoh.\+cc@{T\+Djangoh.\+cc}}
+\subsubsection{\texorpdfstring{hswgtc\+\_\+}{hswgtc\_}}
+{\footnotesize\ttfamily struct \hyperlink{structhswgtc}{hswgtc}  hswgtc\+\_\+}
+
+\mbox{\Hypertarget{_t_djangoh_8cc_a2bcb2f6d96727c2022c803736720a2d5}\label{_t_djangoh_8cc_a2bcb2f6d96727c2022c803736720a2d5}} 
+\index{T\+Djangoh.\+cc@{T\+Djangoh.\+cc}!hystfu\+\_\+@{hystfu\+\_\+}}
+\index{hystfu\+\_\+@{hystfu\+\_\+}!T\+Djangoh.\+cc@{T\+Djangoh.\+cc}}
+\subsubsection{\texorpdfstring{hystfu\+\_\+}{hystfu\_}}
+{\footnotesize\ttfamily struct \hyperlink{structhystfu}{hystfu}  hystfu\+\_\+}
+
+\mbox{\Hypertarget{_t_djangoh_8cc_a644d6c89d494fef65edc7ae23e28c39f}\label{_t_djangoh_8cc_a644d6c89d494fef65edc7ae23e28c39f}} 
+\index{T\+Djangoh.\+cc@{T\+Djangoh.\+cc}!ihscut\+\_\+@{ihscut\+\_\+}}
+\index{ihscut\+\_\+@{ihscut\+\_\+}!T\+Djangoh.\+cc@{T\+Djangoh.\+cc}}
+\subsubsection{\texorpdfstring{ihscut\+\_\+}{ihscut\_}}
+{\footnotesize\ttfamily struct \hyperlink{structihscut}{ihscut}  ihscut\+\_\+}
+
+\mbox{\Hypertarget{_t_djangoh_8cc_a9096e2bcfc580d38ff13b08b4df85692}\label{_t_djangoh_8cc_a9096e2bcfc580d38ff13b08b4df85692}} 
+\index{T\+Djangoh.\+cc@{T\+Djangoh.\+cc}!ihscw\+\_\+@{ihscw\+\_\+}}
+\index{ihscw\+\_\+@{ihscw\+\_\+}!T\+Djangoh.\+cc@{T\+Djangoh.\+cc}}
+\subsubsection{\texorpdfstring{ihscw\+\_\+}{ihscw\_}}
+{\footnotesize\ttfamily struct \hyperlink{structihscw}{ihscw}  ihscw\+\_\+}
+
+\mbox{\Hypertarget{_t_djangoh_8cc_ac1c66cad51d0e97e08f3e527c2348571}\label{_t_djangoh_8cc_ac1c66cad51d0e97e08f3e527c2348571}} 
+\index{T\+Djangoh.\+cc@{T\+Djangoh.\+cc}!lhapdfc\+\_\+@{lhapdfc\+\_\+}}
+\index{lhapdfc\+\_\+@{lhapdfc\+\_\+}!T\+Djangoh.\+cc@{T\+Djangoh.\+cc}}
+\subsubsection{\texorpdfstring{lhapdfc\+\_\+}{lhapdfc\_}}
+{\footnotesize\ttfamily struct \hyperlink{structlhapdfc}{lhapdfc}  lhapdfc\+\_\+}
+
+\mbox{\Hypertarget{_t_djangoh_8cc_a4c1d28cf9fc720f1ea8f7c329502ce13}\label{_t_djangoh_8cc_a4c1d28cf9fc720f1ea8f7c329502ce13}} 
+\index{T\+Djangoh.\+cc@{T\+Djangoh.\+cc}!lujets\+\_\+@{lujets\+\_\+}}
 \index{lujets\+\_\+@{lujets\+\_\+}!T\+Djangoh.\+cc@{T\+Djangoh.\+cc}}
-\subsubsection[{lujets\+\_\+}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Lujets\+\_\+t} lujets\+\_\+}}\label{_t_djangoh_8cc_a4c1d28cf9fc720f1ea8f7c329502ce13}
+\subsubsection{\texorpdfstring{lujets\+\_\+}{lujets\_}}
+{\footnotesize\ttfamily \hyperlink{struct_lujets__t}{Lujets\+\_\+t} lujets\+\_\+}
+
+\mbox{\Hypertarget{_t_djangoh_8cc_a50f48a0d4a033e9cc3b283abf0f060df}\label{_t_djangoh_8cc_a50f48a0d4a033e9cc3b283abf0f060df}} 
+\index{T\+Djangoh.\+cc@{T\+Djangoh.\+cc}!sophct\+\_\+@{sophct\+\_\+}}
+\index{sophct\+\_\+@{sophct\+\_\+}!T\+Djangoh.\+cc@{T\+Djangoh.\+cc}}
+\subsubsection{\texorpdfstring{sophct\+\_\+}{sophct\_}}
+{\footnotesize\ttfamily struct \hyperlink{structsophct}{sophct}  sophct\+\_\+}
+
