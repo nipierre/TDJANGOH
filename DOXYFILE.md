@@ -1,6 +1,6 @@
-# TDJANGOH Doxyfile documentation
+# TDJANGOH Doxygen documentation
 
-Welcome to the doxyfile documentation of the TDJANGOH interface.
+Welcome to the doxygen documentation of the TDJANGOH interface.
 
 You can find several informations about the TDJANGOH class and the
 DJANGOH generator.
