@@ -38,7 +38,7 @@ See more on [test programs](test/TESTPROGRAMS.md)..
 See more on [utilities programs](utils/UTILSPROGRAMS.md)..
 
 ## More informations on Djangoh
-One way to learn more on TDJANGOH is to look at the [doxygen documentation](github.com/nipierre/TDJANGOH/doc/html/index.html).
+One way to learn more on TDJANGOH is to look at the doxygen documentation.
 
 The [DJANGOH manual Version 1.6](http://wwwthep.physik.uni-mainz.de/~hspiesb/djangoh/djangoh_m.4.6.6.ps.gz) contains the description of input options and includes short lists of most important changes with respect to previous versions.
 
