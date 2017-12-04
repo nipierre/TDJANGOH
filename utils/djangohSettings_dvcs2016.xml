@@ -10,11 +10,11 @@
 <!-- KINEM-CUT -->
 <Codeword name="KINEM-CUTS">
   <Data name="icut" value="3"/>
-  <Data name="ixmin" value="0.004"/>
-  <Data name="ixmax" value="0.9"/>
-  <Data name="iymin" value="0.1"/>
-  <Data name="iymax" value="0.9"/>
-  <Data name="iq2min" value="1.0"/>
+  <Data name="ixmin" value="0.001"/>
+  <Data name="ixmax" value="0.95"/>
+  <Data name="iymin" value="0.01"/>
+  <Data name="iymax" value="0.95"/>
+  <Data name="iq2min" value="0.9"/>
   <Data name="iq2max" value="1e5"/>
   <Data name="iwmin" value="1.4"/>
 </Codeword>
@@ -22,7 +22,7 @@
 <!-- GSW-PARAM -->
 <Codeword name="GSW-PARAM">
     <Data name="lparin1" value="2"/>
-    <Data name="lparin2" value="0"/>
+    <Data name="lparin2" value="1"/>
     <Data name="lparin3" value="3"/>
     <Data name="lparin4" value="1"/>
     <Data name="lparin5" value="0"/>
@@ -49,14 +49,14 @@
 <!-- INT-OPT-NC -->
 <Codeword name="INT-OPT-NC">
     <Data name="inc2" value="1"/>
-    <Data name="inc31" value="0"/>
-    <Data name="inc32" value="0"/>
-    <Data name="inc33" value="0"/>
+    <Data name="inc31" value="16"/>
+    <Data name="inc32" value="16"/>
+    <Data name="inc33" value="16"/>
     <Data name="inc34" value="0"/>
-    <Data name="iel2" value="0"/>
-    <Data name="iel31" value="0"/>
-    <Data name="iel32" value="0"/>
-    <Data name="iel33" value="0"/>
+    <Data name="iel2" value="1"/>
+    <Data name="iel31" value="16"/>
+    <Data name="iel32" value="16"/>
+    <Data name="iel33" value="16"/>
 </Codeword>
 
 <!-- INT-OPT-CC -->
@@ -80,14 +80,14 @@
 <!-- SAM_OPT_NC -->
 <Codeword name="SAM-OPT-NC">
   <Data name="isnc2" value="1"/>
-  <Data name="isnc31" value="0"/>
-  <Data name="isnc32" value="0"/>
-  <Data name="isnc33" value="0"/>
+  <Data name="isnc31" value="1"/>
+  <Data name="isnc32" value="1"/>
+  <Data name="isnc33" value="1"/>
   <Data name="isnc34" value="0"/>
-  <Data name="isel2" value="0"/>
-  <Data name="isel31" value="0"/>
-  <Data name="isel32" value="0"/>
-  <Data name="isel33" value="0"/>
+  <Data name="isel2" value="1"/>
+  <Data name="isel31" value="1"/>
+  <Data name="isel32" value="1"/>
+  <Data name="isel33" value="1"/>
 </Codeword>
 
 <!-- SAM-OPT-CC -->
