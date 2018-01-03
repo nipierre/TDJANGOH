@@ -2,17 +2,17 @@
 
 using namespace std;
 
-double average(vector<double> fVec)
+double average(vector<double> pVec)
 {
   double return_value = 0.0;
-  int n = v.size();
+  double n = pVec.size();
 
   for ( int i=0; i < n; i++)
   {
-      return_value += v[i];
+      return_value += pVec[i];
   }
 
-  return ( return_value / size);
+  return (return_value / n);
 }
 
 int main(int argc,char *argv[])
