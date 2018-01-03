@@ -1258,6 +1258,8 @@ int main(int argc,char *argv[])
                       1.575,1.725,1.875};
 
   ofstream shout("semi_inclusive.txt",std::ofstream::out | std::ofstream::trunc);
+  ofstream ofs_multKp("K+_p_MC.txt",std::ofstream::out | std::ofstream::trunc);
+  ofstream ofs_multKm("K-_p_MC.txt",std::ofstream::out | std::ofstream::trunc);
 
   for(int c=0; c<2; c++)
   {
@@ -1470,10 +1472,20 @@ int main(int argc,char *argv[])
           //Here save your Mult for K test activated by a hidden flag.
           if(KMultSave_flag)
           {
-            ofs_mult << (fXrange[i]+fXrange[i+1])/2 << " " << fXrange[i] << " " << fXrange[i+1] << " "
-            << (fYrange[j]+fYrange[j+1])/2 << " " << fYrange[j] << " " << fYrange[j+1] << " 0 "
-            << (fZrange[k]+fZrange[k+1])/2 << " " << fZrange[k] << " " << fZrange[k+1] << " "
-            << fReMult[i][j][k].tab[c][0][1] << " 0 0 0 0 " << endl;
+            if(!c)
+            {
+              ofs_multKp << (fXrange[i]+fXrange[i+1])/2 << " " << fXrange[i] << " " << fXrange[i+1] << " "
+              << (fYrange[j]+fYrange[j+1])/2 << " " << fYrange[j] << " " << fYrange[j+1] << " 0 "
+              << (fZrange[k]+fZrange[k+1])/2 << " " << fZrange[k] << " " << fZrange[k+1] << " "
+              << fReMult[i][j][k].tab[c][0][1] << " 0 0 0 0 " << endl;
+            }
+            else
+            {
+              ofs_multKm << (fXrange[i]+fXrange[i+1])/2 << " " << fXrange[i] << " " << fXrange[i+1] << " "
+              << (fYrange[j]+fYrange[j+1])/2 << " " << fYrange[j] << " " << fYrange[j+1] << " 0 "
+              << (fZrange[k]+fZrange[k+1])/2 << " " << fZrange[k] << " " << fZrange[k+1] << " "
+              << fReMult[i][j][k].tab[c][0][1] << " 0 0 0 0 " << endl;
+            }
           }
 
           shout << fXrange[i] << "\t" << fYrange[j] << "\t" << fZrange[k]
@@ -2426,6 +2438,8 @@ int main(int argc,char *argv[])
   }
 
   shout.close();
+  ofs_multKm.close();
+  ofs_multKp.close();
 
   TLatex fTitle;
 
