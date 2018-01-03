@@ -1470,7 +1470,7 @@ int main(int argc,char *argv[])
           }
 
           //Here save your Mult for K test activated by a hidden flag.
-          if(KMultSave_flag)
+          if(KMultSave_flag && fReMult[i][j][k].tab[c][0][1])
           {
             if(!c)
             {
