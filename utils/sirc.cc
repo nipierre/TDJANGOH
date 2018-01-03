@@ -5,6 +5,7 @@ using namespace std;
 int main(int argc,char *argv[])
 {
   string FileRC, FileBorn, fileFlag;
+  int KMultSave_flag = 0;
 
   for (int i = 1; i < argc; i++)
   {
@@ -14,6 +15,10 @@ int main(int argc,char *argv[])
       cout << FCYN("-f [RC_file] [Born_file]") << endl;
       cout << FCYN("-l [RC_filelist] [Born_filelist]") << endl;
       return 0;
+    }
+    if (string(argv[i]) == "-K")
+    {
+      KMultSave_flag = 1;
     }
     if(i+2 < argc)
     {
@@ -1378,7 +1383,7 @@ int main(int argc,char *argv[])
           fReMult[i][j][k].tab[c][0][2] = ((fNDIS_evt_r[0][i][j][k]) ? double(fRe[i][j][k].tab[c][0][2])/double(fNDIS_evt_r[0][i][j][k]*fZ_bin_width[k]) : 0);
           fReMult[i][j][k].tab[c][0][3] = ((fNDIS_evt_r[0][i][j][k]) ? double(fRe[i][j][k].tab[c][0][3])/double(fNDIS_evt_r[0][i][j][k]*fZ_bin_width[k]) : 0);
           cout << " Hm : " << fReMult[i][j][k].tab[c][0][3] << endl;
-          cout << "N DIS evt B : " << fNDIS_evt_b[0][i][j][k] << " N SIDIS evt r : " << fNSIDIS_evt_b[3][i][j] << " N born : " << fBorn[i][j][k].tab[c][0][3];
+          cout << "N DIS evt B : " << fNDIS_evt_b[0][i][j][k] << " N SIDIS evt B : " << fNSIDIS_evt_b[3][i][j] << " N born : " << fBorn[i][j][k].tab[c][0][3];
           fBornMult[i][j][k].tab[c][0][0] = ((fNDIS_evt_b[0][i][j][k]) ? double(fBorn[i][j][k].tab[c][0][0])/double(fNDIS_evt_b[0][i][j][k]*fZ_bin_width[k]) : 0);
           fBornMult[i][j][k].tab[c][0][1] = ((fNDIS_evt_b[0][i][j][k]) ? double(fBorn[i][j][k].tab[c][0][1])/double(fNDIS_evt_b[0][i][j][k]*fZ_bin_width[k]) : 0);
           fBornMult[i][j][k].tab[c][0][2] = ((fNDIS_evt_b[0][i][j][k]) ? double(fBorn[i][j][k].tab[c][0][2])/double(fNDIS_evt_b[0][i][j][k]*fZ_bin_width[k]) : 0);
@@ -1460,6 +1465,15 @@ int main(int argc,char *argv[])
             fMult[i][j][k].tab[c][1][1] = 0;
             fMult[i][j][k].tab[c][1][2] = 0;
             fMult[i][j][k].tab[c][1][3] = 0;
+          }
+
+          //Here save your Mult for K test activated by a hidden flag.
+          if(KMultSave_flag)
+          {
+            ofs_mult << (fXrange[i]+fXrange[i+1])/2 << " " << fXrange[i] << " " << fXrange[i+1] << " "
+            << (fYrange[j]+fYrange[j+1])/2 << " " << fYrange[j] << " " << fYrange[j+1] << " 0 "
+            << (fZrange[k]+fZrange[k+1])/2 << " " << fZrange[k] << " " << fZrange[k+1] << " "
+            << fReMult[i][j][k].tab[c][0][1] << " 0 0 0 0 " << endl;
           }
 
           shout << fXrange[i] << "\t" << fYrange[j] << "\t" << fZrange[k]
