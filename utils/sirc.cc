@@ -2,6 +2,19 @@
 
 using namespace std;
 
+double average(vector<double> fVec)
+{
+  double return_value = 0.0;
+  int n = v.size();
+
+  for ( int i=0; i < n; i++)
+  {
+      return_value += v[i];
+  }
+
+  return ( return_value / size);
+}
+
 int main(int argc,char *argv[])
 {
   string FileRC, FileBorn, fileFlag;
@@ -289,6 +302,7 @@ int main(int argc,char *argv[])
           fRept[xbin][ybin][ptbin].tab[1][0][3] += 1;
           fNSIDIS_evt_r[0][xbin][ybin]++;
           fNSIDIS_evt_r[3][xbin][ybin]++;
+          fQ2[1][xbin][ybin][zbin].push_back(Q2);
         }
         else if(fId==1)
         {
@@ -299,6 +313,7 @@ int main(int argc,char *argv[])
           fRept[xbin][ybin][ptbin].tab[0][0][3] += 1;
           fNSIDIS_evt_r[0][xbin][ybin]++;
           fNSIDIS_evt_r[3][xbin][ybin]++;
+          fQ2[0][xbin][ybin][zbin].push_back(Q2);
         }
         else if(fId==2)
         {
@@ -309,6 +324,7 @@ int main(int argc,char *argv[])
           fRept[xbin][ybin][ptbin].tab[1][0][3] += 1;
           fNSIDIS_evt_r[1][xbin][ybin]++;
           fNSIDIS_evt_r[3][xbin][ybin]++;
+          fQ2[1][xbin][ybin][zbin].push_back(Q2);
         }
         else if(fId==3)
         {
@@ -319,6 +335,7 @@ int main(int argc,char *argv[])
           fRept[xbin][ybin][ptbin].tab[0][0][3] += 1;
           fNSIDIS_evt_r[1][xbin][ybin]++;
           fNSIDIS_evt_r[3][xbin][ybin]++;
+          fQ2[0][xbin][ybin][zbin].push_back(Q2);
         }
         else if(fId==4)
         {
@@ -329,6 +346,7 @@ int main(int argc,char *argv[])
           fRept[xbin][ybin][ptbin].tab[1][0][3] += 1;
           fNSIDIS_evt_r[2][xbin][ybin]++;
           fNSIDIS_evt_r[3][xbin][ybin]++;
+          fQ2[1][xbin][ybin][zbin].push_back(Q2);
         }
         else if(fId==5)
         {
@@ -339,6 +357,7 @@ int main(int argc,char *argv[])
           fRept[xbin][ybin][ptbin].tab[0][0][3] += 1;
           fNSIDIS_evt_r[2][xbin][ybin]++;
           fNSIDIS_evt_r[3][xbin][ybin]++;
+          fQ2[0][xbin][ybin][zbin].push_back(Q2);
         }
         else if(fId==6)
         {
@@ -346,6 +365,7 @@ int main(int argc,char *argv[])
           fRe[xbin][ybin][zbin].tab[1][0][3] += 1;
           fRept[xbin][ybin][ptbin].tab[1][0][3] += 1;
           fNSIDIS_evt_r[3][xbin][ybin]++;
+          fQ2[1][xbin][ybin][zbin].push_back(Q2);
         }
         else if(fId==7)
         {
@@ -353,6 +373,7 @@ int main(int argc,char *argv[])
           fRe[xbin][ybin][zbin].tab[0][0][3] += 1;
           fRept[xbin][ybin][ptbin].tab[0][0][3] += 1;
           fNSIDIS_evt_r[3][xbin][ybin]++;
+          fQ2[0][xbin][ybin][zbin].push_back(Q2);
         }
         else
         {
@@ -1472,17 +1493,20 @@ int main(int argc,char *argv[])
           //Here save your Mult for K test activated by a hidden flag.
           if(KMultSave_flag && fReMult[i][j][k].tab[c][0][1])
           {
+            double Q2_av = average(fQ2[c][i][j][k]);
             if(!c)
             {
               ofs_multKp << (fXrange[i]+fXrange[i+1])/2 << " " << fXrange[i] << " " << fXrange[i+1] << " "
-              << (fYrange[j]+fYrange[j+1])/2 << " " << fYrange[j] << " " << fYrange[j+1] << " 0 "
+              << (fYrange[j]+fYrange[j+1])/2 << " " << fYrange[j] << " " << fYrange[j+1] << " "
+              << Q2_av << " "
               << (fZrange[k]+fZrange[k+1])/2 << " " << fZrange[k] << " " << fZrange[k+1] << " "
               << fReMult[i][j][k].tab[c][0][1] << " 0 0 0 0 " << endl;
             }
             else
             {
               ofs_multKm << (fXrange[i]+fXrange[i+1])/2 << " " << fXrange[i] << " " << fXrange[i+1] << " "
-              << (fYrange[j]+fYrange[j+1])/2 << " " << fYrange[j] << " " << fYrange[j+1] << " 0 "
+              << (fYrange[j]+fYrange[j+1])/2 << " " << fYrange[j] << " " << fYrange[j+1] << " "
+              << Q2_av << " "
               << (fZrange[k]+fZrange[k+1])/2 << " " << fZrange[k] << " " << fZrange[k+1] << " "
               << fReMult[i][j][k].tab[c][0][1] << " 0 0 0 0 " << endl;
             }
