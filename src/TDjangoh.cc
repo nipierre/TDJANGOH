@@ -1341,7 +1341,7 @@ void TDjangoh::SetGsw(int pvalue, int i)
   else if(i==10) hsparl_.lparin[10] = pvalue;
 }
 
-void TDjangoh::GetIntOptNC(int pvalue, int i)
+int TDjangoh::GetIntOptNC(int i)
 {
   if(i==0) return hsintnc_.inc2;
   else if(i==1) return hsintnc_.inc31;
@@ -1389,14 +1389,14 @@ int TDjangoh::GetStructFunc(int i)
   else return -1;
 }
 
-int TDjangoh::SetStructFunc(int pvalue, int i)
+void TDjangoh::SetStructFunc(int pvalue, int i)
 {
   if(i==0) hsstrp_.ilqmod = pvalue;
   else if(i==1) hsstrp_.ilib = pvalue;
   else if(i==2) hsstrp_.icode = pvalue;
 }
 
-void TDjangoh::GetIntOptCC(int i)
+int TDjangoh::GetIntOptCC(int i)
 {
   if(i==0) return hsintcc_.icc2;
   else if(i==1) return hsintcc_.icc31;
@@ -1422,7 +1422,7 @@ void TDjangoh::SetSamOptCC(int pvalue, int i)
   else if(i==3) hssamcc_.iscc33 = pvalue;
 }
 
-void TDjangoh::SetNucleus(double pHpolar, int pHna, int pHnz, double pEpro=0)
+void TDjangoh::SetNucleus(double pHpolar, int pHna, int pHnz, double pEpro)
 {
   hselab_.epro = pEpro;
   hsparm_.hpolar = pHpolar;
