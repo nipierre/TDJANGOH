@@ -108,7 +108,7 @@ public:
   */
   void             ReadXMLFile(const string pFilename);
 
-  void             WriteXMLFile(const string pFilename)
+  void             WriteXMLFile(const string pFilename);
   /*!
   * \brief Modification of kinematical cuts
   * \param pcut : types of cut (see djangoh manual for further infos)
@@ -194,11 +194,11 @@ public:
   int         GetStructFunc(int i);
   void        SetStructFunc(int pvalue, int i);
 
-  double      GetSophia() {return sophct_.wsophia;}
-  void        SetSophia(double pvalue) {sophct_.wsophia=pvalue;}
+  double      GetSophia();
+  void        SetSophia(double pvalue);
 
-  int         GetVerboze() {return hsvrbz_.verboz;}
-  void        SetVerboze(int pvalue) {hsvrbz_.verboz=pvalue;}
+  int         GetVerboze();
+  void        SetVerboze(int pvalue);
 
   int         GetIntOptCC(int i);
   void        SetIntOptCC(int pvalue, int i);
