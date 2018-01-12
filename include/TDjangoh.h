@@ -107,6 +107,8 @@ public:
   * \param pFilename : XML file path
   */
   void             ReadXMLFile(const string pFilename);
+
+  void             WriteXMLFile(const string pFilename)
   /*!
   * \brief Modification of kinematical cuts
   * \param pcut : types of cut (see djangoh manual for further infos)
@@ -164,13 +166,13 @@ public:
   // ---------------------------------------------------------------------------
   // Djangoh inputs accessorsmodifiers
 
-  int         GetBeamType() {return hsparm_.llept;}
-  void        SetBeamType(int pvalue) {hsparm_.llept=pvalue;}
+  int         GetBeamType();
+  void        SetBeamType(int pvalue);
   void        SetBeamType(const char* pvalue);
   void        SetBeam(double pBeamE, double pPol);
 
-  double      GetBeamPolar() {return hsparm_.polari;}
-  double      SetBeamPolar(double pvalue) {hsparm_.polari=pvalue;}
+  double      GetBeamPolar();
+  double      SetBeamPolar(double pvalue);
 
   double      GetKinemCut(int i);
   void        SetKinemCut(double pvalue, int i);
@@ -181,8 +183,8 @@ public:
   int         GetGsw(int i);
   void        SetGsw(int pvalue, int i);
 
-  double      GetEgamMin() {return hsirct_.egmin;}
-  void        SetEgamMin(double value) {hsirct_.egmin=pvalue;}
+  double      GetEgamMin();
+  void        SetEgamMin(double value);
 
   int         GetIntOptNC(int i);
   void        SetIntOptNC(int pvalue, int i);
@@ -215,7 +217,7 @@ public:
   /*!
   * \brief Clean files created by djangoh
   */
-  void             Clean_File();
+  void        Clean_File();
 
 
   // ---------------------------------------------------------------------------

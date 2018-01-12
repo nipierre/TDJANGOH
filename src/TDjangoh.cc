@@ -1246,6 +1246,10 @@ double TDjangoh::GetSigtrr()
   return hsnume_.sigtrr[0];
 }
 
+int TDjangoh::SGetBeamType() {return hsparm_.llept;}
+
+void TDjangoh::SetBeamType(int pvalue) {hsparm_.llept=pvalue;}
+
 void TDjangoh::SetBeamType(const char* pname)
 {
   int PID;
@@ -1269,6 +1273,9 @@ void TDjangoh::SetBeam(double pBeamE, double pPol)
   hselab_.eele = pBeamE;
   hsparm_.polari = pPol;
 }
+
+double TDjangoh::GetBeamPolar() {return hsparm_.polari;}
+double TDjangoh::SetBeamPolar(double pvalue) {hsparm_.polari=pvalue;}
 
 double TDjangoh::GetKinemCut(int i)
 {
@@ -1340,6 +1347,9 @@ void TDjangoh::SetGsw(int pvalue, int i)
   else if(i==9) hsparl_.lparin[9] = pvalue;
   else if(i==10) hsparl_.lparin[10] = pvalue;
 }
+
+double TDjangoh::GetEgamMin() {return hsirct_.egmin;}
+void TDjangoh::SetEgamMin(double value) {hsirct_.egmin=pvalue;}
 
 int TDjangoh::GetIntOptNC(int i)
 {
