@@ -184,7 +184,7 @@ public:
   void        SetGsw(int pvalue, int i);
 
   double      GetEgamMin();
-  void        SetEgamMin(double value);
+  void        SetEgamMin(double pvalue);
 
   int         GetIntOptNC(int i);
   void        SetIntOptNC(int pvalue, int i);

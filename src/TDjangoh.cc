@@ -1246,7 +1246,7 @@ double TDjangoh::GetSigtrr()
   return hsnume_.sigtrr[0];
 }
 
-int TDjangoh::SGetBeamType() {return hsparm_.llept;}
+int TDjangoh::GetBeamType() {return hsparm_.llept;}
 
 void TDjangoh::SetBeamType(int pvalue) {hsparm_.llept=pvalue;}
 
@@ -1349,7 +1349,7 @@ void TDjangoh::SetGsw(int pvalue, int i)
 }
 
 double TDjangoh::GetEgamMin() {return hsirct_.egmin;}
-void TDjangoh::SetEgamMin(double value) {hsirct_.egmin=pvalue;}
+void TDjangoh::SetEgamMin(double pvalue) {hsirct_.egmin=pvalue;}
 
 int TDjangoh::GetIntOptNC(int i)
 {
@@ -1405,6 +1405,12 @@ void TDjangoh::SetStructFunc(int pvalue, int i)
   else if(i==1) hsstrp_.ilib = pvalue;
   else if(i==2) hsstrp_.icode = pvalue;
 }
+
+double TDjangoh::GetSophia() {return sophct_.wsophia;}
+void TDjangoh::SetSophia(double pvalue) {sophct_.wsophia=pvalue;}
+
+int TDjangoh::GetVerboze() {return hsvrbz_.verboz;}
+void TDjangoh::SetVerboze(int pvalue) {hsvrbz_.verboz=pvalue;}
 
 int TDjangoh::GetIntOptCC(int i)
 {
