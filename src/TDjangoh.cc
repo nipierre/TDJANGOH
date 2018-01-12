@@ -576,7 +576,7 @@ void TDjangoh::ReadXMLFile(const string pFilename)
             cout<<"WARNING! In TDjangoh:Initialize():"<<endl;
             cout<<"Specified beam="<<cData.attribute("value").value()<<" is unrecognized."<<endl;
             cout<<"Resetting to \"e+\" ."<<endl;
-            PID = 11;
+            PID = 1;
           }
           hsparm_.llept = PID;
         }
@@ -905,7 +905,7 @@ void TDjangoh::ReadXMLFile(const string pFilename)
       for(pugi::xml_node cData = cCodeWord.child ( "Data" ); cData; cData = cData.next_sibling())
       {
         if(std::string(cData.attribute("name").value()) == "lst9")
-          {hslptu_.hslst[9] = cData.attribute("value").as_int();cout<<"lst7 : "<<hslptu_.hslst[9]<<endl;}
+          {hslptu_.hslst[9] = cData.attribute("value").as_int();cout<<"lst9 : "<<hslptu_.hslst[9]<<endl;}
       }
     }
 
@@ -957,13 +957,219 @@ void TDjangoh::ReadXMLFile(const string pFilename)
 
 }
 
+void TDjangoh::WriteXMLFile(const string pFilename)
+{
+  string cbeam;
+
+  if(hsparm_.llept==1) cbeam="e+";
+  else if(hsparm_.llept==-1) cbeam="e-";
+  else if(hsparm_.llept==3) cbeam="mu+";
+  else if(hsparm_.llept==-3) cbeam="mu-";
+
+  ofstream f(pFilename);
+  f << "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\" ?>" << endl;
+  f << "<!-- For any information concerning codeword block content, refer to Djangoh manual>" << endl;
+
+  f << "\n<!-- EL-BEAM -->" << endl;
+  f << "<Codeword name=\"EL-BEAM\">" << endl;
+  f << "\t<Data name=\"polari\" value=\"" << hsparm_.polari << "\"/>" << endl;
+  f << "\t<Data name=\"beam\" value=\"" << cbeam << "\"/>" << endl;
+  f << "</Codeword>" << endl;
+
+  f << "\n<!-- KINEM-CUTS -->" << endl;
+  f << "<Codeword name=\"KINEM-CUTS\">" << endl;
+  f << "\t<Data name=\"icut\" value=\"" << hsoptn_.icut << "\"/>" << endl;
+  f << "\t<Data name=\"ixmin\" value=\"" << ihscut_.ixmin << "\"/>" << endl;
+  f << "\t<Data name=\"ixmax\" value=\"" << ihscut_.ixmax << "\"/>" << endl;
+  f << "\t<Data name=\"iymin\" value=\"" << ihscut_.iymin << "\"/>" << endl;
+  f << "\t<Data name=\"iymax\" value=\"" << ihscut_.iymax << "\"/>" << endl;
+  f << "\t<Data name=\"iq2min\" value=\"" << ihscut_.iq2min << "\"/>" << endl;
+  f << "\t<Data name=\"iq2max\" value=\"" << ihscut_.iq2max << "\"/>" << endl;
+  f << "\t<Data name=\"iwmin\" value=\"" << ihscut_.iwmin << "\"/>" << endl;
+  f << "</Codeword>" << endl;
+
+  f << "\n<!-- GSW-PARAM -->" << endl;
+  f << "<Codeword name=\"GSW-PARAM\">" << endl;
+  f << "\t<Data name=\"lparin1\" value=\"" << hsparl_.lparin[0] << "\"/>" << endl;
+  f << "\t<Data name=\"lparin2\" value=\"" << hsparl_.lparin[1] << "\"/>" << endl;
+  f << "\t<Data name=\"lparin3\" value=\"" << hsparl_.lparin[2] << "\"/>" << endl;
+  f << "\t<Data name=\"lparin4\" value=\"" << hsparl_.lparin[3] << "\"/>" << endl;
+  f << "\t<Data name=\"lparin5\" value=\"" << hsparl_.lparin[4] << "\"/>" << endl;
+  f << "\t<Data name=\"lparin6\" value=\"" << hsparl_.lparin[5] << "\"/>" << endl;
+  f << "\t<Data name=\"lparin7\" value=\"" << hsparl_.lparin[6] << "\"/>" << endl;
+  f << "\t<Data name=\"lparin8\" value=\"" << hsparl_.lparin[7] << "\"/>" << endl;
+  f << "\t<Data name=\"lparin9\" value=\"" << hsparl_.lparin[8] << "\"/>" << endl;
+  f << "\t<Data name=\"lparin10\" value=\"" << hsparl_.lparin[9] << "\"/>" << endl;
+  f << "\t<Data name=\"lparin11\" value=\"" << hsparl_.lparin[10] << "\"/>" << endl;
+  f << "</Codeword>" << endl;
+
+  f << "\n<!-- GD-OPT -->" << endl;
+  f << "<Codeword name=\"GD-OPT\">" << endl;
+  f << "\t<Data name=\"gdmean\" value=\"" << hsgrid_.gdmean << "\"/>" << endl;
+  f << "\t<Data name=\"gdsddv\" value=\"" << hsgrid_.gdsddv << "\"/>" << endl;
+  f << "\t<Data name=\"gdsize\" value=\"" << hsgrid_.gdsize << "\"/>" << endl;
+  f << "</Codeword>" << endl;
+
+  f << "\n<!-- EGAM-MIN -->" << endl;
+  f << "<Codeword name=\"EGAM-MIN\">" << endl;
+  f << "\t<Data name=\"egam\" value=\"" << hsirct_.egmin << "\"/>" << endl;
+  f << "</Codeword>" << endl;
+
+  f << "\n<!-- INT-OPT-NC -->" << endl;
+  f << "<Codeword name=\"INT-OPT-NC\">" << endl;
+  f << "\t<Data name=\"inc2\" value=\"" << hsintnc_.inc2 << "\"/>" << endl;
+  f << "\t<Data name=\"inc31\" value=\"" << hsintnc_.inc31 << "\"/>" << endl;
+  f << "\t<Data name=\"inc32\" value=\"" << hsintnc_.inc32 << "\"/>" << endl;
+  f << "\t<Data name=\"inc33\" value=\"" << hsintnc_.inc33 << "\"/>" << endl;
+  f << "\t<Data name=\"inc34\" value=\"" << hsintnc_.inc34 << "\"/>" << endl;
+  f << "\t<Data name=\"iel2\" value=\"" << hsintnc_.iel2 << "\"/>" << endl;
+  f << "\t<Data name=\"iel31\" value=\"" << hsintnc_.iel31 << "\"/>" << endl;
+  f << "\t<Data name=\"iel32\" value=\"" << hsintnc_.iel32 << "\"/>" << endl;
+  f << "\t<Data name=\"iel33\" value=\"" << hsintnc_.iel33 << "\"/>" << endl;
+  f << "</Codeword>" << endl;
+
+  f << "\n<!-- INT-OPT-CC -->" << endl;
+  f << "<Codeword name=\"INT-OPT-CC\">" << endl;
+  f << "\t<Data name=\"icc2\" value=\"" << hsintcc_.icc2 << "\"/>" << endl;
+  f << "\t<Data name=\"icc31\" value=\"" << hsintcc_.icc31 << "\"/>" << endl;
+  f << "\t<Data name=\"icc32\" value=\"" << hsintcc_.icc32 << "\"/>" << endl;
+  f << "\t<Data name=\"icc33\" value=\"" << hsintcc_.icc33 << "\"/>" << endl;
+  f << "</Codeword>" << endl;
+
+  f << "\n<!-- INT-ONLY -->" << endl;
+  f << "<Codeword name=\"INT-ONLY\">" << endl;
+  f << "\t<Data name=\"ioplot\" value=\"" << hsoptn_.ioplot << "\"/>" << endl;
+  f << "</Codeword>" << endl;
+
+  f << "\n<!-- INT-POINTS -->" << endl;
+  f << "<Codeword name=\"INT-POINTS\">" << endl;
+  f << "\t<Data name=\"npoveg\" value=\"" << hsvglp_.npoveg << "\"/>" << endl;
+  f << "</Codeword>" << endl;
+
+  f << "\n<!-- SAM-OPT-NC -->" << endl;
+  f << "<Codeword name=\"SAM-OPT-NC\">" << endl;
+  f << "\t<Data name=\"isnc2\" value=\"" << hssamnc_.isnc2 << "\"/>" << endl;
+  f << "\t<Data name=\"isnc31\" value=\"" << hssamnc_.isnc31 << "\"/>" << endl;
+  f << "\t<Data name=\"isnc32\" value=\"" << hssamnc_.isnc32 << "\"/>" << endl;
+  f << "\t<Data name=\"isnc33\" value=\"" << hssamnc_.isnc33 << "\"/>" << endl;
+  f << "\t<Data name=\"isnc34\" value=\"" << hssamnc_.isnc34 << "\"/>" << endl;
+  f << "\t<Data name=\"isel2\" value=\"" << hssamnc_.isel2 << "\"/>" << endl;
+  f << "\t<Data name=\"isel31\" value=\"" << hssamnc_.isel31 << "\"/>" << endl;
+  f << "\t<Data name=\"isel32\" value=\"" << hssamnc_.isel32 << "\"/>" << endl;
+  f << "\t<Data name=\"isel33\" value=\"" << hssamnc_.isel33 << "\"/>" << endl;
+  f << "</Codeword>" << endl;
+
+  f << "\n<!-- SAM-OPT-CC -->" << endl;
+  f << "<Codeword name=\"SAM-OPT-CC\">" << endl;
+  f << "\t<Data name=\"iscc2\" value=\"" << hssamcc_.iscc2 << "\"/>" << endl;
+  f << "\t<Data name=\"iscc31\" value=\"" << hssamcc_.iscc31 << "\"/>" << endl;
+  f << "\t<Data name=\"iscc32\" value=\"" << hssamcc_.iscc32 << "\"/>" << endl;
+  f << "\t<Data name=\"iscc33\" value=\"" << hssamcc_.iscc33 << "\"/>" << endl;
+  f << "</Codeword>" << endl;
+
+  f << "\n<!-- NUCLEUS -->" << endl;
+  f << "<Codeword name=\"NUCLEUS\">" << endl;
+  f << "\t<Data name=\"epro\" value=\"" << hselab_.epro << "\"/>" << endl;
+  f << "\t<Data name=\"hpolar\" value=\"" << hsparm_.hpolar << "\"/>" << endl;
+  f << "\t<Data name=\"hna\" value=\"" << hsnucl_.hna << "\"/>" << endl;
+  f << "\t<Data name=\"hnz\" value=\"" << hsnucl_.hnz << "\"/>" << endl;
+  f << "</Codeword>" << endl;
+
+  f << "\n<!-- STRUCTFUNC -->" << endl;
+  f << "<Codeword name=\"STRUCTFUNC\">" << endl;
+  f << "\t<Data name=\"ilqmod\" value=\"" << hsstrp_.ilqmod << "\"/>" << endl;
+  f << "\t<Data name=\"ilib\" value=\"" << hsstrp_.ilib << "\"/>" << endl;
+  f << "\t<Data name=\"icode\" value=\"" << hsstrp_.icode << "\"/>" << endl;
+  f << "</Codeword>" << endl;
+
+  f << "\n<!-- FLONG -->" << endl;
+  f << "<Codeword name=\"FLONG\">" << endl;
+  f << "\t<Data name=\"iflopt\" value=\"" << hspdfo_.iflopt << "\"/>" << endl;
+  f << "\t<Data name=\"parl11\" value=\"" << hsalfs_.parl11 << "\"/>" << endl;
+  f << "\t<Data name=\"parl19\" value=\"" << hsalfs_.parl19 << "\"/>" << endl;
+  f << "</Codeword>" << endl;
+
+  f << "\n<!-- ALFAS -->" << endl;
+  f << "<Codeword name=\"ALFAS\">" << endl;
+  f << "\t<Data name=\"mst111\" value=\"" << hsalfs_.mst111 << "\"/>" << endl;
+  f << "\t<Data name=\"mst115\" value=\"" << hsalfs_.mst115 << "\"/>" << endl;
+  f << "\t<Data name=\"par111\" value=\"" << hsalfs_.par111 << "\"/>" << endl;
+  f << "\t<Data name=\"par112\" value=\"" << hsalfs_.par112 << "\"/>" << endl;
+  f << "</Codeword>" << endl;
+
+  f << "\n<!-- NFLAVORS -->" << endl;
+  f << "<Codeword name=\"NFLAVORS\">" << endl;
+  f << "\t<Data name=\"npymin\" value=\"" << hystfu_.npymin << "\"/>" << endl;
+  f << "\t<Data name=\"npymax\" value=\"" << hystfu_.npymax << "\"/>" << endl;
+  f << "</Codeword>" << endl;
+
+  f << "\n<!-- RNDM-SEEDS -->" << endl;
+  f << "<Codeword name=\"RNDM-SEEDS\">" << endl;
+  f << "\t<Data name=\"isdinp\" value=\"" << hsrdio_.isdinp << "\"/>" << endl;
+  f << "\t<Data name=\"isdout\" value=\"" << hsrdio_.isdout << "\"/>" << endl;
+  f << "</Codeword>" << endl;
+
+  f << "\n<!-- SOPHIA -->" << endl;
+  f << "<Codeword name=\"SOPHIA\">" << endl;
+  f << "\t<Data name=\"wsophia\" value=\"" << sophct_.wsophia << "\"/>" << endl;
+  f << "</Codeword>" << endl;
+
+  f << "\n<!-- OUT-LEP -->" << endl;
+  f << "<Codeword name=\"OUT-LEP\">" << endl;
+  f << "\t<Data name=\"lst4\" value=\"" << hslptu_.hslst[4] << "\"/>" << endl;
+  f << "</Codeword>" << endl;
+
+  f << "\n<!-- FRAME -->" << endl;
+  f << "<Codeword name=\"FRAME\">" << endl;
+  f << "\t<Data name=\"lst5\" value=\"" << hslptu_.hslst[5] << "\"/>" << endl;
+  f << "</Codeword>" << endl;
+
+  f << "\n<!-- FRAG -->" << endl;
+  f << "<Codeword name=\"FRAG\">" << endl;
+  f << "\t<Data name=\"lst7\" value=\"" << hslptu_.hslst[7] << "\"/>" << endl;
+  f << "</Codeword>" << endl;
+
+  f << "\n<!-- CASCADES -->" << endl;
+  f << "<Codeword name=\"CASCADES\">" << endl;
+  f << "\t<Data name=\"lst8\" value=\"" << hslptu_.hslst[8] << "\"/>" << endl;
+  f << "</Codeword>" << endl;
+
+  f << "\n<!-- MAX-VIRT -->" << endl;
+  f << "<Codeword name=\"MAX-VIRT\">" << endl;
+  f << "\t<Data name=\"lst9\" value=\"" << hslptu_.hslst[9] << "\"/>" << endl;
+  f << "</Codeword>" << endl;
+
+  f << "\n<!-- BARYON -->" << endl;
+  f << "<Codeword name=\"BARYON\">" << endl;
+  f << "\t<Data name=\"lst14\" value=\"" << hslptu_.hslst[14] << "\"/>" << endl;
+  f << "</Codeword>" << endl;
+
+  f << "\n<!-- KT-PARTON -->" << endl;
+  f << "<Codeword name=\"KT-PARTON\">" << endl;
+  f << "\t<Data name=\"parl13\" value=\"" << hslptu_.hsparl[3] << "\"/>" << endl;
+  f << "</Codeword>" << endl;
+
+  f << "\n<!-- VERBOZE -->" << endl;
+  f << "<Codeword name=\"VERBOZE\">" << endl;
+  f << "\t<Data name=\"verboz\" value=\"" << hsvrbz_.verboz << "\"/>" << endl;
+  f << "</Codeword>" << endl;
+
+  f.close();
+
+  cout << ">>> ****************** <<<" << endl;
+  cout << ">>> TDJANGOH message : <<<" << endl;
+  cout << ">>>    XML written !   <<<" << endl;
+  cout << ">>> ****************** <<<" << endl;
+}
+
 void TDjangoh::Initialize()
 {
   hsinpt_();
 
-  cout << ">>> TDJANGOH message : <<<" << endl;
-  cout << "*** DJANGOH initialized ! ***" << endl;
-  cout << ">>>         ***        <<<" << endl;
+  cout << ">>> ********************* <<<" << endl;
+  cout << ">>>   TDJANGOH message :  <<<" << endl;
+  cout << ">>> DJANGOH initialized ! <<<" << endl;
+  cout << ">>> ********************* <<<" << endl;
 }
 
 void TDjangoh::ModKineCuts(int pcut, double pxmin, double pxmax, double pymin, double pymax, double pq2min, double pq2max, double pwmin)
@@ -1030,7 +1236,17 @@ void TDjangoh::RClepWOqelNC()
 
 }
 
-void TDjangoh::SetParticle(const char* pname)
+double TDjangoh::GetSigtot()
+{
+  return hsnume_.sigtot[0];
+}
+
+double TDjangoh::GetSigtrr()
+{
+  return hsnume_.sigtrr[0];
+}
+
+void TDjangoh::SetBeamType(const char* pname)
 {
   int PID;
 
@@ -1048,113 +1264,170 @@ void TDjangoh::SetParticle(const char* pname)
   hsparm_.llept = PID;
 }
 
-double TDjangoh::GetSigtot()
-{
-  return hsnume_.sigtot[0];
-}
-
-double TDjangoh::GetSigtrr()
-{
-  return hsnume_.sigtrr[0];
-}
-
 void TDjangoh::SetBeam(double pBeamE, double pPol)
 {
   hselab_.eele = pBeamE;
   hsparm_.polari = pPol;
 }
 
-void TDjangoh::SetGridOpt(double pGdMean, double pGdStdDev, int pGdSize)
+double TDjangoh::GetKinemCut(int i)
 {
-  hsgrid_.gdmean = pGdMean;
-  hsgrid_.gdsddv = pGdStdDev;
-  hsgrid_.gdsize = pGdSize;
+  if(i==0) return hsoptn_.icut;
+  else if(i==1) return ihscut_.ixmin;
+  else if(i==2) return ihscut_.ixmax;
+  else if(i==3) return ihscut_.iymin;
+  else if(i==4) return ihscut_.iymax;
+  else if(i==5) return ihscut_.iq2min;
+  else if(i==6) return ihscut_.iq2max;
+  else if(i==7) return ihscut_.iwmin;
+  else return -1;
 }
 
-void TDjangoh::SetGSWParam(int pLparin1, int pLparin2, int pLparin3, int pLparin4,
-                           int pLparin5, int pLparin6, int pLparin7, int pLparin8,
-                           int pLparin9, int pLparin10, int pLparin11)
+void TDjangoh::SetKinemCut(double pvalue, int i)
 {
-  hsparl_.lparin[0] = pLparin1;
-  hsparl_.lparin[1] = pLparin2;
-  hsparl_.lparin[2] = pLparin3;
-  hsparl_.lparin[3] = pLparin4;
-  hsparl_.lparin[4] = pLparin5;
-  hsparl_.lparin[5] = pLparin6;
-  hsparl_.lparin[6] = pLparin7;
-  hsparl_.lparin[7] = pLparin8;
-  hsparl_.lparin[8] = pLparin9;
-  hsparl_.lparin[9] = pLparin10;
-  hsparl_.lparin[10] = pLparin11;
+  if(i==0) hsoptn_.icut = int(pvalue);
+  else if(i==1) ihscut_.ixmin = pvalue;
+  else if(i==2) ihscut_.ixmax = pvalue;
+  else if(i==3) ihscut_.iymin = pvalue;
+  else if(i==4) ihscut_.iymax = pvalue;
+  else if(i==5) ihscut_.iq2min = pvalue;
+  else if(i==6) ihscut_.iq2max = pvalue;
+  else if(i==7) ihscut_.iwmin = pvalue;
 }
 
-void TDjangoh::SetEgamMin(double pEgamMin)
+double TDjangoh::GetGdOpt(int i)
 {
-  hsirct_.egmin = pEgamMin;
+  if(i==0) return hsgrid_.gdmean;
+  else if(i==1) return hsgrid_.gdsddv;
+  else if(i==2) return hsgrid_.gdsize;
+  else return -1;
 }
 
-void TDjangoh::SetIntOptNC(int pInc2, int pInc31, int pInc32, int pInc33, int pInc34,
-                           int pIel2, int pIel31, int pIel32, int pIel33)
+void TDjangoh::SetGdOpt(double pvalue, int i)
 {
-  hsintnc_.inc2 = pInc2;
-  hsintnc_.inc31 = pInc31;
-  hsintnc_.inc32 = pInc32;
-  hsintnc_.inc33 = pInc33;
-  hsintnc_.inc34 = pInc34;
-  hsintnc_.iel2 = pIel2;
-  hsintnc_.iel31 = pIel31;
-  hsintnc_.iel32 = pIel32;
-  hsintnc_.iel33 = pIel33;
+  if(i==0) hsgrid_.gdmean = pvalue;
+  else if(i==1) hsgrid_.gdsddv = pvalue;
+  else if(i==2) hsgrid_.gdsize = pvalue;
 }
 
-void TDjangoh::SetIntOptCC(int pIcc2, int pIcc31, int pIcc32, int pIcc33)
+int TDjangoh::GetGsw(int i)
 {
-  hsintcc_.icc2 = pIcc2;
-  hsintcc_.icc31 = pIcc31;
-  hsintcc_.icc32 = pIcc32;
-  hsintcc_.icc33 = pIcc33;
+  if(i==0) return hsparl_.lparin[0];
+  else if(i==1) return hsparl_.lparin[1];
+  else if(i==2) return hsparl_.lparin[2];
+  else if(i==3) return hsparl_.lparin[3];
+  else if(i==4) return hsparl_.lparin[4];
+  else if(i==5) return hsparl_.lparin[5];
+  else if(i==6) return hsparl_.lparin[6];
+  else if(i==7) return hsparl_.lparin[7];
+  else if(i==8) return hsparl_.lparin[8];
+  else if(i==9) return hsparl_.lparin[9];
+  else if(i==10) return hsparl_.lparin[10];
+  else return -1;
 }
 
-void TDjangoh::SetSamOptNC(int pIsnc2, int pIsnc31, int pIsnc32, int pIsnc33, int pIsnc34,
-                           int pIsel2, int pIsel31, int pIsel32, int pIsel33)
+void TDjangoh::SetGsw(int pvalue, int i)
 {
-  hssamnc_.isnc2 = pIsnc2;
-  hssamnc_.isnc31 = pIsnc31;
-  hssamnc_.isnc32 = pIsnc32;
-  hssamnc_.isnc33 = pIsnc33;
-  hssamnc_.isnc34 = pIsnc34;
-  hssamnc_.isel2 = pIsel2;
-  hssamnc_.isel31 = pIsel31;
-  hssamnc_.isel32 = pIsel32;
-  hssamnc_.isel33 = pIsel33;
+  if(i==0) hsparl_.lparin[0] = pvalue;
+  else if(i==1) hsparl_.lparin[1] = pvalue;
+  else if(i==2) hsparl_.lparin[2] = pvalue;
+  else if(i==3) hsparl_.lparin[3] = pvalue;
+  else if(i==4) hsparl_.lparin[4] = pvalue;
+  else if(i==5) hsparl_.lparin[5] = pvalue;
+  else if(i==6) hsparl_.lparin[6] = pvalue;
+  else if(i==7) hsparl_.lparin[7] = pvalue;
+  else if(i==8) hsparl_.lparin[8] = pvalue;
+  else if(i==9) hsparl_.lparin[9] = pvalue;
+  else if(i==10) hsparl_.lparin[10] = pvalue;
 }
 
-void TDjangoh::SetSamOptCC(int pIscc2, int pIscc31, int pIscc32, int pIscc33)
+void TDjangoh::GetIntOptNC(int pvalue, int i)
 {
-  hssamcc_.iscc2 = pIscc2;
-  hssamcc_.iscc31 = pIscc31;
-  hssamcc_.iscc32 = pIscc32;
-  hssamcc_.iscc33 = pIscc33;
+  if(i==0) return hsintnc_.inc2;
+  else if(i==1) return hsintnc_.inc31;
+  else if(i==2) return hsintnc_.inc32;
+  else if(i==3) return hsintnc_.inc33;
+  else if(i==4) return hsintnc_.inc34;
+  else if(i==5) return hsintnc_.iel2;
+  else if(i==6) return hsintnc_.iel31;
+  else if(i==7) return hsintnc_.iel32;
+  else if(i==8) return hsintnc_.iel33;
+  else return -1;
 }
 
-void TDjangoh::SetNucleus(double pEpro, double pHpolar, int pHna, int pHnz)
+void TDjangoh::SetIntOptNC(int pvalue, int i)
+{
+  if(i==0) hsintnc_.inc2 = pvalue;
+  else if(i==1) hsintnc_.inc31 = pvalue;
+  else if(i==2) hsintnc_.inc32 = pvalue;
+  else if(i==3) hsintnc_.inc33 = pvalue;
+  else if(i==4) hsintnc_.inc34 = pvalue;
+  else if(i==5) hsintnc_.iel2 = pvalue;
+  else if(i==6) hsintnc_.iel31 = pvalue;
+  else if(i==7) hsintnc_.iel32 = pvalue;
+  else if(i==8) hsintnc_.iel33 = pvalue;
+}
+
+void TDjangoh::SetSamOptNC(int pvalue, int i)
+{
+  if(i==0) hssamnc_.isnc2 = pvalue;
+  else if(i==1) hssamnc_.isnc31 = pvalue;
+  else if(i==2) hssamnc_.isnc32 = pvalue;
+  else if(i==3) hssamnc_.isnc33 = pvalue;
+  else if(i==4) hssamnc_.isnc34 = pvalue;
+  else if(i==5) hssamnc_.isel2 = pvalue;
+  else if(i==6) hssamnc_.isel31 = pvalue;
+  else if(i==7) hssamnc_.isel32 = pvalue;
+  else if(i==8) hssamnc_.isel33 = pvalue;
+}
+
+int TDjangoh::GetStructFunc(int i)
+{
+  if(i==0) return hsstrp_.ilqmod;
+  else if(i==1) return hsstrp_.ilib;
+  else if(i==2) return hsstrp_.icode;
+  else return -1;
+}
+
+int TDjangoh::SetStructFunc(int pvalue, int i)
+{
+  if(i==0) hsstrp_.ilqmod = pvalue;
+  else if(i==1) hsstrp_.ilib = pvalue;
+  else if(i==2) hsstrp_.icode = pvalue;
+}
+
+void TDjangoh::GetIntOptCC(int i)
+{
+  if(i==0) return hsintcc_.icc2;
+  else if(i==1) return hsintcc_.icc31;
+  else if(i==2) return hsintcc_.icc32;
+  else if(i==3) return hsintcc_.icc33;
+  else return -1;
+}
+
+void TDjangoh::SetIntOptCC(int pvalue, int i)
+{
+  if(i==0) hsintcc_.icc2 = pvalue;
+  else if(i==1) hsintcc_.icc31 = pvalue;
+  else if(i==2) hsintcc_.icc32 = pvalue;
+  else if(i==3) hsintcc_.icc33 = pvalue;
+}
+
+
+void TDjangoh::SetSamOptCC(int pvalue, int i)
+{
+  if(i==0) hssamcc_.iscc2 = pvalue;
+  else if(i==1) hssamcc_.iscc31 = pvalue;
+  else if(i==2) hssamcc_.iscc32 = pvalue;
+  else if(i==3) hssamcc_.iscc33 = pvalue;
+}
+
+void TDjangoh::SetNucleus(double pHpolar, int pHna, int pHnz, double pEpro=0)
 {
   hselab_.epro = pEpro;
   hsparm_.hpolar = pHpolar;
   hsnucl_.hna = pHna;
   hsnucl_.hnz = pHnz;
-}
-
-void TDjangoh::SetStructFunc(int pIlqmod, int pIlib, int pIcode)
-{
-  hsstrp_.ilqmod = pIlqmod;
-  hsstrp_.ilib = pIlib;
-  hsstrp_.icode = pIcode;
-}
-
-void TDjangoh::SetVerboze(int pVerboz)
-{
-  hsvrbz_.verboz = pVerboz;
 }
 
 void TDjangoh::WriteFSInFile()

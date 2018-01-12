@@ -130,11 +130,6 @@ public:
   */
   void             RClepWOqelNC();
   /*!
-  * \brief Choice of beam particle
-  * \param pname : particle (e+/e-/mu+/mu-)
-  */
-  void             SetParticle(const char* pname);
-  /*!
   * \brief Configuration of DJANGOH
   * \param beam_e : Energy of the beam (in GeV)
   */
@@ -156,6 +151,67 @@ public:
   * \return TObjArray w/ particles
   */
   TObjArray       *ImportParticles(Option_t *option="");
+
+  // ---------------------------------------------------------------------------
+  // Cross-Section
+
+  // Total Cross-Section
+  double      GetSigtot();
+
+  // Error on total Cross-Section
+  double      GetSigtrr();
+
+  // ---------------------------------------------------------------------------
+  // Djangoh inputs accessorsmodifiers
+
+  int         GetBeamType() {return hsparm_.llept;}
+  void        SetBeamType(int pvalue) {hsparm_.llept=pvalue;}
+  void        SetBeamType(const char* pvalue);
+  void        SetBeam(double pBeamE, double pPol);
+
+  double      GetBeamPolar() {return hsparm_.polari;}
+  double      SetBeamPolar(double pvalue) {hsparm_.polari=pvalue;}
+
+  double      GetKinemCut(int i);
+  void        SetKinemCut(double pvalue, int i);
+
+  double      GetGdOpt(int i);
+  void        SetGdOpt(double pvalue, int i);
+
+  int         GetGsw(int i);
+  void        SetGsw(int pvalue, int i);
+
+  double      GetEgamMin() {return hsirct_.egmin;}
+  void        SetEgamMin(double value) {hsirct_.egmin=pvalue;}
+
+  int         GetIntOptNC(int i);
+  void        SetIntOptNC(int pvalue, int i);
+
+  void        SetSamOptNC(int pvalue, int i);
+
+  int         GetStructFunc(int i);
+  void        SetStructFunc(int pvalue, int i);
+
+  double      GetSophia() {return sophct_.wsophia;}
+  void        SetSophia(double pvalue) {sophct_.wsophia=pvalue;}
+
+  int         GetVerboze() {return hsvrbz_.verboz;}
+  void        SetVerboze(int pvalue) {hsvrbz_.verboz=pvalue;}
+
+  int         GetIntOptCC(int i);
+  void        SetIntOptCC(int pvalue, int i);
+
+  void        SetSamOptCC(int pvalue, int i);
+
+  void        SetNucleus(double pHpolar, int pHna, int pHnz, double pEpro=0);
+
+  // ---------------------------------------------------------------------------
+  // Save final state infos in file
+  void        WriteFSInFile();
+  void        CleanFSFile() { remove("finalState.txt"); }
+
+  // ---------------------------------------------------------------------------
+  // Cleaner
   /*!
   * \brief Clean files created by djangoh
   */
@@ -163,7 +219,7 @@ public:
 
 
   // ---------------------------------------------------------------------------
-  // ACCESSORS
+  // FORTRAN ACCESSORS
   // FORTRAN indexing in accessing the arrays, indices start from 1 !!
   // ---------------------------------------------------------------------------
 
@@ -277,37 +333,6 @@ public:
   void        SetQ2HAD(double q) { fDjkin->DJQ2HAD = q; }
 
   // ---------------------------------------------------------------------------
-  // Cross-Section
-
-  // Total Cross-Section
-  double      GetSigtot();
-
-  // Error on total Cross-Section
-  double      GetSigtrr();
-
-  // ---------------------------------------------------------------------------
-  // Save final state infos in file
-  void        WriteFSInFile();
-  void        CleanFSFile() { remove("finalState.txt"); }
-
-  // ---------------------------------------------------------------------------
-  // Djangoh inputs modifiers
-
-  void        SetBeam(double pBeamE, double pPol);
-  void        SetGridOpt(double pGdMean, double pGdStdDev, int pGdSize);
-  void        SetGSWParam(int pLparin1, int pLparin2, int pLparin3, int pLparin4,
-                          int pLparin5, int pLparin6, int pLparin7, int pLparin8,
-                          int pLparin9, int pLparin10, int pLparin11);
-  void        SetEgamMin(double pEgamMin);
-  void        SetIntOptNC(int pInc2, int pInc31, int pInc32, int pInc33, int pInc34,
-                          int pIel2, int pIel31, int pIel32, int pIel33);
-  void        SetIntOptCC(int pIcc2, int pIcc31, int pIcc32, int pIcc33);
-  void        SetSamOptNC(int pIsnc2, int pIsnc31, int pIsnc32, int pIsnc33, int pIsnc34,
-                          int pIsel2, int pIsel31, int pIsel32, int pIsel33);
-  void        SetSamOptCC(int pIscc2, int pIscc31, int pIscc32, int pIscc33);
-  void        SetNucleus(double pEpro, double pHpolar, int pHna, int pHnz);
-  void        SetStructFunc(int pIlqmod, int pIlib, int pIcode);
-  void        SetVerboze(int pVerboz);
 
 };
 
