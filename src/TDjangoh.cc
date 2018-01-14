@@ -929,9 +929,9 @@ void TDjangoh::ReadXMLFile(const string pFilename)
       }
     }
 
-    if(!strcmp(cCWType.c_str(), "VERBOZE" ))
+    if(!strcmp(cCWType.c_str(), "VERBOSE" ))
     {
-      cout << "\nCodeword : VERBOZE" << endl;
+      cout << "\nCodeword : VERBOSE" << endl;
       for(pugi::xml_node cData = cCodeWord.child ( "Data" ); cData; cData = cData.next_sibling())
       {
         if(std::string(cData.attribute("name").value()) == "verboz")
@@ -1149,8 +1149,8 @@ void TDjangoh::WriteXMLFile(const string pFilename)
   f << "\t<Data name=\"parl13\" value=\"" << hslptu_.hsparl[3] << "\"/>" << endl;
   f << "</Codeword>" << endl;
 
-  f << "\n<!-- VERBOZE -->" << endl;
-  f << "<Codeword name=\"VERBOZE\">" << endl;
+  f << "\n<!-- VERBOSE -->" << endl;
+  f << "<Codeword name=\"VERBOSE\">" << endl;
   f << "\t<Data name=\"verboz\" value=\"" << hsvrbz_.verboz << "\"/>" << endl;
   f << "</Codeword>" << endl;
 
@@ -1409,8 +1409,8 @@ void TDjangoh::SetStructFunc(int pvalue, int i)
 double TDjangoh::GetSophia() {return sophct_.wsophia;}
 void TDjangoh::SetSophia(double pvalue) {sophct_.wsophia=pvalue;}
 
-int TDjangoh::GetVerboze() {return hsvrbz_.verboz;}
-void TDjangoh::SetVerboze(int pvalue) {hsvrbz_.verboz=pvalue;}
+int TDjangoh::GetVerbose() {return hsvrbz_.verboz;}
+void TDjangoh::SetVerbose(int pvalue) {hsvrbz_.verboz=pvalue;}
 
 int TDjangoh::GetIntOptCC(int i)
 {

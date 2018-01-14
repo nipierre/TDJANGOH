@@ -197,8 +197,8 @@ public:
   double      GetSophia();
   void        SetSophia(double pvalue);
 
-  int         GetVerboze();
-  void        SetVerboze(int pvalue);
+  int         GetVerbose();
+  void        SetVerbose(int pvalue);
 
   int         GetIntOptCC(int i);
   void        SetIntOptCC(int pvalue, int i);
