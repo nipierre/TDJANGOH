@@ -11,11 +11,11 @@
 <Codeword name="KINEM-CUTS">
   <Data name="icut" value="3"/>
   <Data name="ixmin" value="0.001"/>
-  <Data name="ixmax" value="0.95"/>
+  <Data name="ixmax" value="1"/>
   <Data name="iymin" value="0.01"/>
-  <Data name="iymax" value="0.95"/>
+  <Data name="iymax" value="1"/>
   <Data name="iq2min" value="0.9"/>
-  <Data name="iq2max" value="1e5"/>
+  <Data name="iq2max" value="80"/>
   <Data name="iwmin" value="1.4"/>
 </Codeword>
 
@@ -49,14 +49,14 @@
 <!-- INT-OPT-NC -->
 <Codeword name="INT-OPT-NC">
     <Data name="inc2" value="1"/>
-    <Data name="inc31" value="16"/>
-    <Data name="inc32" value="16"/>
-    <Data name="inc33" value="16"/>
+    <Data name="inc31" value="18"/>
+    <Data name="inc32" value="18"/>
+    <Data name="inc33" value="18"/>
     <Data name="inc34" value="0"/>
     <Data name="iel2" value="1"/>
-    <Data name="iel31" value="16"/>
-    <Data name="iel32" value="16"/>
-    <Data name="iel33" value="16"/>
+    <Data name="iel31" value="18"/>
+    <Data name="iel32" value="18"/>
+    <Data name="iel33" value="18"/>
 </Codeword>
 
 <!-- INT-OPT-CC -->
