@@ -356,7 +356,7 @@ C...average time per event
 
 C...write events to file
       WRITE(31,2301) ICHNN
-C...Added by Nicolas for test purpose
+C...Added by Nicolas
       WRITE(31,2303) X,Y,Q2,XHAD,YHAD,Q2HAD
 C... -
       WRITE(31,2302) IDHEP(1)

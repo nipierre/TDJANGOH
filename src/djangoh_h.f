@@ -2190,6 +2190,9 @@ C-------------------------
       CHARACTER*10   INPUTCODEWD
       INTEGER                         ITCW
       SAVE   /IHSCW/
+      COMMON /CHNUMB/ ICHNGL
+      INTEGER         ICHNGL
+      SAVE /CHNUMB/
       DIMENSION CODE(40)
       DIMENSION UIO(97)
       DIMENSION INT2C(5),ISAM2C(5),INT3C(15),ISAM3C(15)
@@ -3696,6 +3699,9 @@ C-------------------------
      +                HSXE31(100),HSXE32(100),HSXE33(100)
       COMMON /HSGRID/ GDSIZE, GDINDX, GDMEAN, GDSDDV, GDSCLE
       INTEGER         GDSIZE, GDINDX
+      COMMON /CHNUMB/ ICHNGL
+      INTEGER         ICHNGL
+      SAVE /CHNUMB/
 C-------------------------
       CHARACTER*45 CHNAME
       COMMON /HSNAMC/ CHNAME(20)
@@ -4007,6 +4013,11 @@ C---
         LFIRST(NCA)=.FALSE.
         ICONTI(NCA)=2
       ENDIF
+
+C---Saving NCA in a global variable in order to retrieve it.
+C---N.Pierre 22.01.18
+
+      ICHNGL=NCA
 
 C---Efficiencies
       DO I=1,GDSIZE

@@ -311,6 +311,11 @@ extern "C" struct hsoutf
   char outfilenam[80];
 } hsoutf_;
 
+extern "C" struct chnumb
+{
+  int ichngl;
+} chnumb_;
+
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
 
@@ -1453,6 +1458,7 @@ void TDjangoh::WriteFSInFile()
 
   Int_t numpart = fLujets->N;
 
+  finalState << chnumb_.ichngl << endl;
   finalState << numpart << endl;
   finalState << hselab_.eele << "\t" << fDjkin->DJX << "\t" << fDjkin->DJY << "\t" << fDjkin->DJQ2 << endl;
 
