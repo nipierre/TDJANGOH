@@ -11,12 +11,12 @@
 <Codeword name="KINEM-CUTS">
   <Data name="icut" value="3"/>
   <Data name="ixmin" value="0.001"/>
-  <Data name="ixmax" value="1"/>
+  <Data name="ixmax" value="0.95"/>
   <Data name="iymin" value="0.01"/>
-  <Data name="iymax" value="1"/>
+  <Data name="iymax" value="0.95"/>
   <Data name="iq2min" value="0.9"/>
   <Data name="iq2max" value="80"/>
-  <Data name="iwmin" value="1.4"/>
+  <Data name="iwmin" value="0"/>
 </Codeword>
 
 <!-- GSW-PARAM -->
@@ -181,6 +181,6 @@
 </Codeword>
 
 <!-- VERBOZE -->
-<Codeword name="VERBOZE">
+<Codeword name="VERBOSE">
   <Data name="verboz" value="1"/>
 </Codeword>
