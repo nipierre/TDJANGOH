@@ -3702,6 +3702,9 @@ C-------------------------
       COMMON /CHNUMB/ ICHNGL
       INTEGER         ICHNGL
       SAVE /CHNUMB/
+      COMMON /HEPSAV/ IDHSV(3), PHEPSV(5,3)
+      INTEGER         IDHSV(3)
+      SAVE /HEPSAV/
 C-------------------------
       CHARACTER*45 CHNAME
       COMMON /HSNAMC/ CHNAME(20)
@@ -6143,6 +6146,9 @@ C---------------------------------------------------------------------
       COMMON /HSOPTN/ INT2(5),INT3(15),ISAM2(5),ISAM3(15),
      *                IOPLOT,IPRINT,ICUT
       COMMON /HSUNTS/ LUNTES,LUNDAT,LUNIN,LUNOUT,LUNRND
+      COMMON /HEPSAV/ IDHSV(3), PHEPSV(5,3)
+      INTEGER         IDHSV(3)
+      SAVE /HEPSAV/
       PARAMETER (NDIMX=10)
       DIMENSION X(NDIMX),N(NDIMX),FMAX(NREG),NM(NREG),XI(NDO,NDIM)
       double precision ntot,ntold
@@ -6761,7 +6767,9 @@ C
       DATA IQFLAV /-6,-5,-4,-3,-1,-2,0,2,1,3,4,5,6/
       DATA IQFLCC /-5,-6,-3,-4,-2,-1,0,1,2,4,3,6,5/
       DATA NCEVE /0/
-
+      COMMON /HEPSAV/ IDHSV(3), PHEPSV(5,3)
+      INTEGER         IDHSV(3)
+      SAVE /HEPSAV/
       IELAST=.FALSE.
       IDJSPH=.FALSE.
       ICHNN=ICONT
@@ -7115,6 +7123,26 @@ C other nuclei
 
       CALL HSUSER(2,X,Y,Q2)
 
+C---Added save of final state for (quasi)el for MC chain
+C---N.Pierre 22.01.2018
+      IDHSV(1)=IDHEP(1)
+      PHEPSV(1,1)=PHEP(1,1)
+      PHEPSV(2,1)=PHEP(2,1)
+      PHEPSV(3,1)=PHEP(3,1)
+      PHEPSV(4,1)=PHEP(4,1)
+      PHEPSV(5,1)=PHEP(5,1)
+      IDHSV(2)=IDHEP(2)
+      PHEPSV(1,2)=PHEP(1,2)
+      PHEPSV(2,2)=PHEP(2,2)
+      PHEPSV(3,2)=PHEP(3,2)
+      PHEPSV(4,2)=PHEP(4,2)
+      PHEPSV(5,2)=PHEP(5,2)
+      IDHSV(3)=IDHEP(3)
+      PHEPSV(1,3)=PHEP(1,3)
+      PHEPSV(2,3)=PHEP(2,3)
+      PHEPSV(3,3)=PHEP(3,3)
+      PHEPSV(4,3)=PHEP(4,3)
+      PHEPSV(5,3)=PHEP(5,3)
 C
       RETURN
       END

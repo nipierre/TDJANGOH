@@ -200,9 +200,9 @@ extern "C" struct hsalfs
 extern "C" struct hsintnc
 {
   int inc2;
-  int inc31 ;
-  int inc32 ;
-  int inc33 ;
+  int inc31;
+  int inc32;
+  int inc33;
   int inc34;
   int iel2;
   int iel31;
@@ -315,6 +315,12 @@ extern "C" struct chnumb
 {
   int ichngl;
 } chnumb_;
+
+extern "C" struct hepsav
+{
+  int idhsv[3];
+  double phepsv[5][3];
+} hepsav_;
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
@@ -1461,6 +1467,13 @@ void TDjangoh::WriteFSInFile()
   finalState << chnumb_.ichngl << endl;
   finalState << numpart << endl;
   finalState << hselab_.eele << "\t" << fDjkin->DJX << "\t" << fDjkin->DJY << "\t" << fDjkin->DJQ2 << endl;
+
+  finalState << hepsav_.idhsv[0] << "\n" << hepsav_.phepsv[0][0] << "\t" << hepsav_.phepsv[1][0] << "\t" <<
+  hepsav_.phepsv[2][0] << "\t" << hepsav_.phepsv[3][0] << "\t" << hepsav_.phepsv[4][0] << "\t" << endl;
+  finalState << hepsav_.idhsv[1] << "\n" << hepsav_.phepsv[0][1] << "\t" << hepsav_.phepsv[1][1] << "\t" <<
+  hepsav_.phepsv[2][1] << "\t" << hepsav_.phepsv[3][1] << "\t" << hepsav_.phepsv[4][1] << "\t" << endl;
+  finalState << hepsav_.idhsv[2] << "\n" << hepsav_.phepsv[0][2] << "\t" << hepsav_.phepsv[1][2] << "\t" <<
+  hepsav_.phepsv[2][2] << "\t" << hepsav_.phepsv[3][2] << "\t" << hepsav_.phepsv[4][2] << "\t" << endl;
 
   for (Int_t i = 0; i<numpart; i++)
   {
