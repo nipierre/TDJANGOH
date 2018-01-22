@@ -1491,22 +1491,22 @@ void TDjangoh::WriteFSInFile()
   finalState.close();
 }
 
-double GetPHEP(int ip, int i)
+double TDjangoh::GetPHEP(int ip, int i)
 {
   return hepsav_.phepsv[i-1][ip-1];
 }
 
-double GetVHKK(int ip, int i)
+double TDjangoh::GetVHKK(int ip, int i)
 {
   return hepsav_.vhkksv[i-1][ip-1];
 }
 
-int GetIDPHEP(int i)
+int TDjangoh::GetIDPHEP(int i)
 {
   return hepsav_.idhsv[i-1];
 }
 
-int GetChannel()
+int TDjangoh::GetChannel()
 {
   return chnumb_.ichngl;
 }
