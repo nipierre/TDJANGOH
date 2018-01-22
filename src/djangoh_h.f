@@ -3703,7 +3703,7 @@ C-------------------------
       INTEGER         ICHNGL
       SAVE /CHNUMB/
       COMMON /HEPSAV/ IDHSV(3), PHEPSV(5,3)
-      INTEGER         IDHSV(3)
+      INTEGER         IDHSV
       SAVE /HEPSAV/
 C-------------------------
       CHARACTER*45 CHNAME
@@ -6147,7 +6147,7 @@ C---------------------------------------------------------------------
      *                IOPLOT,IPRINT,ICUT
       COMMON /HSUNTS/ LUNTES,LUNDAT,LUNIN,LUNOUT,LUNRND
       COMMON /HEPSAV/ IDHSV(3), PHEPSV(5,3)
-      INTEGER         IDHSV(3)
+      INTEGER         IDHSV
       SAVE /HEPSAV/
       PARAMETER (NDIMX=10)
       DIMENSION X(NDIMX),N(NDIMX),FMAX(NREG),NM(NREG),XI(NDO,NDIM)
@@ -6768,7 +6768,7 @@ C
       DATA IQFLCC /-5,-6,-3,-4,-2,-1,0,1,2,4,3,6,5/
       DATA NCEVE /0/
       COMMON /HEPSAV/ IDHSV(3), PHEPSV(5,3)
-      INTEGER         IDHSV(3)
+      INTEGER         IDHSV
       SAVE /HEPSAV/
       IELAST=.FALSE.
       IDJSPH=.FALSE.
