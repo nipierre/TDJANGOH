@@ -213,6 +213,12 @@ public:
   void        CleanFSFile() { remove("finalState.txt"); }
 
   // ---------------------------------------------------------------------------
+  // Accessors for MC for (quasi)elastic case (for more infos, see manual)
+  double      GetPHEP(int ip, int i);
+  int         GetIDPHEP(int i);
+  int         GetChannel();
+
+  // ---------------------------------------------------------------------------
   // Cleaner
   /*!
   * \brief Clean files created by djangoh

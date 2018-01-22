@@ -1464,16 +1464,8 @@ void TDjangoh::WriteFSInFile()
 
   Int_t numpart = fLujets->N;
 
-  finalState << chnumb_.ichngl << endl;
   finalState << numpart << endl;
   finalState << hselab_.eele << "\t" << fDjkin->DJX << "\t" << fDjkin->DJY << "\t" << fDjkin->DJQ2 << endl;
-
-  finalState << hepsav_.idhsv[0] << "\n" << hepsav_.phepsv[0][0] << "\t" << hepsav_.phepsv[0][1] << "\t" <<
-  hepsav_.phepsv[0][2] << "\t" << hepsav_.phepsv[0][3] << "\t" << hepsav_.phepsv[0][4] << "\t" << endl;
-  finalState << hepsav_.idhsv[1] << "\n" << hepsav_.phepsv[1][0] << "\t" << hepsav_.phepsv[1][1] << "\t" <<
-  hepsav_.phepsv[1][2] << "\t" << hepsav_.phepsv[1][3] << "\t" << hepsav_.phepsv[1][4] << "\t" << endl;
-  finalState << hepsav_.idhsv[2] << "\n" << hepsav_.phepsv[2][0] << "\t" << hepsav_.phepsv[2][1] << "\t" <<
-  hepsav_.phepsv[2][2] << "\t" << hepsav_.phepsv[2][3] << "\t" << hepsav_.phepsv[2][4] << "\t" << endl;
 
   for (Int_t i = 0; i<numpart; i++)
   {
@@ -1496,6 +1488,21 @@ void TDjangoh::WriteFSInFile()
   }
 
   finalState.close();
+}
+
+double GetPHEP(int ip, int i)
+{
+  return hepsav_.phepsv[i-1][ip-1];
+}
+
+int GetIDPHEP(int i)
+{
+  return hepsav_.idhsv[i-1];
+}
+
+int GetChannel()
+{
+  return chnumb_.ichngl;
 }
 
 void TDjangoh::Clean_File()
