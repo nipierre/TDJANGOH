@@ -215,6 +215,7 @@ public:
   // ---------------------------------------------------------------------------
   // Accessors for MC for (quasi)elastic case (for more infos, see manual)
   double      GetPHEP(int ip, int i);
+  double      GetVHKK(int ip, int i);
   int         GetIDPHEP(int i);
   int         GetChannel();
 

@@ -3702,7 +3702,7 @@ C-------------------------
       COMMON /CHNUMB/ ICHNGL
       INTEGER         ICHNGL
       SAVE /CHNUMB/
-      COMMON /HEPSAV/ IDHSV(3), PHEPSV(5,3)
+      COMMON /HEPSAV/ IDHSV(3), PHEPSV(5,3), VHKKSV(4,3)
       INTEGER         IDHSV
       SAVE /HEPSAV/
 C-------------------------
@@ -6146,7 +6146,7 @@ C---------------------------------------------------------------------
       COMMON /HSOPTN/ INT2(5),INT3(15),ISAM2(5),ISAM3(15),
      *                IOPLOT,IPRINT,ICUT
       COMMON /HSUNTS/ LUNTES,LUNDAT,LUNIN,LUNOUT,LUNRND
-      COMMON /HEPSAV/ IDHSV(3), PHEPSV(5,3)
+      COMMON /HEPSAV/ IDHSV(3), PHEPSV(5,3), VHKKSV(4,3)
       INTEGER         IDHSV
       SAVE /HEPSAV/
       PARAMETER (NDIMX=10)
@@ -6767,7 +6767,7 @@ C
       DATA IQFLAV /-6,-5,-4,-3,-1,-2,0,2,1,3,4,5,6/
       DATA IQFLCC /-5,-6,-3,-4,-2,-1,0,1,2,4,3,6,5/
       DATA NCEVE /0/
-      COMMON /HEPSAV/ IDHSV(3), PHEPSV(5,3)
+      COMMON /HEPSAV/ IDHSV(3), PHEPSV(5,3), VHKKSV(4,3)
       INTEGER         IDHSV
       SAVE /HEPSAV/
       IELAST=.FALSE.
@@ -7131,18 +7131,30 @@ C---N.Pierre 22.01.2018
       PHEPSV(3,1)=PHEP(3,1)
       PHEPSV(4,1)=PHEP(4,1)
       PHEPSV(5,1)=PHEP(5,1)
+      VHKKSV(1,1)=VHKK(1,1)
+      VHKKSV(2,1)=VHKK(2,1)
+      VHKKSV(3,1)=VHKK(3,1)
+      VHKKSV(4,1)=VHKK(4,1)
       IDHSV(2)=IDHEP(2)
       PHEPSV(1,2)=PHEP(1,2)
       PHEPSV(2,2)=PHEP(2,2)
       PHEPSV(3,2)=PHEP(3,2)
       PHEPSV(4,2)=PHEP(4,2)
       PHEPSV(5,2)=PHEP(5,2)
+      VHKKSV(1,2)=VHKK(1,2)
+      VHKKSV(2,2)=VHKK(2,2)
+      VHKKSV(3,2)=VHKK(3,2)
+      VHKKSV(4,2)=VHKK(4,2)
       IDHSV(3)=IDHEP(3)
       PHEPSV(1,3)=PHEP(1,3)
       PHEPSV(2,3)=PHEP(2,3)
       PHEPSV(3,3)=PHEP(3,3)
       PHEPSV(4,3)=PHEP(4,3)
       PHEPSV(5,3)=PHEP(5,3)
+      VHKKSV(1,3)=VHKK(1,3)
+      VHKKSV(2,3)=VHKK(2,3)
+      VHKKSV(3,3)=VHKK(3,3)
+      VHKKSV(4,3)=VHKK(4,3)
 C
       RETURN
       END

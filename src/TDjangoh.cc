@@ -320,6 +320,7 @@ extern "C" struct hepsav
 {
   int idhsv[3];
   double phepsv[3][5];
+  double vhkksv[3][4];
 } hepsav_;
 
 //------------------------------------------------------------------------------
@@ -1493,6 +1494,11 @@ void TDjangoh::WriteFSInFile()
 double GetPHEP(int ip, int i)
 {
   return hepsav_.phepsv[i-1][ip-1];
+}
+
+double GetVHKK(int ip, int i)
+{
+  return hepsav_.vhkksv[i-1][ip-1];
 }
 
 int GetIDPHEP(int i)
