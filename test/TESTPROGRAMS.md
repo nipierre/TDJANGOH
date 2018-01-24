@@ -9,5 +9,7 @@ You can find two different programs :
     - `-verbose [v]` : v=0/1/2, default is 1. Use 0 when in batch mode.
     - `-rand [r]` : r=0/1, gaussian randomization of input energy within ±40 GeV relative to nominal energy.
     - `-finalstate` : save the final states inside a file (eg. for semi-inclusive correction calculation)
-- The other is `xsgen` and is used for inclusive cross-section generation. The usage is the following :
+- An other is `xsgen` and is used for inclusive cross-section generation. The usage is the following :
   - `./xsgen [inputfile] [RC(1)/Born(0)]`
+- The last one is `genfile` and is used to produce an XML configuration file for Djangoh.
+  - `./genfile [inputfile] [generatedfile]`

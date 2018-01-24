@@ -105,11 +105,16 @@ int main(int argc,char *argv[])
     while(revt >> npart)
     {
       fDIScuts = 0;
-//      cout << npart << endl;
+#ifdef DEBUG
+      cout << "DEBUG: READ CHECK" << endl;
+      cout << npart << endl;
+#endif
       revt >> E >> xbj >> y >> Q2;
       W = pow(fM_p,2) + Q2*(1-xbj)/xbj;
-//      cout << E << "\txbj : " << xbj << "\ty : " << y << "\tQ2 : " << Q2 << endl;
-//      cout << "Particles list" << endl;
+#ifdef DEBUG
+      cout << E << "\txbj : " << xbj << "\ty : " << y << "\tQ2 : " << Q2 << endl;
+      cout << "Particles list" << endl;
+#endif
       if(0<E)
       {
         if(Q2>1)
@@ -163,11 +168,18 @@ int main(int argc,char *argv[])
       for(int i=0; i<npart; i++)
       {
         revt >> dummy >> id >> dummy >> dummy >> dummy;
-      //  cout << dummy << "\tid : " << id << "\t" << dummy << "\t" << dummy << "\t" << dummy << "\t";
+#ifdef DEBUG
+       cout << "DEBUG: READ CHECK RE FILE" << endl;
+       cout << dummy << "\tid : " << id << "\t" << dummy << "\t" << dummy << "\t" << dummy << "\t";
+#endif
         revt >> px >> py >> pz >> Eh;
-      //  cout << px << "\t" << py << "\t" << pz << "\t" << Eh << "\t";
+#ifdef DEBUG
+       cout << px << "\t" << py << "\t" << pz << "\t" << Eh << "\t";
+#endif
         revt >> dummy >> dummy >> dummy >> dummy;
-      //  cout << dummy << "\t" << dummy << "\t" << dummy << "\t" << dummy << endl;
+#ifdef DEBUG
+       cout << dummy << "\t" << dummy << "\t" << dummy << "\t" << dummy << endl;
+#endif
 
         if(!fDIScuts) continue;
 
@@ -175,27 +187,6 @@ int main(int argc,char *argv[])
         {
           E_prime = Eh;
           nu = E - E_prime;
-
-          // nu cut
-          // for(int j=0; j<14; j++)
-          // {
-          //   if(!(fNu_min[0][j]<nu && nu<fNu_max[0][j]))
-          //   {
-          //     fFlag_r[0][xbin][ybin][j]=1;
-          //   }
-          //   if(!(fNu_min[1][j]<nu && nu<fNu_max[1][j]))
-          //   {
-          //     fFlag_r[1][xbin][ybin][j]=1;
-          //   }
-          //   if(!(fNu_min[2][j]<nu && nu<fNu_max[2][j]))
-          //   {
-          //     fFlag_r[2][xbin][ybin][j]=1;
-          //   }
-          //   if(fFlag_r[0][xbin][ybin][j] || fFlag_r[1][xbin][ybin][j] || fFlag_r[2][xbin][ybin][j])
-          //   {
-          //     fNDIS_evt_r[0][xbin][ybin][j]--; fNDIS_evt_r[1][xbin][ybin][j]--; fNDIS_evt_r[2][xbin][ybin][j]--;
-          //   }
-          // }
         }
         else if(id == 211)//pi+
         {
@@ -253,15 +244,11 @@ int main(int argc,char *argv[])
 
         if(!(3<Eh && Eh<40))
         {
-          // cout << "Eh not good : " << Eh << endl;
+#ifdef DEBUG
+          cout << "Eh not good : " << Eh << endl;
+#endif
           continue;
         }
-
-        // if(!(0.2<z && z<0.85))
-        // {
-        //   // cout << "z not good : " << z << endl;
-        //   continue;
-        // }
 
         if(0<z && z<0.2) zbin = 0;
         else if(0.2<z && z<0.25) zbin = 1;
@@ -390,11 +377,16 @@ int main(int argc,char *argv[])
     while(bevt >> npart)
     {
       fDIScuts = 0;
-//      cout << npart << endl;
+#ifdef DEBUG
+      cout << "DEBUG: READ CHECK" << endl;
+      cout << npart << endl;
+#endif
       bevt >> E >> xbj >> y >> Q2;
       W = pow(fM_p,2) + Q2*(1-xbj)/xbj;
-//      cout << E << "\txbj : " << xbj << "\ty : " << y << "\tQ2 : " << Q2 << endl;
-//      cout << "Particles list" << endl;
+#ifdef DEBUG
+      cout << E << "\txbj : " << xbj << "\ty : " << y << "\tQ2 : " << Q2 << endl;
+      cout << "Particles list" << endl;
+#endif
       if(0<E)
       {
         if(Q2>1)
@@ -429,8 +421,6 @@ int main(int argc,char *argv[])
       else if(0.5<=y && y<0.7) ybin = 4;
       else ybin = 5;
 
-      // cout << ybin << endl;
-
       if(fDIScuts)
       {
         for(int i=0; i<14; i++)
@@ -448,11 +438,18 @@ int main(int argc,char *argv[])
       for(int i=0; i<npart; i++)
       {
         bevt >> dummy >> id >> dummy >> dummy >> dummy;
-//        cout << dummy << "\tid : " << id << "\t" << dummy << "\t" << dummy << "\t" << dummy << "\t";
+#ifdef DEBUG
+       cout << "DEBUG: READ CHECK BORN FILE" << endl;
+       cout << dummy << "\tid : " << id << "\t" << dummy << "\t" << dummy << "\t" << dummy << "\t";
+#endif
         bevt >> px >> py >> pz >> Eh;
-//        cout << px << "\t" << py << "\t" << pz << "\t" << Eh << "\t";
+#ifdef DEBUG
+       cout << px << "\t" << py << "\t" << pz << "\t" << Eh << "\t";
+#endif
         bevt >> dummy >> dummy >> dummy >> dummy;
-//        cout << dummy << "\t" << dummy << "\t" << dummy << "\t" << dummy << endl;
+#ifdef DEBUG
+       cout << dummy << "\t" << dummy << "\t" << dummy << "\t" << dummy << endl;
+#endif
 
         if(!fDIScuts) continue;
 
@@ -460,27 +457,6 @@ int main(int argc,char *argv[])
         {
           E_prime = Eh;
           nu = E - E_prime;
-
-          // nu cut
-          // for(int j=0; j<14; j++)
-          // {
-          //   if(!(fNu_min[0][j]<nu && nu<fNu_max[0][j]))
-          //   {
-          //     fFlag_b[0][xbin][ybin][j]=1;
-          //   }
-          //   if(!(fNu_min[1][j]<nu && nu<fNu_max[1][j]))
-          //   {
-          //     fFlag_b[1][xbin][ybin][j]=1;
-          //   }
-          //   if(!(fNu_min[2][j]<nu && nu<fNu_max[2][j]))
-          //   {
-          //     fFlag_b[2][xbin][ybin][j]=1;
-          //   }
-          //   if(fFlag_b[0][xbin][ybin][j] || fFlag_b[1][xbin][ybin][j] || fFlag_b[2][xbin][ybin][j])
-          //   {
-          //     fNDIS_evt_b[0][xbin][ybin][j]--; fNDIS_evt_b[1][xbin][ybin][j]--; fNDIS_evt_b[2][xbin][ybin][j]--;
-          //   }
-          // }
         }
         else if(id == 211)//pi+
         {
@@ -538,15 +514,11 @@ int main(int argc,char *argv[])
 
         if(!(3<Eh && Eh<40))
         {
-          // cout << "Eh not good : " << Eh << endl;
+#ifdef DEBUG
+          cout << "Eh not good : " << Eh << endl;
+#endif
           continue;
         }
-
-        // if(!(0.2<z && z<0.85))
-        // {
-        //   // cout << "z not good : " << z << endl;
-        //   continue;
-        // }
 
         if(0<z && z<0.2) zbin = 0;
         else if(0.2<z && z<0.25) zbin = 1;
@@ -681,11 +653,16 @@ int main(int argc,char *argv[])
       while(revt >> npart)
       {
         fDIScuts = 0;
-  //      cout << npart << endl;
+#ifdef DEBUG
+        cout << "DEBUG: READ CHECK" << endl;
+        cout << npart << endl;
+#endif
         revt >> E >> xbj >> y >> Q2;
         W = pow(fM_p,2) + Q2*(1-xbj)/xbj;
-  //      cout << E << "\txbj : " << xbj << "\ty : " << y << "\tQ2 : " << Q2 << endl;
-  //      cout << "Particles list" << endl;
+#ifdef DEBUG
+        cout << E << "\txbj : " << xbj << "\ty : " << y << "\tQ2 : " << Q2 << endl;
+        cout << "Particles list" << endl;
+#endif
         if(0<E)
         {
           if(Q2>1)
@@ -720,8 +697,6 @@ int main(int argc,char *argv[])
         else if(0.5<=y && y<0.7) ybin = 4;
         else ybin = 5;
 
-        // cout << ybin << endl;
-
         if(fDIScuts)
         {
           for(int i=0; i<14; i++)
@@ -739,11 +714,18 @@ int main(int argc,char *argv[])
         for(int i=0; i<npart; i++)
         {
           revt >> dummy >> id >> dummy >> dummy >> dummy;
-        //  cout << dummy << "\tid : " << id << "\t" << dummy << "\t" << dummy << "\t" << dummy << "\t";
+#ifdef DEBUG
+          cout << "DEBUG: READ CHECK RE FILE" << endl;
+          cout << dummy << "\tid : " << id << "\t" << dummy << "\t" << dummy << "\t" << dummy << "\t";
+#endif
           revt >> px >> py >> pz >> Eh;
-        //  cout << px << "\t" << py << "\t" << pz << "\t" << Eh << "\t";
+#ifdef DEBUG
+          cout << px << "\t" << py << "\t" << pz << "\t" << Eh << "\t";
+#endif
           revt >> dummy >> dummy >> dummy >> dummy;
-        //  cout << dummy << "\t" << dummy << "\t" << dummy << "\t" << dummy << endl;
+#ifdef DEBUG
+          cout << dummy << "\t" << dummy << "\t" << dummy << "\t" << dummy << endl;
+#endif
 
           if(!fDIScuts) continue;
 
@@ -751,27 +733,6 @@ int main(int argc,char *argv[])
           {
             E_prime = Eh;
             nu = E - E_prime;
-
-            // nu cut
-            // for(int j=0; j<14; j++)
-            // {
-            //   if(!(fNu_min[0][j]<nu && nu<fNu_max[0][j]))
-            //   {
-            //     fFlag_r[0][xbin][ybin][j]=1;
-            //   }
-            //   if(!(fNu_min[1][j]<nu && nu<fNu_max[1][j]))
-            //   {
-            //     fFlag_r[1][xbin][ybin][j]=1;
-            //   }
-            //   if(!(fNu_min[2][j]<nu && nu<fNu_max[2][j]))
-            //   {
-            //     fFlag_r[2][xbin][ybin][j]=1;
-            //   }
-            //   if(fFlag_r[0][xbin][ybin][j] || fFlag_r[1][xbin][ybin][j] || fFlag_r[2][xbin][ybin][j])
-            //   {
-            //     fNDIS_evt_r[0][xbin][ybin][j]--; fNDIS_evt_r[1][xbin][ybin][j]--; fNDIS_evt_r[2][xbin][ybin][j]--;
-            //   }
-            // }
           }
           else if(id == 211)//pi+
           {
@@ -829,15 +790,11 @@ int main(int argc,char *argv[])
 
           if(!(3<Eh && Eh<40))
           {
-            // cout << "Eh not good : " << Eh << endl;
+#ifdef DEBUG
+            cout << "Eh not good : " << Eh << endl;
+#endif
             continue;
           }
-
-          // if(!(0.2<z && z<0.85))
-          // {
-          //   // cout << "z not good : " << z << endl;
-          //   continue;
-          // }
 
           if(0<z && z<0.2) zbin = 0;
           else if(0.2<z && z<0.25) zbin = 1;
@@ -964,11 +921,16 @@ int main(int argc,char *argv[])
       while(bevt >> npart)
       {
         fDIScuts = 0;
-  //      cout << npart << endl;
+#ifdef DEBUG
+        cout << "DEBUG: READ CHECK" << endl;
+        cout << npart << endl;
+#endif
         bevt >> E >> xbj >> y >> Q2;
         W = pow(fM_p,2) + Q2*(1-xbj)/xbj;
-  //      cout << E << "\txbj : " << xbj << "\ty : " << y << "\tQ2 : " << Q2 << endl;
-  //      cout << "Particles list" << endl;
+#ifdef DEBUG
+        cout << E << "\txbj : " << xbj << "\ty : " << y << "\tQ2 : " << Q2 << endl;
+        cout << "Particles list" << endl;
+#endif
         if(0<E)
         {
           if(Q2>1)
@@ -1003,8 +965,6 @@ int main(int argc,char *argv[])
         else if(0.5<=y && y<0.7) ybin = 4;
         else ybin = 5;
 
-        // cout << ybin << endl;
-
         if(fDIScuts)
         {
           for(int i=0; i<14; i++)
@@ -1022,11 +982,18 @@ int main(int argc,char *argv[])
         for(int i=0; i<npart; i++)
         {
           bevt >> dummy >> id >> dummy >> dummy >> dummy;
-  //        cout << dummy << "\tid : " << id << "\t" << dummy << "\t" << dummy << "\t" << dummy << "\t";
+#ifdef DEBUG
+          cout << "DEBUG: READ CHECK BORN FILE" << endl;
+          cout << dummy << "\tid : " << id << "\t" << dummy << "\t" << dummy << "\t" << dummy << "\t";
+#endif
           bevt >> px >> py >> pz >> Eh;
-  //        cout << px << "\t" << py << "\t" << pz << "\t" << Eh << "\t";
+#ifdef DEBUG
+          cout << px << "\t" << py << "\t" << pz << "\t" << Eh << "\t";
+#endif
           bevt >> dummy >> dummy >> dummy >> dummy;
-  //        cout << dummy << "\t" << dummy << "\t" << dummy << "\t" << dummy << endl;
+#ifdef DEBUG
+          cout << dummy << "\t" << dummy << "\t" << dummy << "\t" << dummy << endl;
+#endif
 
           if(!fDIScuts) continue;
 
@@ -1034,27 +1001,6 @@ int main(int argc,char *argv[])
           {
             E_prime = Eh;
             nu = E - E_prime;
-
-            //nu cut
-            // for(int j=0; j<14; j++)
-            // {
-            //   if(!(fNu_min[0][j]<nu && nu<fNu_max[0][j]))
-            //   {
-            //     fFlag_b[0][xbin][ybin][j]=1;
-            //   }
-            //   if(!(fNu_min[1][j]<nu && nu<fNu_max[1][j]))
-            //   {
-            //     fFlag_b[1][xbin][ybin][j]=1;
-            //   }
-            //   if(!(fNu_min[2][j]<nu && nu<fNu_max[2][j]))
-            //   {
-            //     fFlag_b[2][xbin][ybin][j]=1;
-            //   }
-            //   if(fFlag_b[0][xbin][ybin][j] || fFlag_b[1][xbin][ybin][j] || fFlag_b[2][xbin][ybin][j])
-            //   {
-            //     fNDIS_evt_b[0][xbin][ybin][j]--; fNDIS_evt_b[1][xbin][ybin][j]--; fNDIS_evt_b[2][xbin][ybin][j]--;
-            //   }
-            // }
           }
           else if(id == 211)//pi+
           {
@@ -1112,15 +1058,12 @@ int main(int argc,char *argv[])
 
           if(!(3<Eh && Eh<40))
           {
-            // cout << "Eh not good : " << Eh << endl;
+#ifdef DEBUG
+            cout << "Eh not good : " << Eh << endl;
+#endif
             continue;
           }
 
-          // if(!(0.2<z && z<0.85))
-          // {
-          //   // cout << "z not good : " << z << endl;
-          //   continue;
-          // }
 
           if(0<z && z<0.2) zbin = 0;
           else if(0.2<z && z<0.25) zbin = 1;
@@ -1380,23 +1323,26 @@ int main(int argc,char *argv[])
           pt_range_h_d.push_back(pt_range[l]);
         }
 
-        // cout << fRe[i][j][0].tab[0][0][3]+fRe[i][j][1].tab[0][0][3]+fRe[i][j][2].tab[0][0][3]+fRe[i][j][3].tab[0][0][3]
-        // +fRe[i][j][4].tab[0][0][3]+fRe[i][j][5].tab[0][0][3]+fRe[i][j][6].tab[0][0][3]+fRe[i][j][7].tab[0][0][3]
-        // +fRe[i][j][8].tab[0][0][3]+fRe[i][j][9].tab[0][0][3]+fRe[i][j][10].tab[0][0][3]+fRe[i][j][11].tab[0][0][3]
-        // +fRe[i][j][0].tab[1][0][3]+fRe[i][j][1].tab[1][0][3]+fRe[i][j][2].tab[1][0][3]+fRe[i][j][3].tab[1][0][3]
-        // +fRe[i][j][4].tab[1][0][3]+fRe[i][j][5].tab[1][0][3]+fRe[i][j][6].tab[1][0][3]+fRe[i][j][7].tab[1][0][3]
-        // +fRe[i][j][8].tab[1][0][3]+fRe[i][j][9].tab[1][0][3]+fRe[i][j][10].tab[1][0][3]+fRe[i][j][11].tab[1][0][3]
-        // <<
-        // " " << fNSIDIS_evt_r[3][i][j] << endl;
-        //
-        // cout << fBorn[i][j][0].tab[0][0][3]+fBorn[i][j][1].tab[0][0][3]+fBorn[i][j][2].tab[0][0][3]+fBorn[i][j][3].tab[0][0][3]
-        // +fBorn[i][j][4].tab[0][0][3]+fBorn[i][j][5].tab[0][0][3]+fBorn[i][j][6].tab[0][0][3]+fBorn[i][j][7].tab[0][0][3]
-        // +fBorn[i][j][8].tab[0][0][3]+fBorn[i][j][9].tab[0][0][3]+fBorn[i][j][10].tab[0][0][3]+fBorn[i][j][11].tab[0][0][3]
-        // +fBorn[i][j][0].tab[1][0][3]+fBorn[i][j][1].tab[1][0][3]+fBorn[i][j][2].tab[1][0][3]+fBorn[i][j][3].tab[1][0][3]
-        // +fBorn[i][j][4].tab[1][0][3]+fBorn[i][j][5].tab[1][0][3]+fBorn[i][j][6].tab[1][0][3]+fBorn[i][j][7].tab[1][0][3]
-        // +fBorn[i][j][8].tab[1][0][3]+fBorn[i][j][9].tab[1][0][3]+fBorn[i][j][10].tab[1][0][3]+fBorn[i][j][11].tab[1][0][3]
-        // <<
-        // " " << fNSIDIS_evt_b[3][i][j] << endl;
+#ifdef DEBUG
+        cout << "DEBUG: MULTIPLICITY CONTENT" << endl;
+        cout << fRe[i][j][0].tab[0][0][3]+fRe[i][j][1].tab[0][0][3]+fRe[i][j][2].tab[0][0][3]+fRe[i][j][3].tab[0][0][3]
+        +fRe[i][j][4].tab[0][0][3]+fRe[i][j][5].tab[0][0][3]+fRe[i][j][6].tab[0][0][3]+fRe[i][j][7].tab[0][0][3]
+        +fRe[i][j][8].tab[0][0][3]+fRe[i][j][9].tab[0][0][3]+fRe[i][j][10].tab[0][0][3]+fRe[i][j][11].tab[0][0][3]
+        +fRe[i][j][0].tab[1][0][3]+fRe[i][j][1].tab[1][0][3]+fRe[i][j][2].tab[1][0][3]+fRe[i][j][3].tab[1][0][3]
+        +fRe[i][j][4].tab[1][0][3]+fRe[i][j][5].tab[1][0][3]+fRe[i][j][6].tab[1][0][3]+fRe[i][j][7].tab[1][0][3]
+        +fRe[i][j][8].tab[1][0][3]+fRe[i][j][9].tab[1][0][3]+fRe[i][j][10].tab[1][0][3]+fRe[i][j][11].tab[1][0][3]
+        <<
+        " " << fNSIDIS_evt_r[3][i][j] << endl;
+
+        cout << fBorn[i][j][0].tab[0][0][3]+fBorn[i][j][1].tab[0][0][3]+fBorn[i][j][2].tab[0][0][3]+fBorn[i][j][3].tab[0][0][3]
+        +fBorn[i][j][4].tab[0][0][3]+fBorn[i][j][5].tab[0][0][3]+fBorn[i][j][6].tab[0][0][3]+fBorn[i][j][7].tab[0][0][3]
+        +fBorn[i][j][8].tab[0][0][3]+fBorn[i][j][9].tab[0][0][3]+fBorn[i][j][10].tab[0][0][3]+fBorn[i][j][11].tab[0][0][3]
+        +fBorn[i][j][0].tab[1][0][3]+fBorn[i][j][1].tab[1][0][3]+fBorn[i][j][2].tab[1][0][3]+fBorn[i][j][3].tab[1][0][3]
+        +fBorn[i][j][4].tab[1][0][3]+fBorn[i][j][5].tab[1][0][3]+fBorn[i][j][6].tab[1][0][3]+fBorn[i][j][7].tab[1][0][3]
+        +fBorn[i][j][8].tab[1][0][3]+fBorn[i][j][9].tab[1][0][3]+fBorn[i][j][10].tab[1][0][3]+fBorn[i][j][11].tab[1][0][3]
+        <<
+        " " << fNSIDIS_evt_b[3][i][j] << endl;
+#endif
 
         for(int k=0; k<14; k++)
         {

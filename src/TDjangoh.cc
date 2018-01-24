@@ -4,12 +4,12 @@
     \file                         TDjangoh.cc
     \brief                        Interface class to Djangoh generator
     \author                       Nicolas PIERRE
-    \version                      1.1
-    \date                         14/06/16
+    \version                      1.2
+    \date                         24/01/18
     Support :                     mail to : nicolas.pierre@cern.ch
 
-\class TDjangoh
-\ingroup djangoh
+    \class TDjangoh
+    \ingroup djangoh
 */
 //==============================================================================
 
@@ -28,7 +28,7 @@ TDjangoh*  TDjangoh::fgInstance = 0;
 
 # define type_of_call _stdcall
 # define VERSION 1
-# define SUBVERSION 1
+# define SUBVERSION 2
 
 // COLORS
 
@@ -490,7 +490,9 @@ Int_t TDjangoh::ImportParticles(TClonesArray *particles, Option_t *option)
                              fLujets->V[2][i] ,
                              fLujets->V[3][i]);
 
-          //  printf("%d %d %d! ",i,fLujets->K[1][i],numpart);
+#ifdef DEBUG
+          printf("%d %d %d! ",i,fLujets->K[1][i],numpart);
+#endif
           nparts++;
         }
      }
@@ -1518,4 +1520,9 @@ void TDjangoh::Clean_File()
   remove("TDjangoh_rnd.dat");
   remove("TDjangoh_smp.dat");
   remove("TDjangoh_sigtot.dat");
+
+  cout << ">>> ************************ <<<" << endl;
+  cout << ">>>    TDJANGOH message :    <<<" << endl;
+  cout << ">>> TDJANGOH files cleaned ! <<<" << endl;
+  cout << ">>> ************************ <<<" << endl;
 }

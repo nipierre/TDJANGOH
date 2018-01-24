@@ -270,7 +270,9 @@ int main(int argc,char *argv[])
     while(revt >> dummy)
     {
       revt >> x >> y >> Q2 >> xhad >> yhad >> Q2had;
-      // cout << x << " " << y << " " << Q2 << " " << xhad << " " << yhad << " " << Q2had << endl;
+#ifdef DEBUG
+      cout << x << " " << y << " " << Q2 << " " << xhad << " " << yhad << " " << Q2had << endl;
+#endif
 
       for(int j=0; j<3; j++)
       {
@@ -307,12 +309,16 @@ int main(int argc,char *argv[])
 
       if(xflag && yflag)
       {
-        // cout << "x = " << x << ", y = " << y << endl;
+#ifdef DEBUG
+        cout << "x = " << x << ", y = " << y << endl;
+#endif
         re[yi][xi]++;
       }
       else
       {
-        // cout << "x = " << x << ", y = " << y << endl;
+#ifdef DEBUG
+        cout << "x = " << x << ", y = " << y << endl;
+#endif
       }
     }
 
@@ -362,12 +368,16 @@ int main(int argc,char *argv[])
 
       if(xflag && yflag)
       {
-        // cout << "x = " << x << ", y = " << y << endl;
+#ifdef DEBUG
+        cout << "x = " << x << ", y = " << y << endl;
+#endif
         born[yi][xi]++;
       }
       else
       {
-        // cout << "x = " << x << ", y = " << y << endl;
+#ifdef DEBUG
+        cout << "x = " << x << ", y = " << y << endl;
+#endif
       }
     }
     bevt.close();
@@ -386,7 +396,9 @@ int main(int argc,char *argv[])
       while(revt >> dummy)
       {
         revt >> x >> y >> Q2 >> xhad >> yhad >> Q2had;
-        // cout << x << " " << y << " " << Q2 << " " << xhad << " " << yhad << " " << Q2had << endl;
+#ifdef DEBUG
+        cout << x << " " << y << " " << Q2 << " " << xhad << " " << yhad << " " << Q2had << endl;
+#endif
 
         for(int j=0; j<3; j++)
         {
@@ -423,12 +435,16 @@ int main(int argc,char *argv[])
 
         if(xflag && yflag)
         {
-          // cout << "x = " << x << ", y = " << y << endl;
+#ifdef DEBUG
+          cout << "x = " << x << ", y = " << y << endl;
+#endif
           re[yi][xi]++;
         }
         else
         {
-          // cout << "x = " << x << ", y = " << y << endl;
+#ifdef DEBUG
+          cout << "x = " << x << ", y = " << y << endl;
+#endif
         }
       }
 
@@ -480,12 +496,16 @@ int main(int argc,char *argv[])
 
         if(xflag && yflag)
         {
-          // cout << "x = " << x << ", y = " << y << endl;
+#ifdef DEBUG
+          cout << "x = " << x << ", y = " << y << endl;
+#endif
           born[yi][xi]++;
         }
         else
         {
-          // cout << "x = " << x << ", y = " << y << endl;
+#ifdef DEBUG
+          cout << "x = " << x << ", y = " << y << endl;
+#endif
         }
       }
       bevt.close();
@@ -515,7 +535,9 @@ int main(int argc,char *argv[])
       {
         bevt >> sigbornb[i][j];
         bevt >> erborn[i][j];
-	      // cout << "(" << j << "," << i << ") : " << sigborn[i][j] << "\t" << erborn[i][j] << endl;
+#ifdef DEBUG
+	      cout << "(" << j << "," << i << ") : " << sigborn[i][j] << "\t" << erborn[i][j] << endl;
+#endif
       }
     }
 
@@ -531,7 +553,9 @@ int main(int argc,char *argv[])
       {
         bevt >> sigbornb[i][j];
         bevt >> erborn[i][j];
-	      // cout << "(" << j << "," << i << ") : " << sigborn[i][j] << "\t" << erborn[i][j] << endl;
+#ifdef DEBUG
+	      cout << "(" << j << "," << i << ") : " << sigborn[i][j] << "\t" << erborn[i][j] << endl;
+#endif
       }
     }
 
@@ -691,7 +715,9 @@ int main(int argc,char *argv[])
       {
         br[j][i] = sigbornb[j][i]/(born_ratio[j+1][i+9]);
 	      br[j][i] /= norm;
-        // cout << "j=" << j << ", i=" << i << "  br[j][i] : " << br[j][i] << "  sigbornb[j][i] : " << sigbornb[j][i] << "  born_ratio[j+1][i+9] : " << born_ratio[j+1][i+9] << endl;
+#ifdef DEBUG
+        cout << "j=" << j << ", i=" << i << "  br[j][i] : " << br[j][i] << "  sigbornb[j][i] : " << sigbornb[j][i] << "  born_ratio[j+1][i+9] : " << born_ratio[j+1][i+9] << endl;
+#endif
       }
 
       brx_g[j] = new TGraph(21,xtab,br[j]);
@@ -700,8 +726,6 @@ int main(int argc,char *argv[])
       brx_g[j]->SetMarkerSize(3);
       brx_g[j]->SetFillColor(601);
       brx_g[j]->SetFillStyle(3001);
-      // brx_g[j]->GetXaxis()->SetTitle("x_{Bj}");
-      // brx_g[j]->GetYaxis()->SetTitle("BR[BORN_DJANGOH/BORN_TERAD]");
       bg_x->Add(brx_g[j],"AP");
     }
 
@@ -723,15 +747,13 @@ int main(int argc,char *argv[])
       bry_g[i]->SetMarkerSize(3);
       bry_g[i]->SetFillColor(601);
       bry_g[i]->SetFillStyle(3001);
-      // bry_g[i]->GetXaxis()->SetTitle("y");
-      // bry_g[i]->GetYaxis()->SetTitle("BR[BORN_DJANGOH/BORN_TERAD]");
       bg_y->Add(bry_g[i],"AP");
 
       if(i%2==0 && i<17)
       {
         c9.cd(i/2+1);
         bry_g[i]->SetTitle(Form("BR[BORN_DJANGOH/BORN_TERAD] @ x = %g",xtab[i]));
-	bry_g[i]->GetXaxis()->SetTitle("y");
+	      bry_g[i]->GetXaxis()->SetTitle("y");
         bry_g[i]->GetYaxis()->SetTitle("Born_{DJANGOH}/Born_{TERAD}]");
         bry_g[i]->GetYaxis()->SetRangeUser(0.9998,1.0002);
         bry_g[i]->GetXaxis()->SetTitleSize(.05);
@@ -765,17 +787,23 @@ int main(int argc,char *argv[])
       for(int j=0; j<5; j++)
       {
         table >> sdum;
-        // cout << sdum << "\t";
+#ifdef DEBUG
+        cout << sdum << "\t";
+#endif
 
         for(int k=0; k<6; k++)
         {
           table >> rc_table[i][k+j*6] >> sdum;
-          // cout << " " << rc_table[i][k+j*6] << sdum;
+#ifdef DEBUG
+          cout << " " << rc_table[i][k+j*6] << sdum;
+#endif
           rc_table[i][k+j*6] = 1/rc_table[i][k+j*6];
           rc_table_y[k+j*6][i]=rc_table[i][k+j*6];
         }
 
-        // cout << endl;
+#ifdef DEBUG
+        cout << endl;
+#endif
       }
     }
     table.close();
@@ -788,17 +816,23 @@ int main(int argc,char *argv[])
       for(int j=0; j<5; j++)
       {
         table >> sdum;
-        // cout << sdum << "\t";
+#ifdef DEBUG
+        cout << sdum << "\t";
+#endif
 
         for(int k=0; k<6; k++)
         {
           table >> rc_table[i][k+j*6] >> sdum;
           rc_table[i][k+j*6] = 1/rc_table[i][k+j*6];
+#ifdef DEBUG
           cout << "(" << xtable[k+j*6] << "," << ytable[i] << ") : " << rc_table[i][k+j*6] << endl;
+#endif
           rc_table_y[k+j*6][i]=rc_table[i][k+j*6];
         }
 
-        // cout << endl;
+#ifdef DEBUG
+        cout << endl;
+#endif
 
       }
     }
@@ -863,11 +897,13 @@ int main(int argc,char *argv[])
                                        +rc_table[1+i+1][9+j+1]
                                        +rc_table[1+i][9+j+1]
                                        +rc_table[1+i+1][9+j])/4)/abs(1-rcx[i][j]);
-          // cout << "rcx_e["<<i<<"]["<<j<<"] = " << rcx_e[i][j] << endl;
-          // cout << "sigtotre : " << sigtotre
-          // << "evtotre : " << evtotre
-          // << "sigtotborn : " << sigtotborn
-          // << "evtotborn : " << evtotborn << endl;
+#ifdef DEBUG
+          cout << "rcx_e["<<i<<"]["<<j<<"] = " << rcx_e[i][j] << endl;
+          cout << "sigtotre : " << sigtotre
+          << "evtotre : " << evtotre
+          << "sigtotborn : " << sigtotborn
+          << "evtotborn : " << evtotborn << endl;
+#endif
         }
         else if(fileFlag == "-sigf")
         {
@@ -876,10 +912,12 @@ int main(int argc,char *argv[])
           rcx_eb[i][j] = double(erborn[i][j])+double(erre[i][j]);
           erxb[i][j] = rcxb[i][j]-rc_table[1+i][9+j];
           errexb[i][j] = (rc_table[1+i][9+j]-rcxb[i][j])/rcxb[i][j];
-          // cout << "rcxb["<<i<<"]["<<j<<"] = " << rcxb[i][j] << endl;
-          // cout << "rcx_eb["<<i<<"]["<<j<<"] = " << rcx_eb[i][j] << endl;
-          // cout << "sigreb["<<i<<"]["<<j<<"] : " << sigreb[i][j] << " "
-          // << "sigbornb["<<i<<"]["<<j<<"] : " << sigbornb[i][j] << endl;
+#ifdef DEBUG
+          cout << "rcxb["<<i<<"]["<<j<<"] = " << rcxb[i][j] << endl;
+          cout << "rcx_eb["<<i<<"]["<<j<<"] = " << rcx_eb[i][j] << endl;
+          cout << "sigreb["<<i<<"]["<<j<<"] : " << sigreb[i][j] << " "
+          << "sigbornb["<<i<<"]["<<j<<"] : " << sigbornb[i][j] << endl;
+#endif
         }
       }
       else
@@ -947,7 +985,6 @@ int main(int argc,char *argv[])
     erx_g[i]->SetMarkerSize(3);
     erx_g[i]->SetFillColor(601);
     erx_g[i]->SetFillStyle(3001);
-    //erx_g[i]->GetYaxis()->SetRangeUser(-.05,.05);
     erx_g[i]->GetXaxis()->SetTitle("x_{Bj}");
     erx_g[i]->GetYaxis()->SetTitle("ER[|DJANGOH-TERAD|/DJANGOH]");
     mg_x->Add(erx_g[i],"AP");
@@ -956,15 +993,12 @@ int main(int argc,char *argv[])
     errex_g[i]->SetMarkerSize(3);
     errex_g[i]->SetFillColor(601);
     errex_g[i]->SetFillStyle(3001);
-    //errex_g[i]->GetYaxis()->SetRangeUser(-.05,.05);
     errex_g[i]->GetXaxis()->SetTitle("x_{Bj}");
     errex_g[i]->GetYaxis()->SetTitle("ER[|DJANGOH-TERAD|/DJANGOH]");
     mge_x->Add(errex_g[i],"AP");
   }
 
   c3.cd(1);
-  // mg_x->SetMinimum(-.05);
-  // mg_x->SetMaximum(.05);
   mg_x->SetTitle("ER[DJANGOH-TERAD]");
   mg_x->Draw("AP");
   mg_x->GetXaxis()->SetTitle("x_{Bj}");
@@ -972,8 +1006,6 @@ int main(int argc,char *argv[])
   c3.Update();
 
   c5.cd(1);
-  // mg_x->SetMinimum(-.05);
-  // mg_x->SetMaximum(.05);
   mge_x->SetTitle("ER[|DJANGOH-TERAD|/|1-DJANGOH|]");
   mge_x->Draw("AP");
   mge_x->GetXaxis()->SetTitle("x_{Bj}");
@@ -1001,7 +1033,9 @@ int main(int argc,char *argv[])
           eryb[i][j] = erxb[j][i];
           erreyb[i][j] = errexb[j][i];
         }
-        // cout << "rcy_e["<<i<<"]["<<j<<"] = " << rcy_e[i][j] << endl;
+#ifdef DEBUG
+        cout << "rcy_e["<<i<<"]["<<j<<"] = " << rcy_e[i][j] << endl;
+#endif
       }
       else
       {
@@ -1063,7 +1097,6 @@ int main(int argc,char *argv[])
       rcyt_g[i]->SetMarkerSize(3);
       rcyt_g[i]->Draw("P");
     }
-    //l2.Draw("SAME");
     c2.Update();
 
     ery_g[i]->SetMarkerStyle(22);
@@ -1071,7 +1104,6 @@ int main(int argc,char *argv[])
     ery_g[i]->SetMarkerSize(3);
     ery_g[i]->SetFillColor(601);
     ery_g[i]->SetFillStyle(3001);
-    //ery_g[i]->GetYaxis()->SetRangeUser(-.05,.05);
     ery_g[i]->GetXaxis()->SetTitle("y");
     ery_g[i]->GetYaxis()->SetTitle("ER[|DJANGOH-TERAD|/DJANGOH]");
     mg_y->Add(ery_g[i],"AP");
@@ -1088,7 +1120,6 @@ int main(int argc,char *argv[])
     errey_g[i]->SetMarkerSize(3);
     errey_g[i]->SetFillColor(601);
     errey_g[i]->SetFillStyle(3001);
-    //errey_g[i]->GetYaxis()->SetRangeUser(-.05,.05);
     errey_g[i]->GetXaxis()->SetTitle("y");
     errey_g[i]->GetYaxis()->SetTitle("ER[|DJANGOH-TERAD|/DJANGOH]");
     mge_y->Add(errey_g[i],"AP");
@@ -1110,8 +1141,6 @@ int main(int argc,char *argv[])
   }
 
   c4.cd(1);
-  // mg_y->SetMinimum(-.05);
-  // mg_y->SetMaximum(.05);
   mg_y->SetTitle("ER[DJANGOH-TERAD]");
   mg_y->Draw("AP");
   mg_y->GetXaxis()->SetTitle("y");
@@ -1119,8 +1148,6 @@ int main(int argc,char *argv[])
   c4.Update();
 
   c6.cd(1);
-  // mg_y->SetMinimum(-.05);
-  // mg_y->SetMaximum(.05);
   mge_y->SetTitle("ER[|DJANGOH-TERAD|/|1-DJANGOH|]");
   mge_y->Draw("AP");
   mge_y->GetXaxis()->SetTitle("y");

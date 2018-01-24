@@ -25,7 +25,9 @@ int main()
 		while(sff >> cTx)
 	  {
 			sff >> cTQ2 >> cTF1 >> cTF2;
-	//		cout <<	cTx << " " << cTQ2 << " " << cTF2 << endl;
+#ifdef DEBUG
+			cout <<	cTx << " " << cTQ2 << " " << cTF2 << endl;
+#endif
 
 			xbin=-1;
 			Q2bin=-1;

@@ -189,7 +189,9 @@ int main(int argc,char *argv[])
         if(px || py)
         {
           g_flag = 1;
-          //cout << px << " " << py << " " << pz << " " << E << " " << m << endl;
+#ifdef DEBUG
+          cout << px << " " << py << " " << pz << " " << E << " " << m << endl;
+#endif
 
           theta_g = asin(sqrt(pow(px/E,2)+pow(py/E,2)));
           tdist->Fill(log10(theta_g));
@@ -294,7 +296,9 @@ int main(int argc,char *argv[])
         evt >> pz;
         evt >> E;
         evt >> m;
-        //cout << px << " " << py << " " << pz << " " << E << " " << m << endl;
+#ifdef DEBUG
+        cout << px << " " << py << " " << pz << " " << E << " " << m << endl;
+#endif
         edist_m.Fill(E);
         theta_m = asin(sqrt(pow(px/sqrt(pow(E,2)-pow(m,2)),2)+pow(py/sqrt(pow(E,2)-pow(m,2)),2)));
         tdist_m.Fill(theta_m);
@@ -603,10 +607,12 @@ int main(int argc,char *argv[])
   }
 
   c9.cd(1);
+#ifdef DEBUG
   for(int i=2; i<8; i++)
   {
-    //cout << edist_n.GetBinContent(i) << " " << edist_n.GetBinContent(i)*100/100000 << endl;
+    cout << edist_n.GetBinContent(i) << " " << edist_n.GetBinContent(i)*100/100000 << endl;
   }
+#endif
   edist_n.Scale(1.0/100000);
   edist_n.GetXaxis()->SetTitle("E_{#gamma} (GeV)");
   edist_n.GetYaxis()->SetTitle("# Events_{norm}");
