@@ -1108,10 +1108,10 @@ C***********************************************************************
       ENDIF
 
 C---Now we can open output files
-      OPEN(LUNDAT,FILE=OUTFILENAM(1:ICH)//'_smp.dat',STATUS='REPLACE',
-     *     FORM='UNFORMATTED')
-      OPEN(LUNRND,FILE=OUTFILENAM(1:ICH)//'_rnd.dat'
-     *     ,STATUS='REPLACE', FORM='FORMATTED')
+C      OPEN(LUNDAT,FILE=OUTFILENAM(1:ICH)//'_smp.dat',STATUS='REPLACE',
+C     *     FORM='UNFORMATTED')
+C      OPEN(LUNRND,FILE=OUTFILENAM(1:ICH)//'_rnd.dat'
+C     *     ,STATUS='REPLACE', FORM='FORMATTED')
       OPEN(31,FILE=OUTFILENAM(1:ICH)//'_evt.dat',STATUS='UNKNOWN')
       OPEN(19,FILE=OUTFILENAM(1:ICH)//'_sigtot.dat',STATUS='UNKNOWN')
 C---PRINT THE TITLE ALSO TO FILE
