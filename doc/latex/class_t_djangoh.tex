@@ -33,14 +33,14 @@ void \hyperlink{class_t_djangoh_a763cae78834404166df26ccd059bb301}{Initialize} (
 \begin{DoxyCompactList}\small\item\em Initialization of D\+J\+A\+N\+G\+OH. \end{DoxyCompactList}\item 
 void \hyperlink{class_t_djangoh_af6954bed103bc5adc60822f16268c12d}{Read\+X\+M\+L\+File} (const string p\+Filename)
 \begin{DoxyCompactList}\small\item\em Reading of parameters in X\+ML file. \end{DoxyCompactList}\item 
+void \hyperlink{class_t_djangoh_ade135fa317b5678c048d417fcef573ae}{Write\+X\+M\+L\+File} (const string p\+Filename)
+\item 
 void \hyperlink{class_t_djangoh_a20fbc4c9736f639e6211333c6113421a}{Mod\+Kine\+Cuts} (int pcut, double pxmin, double pxmax, double pymin, double pymax, double pq2min, double pq2max, double pwmin)
 \begin{DoxyCompactList}\small\item\em Modification of kinematical cuts. \end{DoxyCompactList}\item 
 void \hyperlink{class_t_djangoh_acbf402e049af75c65f28589178eb1487}{Born\+W\+Oqel\+NC} ()
 \begin{DoxyCompactList}\small\item\em Configuration for Born w/o quasielastic contribution generation. \end{DoxyCompactList}\item 
 void \hyperlink{class_t_djangoh_a283b09ffc625a6a14af2f301ae957c92}{R\+Clep\+W\+Oqel\+NC} ()
 \begin{DoxyCompactList}\small\item\em Configuration for leptonic RC w/o quasielastic contribution generation. \end{DoxyCompactList}\item 
-void \hyperlink{class_t_djangoh_a90712a2b5457a05ffb78faca2cc3a2b9}{Set\+Particle} (const char $\ast$pname)
-\begin{DoxyCompactList}\small\item\em Choice of beam particle. \end{DoxyCompactList}\item 
 void \hyperlink{class_t_djangoh_af58a4c6bb944a4ce79cc538829e490e8}{Configure} (float beam\+\_\+e, float pol)
 \begin{DoxyCompactList}\small\item\em Configuration of D\+J\+A\+N\+G\+OH. \end{DoxyCompactList}\item 
 void \hyperlink{class_t_djangoh_a076cac82063ed8740ac0a32e77c02c94}{End\+Recap} ()
@@ -49,6 +49,76 @@ Int\+\_\+t \hyperlink{class_t_djangoh_a69e5ebe63faa2dd00d9bcd217ecdf825}{Import\
 \begin{DoxyCompactList}\small\item\em Import particles from lujets\+\_\+ subroutine and copy it in T\+Clones\+Array$\ast$. \end{DoxyCompactList}\item 
 T\+Obj\+Array $\ast$ \hyperlink{class_t_djangoh_ac63f2c463b6a2fff98f256952aaf945f}{Import\+Particles} (Option\+\_\+t $\ast$option=\char`\"{}\char`\"{})
 \begin{DoxyCompactList}\small\item\em Import particles from lujets\+\_\+ subroutine and copy it in T\+Clones\+Array$\ast$. \end{DoxyCompactList}\item 
+double \hyperlink{class_t_djangoh_a6c3ac520ed9c8c8eb0e80f3dda7eb146}{Get\+Sigtot} ()
+\begin{DoxyCompactList}\small\item\em Access total Cross-\/\+Section. \end{DoxyCompactList}\item 
+double \hyperlink{class_t_djangoh_af888193a486499c7b019b0da80eae760}{Get\+Sigtrr} ()
+\begin{DoxyCompactList}\small\item\em Access error on Cross-\/\+Section. \end{DoxyCompactList}\item 
+int \hyperlink{class_t_djangoh_a2ed9a38fa1593d5a6a6e2c33b2912d1b}{Get\+Beam\+Type} ()
+\begin{DoxyCompactList}\small\item\em Access beam particle type. \end{DoxyCompactList}\item 
+void \hyperlink{class_t_djangoh_af93ae6412c07af22bca887cbcbba5082}{Set\+Beam\+Type} (int pvalue)
+\begin{DoxyCompactList}\small\item\em Set beam particle type. \end{DoxyCompactList}\item 
+void \hyperlink{class_t_djangoh_a37c2f8994175d3181a7f6f5aae5797f1}{Set\+Beam\+Type} (const char $\ast$pvalue)
+\begin{DoxyCompactList}\small\item\em Set beam particle type. \end{DoxyCompactList}\item 
+void \hyperlink{class_t_djangoh_a6995df5cd413a9e998fe8c0836004363}{Set\+Beam} (double p\+BeamE, double p\+Pol)
+\begin{DoxyCompactList}\small\item\em Set beam energy and polarization. \end{DoxyCompactList}\item 
+double \hyperlink{class_t_djangoh_a62b52fce9e36c0c7296fc1e519b1b902}{Get\+Beam\+Polar} ()
+\begin{DoxyCompactList}\small\item\em Access beam polarization. \end{DoxyCompactList}\item 
+double \hyperlink{class_t_djangoh_a34a0415a20f61670164665904eeca25b}{Set\+Beam\+Polar} (double pvalue)
+\begin{DoxyCompactList}\small\item\em Set beam polarization. \end{DoxyCompactList}\item 
+double \hyperlink{class_t_djangoh_a6baf26c760e0fc2f7bfc802fe7b14093}{Get\+Kinem\+Cut} (int i)
+\begin{DoxyCompactList}\small\item\em Access kinematical cuts. \end{DoxyCompactList}\item 
+void \hyperlink{class_t_djangoh_acb1c8c1ead16a0fbadd733b117cc0445}{Set\+Kinem\+Cut} (double pvalue, int i)
+\begin{DoxyCompactList}\small\item\em Set kinematical cuts. \end{DoxyCompactList}\item 
+double \hyperlink{class_t_djangoh_a74a77949c408cc303ec5e90482b1e639}{Get\+Gd\+Opt} (int i)
+\begin{DoxyCompactList}\small\item\em Access cross-\/section grid values. \end{DoxyCompactList}\item 
+void \hyperlink{class_t_djangoh_abbbe8452bf4a894e8757e096fb104d90}{Set\+Gd\+Opt} (double pvalue, int i)
+\begin{DoxyCompactList}\small\item\em Set cross-\/section grid values. \end{DoxyCompactList}\item 
+int \hyperlink{class_t_djangoh_ac58587b988731552d41321364c30748d}{Get\+Gsw} (int i)
+\begin{DoxyCompactList}\small\item\em Access EW parameters values. \end{DoxyCompactList}\item 
+void \hyperlink{class_t_djangoh_acbd9827496878eed7768c97031a1c1d7}{Set\+Gsw} (int pvalue, int i)
+\begin{DoxyCompactList}\small\item\em Set EW parameters values. \end{DoxyCompactList}\item 
+double \hyperlink{class_t_djangoh_a47b4a219c93cbcad58a82bfab9649a42}{Get\+Egam\+Min} ()
+\begin{DoxyCompactList}\small\item\em Access cutoff energy value. \end{DoxyCompactList}\item 
+void \hyperlink{class_t_djangoh_ac296a00fee7971d387aa5127f726a649}{Set\+Egam\+Min} (double pvalue)
+\begin{DoxyCompactList}\small\item\em Set cutoff energy value. \end{DoxyCompactList}\item 
+int \hyperlink{class_t_djangoh_aea74b082287a6870a27b07217832768f}{Get\+Int\+Opt\+NC} (int i)
+\begin{DoxyCompactList}\small\item\em Access contribution to NC interactions values. \end{DoxyCompactList}\item 
+void \hyperlink{class_t_djangoh_a867c7f0d6deb79773b4529e496a2ee23}{Set\+Int\+Opt\+NC} (int pvalue, int i)
+\begin{DoxyCompactList}\small\item\em Set contribution to NC interactions values. \end{DoxyCompactList}\item 
+void \hyperlink{class_t_djangoh_a6e6fa7e1826bd4e86be44d80a6bd6854}{Set\+Sam\+Opt\+NC} (int pvalue, int i)
+\begin{DoxyCompactList}\small\item\em Set inclusion of NC cross-\/section to sampling values. \end{DoxyCompactList}\item 
+int \hyperlink{class_t_djangoh_a58e1925539d208ca8e00533b5ae52074}{Get\+Struct\+Func} (int i)
+\begin{DoxyCompactList}\small\item\em Access parametrization of structure functions values. \end{DoxyCompactList}\item 
+void \hyperlink{class_t_djangoh_aa8331885aeb7880a63ebdfcf32919f9b}{Set\+Struct\+Func} (int pvalue, int i)
+\begin{DoxyCompactList}\small\item\em Set parametrization of structure functions values. \end{DoxyCompactList}\item 
+double \hyperlink{class_t_djangoh_a31acc70811ad58a8986f7d04547e9213}{Get\+Sophia} ()
+\begin{DoxyCompactList}\small\item\em Access low W limit for Sophia value. \end{DoxyCompactList}\item 
+void \hyperlink{class_t_djangoh_a12bd5515ab5db50b147810e06e98a0b8}{Set\+Sophia} (double pvalue)
+\begin{DoxyCompactList}\small\item\em Set low W limit for Sophia value. \end{DoxyCompactList}\item 
+int \hyperlink{class_t_djangoh_a1caf80b8f7228dbc7818ac047de9b8b7}{Get\+Verbose} ()
+\begin{DoxyCompactList}\small\item\em Get verbose value. \end{DoxyCompactList}\item 
+void \hyperlink{class_t_djangoh_a5129257c110777c1625049fb74f33e4b}{Set\+Verbose} (int pvalue)
+\begin{DoxyCompactList}\small\item\em Set verbose value. \end{DoxyCompactList}\item 
+int \hyperlink{class_t_djangoh_a39b356c5689222e6c82172e9b4954fe1}{Get\+Int\+Opt\+CC} (int i)
+\begin{DoxyCompactList}\small\item\em Access contribution to CC interactions values. \end{DoxyCompactList}\item 
+void \hyperlink{class_t_djangoh_a7e37a7afc5c112a2bd061f5e73973f78}{Set\+Int\+Opt\+CC} (int pvalue, int i)
+\begin{DoxyCompactList}\small\item\em Set contribution to CC interactions values. \end{DoxyCompactList}\item 
+void \hyperlink{class_t_djangoh_acc7a3124293fe30c297fb7702bade781}{Set\+Sam\+Opt\+CC} (int pvalue, int i)
+\begin{DoxyCompactList}\small\item\em Set inclusion of CC cross-\/section to sampling values. \end{DoxyCompactList}\item 
+void \hyperlink{class_t_djangoh_ae37cb56d62427ac672155e0817f6849e}{Set\+Nucleus} (double p\+Hpolar, int p\+Hna, int p\+Hnz, double p\+Epro=0)
+\begin{DoxyCompactList}\small\item\em Set nucleus properties values. \end{DoxyCompactList}\item 
+void \hyperlink{class_t_djangoh_aa78f3a43ed71499a9efe9e87cc22d668}{Write\+F\+S\+In\+File} ()
+\begin{DoxyCompactList}\small\item\em Save final state infos in file. \end{DoxyCompactList}\item 
+void \hyperlink{class_t_djangoh_ade1e9ff8b29d2b95d24a22c3474a7ba6}{Clean\+F\+S\+File} ()
+\begin{DoxyCompactList}\small\item\em Remove final state file. \end{DoxyCompactList}\item 
+double \hyperlink{class_t_djangoh_acf17f3e8d6a10ebe25f57f75662a1817}{Get\+P\+H\+EP} (int ip, int i)
+\begin{DoxyCompactList}\small\item\em Access P\+H\+EP content of event. \end{DoxyCompactList}\item 
+double \hyperlink{class_t_djangoh_ab8bbab97c50a6a9f296fbd0d78e98e17}{Get\+V\+H\+KK} (int ip, int i)
+\begin{DoxyCompactList}\small\item\em Access V\+H\+KK content of event. \end{DoxyCompactList}\item 
+int \hyperlink{class_t_djangoh_aaa275337568bcd47d87a63f1de688d27}{Get\+I\+D\+P\+H\+EP} (int i)
+\begin{DoxyCompactList}\small\item\em Access I\+D\+P\+H\+EP content of event. \end{DoxyCompactList}\item 
+int \hyperlink{class_t_djangoh_a381b6da1d6ef7145d9b4e49afb44a654}{Get\+Channel} ()
+\begin{DoxyCompactList}\small\item\em Access sampling channel from Djangoh. \end{DoxyCompactList}\item 
 void \hyperlink{class_t_djangoh_adf5acc5294013735f2475d4ce8ccf012}{Clean\+\_\+\+File} ()
 \begin{DoxyCompactList}\small\item\em Clean files created by djangoh. \end{DoxyCompactList}\item 
 \hyperlink{struct_lujets__t}{Lujets\+\_\+t} $\ast$ \hyperlink{class_t_djangoh_a2572e682379a304f84f21840d488fa0c}{Get\+Lujets} ()
@@ -58,21 +128,21 @@ int \hyperlink{class_t_djangoh_a501e50bbb1ad6a75014fd7c555313b74}{GetN} ()
 int \hyperlink{class_t_djangoh_afb58be11a10e8a6a4b442ea0fe4e16f5}{Get\+N\+P\+AD} ()
 \begin{DoxyCompactList}\small\item\em Recover. \end{DoxyCompactList}\item 
 int \hyperlink{class_t_djangoh_aaf2c94dbb8382bbd3b7ed1530a8ac878}{GetK} (int ip, int i)
-\begin{DoxyCompactList}\small\item\em Recover the K\mbox{[}i-\/1\mbox{]}\mbox{[}ip-\/1\mbox{]} element. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Access K content of event. \end{DoxyCompactList}\item 
 double \hyperlink{class_t_djangoh_a2bc14d05d493e604f9f7fef847c19c9b}{GetP} (int ip, int i)
-\begin{DoxyCompactList}\small\item\em Recover the P\mbox{[}i-\/1\mbox{]}\mbox{[}ip-\/1\mbox{]} element. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Access P content of event. \end{DoxyCompactList}\item 
 double \hyperlink{class_t_djangoh_a4993a87fef8917b9ed8a55811aa2daf6}{GetV} (int ip, int i)
-\begin{DoxyCompactList}\small\item\em Recover the V\mbox{[}i-\/1\mbox{]}\mbox{[}ip-\/1\mbox{]} element. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Access V content of event. \end{DoxyCompactList}\item 
 void \hyperlink{class_t_djangoh_ac15b9862e954349fd9f0911c71e0e664}{SetN} (int n)
 \begin{DoxyCompactList}\small\item\em Set the number of particles. \end{DoxyCompactList}\item 
 void \hyperlink{class_t_djangoh_a0ed7bb7e7433a6385b5838ce519168a2}{Set\+N\+P\+AD} (int n)
 \begin{DoxyCompactList}\small\item\em Set N\+P\+AD. \end{DoxyCompactList}\item 
 void \hyperlink{class_t_djangoh_a045a7fabe350589453e240bff98ca54b}{SetK} (int ip, int i, int k)
-\begin{DoxyCompactList}\small\item\em Set the K\mbox{[}i-\/1\mbox{]}\mbox{[}ip-\/1\mbox{]} element. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Set K content of event. \end{DoxyCompactList}\item 
 void \hyperlink{class_t_djangoh_aa9cfa62ac6bf01a7f5214cc62cdae34c}{SetP} (int ip, int i, double p)
-\begin{DoxyCompactList}\small\item\em Set the P\mbox{[}i-\/1\mbox{]}\mbox{[}ip-\/1\mbox{]} element. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Set P content of event. \end{DoxyCompactList}\item 
 void \hyperlink{class_t_djangoh_a472e228f316f1473c940dfa37c22637c}{SetV} (int ip, int i, double v)
-\begin{DoxyCompactList}\small\item\em Set the V\mbox{[}i-\/1\mbox{]}\mbox{[}ip-\/1\mbox{]} element. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Set V content of event. \end{DoxyCompactList}\item 
 \hyperlink{struct_djkin__t}{Djkin\+\_\+t} $\ast$ \hyperlink{class_t_djangoh_a4f5a22f9af97e7c84660c94cd354f780}{Get\+Djkin} ()
 \item 
 double \hyperlink{class_t_djangoh_aa2d4a28a97826cf32b9d623c581da9de}{GetX} ()
@@ -106,36 +176,6 @@ void \hyperlink{class_t_djangoh_a13173ef3490a98d8488ce7421905284c}{Set\+X\+H\+AD
 void \hyperlink{class_t_djangoh_a2dc4b62cd66dd41e8ae3d62965e36617}{Set\+Y\+H\+AD} (double y)
 \item 
 void \hyperlink{class_t_djangoh_a0066b103b2f779d8ed302fd77f42ee5e}{Set\+Q2\+H\+AD} (double q)
-\item 
-double \hyperlink{class_t_djangoh_a6c3ac520ed9c8c8eb0e80f3dda7eb146}{Get\+Sigtot} ()
-\item 
-double \hyperlink{class_t_djangoh_af888193a486499c7b019b0da80eae760}{Get\+Sigtrr} ()
-\item 
-void \hyperlink{class_t_djangoh_aa78f3a43ed71499a9efe9e87cc22d668}{Write\+F\+S\+In\+File} ()
-\item 
-void \hyperlink{class_t_djangoh_ade1e9ff8b29d2b95d24a22c3474a7ba6}{Clean\+F\+S\+File} ()
-\item 
-void \hyperlink{class_t_djangoh_a6995df5cd413a9e998fe8c0836004363}{Set\+Beam} (double p\+BeamE, double p\+Pol)
-\item 
-void \hyperlink{class_t_djangoh_ae1c46a20056315d4c43c8a4f72eb2f19}{Set\+Grid\+Opt} (double p\+Gd\+Mean, double p\+Gd\+Std\+Dev, int p\+Gd\+Size)
-\item 
-void \hyperlink{class_t_djangoh_a87690d78d0b95de8851a5a801cc172e5}{Set\+G\+S\+W\+Param} (int p\+Lparin1, int p\+Lparin2, int p\+Lparin3, int p\+Lparin4, int p\+Lparin5, int p\+Lparin6, int p\+Lparin7, int p\+Lparin8, int p\+Lparin9, int p\+Lparin10, int p\+Lparin11)
-\item 
-void \hyperlink{class_t_djangoh_afaea9aa0144bded9b0fa1fb85b4cbb36}{Set\+Egam\+Min} (double p\+Egam\+Min)
-\item 
-void \hyperlink{class_t_djangoh_a0dbc06c203a2e4b29cf6fea815ee99b3}{Set\+Int\+Opt\+NC} (int p\+Inc2, int p\+Inc31, int p\+Inc32, int p\+Inc33, int p\+Inc34, int p\+Iel2, int p\+Iel31, int p\+Iel32, int p\+Iel33)
-\item 
-void \hyperlink{class_t_djangoh_adbec2d27a74ade279346a72d50b7e52a}{Set\+Int\+Opt\+CC} (int p\+Icc2, int p\+Icc31, int p\+Icc32, int p\+Icc33)
-\item 
-void \hyperlink{class_t_djangoh_a5dd265d2eb4660fb72c8f8fb477b57b1}{Set\+Sam\+Opt\+NC} (int p\+Isnc2, int p\+Isnc31, int p\+Isnc32, int p\+Isnc33, int p\+Isnc34, int p\+Isel2, int p\+Isel31, int p\+Isel32, int p\+Isel33)
-\item 
-void \hyperlink{class_t_djangoh_a6fca9ddb25324ad4697c1e29e8789f0c}{Set\+Sam\+Opt\+CC} (int p\+Iscc2, int p\+Iscc31, int p\+Iscc32, int p\+Iscc33)
-\item 
-void \hyperlink{class_t_djangoh_ad619dbb20d8cdc822f664e434ecad0aa}{Set\+Nucleus} (double p\+Epro, double p\+Hpolar, int p\+Hna, int p\+Hnz)
-\item 
-void \hyperlink{class_t_djangoh_a163b31acdd2a9b30095cb72840c3404b}{Set\+Struct\+Func} (int p\+Ilqmod, int p\+Ilib, int p\+Icode)
-\item 
-void \hyperlink{class_t_djangoh_aef7574d33f10d8ac0f0e2cd88a02cf29}{Set\+Verboze} (int p\+Verboz)
 \end{DoxyCompactItemize}
 \subsection*{Static Public Member Functions}
 \begin{DoxyCompactItemize}
@@ -231,6 +271,10 @@ Clean files created by djangoh.
 \subsubsection{\texorpdfstring{Clean\+F\+S\+File()}{CleanFSFile()}}
 {\footnotesize\ttfamily void T\+Djangoh\+::\+Clean\+F\+S\+File (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
+
+
+Remove final state file. 
+
 \mbox{\Hypertarget{class_t_djangoh_af58a4c6bb944a4ce79cc538829e490e8}\label{class_t_djangoh_af58a4c6bb944a4ce79cc538829e490e8}} 
 \index{T\+Djangoh@{T\+Djangoh}!Configure@{Configure}}
 \index{Configure@{Configure}!T\+Djangoh@{T\+Djangoh}}
@@ -266,12 +310,154 @@ Print a recap of the generation made.
 
 Generation of an event. 
 
+\mbox{\Hypertarget{class_t_djangoh_a62b52fce9e36c0c7296fc1e519b1b902}\label{class_t_djangoh_a62b52fce9e36c0c7296fc1e519b1b902}} 
+\index{T\+Djangoh@{T\+Djangoh}!Get\+Beam\+Polar@{Get\+Beam\+Polar}}
+\index{Get\+Beam\+Polar@{Get\+Beam\+Polar}!T\+Djangoh@{T\+Djangoh}}
+\subsubsection{\texorpdfstring{Get\+Beam\+Polar()}{GetBeamPolar()}}
+{\footnotesize\ttfamily double T\+Djangoh\+::\+Get\+Beam\+Polar (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Access beam polarization. 
+
+\begin{DoxyReturn}{Returns}
+Beam polarization 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_t_djangoh_a2ed9a38fa1593d5a6a6e2c33b2912d1b}\label{class_t_djangoh_a2ed9a38fa1593d5a6a6e2c33b2912d1b}} 
+\index{T\+Djangoh@{T\+Djangoh}!Get\+Beam\+Type@{Get\+Beam\+Type}}
+\index{Get\+Beam\+Type@{Get\+Beam\+Type}!T\+Djangoh@{T\+Djangoh}}
+\subsubsection{\texorpdfstring{Get\+Beam\+Type()}{GetBeamType()}}
+{\footnotesize\ttfamily int T\+Djangoh\+::\+Get\+Beam\+Type (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Access beam particle type. 
+
+\begin{DoxyReturn}{Returns}
+Beam particle type 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_t_djangoh_a381b6da1d6ef7145d9b4e49afb44a654}\label{class_t_djangoh_a381b6da1d6ef7145d9b4e49afb44a654}} 
+\index{T\+Djangoh@{T\+Djangoh}!Get\+Channel@{Get\+Channel}}
+\index{Get\+Channel@{Get\+Channel}!T\+Djangoh@{T\+Djangoh}}
+\subsubsection{\texorpdfstring{Get\+Channel()}{GetChannel()}}
+{\footnotesize\ttfamily int T\+Djangoh\+::\+Get\+Channel (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Access sampling channel from Djangoh. 
+
+\begin{DoxyReturn}{Returns}
+Sampling channel number 
+\end{DoxyReturn}
 \mbox{\Hypertarget{class_t_djangoh_a4f5a22f9af97e7c84660c94cd354f780}\label{class_t_djangoh_a4f5a22f9af97e7c84660c94cd354f780}} 
 \index{T\+Djangoh@{T\+Djangoh}!Get\+Djkin@{Get\+Djkin}}
 \index{Get\+Djkin@{Get\+Djkin}!T\+Djangoh@{T\+Djangoh}}
 \subsubsection{\texorpdfstring{Get\+Djkin()}{GetDjkin()}}
 {\footnotesize\ttfamily \hyperlink{struct_djkin__t}{Djkin\+\_\+t}$\ast$ T\+Djangoh\+::\+Get\+Djkin (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
+\mbox{\Hypertarget{class_t_djangoh_a47b4a219c93cbcad58a82bfab9649a42}\label{class_t_djangoh_a47b4a219c93cbcad58a82bfab9649a42}} 
+\index{T\+Djangoh@{T\+Djangoh}!Get\+Egam\+Min@{Get\+Egam\+Min}}
+\index{Get\+Egam\+Min@{Get\+Egam\+Min}!T\+Djangoh@{T\+Djangoh}}
+\subsubsection{\texorpdfstring{Get\+Egam\+Min()}{GetEgamMin()}}
+{\footnotesize\ttfamily double T\+Djangoh\+::\+Get\+Egam\+Min (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Access cutoff energy value. 
+
+\begin{DoxyReturn}{Returns}
+Cutoff energy value 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_t_djangoh_a74a77949c408cc303ec5e90482b1e639}\label{class_t_djangoh_a74a77949c408cc303ec5e90482b1e639}} 
+\index{T\+Djangoh@{T\+Djangoh}!Get\+Gd\+Opt@{Get\+Gd\+Opt}}
+\index{Get\+Gd\+Opt@{Get\+Gd\+Opt}!T\+Djangoh@{T\+Djangoh}}
+\subsubsection{\texorpdfstring{Get\+Gd\+Opt()}{GetGdOpt()}}
+{\footnotesize\ttfamily double T\+Djangoh\+::\+Get\+Gd\+Opt (\begin{DoxyParamCaption}\item[{int}]{i }\end{DoxyParamCaption})}
+
+
+
+Access cross-\/section grid values. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em i} & \+: Cross-\/section grid value number (in the order as in the manual) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Cross-\/section grid value 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_t_djangoh_ac58587b988731552d41321364c30748d}\label{class_t_djangoh_ac58587b988731552d41321364c30748d}} 
+\index{T\+Djangoh@{T\+Djangoh}!Get\+Gsw@{Get\+Gsw}}
+\index{Get\+Gsw@{Get\+Gsw}!T\+Djangoh@{T\+Djangoh}}
+\subsubsection{\texorpdfstring{Get\+Gsw()}{GetGsw()}}
+{\footnotesize\ttfamily int T\+Djangoh\+::\+Get\+Gsw (\begin{DoxyParamCaption}\item[{int}]{i }\end{DoxyParamCaption})}
+
+
+
+Access EW parameters values. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em i} & \+: EW parameter value number (in the order as in the manual) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+EW parameter value 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_t_djangoh_aaa275337568bcd47d87a63f1de688d27}\label{class_t_djangoh_aaa275337568bcd47d87a63f1de688d27}} 
+\index{T\+Djangoh@{T\+Djangoh}!Get\+I\+D\+P\+H\+EP@{Get\+I\+D\+P\+H\+EP}}
+\index{Get\+I\+D\+P\+H\+EP@{Get\+I\+D\+P\+H\+EP}!T\+Djangoh@{T\+Djangoh}}
+\subsubsection{\texorpdfstring{Get\+I\+D\+P\+H\+E\+P()}{GetIDPHEP()}}
+{\footnotesize\ttfamily int T\+Djangoh\+::\+Get\+I\+D\+P\+H\+EP (\begin{DoxyParamCaption}\item[{int}]{i }\end{DoxyParamCaption})}
+
+
+
+Access I\+D\+P\+H\+EP content of event. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em i} & \+: index \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+I\+D\+P\+H\+E\+P(i) 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_t_djangoh_a39b356c5689222e6c82172e9b4954fe1}\label{class_t_djangoh_a39b356c5689222e6c82172e9b4954fe1}} 
+\index{T\+Djangoh@{T\+Djangoh}!Get\+Int\+Opt\+CC@{Get\+Int\+Opt\+CC}}
+\index{Get\+Int\+Opt\+CC@{Get\+Int\+Opt\+CC}!T\+Djangoh@{T\+Djangoh}}
+\subsubsection{\texorpdfstring{Get\+Int\+Opt\+C\+C()}{GetIntOptCC()}}
+{\footnotesize\ttfamily int T\+Djangoh\+::\+Get\+Int\+Opt\+CC (\begin{DoxyParamCaption}\item[{int}]{i }\end{DoxyParamCaption})}
+
+
+
+Access contribution to CC interactions values. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em i} & \+: Contribution value number (in the order as in the manual) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Contribution value 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_t_djangoh_aea74b082287a6870a27b07217832768f}\label{class_t_djangoh_aea74b082287a6870a27b07217832768f}} 
+\index{T\+Djangoh@{T\+Djangoh}!Get\+Int\+Opt\+NC@{Get\+Int\+Opt\+NC}}
+\index{Get\+Int\+Opt\+NC@{Get\+Int\+Opt\+NC}!T\+Djangoh@{T\+Djangoh}}
+\subsubsection{\texorpdfstring{Get\+Int\+Opt\+N\+C()}{GetIntOptNC()}}
+{\footnotesize\ttfamily int T\+Djangoh\+::\+Get\+Int\+Opt\+NC (\begin{DoxyParamCaption}\item[{int}]{i }\end{DoxyParamCaption})}
+
+
+
+Access contribution to NC interactions values. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em i} & \+: Contribution value number (in the order as in the manual) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Contribution value 
+\end{DoxyReturn}
 \mbox{\Hypertarget{class_t_djangoh_aaf2c94dbb8382bbd3b7ed1530a8ac878}\label{class_t_djangoh_aaf2c94dbb8382bbd3b7ed1530a8ac878}} 
 \index{T\+Djangoh@{T\+Djangoh}!GetK@{GetK}}
 \index{GetK@{GetK}!T\+Djangoh@{T\+Djangoh}}
@@ -280,17 +466,35 @@ Generation of an event.
 
 
 
-Recover the K\mbox{[}i-\/1\mbox{]}\mbox{[}ip-\/1\mbox{]} element. 
+Access K content of event. 
 
 
 \begin{DoxyParams}{Parameters}
 {\em ip} & \+: column index \\
 \hline
-{\em i} & \+: line index \\
+{\em i} & \+: row index \\
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
-K\mbox{[}i-\/1\mbox{]}\mbox{[}ip-\/1\mbox{]} 
+K(ip,i) 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_t_djangoh_a6baf26c760e0fc2f7bfc802fe7b14093}\label{class_t_djangoh_a6baf26c760e0fc2f7bfc802fe7b14093}} 
+\index{T\+Djangoh@{T\+Djangoh}!Get\+Kinem\+Cut@{Get\+Kinem\+Cut}}
+\index{Get\+Kinem\+Cut@{Get\+Kinem\+Cut}!T\+Djangoh@{T\+Djangoh}}
+\subsubsection{\texorpdfstring{Get\+Kinem\+Cut()}{GetKinemCut()}}
+{\footnotesize\ttfamily double T\+Djangoh\+::\+Get\+Kinem\+Cut (\begin{DoxyParamCaption}\item[{int}]{i }\end{DoxyParamCaption})}
+
+
+
+Access kinematical cuts. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em i} & \+: Kinematical cut number (in the order as in the manual) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Cut value 
 \end{DoxyReturn}
 \mbox{\Hypertarget{class_t_djangoh_a2572e682379a304f84f21840d488fa0c}\label{class_t_djangoh_a2572e682379a304f84f21840d488fa0c}} 
 \index{T\+Djangoh@{T\+Djangoh}!Get\+Lujets@{Get\+Lujets}}
@@ -339,17 +543,37 @@ N\+P\+AD
 
 
 
-Recover the P\mbox{[}i-\/1\mbox{]}\mbox{[}ip-\/1\mbox{]} element. 
+Access P content of event. 
 
 
 \begin{DoxyParams}{Parameters}
 {\em ip} & \+: column index \\
 \hline
-{\em i} & \+: line index \\
+{\em i} & \+: row index \\
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
-P\mbox{[}i-\/1\mbox{]}\mbox{[}ip-\/1\mbox{]} 
+P(ip,i) 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_t_djangoh_acf17f3e8d6a10ebe25f57f75662a1817}\label{class_t_djangoh_acf17f3e8d6a10ebe25f57f75662a1817}} 
+\index{T\+Djangoh@{T\+Djangoh}!Get\+P\+H\+EP@{Get\+P\+H\+EP}}
+\index{Get\+P\+H\+EP@{Get\+P\+H\+EP}!T\+Djangoh@{T\+Djangoh}}
+\subsubsection{\texorpdfstring{Get\+P\+H\+E\+P()}{GetPHEP()}}
+{\footnotesize\ttfamily double T\+Djangoh\+::\+Get\+P\+H\+EP (\begin{DoxyParamCaption}\item[{int}]{ip,  }\item[{int}]{i }\end{DoxyParamCaption})}
+
+
+
+Access P\+H\+EP content of event. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ip} & \+: Column index \\
+\hline
+{\em i} & \+: row index \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+P\+H\+E\+P(ip,i) 
 \end{DoxyReturn}
 \mbox{\Hypertarget{class_t_djangoh_afce6f0bfed90b20eb0f9310ae107291d}\label{class_t_djangoh_afce6f0bfed90b20eb0f9310ae107291d}} 
 \index{T\+Djangoh@{T\+Djangoh}!Get\+Q2@{Get\+Q2}}
@@ -369,12 +593,57 @@ P\mbox{[}i-\/1\mbox{]}\mbox{[}ip-\/1\mbox{]}
 \subsubsection{\texorpdfstring{Get\+Sigtot()}{GetSigtot()}}
 {\footnotesize\ttfamily double T\+Djangoh\+::\+Get\+Sigtot (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
 
+
+
+Access total Cross-\/\+Section. 
+
+\begin{DoxyReturn}{Returns}
+Total Cross-\/\+Section 
+\end{DoxyReturn}
 \mbox{\Hypertarget{class_t_djangoh_af888193a486499c7b019b0da80eae760}\label{class_t_djangoh_af888193a486499c7b019b0da80eae760}} 
 \index{T\+Djangoh@{T\+Djangoh}!Get\+Sigtrr@{Get\+Sigtrr}}
 \index{Get\+Sigtrr@{Get\+Sigtrr}!T\+Djangoh@{T\+Djangoh}}
 \subsubsection{\texorpdfstring{Get\+Sigtrr()}{GetSigtrr()}}
 {\footnotesize\ttfamily double T\+Djangoh\+::\+Get\+Sigtrr (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
 
+
+
+Access error on Cross-\/\+Section. 
+
+\begin{DoxyReturn}{Returns}
+Error on Cross-\/\+Section 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_t_djangoh_a31acc70811ad58a8986f7d04547e9213}\label{class_t_djangoh_a31acc70811ad58a8986f7d04547e9213}} 
+\index{T\+Djangoh@{T\+Djangoh}!Get\+Sophia@{Get\+Sophia}}
+\index{Get\+Sophia@{Get\+Sophia}!T\+Djangoh@{T\+Djangoh}}
+\subsubsection{\texorpdfstring{Get\+Sophia()}{GetSophia()}}
+{\footnotesize\ttfamily double T\+Djangoh\+::\+Get\+Sophia (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Access low W limit for Sophia value. 
+
+\begin{DoxyReturn}{Returns}
+Low W limit value 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_t_djangoh_a58e1925539d208ca8e00533b5ae52074}\label{class_t_djangoh_a58e1925539d208ca8e00533b5ae52074}} 
+\index{T\+Djangoh@{T\+Djangoh}!Get\+Struct\+Func@{Get\+Struct\+Func}}
+\index{Get\+Struct\+Func@{Get\+Struct\+Func}!T\+Djangoh@{T\+Djangoh}}
+\subsubsection{\texorpdfstring{Get\+Struct\+Func()}{GetStructFunc()}}
+{\footnotesize\ttfamily int T\+Djangoh\+::\+Get\+Struct\+Func (\begin{DoxyParamCaption}\item[{int}]{i }\end{DoxyParamCaption})}
+
+
+
+Access parametrization of structure functions values. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em i} & \+: Parameter value number (in the order as in the manual) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Parameter value 
+\end{DoxyReturn}
 \mbox{\Hypertarget{class_t_djangoh_a6e69090ac8581a1be96cac889cf5292b}\label{class_t_djangoh_a6e69090ac8581a1be96cac889cf5292b}} 
 \index{T\+Djangoh@{T\+Djangoh}!GetU@{GetU}}
 \index{GetU@{GetU}!T\+Djangoh@{T\+Djangoh}}
@@ -389,17 +658,50 @@ P\mbox{[}i-\/1\mbox{]}\mbox{[}ip-\/1\mbox{]}
 
 
 
-Recover the V\mbox{[}i-\/1\mbox{]}\mbox{[}ip-\/1\mbox{]} element. 
+Access V content of event. 
 
 
 \begin{DoxyParams}{Parameters}
 {\em ip} & \+: column index \\
 \hline
-{\em i} & \+: line index \\
+{\em i} & \+: row index \\
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
-V\mbox{[}i-\/1\mbox{]}\mbox{[}ip-\/1\mbox{]} 
+V(ip,i) 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_t_djangoh_a1caf80b8f7228dbc7818ac047de9b8b7}\label{class_t_djangoh_a1caf80b8f7228dbc7818ac047de9b8b7}} 
+\index{T\+Djangoh@{T\+Djangoh}!Get\+Verbose@{Get\+Verbose}}
+\index{Get\+Verbose@{Get\+Verbose}!T\+Djangoh@{T\+Djangoh}}
+\subsubsection{\texorpdfstring{Get\+Verbose()}{GetVerbose()}}
+{\footnotesize\ttfamily int T\+Djangoh\+::\+Get\+Verbose (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Get verbose value. 
+
+\begin{DoxyReturn}{Returns}
+Verbose value 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_t_djangoh_ab8bbab97c50a6a9f296fbd0d78e98e17}\label{class_t_djangoh_ab8bbab97c50a6a9f296fbd0d78e98e17}} 
+\index{T\+Djangoh@{T\+Djangoh}!Get\+V\+H\+KK@{Get\+V\+H\+KK}}
+\index{Get\+V\+H\+KK@{Get\+V\+H\+KK}!T\+Djangoh@{T\+Djangoh}}
+\subsubsection{\texorpdfstring{Get\+V\+H\+K\+K()}{GetVHKK()}}
+{\footnotesize\ttfamily double T\+Djangoh\+::\+Get\+V\+H\+KK (\begin{DoxyParamCaption}\item[{int}]{ip,  }\item[{int}]{i }\end{DoxyParamCaption})}
+
+
+
+Access V\+H\+KK content of event. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ip} & \+: Column index \\
+\hline
+{\em i} & \+: row index \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+V\+H\+K\+K(ip,i) 
 \end{DoxyReturn}
 \mbox{\Hypertarget{class_t_djangoh_a94c252e7c5375e9641ad5ea048098c06}\label{class_t_djangoh_a94c252e7c5375e9641ad5ea048098c06}} 
 \index{T\+Djangoh@{T\+Djangoh}!Get\+W2@{Get\+W2}}
@@ -449,7 +751,7 @@ Import particles from lujets\+\_\+ subroutine and copy it in T\+Clones\+Array$\a
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
-nparts \+: number of particles 
+Number of particles 
 \end{DoxyReturn}
 \mbox{\Hypertarget{class_t_djangoh_ac63f2c463b6a2fff98f256952aaf945f}\label{class_t_djangoh_ac63f2c463b6a2fff98f256952aaf945f}} 
 \index{T\+Djangoh@{T\+Djangoh}!Import\+Particles@{Import\+Particles}}
@@ -564,36 +866,145 @@ Reading of parameters in X\+ML file.
 \subsubsection{\texorpdfstring{Set\+Beam()}{SetBeam()}}
 {\footnotesize\ttfamily void T\+Djangoh\+::\+Set\+Beam (\begin{DoxyParamCaption}\item[{double}]{p\+BeamE,  }\item[{double}]{p\+Pol }\end{DoxyParamCaption})}
 
-\mbox{\Hypertarget{class_t_djangoh_afaea9aa0144bded9b0fa1fb85b4cbb36}\label{class_t_djangoh_afaea9aa0144bded9b0fa1fb85b4cbb36}} 
+
+
+Set beam energy and polarization. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em pvalue} & \+: Beam energy \\
+\hline
+{\em pvalue} & \+: Beam polarization \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_t_djangoh_a34a0415a20f61670164665904eeca25b}\label{class_t_djangoh_a34a0415a20f61670164665904eeca25b}} 
+\index{T\+Djangoh@{T\+Djangoh}!Set\+Beam\+Polar@{Set\+Beam\+Polar}}
+\index{Set\+Beam\+Polar@{Set\+Beam\+Polar}!T\+Djangoh@{T\+Djangoh}}
+\subsubsection{\texorpdfstring{Set\+Beam\+Polar()}{SetBeamPolar()}}
+{\footnotesize\ttfamily double T\+Djangoh\+::\+Set\+Beam\+Polar (\begin{DoxyParamCaption}\item[{double}]{pvalue }\end{DoxyParamCaption})}
+
+
+
+Set beam polarization. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em pvalue} & \+: Beam polarization \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_t_djangoh_af93ae6412c07af22bca887cbcbba5082}\label{class_t_djangoh_af93ae6412c07af22bca887cbcbba5082}} 
+\index{T\+Djangoh@{T\+Djangoh}!Set\+Beam\+Type@{Set\+Beam\+Type}}
+\index{Set\+Beam\+Type@{Set\+Beam\+Type}!T\+Djangoh@{T\+Djangoh}}
+\subsubsection{\texorpdfstring{Set\+Beam\+Type()}{SetBeamType()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily void T\+Djangoh\+::\+Set\+Beam\+Type (\begin{DoxyParamCaption}\item[{int}]{pvalue }\end{DoxyParamCaption})}
+
+
+
+Set beam particle type. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em pvalue} & \+: Particle ID \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_t_djangoh_a37c2f8994175d3181a7f6f5aae5797f1}\label{class_t_djangoh_a37c2f8994175d3181a7f6f5aae5797f1}} 
+\index{T\+Djangoh@{T\+Djangoh}!Set\+Beam\+Type@{Set\+Beam\+Type}}
+\index{Set\+Beam\+Type@{Set\+Beam\+Type}!T\+Djangoh@{T\+Djangoh}}
+\subsubsection{\texorpdfstring{Set\+Beam\+Type()}{SetBeamType()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily void T\+Djangoh\+::\+Set\+Beam\+Type (\begin{DoxyParamCaption}\item[{const char $\ast$}]{pvalue }\end{DoxyParamCaption})}
+
+
+
+Set beam particle type. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em pvalue} & \+: Particle name (eg. e-\/) \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_t_djangoh_ac296a00fee7971d387aa5127f726a649}\label{class_t_djangoh_ac296a00fee7971d387aa5127f726a649}} 
 \index{T\+Djangoh@{T\+Djangoh}!Set\+Egam\+Min@{Set\+Egam\+Min}}
 \index{Set\+Egam\+Min@{Set\+Egam\+Min}!T\+Djangoh@{T\+Djangoh}}
 \subsubsection{\texorpdfstring{Set\+Egam\+Min()}{SetEgamMin()}}
-{\footnotesize\ttfamily void T\+Djangoh\+::\+Set\+Egam\+Min (\begin{DoxyParamCaption}\item[{double}]{p\+Egam\+Min }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void T\+Djangoh\+::\+Set\+Egam\+Min (\begin{DoxyParamCaption}\item[{double}]{pvalue }\end{DoxyParamCaption})}
 
-\mbox{\Hypertarget{class_t_djangoh_ae1c46a20056315d4c43c8a4f72eb2f19}\label{class_t_djangoh_ae1c46a20056315d4c43c8a4f72eb2f19}} 
-\index{T\+Djangoh@{T\+Djangoh}!Set\+Grid\+Opt@{Set\+Grid\+Opt}}
-\index{Set\+Grid\+Opt@{Set\+Grid\+Opt}!T\+Djangoh@{T\+Djangoh}}
-\subsubsection{\texorpdfstring{Set\+Grid\+Opt()}{SetGridOpt()}}
-{\footnotesize\ttfamily void T\+Djangoh\+::\+Set\+Grid\+Opt (\begin{DoxyParamCaption}\item[{double}]{p\+Gd\+Mean,  }\item[{double}]{p\+Gd\+Std\+Dev,  }\item[{int}]{p\+Gd\+Size }\end{DoxyParamCaption})}
 
-\mbox{\Hypertarget{class_t_djangoh_a87690d78d0b95de8851a5a801cc172e5}\label{class_t_djangoh_a87690d78d0b95de8851a5a801cc172e5}} 
-\index{T\+Djangoh@{T\+Djangoh}!Set\+G\+S\+W\+Param@{Set\+G\+S\+W\+Param}}
-\index{Set\+G\+S\+W\+Param@{Set\+G\+S\+W\+Param}!T\+Djangoh@{T\+Djangoh}}
-\subsubsection{\texorpdfstring{Set\+G\+S\+W\+Param()}{SetGSWParam()}}
-{\footnotesize\ttfamily void T\+Djangoh\+::\+Set\+G\+S\+W\+Param (\begin{DoxyParamCaption}\item[{int}]{p\+Lparin1,  }\item[{int}]{p\+Lparin2,  }\item[{int}]{p\+Lparin3,  }\item[{int}]{p\+Lparin4,  }\item[{int}]{p\+Lparin5,  }\item[{int}]{p\+Lparin6,  }\item[{int}]{p\+Lparin7,  }\item[{int}]{p\+Lparin8,  }\item[{int}]{p\+Lparin9,  }\item[{int}]{p\+Lparin10,  }\item[{int}]{p\+Lparin11 }\end{DoxyParamCaption})}
 
-\mbox{\Hypertarget{class_t_djangoh_adbec2d27a74ade279346a72d50b7e52a}\label{class_t_djangoh_adbec2d27a74ade279346a72d50b7e52a}} 
+Set cutoff energy value. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em pvalue} & \+: Cutoff energy value \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_t_djangoh_abbbe8452bf4a894e8757e096fb104d90}\label{class_t_djangoh_abbbe8452bf4a894e8757e096fb104d90}} 
+\index{T\+Djangoh@{T\+Djangoh}!Set\+Gd\+Opt@{Set\+Gd\+Opt}}
+\index{Set\+Gd\+Opt@{Set\+Gd\+Opt}!T\+Djangoh@{T\+Djangoh}}
+\subsubsection{\texorpdfstring{Set\+Gd\+Opt()}{SetGdOpt()}}
+{\footnotesize\ttfamily void T\+Djangoh\+::\+Set\+Gd\+Opt (\begin{DoxyParamCaption}\item[{double}]{pvalue,  }\item[{int}]{i }\end{DoxyParamCaption})}
+
+
+
+Set cross-\/section grid values. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em pvalue} & \+: Cross-\/section grid value \\
+\hline
+{\em i} & \+: Cross-\/section grid value number (in the order as in the manual) \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_t_djangoh_acbd9827496878eed7768c97031a1c1d7}\label{class_t_djangoh_acbd9827496878eed7768c97031a1c1d7}} 
+\index{T\+Djangoh@{T\+Djangoh}!Set\+Gsw@{Set\+Gsw}}
+\index{Set\+Gsw@{Set\+Gsw}!T\+Djangoh@{T\+Djangoh}}
+\subsubsection{\texorpdfstring{Set\+Gsw()}{SetGsw()}}
+{\footnotesize\ttfamily void T\+Djangoh\+::\+Set\+Gsw (\begin{DoxyParamCaption}\item[{int}]{pvalue,  }\item[{int}]{i }\end{DoxyParamCaption})}
+
+
+
+Set EW parameters values. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em pvalue} & \+: EW parameter value \\
+\hline
+{\em i} & \+: EW parameter value number (in the order as in the manual) \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_t_djangoh_a7e37a7afc5c112a2bd061f5e73973f78}\label{class_t_djangoh_a7e37a7afc5c112a2bd061f5e73973f78}} 
 \index{T\+Djangoh@{T\+Djangoh}!Set\+Int\+Opt\+CC@{Set\+Int\+Opt\+CC}}
 \index{Set\+Int\+Opt\+CC@{Set\+Int\+Opt\+CC}!T\+Djangoh@{T\+Djangoh}}
 \subsubsection{\texorpdfstring{Set\+Int\+Opt\+C\+C()}{SetIntOptCC()}}
-{\footnotesize\ttfamily void T\+Djangoh\+::\+Set\+Int\+Opt\+CC (\begin{DoxyParamCaption}\item[{int}]{p\+Icc2,  }\item[{int}]{p\+Icc31,  }\item[{int}]{p\+Icc32,  }\item[{int}]{p\+Icc33 }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void T\+Djangoh\+::\+Set\+Int\+Opt\+CC (\begin{DoxyParamCaption}\item[{int}]{pvalue,  }\item[{int}]{i }\end{DoxyParamCaption})}
 
-\mbox{\Hypertarget{class_t_djangoh_a0dbc06c203a2e4b29cf6fea815ee99b3}\label{class_t_djangoh_a0dbc06c203a2e4b29cf6fea815ee99b3}} 
+
+
+Set contribution to CC interactions values. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em pvalue} & \+: Contribution value \\
+\hline
+{\em i} & \+: Contribution value number (in the order as in the manual) \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_t_djangoh_a867c7f0d6deb79773b4529e496a2ee23}\label{class_t_djangoh_a867c7f0d6deb79773b4529e496a2ee23}} 
 \index{T\+Djangoh@{T\+Djangoh}!Set\+Int\+Opt\+NC@{Set\+Int\+Opt\+NC}}
 \index{Set\+Int\+Opt\+NC@{Set\+Int\+Opt\+NC}!T\+Djangoh@{T\+Djangoh}}
 \subsubsection{\texorpdfstring{Set\+Int\+Opt\+N\+C()}{SetIntOptNC()}}
-{\footnotesize\ttfamily void T\+Djangoh\+::\+Set\+Int\+Opt\+NC (\begin{DoxyParamCaption}\item[{int}]{p\+Inc2,  }\item[{int}]{p\+Inc31,  }\item[{int}]{p\+Inc32,  }\item[{int}]{p\+Inc33,  }\item[{int}]{p\+Inc34,  }\item[{int}]{p\+Iel2,  }\item[{int}]{p\+Iel31,  }\item[{int}]{p\+Iel32,  }\item[{int}]{p\+Iel33 }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void T\+Djangoh\+::\+Set\+Int\+Opt\+NC (\begin{DoxyParamCaption}\item[{int}]{pvalue,  }\item[{int}]{i }\end{DoxyParamCaption})}
 
+
+
+Set contribution to NC interactions values. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em pvalue} & \+: Contribution value \\
+\hline
+{\em i} & \+: Contribution value number (in the order as in the manual) \\
+\hline
+\end{DoxyParams}
 \mbox{\Hypertarget{class_t_djangoh_a045a7fabe350589453e240bff98ca54b}\label{class_t_djangoh_a045a7fabe350589453e240bff98ca54b}} 
 \index{T\+Djangoh@{T\+Djangoh}!SetK@{SetK}}
 \index{SetK@{SetK}!T\+Djangoh@{T\+Djangoh}}
@@ -602,15 +1013,32 @@ Reading of parameters in X\+ML file.
 
 
 
-Set the K\mbox{[}i-\/1\mbox{]}\mbox{[}ip-\/1\mbox{]} element. 
+Set K content of event. 
 
 
 \begin{DoxyParams}{Parameters}
 {\em ip} & \+: column index \\
 \hline
-{\em i} & \+: line index \\
+{\em i} & \+: row index \\
 \hline
-{\em k} & \+: value of K\mbox{[}i-\/1\mbox{]}\mbox{[}ip-\/1\mbox{]} \\
+{\em k} & \+: value of K(ip,i) \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_t_djangoh_acb1c8c1ead16a0fbadd733b117cc0445}\label{class_t_djangoh_acb1c8c1ead16a0fbadd733b117cc0445}} 
+\index{T\+Djangoh@{T\+Djangoh}!Set\+Kinem\+Cut@{Set\+Kinem\+Cut}}
+\index{Set\+Kinem\+Cut@{Set\+Kinem\+Cut}!T\+Djangoh@{T\+Djangoh}}
+\subsubsection{\texorpdfstring{Set\+Kinem\+Cut()}{SetKinemCut()}}
+{\footnotesize\ttfamily void T\+Djangoh\+::\+Set\+Kinem\+Cut (\begin{DoxyParamCaption}\item[{double}]{pvalue,  }\item[{int}]{i }\end{DoxyParamCaption})}
+
+
+
+Set kinematical cuts. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em pvalue} & \+: Cut value \\
+\hline
+{\em i} & \+: Kinematical cut number (in the order as in the manual) \\
 \hline
 \end{DoxyParams}
 \mbox{\Hypertarget{class_t_djangoh_ac15b9862e954349fd9f0911c71e0e664}\label{class_t_djangoh_ac15b9862e954349fd9f0911c71e0e664}} 
@@ -643,12 +1071,27 @@ Set N\+P\+AD.
 {\em n} & \+: N\+P\+AD \\
 \hline
 \end{DoxyParams}
-\mbox{\Hypertarget{class_t_djangoh_ad619dbb20d8cdc822f664e434ecad0aa}\label{class_t_djangoh_ad619dbb20d8cdc822f664e434ecad0aa}} 
+\mbox{\Hypertarget{class_t_djangoh_ae37cb56d62427ac672155e0817f6849e}\label{class_t_djangoh_ae37cb56d62427ac672155e0817f6849e}} 
 \index{T\+Djangoh@{T\+Djangoh}!Set\+Nucleus@{Set\+Nucleus}}
 \index{Set\+Nucleus@{Set\+Nucleus}!T\+Djangoh@{T\+Djangoh}}
 \subsubsection{\texorpdfstring{Set\+Nucleus()}{SetNucleus()}}
-{\footnotesize\ttfamily void T\+Djangoh\+::\+Set\+Nucleus (\begin{DoxyParamCaption}\item[{double}]{p\+Epro,  }\item[{double}]{p\+Hpolar,  }\item[{int}]{p\+Hna,  }\item[{int}]{p\+Hnz }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void T\+Djangoh\+::\+Set\+Nucleus (\begin{DoxyParamCaption}\item[{double}]{p\+Hpolar,  }\item[{int}]{p\+Hna,  }\item[{int}]{p\+Hnz,  }\item[{double}]{p\+Epro = {\ttfamily 0} }\end{DoxyParamCaption})}
 
+
+
+Set nucleus properties values. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em p\+Hpolar} & \+: Polarisation of the nucleus \\
+\hline
+{\em p\+Hna} & \+: A of the nucleus \\
+\hline
+{\em p\+Hnz} & \+: Z of the nucleus \\
+\hline
+{\em p\+Epro} & \+: Energy of the nucleus \\
+\hline
+\end{DoxyParams}
 \mbox{\Hypertarget{class_t_djangoh_aa9cfa62ac6bf01a7f5214cc62cdae34c}\label{class_t_djangoh_aa9cfa62ac6bf01a7f5214cc62cdae34c}} 
 \index{T\+Djangoh@{T\+Djangoh}!SetP@{SetP}}
 \index{SetP@{SetP}!T\+Djangoh@{T\+Djangoh}}
@@ -657,30 +1100,15 @@ Set N\+P\+AD.
 
 
 
-Set the P\mbox{[}i-\/1\mbox{]}\mbox{[}ip-\/1\mbox{]} element. 
+Set P content of event. 
 
 
 \begin{DoxyParams}{Parameters}
 {\em ip} & \+: column index \\
 \hline
-{\em i} & \+: line index \\
+{\em i} & \+: row index \\
 \hline
-{\em p} & \+: value of P\mbox{[}i-\/1\mbox{]}\mbox{[}ip-\/1\mbox{]} \\
-\hline
-\end{DoxyParams}
-\mbox{\Hypertarget{class_t_djangoh_a90712a2b5457a05ffb78faca2cc3a2b9}\label{class_t_djangoh_a90712a2b5457a05ffb78faca2cc3a2b9}} 
-\index{T\+Djangoh@{T\+Djangoh}!Set\+Particle@{Set\+Particle}}
-\index{Set\+Particle@{Set\+Particle}!T\+Djangoh@{T\+Djangoh}}
-\subsubsection{\texorpdfstring{Set\+Particle()}{SetParticle()}}
-{\footnotesize\ttfamily void T\+Djangoh\+::\+Set\+Particle (\begin{DoxyParamCaption}\item[{const char $\ast$}]{pname }\end{DoxyParamCaption})}
-
-
-
-Choice of beam particle. 
-
-
-\begin{DoxyParams}{Parameters}
-{\em pname} & \+: particle (e+/e-\//mu+/mu-\/) \\
+{\em p} & \+: value of P(ip,i) \\
 \hline
 \end{DoxyParams}
 \mbox{\Hypertarget{class_t_djangoh_abecf2835ceecd72f0847544b72fd837e}\label{class_t_djangoh_abecf2835ceecd72f0847544b72fd837e}} 
@@ -695,24 +1123,72 @@ Choice of beam particle.
 \subsubsection{\texorpdfstring{Set\+Q2\+H\+A\+D()}{SetQ2HAD()}}
 {\footnotesize\ttfamily void T\+Djangoh\+::\+Set\+Q2\+H\+AD (\begin{DoxyParamCaption}\item[{double}]{q }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
-\mbox{\Hypertarget{class_t_djangoh_a6fca9ddb25324ad4697c1e29e8789f0c}\label{class_t_djangoh_a6fca9ddb25324ad4697c1e29e8789f0c}} 
+\mbox{\Hypertarget{class_t_djangoh_acc7a3124293fe30c297fb7702bade781}\label{class_t_djangoh_acc7a3124293fe30c297fb7702bade781}} 
 \index{T\+Djangoh@{T\+Djangoh}!Set\+Sam\+Opt\+CC@{Set\+Sam\+Opt\+CC}}
 \index{Set\+Sam\+Opt\+CC@{Set\+Sam\+Opt\+CC}!T\+Djangoh@{T\+Djangoh}}
 \subsubsection{\texorpdfstring{Set\+Sam\+Opt\+C\+C()}{SetSamOptCC()}}
-{\footnotesize\ttfamily void T\+Djangoh\+::\+Set\+Sam\+Opt\+CC (\begin{DoxyParamCaption}\item[{int}]{p\+Iscc2,  }\item[{int}]{p\+Iscc31,  }\item[{int}]{p\+Iscc32,  }\item[{int}]{p\+Iscc33 }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void T\+Djangoh\+::\+Set\+Sam\+Opt\+CC (\begin{DoxyParamCaption}\item[{int}]{pvalue,  }\item[{int}]{i }\end{DoxyParamCaption})}
 
-\mbox{\Hypertarget{class_t_djangoh_a5dd265d2eb4660fb72c8f8fb477b57b1}\label{class_t_djangoh_a5dd265d2eb4660fb72c8f8fb477b57b1}} 
+
+
+Set inclusion of CC cross-\/section to sampling values. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em pvalue} & \+: Inclusion value \\
+\hline
+{\em i} & \+: Inclusion value number (in the order as in the manual) \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_t_djangoh_a6e6fa7e1826bd4e86be44d80a6bd6854}\label{class_t_djangoh_a6e6fa7e1826bd4e86be44d80a6bd6854}} 
 \index{T\+Djangoh@{T\+Djangoh}!Set\+Sam\+Opt\+NC@{Set\+Sam\+Opt\+NC}}
 \index{Set\+Sam\+Opt\+NC@{Set\+Sam\+Opt\+NC}!T\+Djangoh@{T\+Djangoh}}
 \subsubsection{\texorpdfstring{Set\+Sam\+Opt\+N\+C()}{SetSamOptNC()}}
-{\footnotesize\ttfamily void T\+Djangoh\+::\+Set\+Sam\+Opt\+NC (\begin{DoxyParamCaption}\item[{int}]{p\+Isnc2,  }\item[{int}]{p\+Isnc31,  }\item[{int}]{p\+Isnc32,  }\item[{int}]{p\+Isnc33,  }\item[{int}]{p\+Isnc34,  }\item[{int}]{p\+Isel2,  }\item[{int}]{p\+Isel31,  }\item[{int}]{p\+Isel32,  }\item[{int}]{p\+Isel33 }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void T\+Djangoh\+::\+Set\+Sam\+Opt\+NC (\begin{DoxyParamCaption}\item[{int}]{pvalue,  }\item[{int}]{i }\end{DoxyParamCaption})}
 
-\mbox{\Hypertarget{class_t_djangoh_a163b31acdd2a9b30095cb72840c3404b}\label{class_t_djangoh_a163b31acdd2a9b30095cb72840c3404b}} 
+
+
+Set inclusion of NC cross-\/section to sampling values. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em pvalue} & \+: Inclusion value \\
+\hline
+{\em i} & \+: Inclusion value number (in the order as in the manual) \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_t_djangoh_a12bd5515ab5db50b147810e06e98a0b8}\label{class_t_djangoh_a12bd5515ab5db50b147810e06e98a0b8}} 
+\index{T\+Djangoh@{T\+Djangoh}!Set\+Sophia@{Set\+Sophia}}
+\index{Set\+Sophia@{Set\+Sophia}!T\+Djangoh@{T\+Djangoh}}
+\subsubsection{\texorpdfstring{Set\+Sophia()}{SetSophia()}}
+{\footnotesize\ttfamily void T\+Djangoh\+::\+Set\+Sophia (\begin{DoxyParamCaption}\item[{double}]{pvalue }\end{DoxyParamCaption})}
+
+
+
+Set low W limit for Sophia value. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em pvalue} & \+: Low W limit value \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_t_djangoh_aa8331885aeb7880a63ebdfcf32919f9b}\label{class_t_djangoh_aa8331885aeb7880a63ebdfcf32919f9b}} 
 \index{T\+Djangoh@{T\+Djangoh}!Set\+Struct\+Func@{Set\+Struct\+Func}}
 \index{Set\+Struct\+Func@{Set\+Struct\+Func}!T\+Djangoh@{T\+Djangoh}}
 \subsubsection{\texorpdfstring{Set\+Struct\+Func()}{SetStructFunc()}}
-{\footnotesize\ttfamily void T\+Djangoh\+::\+Set\+Struct\+Func (\begin{DoxyParamCaption}\item[{int}]{p\+Ilqmod,  }\item[{int}]{p\+Ilib,  }\item[{int}]{p\+Icode }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void T\+Djangoh\+::\+Set\+Struct\+Func (\begin{DoxyParamCaption}\item[{int}]{pvalue,  }\item[{int}]{i }\end{DoxyParamCaption})}
 
+
+
+Set parametrization of structure functions values. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em pvalue} & \+: Parameter value \\
+\hline
+{\em i} & \+: Parameter value number (in the order as in the manual) \\
+\hline
+\end{DoxyParams}
 \mbox{\Hypertarget{class_t_djangoh_a69cebdc5dc26bfd0def872a996da0650}\label{class_t_djangoh_a69cebdc5dc26bfd0def872a996da0650}} 
 \index{T\+Djangoh@{T\+Djangoh}!SetU@{SetU}}
 \index{SetU@{SetU}!T\+Djangoh@{T\+Djangoh}}
@@ -727,23 +1203,32 @@ Choice of beam particle.
 
 
 
-Set the V\mbox{[}i-\/1\mbox{]}\mbox{[}ip-\/1\mbox{]} element. 
+Set V content of event. 
 
 
 \begin{DoxyParams}{Parameters}
 {\em ip} & \+: column index \\
 \hline
-{\em i} & \+: line index \\
+{\em i} & \+: row index \\
 \hline
-{\em v} & \+: value of V\mbox{[}i-\/1\mbox{]}\mbox{[}ip-\/1\mbox{]} \\
+{\em v} & \+: value of V(ip,i) \\
 \hline
 \end{DoxyParams}
-\mbox{\Hypertarget{class_t_djangoh_aef7574d33f10d8ac0f0e2cd88a02cf29}\label{class_t_djangoh_aef7574d33f10d8ac0f0e2cd88a02cf29}} 
-\index{T\+Djangoh@{T\+Djangoh}!Set\+Verboze@{Set\+Verboze}}
-\index{Set\+Verboze@{Set\+Verboze}!T\+Djangoh@{T\+Djangoh}}
-\subsubsection{\texorpdfstring{Set\+Verboze()}{SetVerboze()}}
-{\footnotesize\ttfamily void T\+Djangoh\+::\+Set\+Verboze (\begin{DoxyParamCaption}\item[{int}]{p\+Verboz }\end{DoxyParamCaption})}
+\mbox{\Hypertarget{class_t_djangoh_a5129257c110777c1625049fb74f33e4b}\label{class_t_djangoh_a5129257c110777c1625049fb74f33e4b}} 
+\index{T\+Djangoh@{T\+Djangoh}!Set\+Verbose@{Set\+Verbose}}
+\index{Set\+Verbose@{Set\+Verbose}!T\+Djangoh@{T\+Djangoh}}
+\subsubsection{\texorpdfstring{Set\+Verbose()}{SetVerbose()}}
+{\footnotesize\ttfamily void T\+Djangoh\+::\+Set\+Verbose (\begin{DoxyParamCaption}\item[{int}]{pvalue }\end{DoxyParamCaption})}
 
+
+
+Set verbose value. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em pvalue} & \+: Verbose value \\
+\hline
+\end{DoxyParams}
 \mbox{\Hypertarget{class_t_djangoh_aea9a499dfc8cbca480f228b79a05d99a}\label{class_t_djangoh_aea9a499dfc8cbca480f228b79a05d99a}} 
 \index{T\+Djangoh@{T\+Djangoh}!Set\+W2@{Set\+W2}}
 \index{Set\+W2@{Set\+W2}!T\+Djangoh@{T\+Djangoh}}
@@ -779,6 +1264,16 @@ Set the V\mbox{[}i-\/1\mbox{]}\mbox{[}ip-\/1\mbox{]} element.
 \index{Write\+F\+S\+In\+File@{Write\+F\+S\+In\+File}!T\+Djangoh@{T\+Djangoh}}
 \subsubsection{\texorpdfstring{Write\+F\+S\+In\+File()}{WriteFSInFile()}}
 {\footnotesize\ttfamily void T\+Djangoh\+::\+Write\+F\+S\+In\+File (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Save final state infos in file. 
+
+\mbox{\Hypertarget{class_t_djangoh_ade135fa317b5678c048d417fcef573ae}\label{class_t_djangoh_ade135fa317b5678c048d417fcef573ae}} 
+\index{T\+Djangoh@{T\+Djangoh}!Write\+X\+M\+L\+File@{Write\+X\+M\+L\+File}}
+\index{Write\+X\+M\+L\+File@{Write\+X\+M\+L\+File}!T\+Djangoh@{T\+Djangoh}}
+\subsubsection{\texorpdfstring{Write\+X\+M\+L\+File()}{WriteXMLFile()}}
+{\footnotesize\ttfamily void T\+Djangoh\+::\+Write\+X\+M\+L\+File (\begin{DoxyParamCaption}\item[{const string}]{p\+Filename }\end{DoxyParamCaption})}
 
 
 

@@ -76,6 +76,10 @@ struct \hyperlink{structsophct}{sophct}
 struct \hyperlink{structlhapdfc}{lhapdfc}
 \item 
 struct \hyperlink{structhsoutf}{hsoutf}
+\item 
+struct \hyperlink{structchnumb}{chnumb}
+\item 
+struct \hyperlink{structhepsav}{hepsav}
 \end{DoxyCompactItemize}
 \subsection*{Macros}
 \begin{DoxyCompactItemize}
@@ -84,7 +88,7 @@ struct \hyperlink{structhsoutf}{hsoutf}
 \item 
 \#define \hyperlink{_t_djangoh_8cc_a1c6d5de492ac61ad29aec7aa9a436bbf}{V\+E\+R\+S\+I\+ON}~1
 \item 
-\#define \hyperlink{_t_djangoh_8cc_a494dfbd3d5cb64aaae52c3c065ff6add}{S\+U\+B\+V\+E\+R\+S\+I\+ON}~1
+\#define \hyperlink{_t_djangoh_8cc_a494dfbd3d5cb64aaae52c3c065ff6add}{S\+U\+B\+V\+E\+R\+S\+I\+ON}~2
 \item 
 \#define \hyperlink{_t_djangoh_8cc_ac5d957e4fd3dc11cd97a54cf9ca057a4}{R\+ST}~\char`\"{}\textbackslash{}x1B\mbox{[}0m\char`\"{}
 \item 
@@ -102,19 +106,19 @@ struct \hyperlink{structhsoutf}{hsoutf}
 \item 
 \#define \hyperlink{_t_djangoh_8cc_af0036c8022c9980079ab17e5c87fd478}{K\+W\+HT}~\char`\"{}\textbackslash{}x1B\mbox{[}37m\char`\"{}
 \item 
-\#define \hyperlink{_t_djangoh_8cc_ae5b789f4a8f720ec20a544c58f9c204d}{F\+R\+ED}(x)~\hyperlink{_t_djangoh_8cc_a66290957baed5df3930ada4cb8caccf1}{K\+R\+ED} x \hyperlink{_t_djangoh_8cc_ac5d957e4fd3dc11cd97a54cf9ca057a4}{R\+ST}
+\#define \hyperlink{_t_djangoh_8cc_ae5b789f4a8f720ec20a544c58f9c204d}{F\+R\+ED}(x)~\hyperlink{genfile_8cc_a66290957baed5df3930ada4cb8caccf1}{K\+R\+ED} x \hyperlink{genfile_8cc_ac5d957e4fd3dc11cd97a54cf9ca057a4}{R\+ST}
 \item 
-\#define \hyperlink{_t_djangoh_8cc_ab3968f7b5009845811dc102a5b53d898}{F\+G\+RN}(x)~\hyperlink{_t_djangoh_8cc_ac081c83b067273757f7a2e54a5957d41}{K\+G\+RN} x \hyperlink{_t_djangoh_8cc_ac5d957e4fd3dc11cd97a54cf9ca057a4}{R\+ST}
+\#define \hyperlink{_t_djangoh_8cc_ab3968f7b5009845811dc102a5b53d898}{F\+G\+RN}(x)~\hyperlink{genfile_8cc_ac081c83b067273757f7a2e54a5957d41}{K\+G\+RN} x \hyperlink{genfile_8cc_ac5d957e4fd3dc11cd97a54cf9ca057a4}{R\+ST}
 \item 
-\#define \hyperlink{_t_djangoh_8cc_a4bae6c5147cf3957a90c9c6f5b37faac}{F\+Y\+EL}(x)~\hyperlink{_t_djangoh_8cc_a897b10d246533c95ba86cb79f92e465a}{K\+Y\+EL} x \hyperlink{_t_djangoh_8cc_ac5d957e4fd3dc11cd97a54cf9ca057a4}{R\+ST}
+\#define \hyperlink{_t_djangoh_8cc_a4bae6c5147cf3957a90c9c6f5b37faac}{F\+Y\+EL}(x)~\hyperlink{genfile_8cc_a897b10d246533c95ba86cb79f92e465a}{K\+Y\+EL} x \hyperlink{genfile_8cc_ac5d957e4fd3dc11cd97a54cf9ca057a4}{R\+ST}
 \item 
-\#define \hyperlink{_t_djangoh_8cc_a7efc4f68a50a41c6a93ece87dd6c7dec}{F\+B\+LU}(x)~\hyperlink{_t_djangoh_8cc_a3f838f2fc3a9a3b434be606fc908964b}{K\+B\+LU} x \hyperlink{_t_djangoh_8cc_ac5d957e4fd3dc11cd97a54cf9ca057a4}{R\+ST}
+\#define \hyperlink{_t_djangoh_8cc_a7efc4f68a50a41c6a93ece87dd6c7dec}{F\+B\+LU}(x)~\hyperlink{genfile_8cc_a3f838f2fc3a9a3b434be606fc908964b}{K\+B\+LU} x \hyperlink{genfile_8cc_ac5d957e4fd3dc11cd97a54cf9ca057a4}{R\+ST}
 \item 
-\#define \hyperlink{_t_djangoh_8cc_a957ecba768167bfb215a4bf97e7a0533}{F\+M\+AG}(x)~\hyperlink{_t_djangoh_8cc_a6825f05d3b9d619d91d79d0ef18bb8b2}{K\+M\+AG} x \hyperlink{_t_djangoh_8cc_ac5d957e4fd3dc11cd97a54cf9ca057a4}{R\+ST}
+\#define \hyperlink{_t_djangoh_8cc_a957ecba768167bfb215a4bf97e7a0533}{F\+M\+AG}(x)~\hyperlink{genfile_8cc_a6825f05d3b9d619d91d79d0ef18bb8b2}{K\+M\+AG} x \hyperlink{genfile_8cc_ac5d957e4fd3dc11cd97a54cf9ca057a4}{R\+ST}
 \item 
-\#define \hyperlink{_t_djangoh_8cc_a707fab975ef99b4f89ff740f55d14602}{F\+C\+YN}(x)~\hyperlink{_t_djangoh_8cc_a32036c94dbb166a3f874b7efc169841f}{K\+C\+YN} x \hyperlink{_t_djangoh_8cc_ac5d957e4fd3dc11cd97a54cf9ca057a4}{R\+ST}
+\#define \hyperlink{_t_djangoh_8cc_a707fab975ef99b4f89ff740f55d14602}{F\+C\+YN}(x)~\hyperlink{genfile_8cc_a32036c94dbb166a3f874b7efc169841f}{K\+C\+YN} x \hyperlink{genfile_8cc_ac5d957e4fd3dc11cd97a54cf9ca057a4}{R\+ST}
 \item 
-\#define \hyperlink{_t_djangoh_8cc_a312c671f34e0d7a772e43cd63bc0f31b}{F\+W\+HT}(x)~\hyperlink{_t_djangoh_8cc_af0036c8022c9980079ab17e5c87fd478}{K\+W\+HT} x \hyperlink{_t_djangoh_8cc_ac5d957e4fd3dc11cd97a54cf9ca057a4}{R\+ST}
+\#define \hyperlink{_t_djangoh_8cc_a312c671f34e0d7a772e43cd63bc0f31b}{F\+W\+HT}(x)~\hyperlink{genfile_8cc_af0036c8022c9980079ab17e5c87fd478}{K\+W\+HT} x \hyperlink{genfile_8cc_ac5d957e4fd3dc11cd97a54cf9ca057a4}{R\+ST}
 \item 
 \#define \hyperlink{_t_djangoh_8cc_a8d6c06f3e6f93ac985b046d40b63ae43}{B\+O\+LD}(x)~\char`\"{}\textbackslash{}x1B\mbox{[}1m\char`\"{} x R\+ST
 \item 
@@ -197,6 +201,10 @@ struct \hyperlink{structsophct}{sophct} \hyperlink{_t_djangoh_8cc_a50f48a0d4a033
 struct \hyperlink{structlhapdfc}{lhapdfc} \hyperlink{_t_djangoh_8cc_ac1c66cad51d0e97e08f3e527c2348571}{lhapdfc\+\_\+}
 \item 
 struct \hyperlink{structhsoutf}{hsoutf} \hyperlink{_t_djangoh_8cc_a199fdfc754803f289e8f4b1f7734a823}{hsoutf\+\_\+}
+\item 
+struct \hyperlink{structchnumb}{chnumb} \hyperlink{_t_djangoh_8cc_a07e2ed6208b458bb655f679dcd222493}{chnumb\+\_\+}
+\item 
+struct \hyperlink{structhepsav}{hepsav} \hyperlink{_t_djangoh_8cc_ac02ed53491f7df3d133b24500b8b90a1}{hepsav\+\_\+}
 \end{DoxyCompactItemize}
 
 
@@ -207,10 +215,10 @@ Interface class to Djangoh generator.
 Nicolas P\+I\+E\+R\+RE 
 \end{DoxyAuthor}
 \begin{DoxyVersion}{Version}
-1.\+1 
+1.\+2 
 \end{DoxyVersion}
 \begin{DoxyDate}{Date}
-14/06/16 Support \+: mail to \+: \href{mailto:nicolas.pierre@cern.ch}{\tt nicolas.\+pierre@cern.\+ch} 
+24/01/18 Support \+: mail to \+: \href{mailto:nicolas.pierre@cern.ch}{\tt nicolas.\+pierre@cern.\+ch} 
 \end{DoxyDate}
 
 
@@ -225,43 +233,43 @@ Nicolas P\+I\+E\+R\+RE
 \index{T\+Djangoh.\+cc@{T\+Djangoh.\+cc}!F\+B\+LU@{F\+B\+LU}}
 \index{F\+B\+LU@{F\+B\+LU}!T\+Djangoh.\+cc@{T\+Djangoh.\+cc}}
 \subsubsection{\texorpdfstring{F\+B\+LU}{FBLU}}
-{\footnotesize\ttfamily \#define F\+B\+LU(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~\hyperlink{_t_djangoh_8cc_a3f838f2fc3a9a3b434be606fc908964b}{K\+B\+LU} x \hyperlink{_t_djangoh_8cc_ac5d957e4fd3dc11cd97a54cf9ca057a4}{R\+ST}}
+{\footnotesize\ttfamily \#define F\+B\+LU(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~\hyperlink{genfile_8cc_a3f838f2fc3a9a3b434be606fc908964b}{K\+B\+LU} x \hyperlink{genfile_8cc_ac5d957e4fd3dc11cd97a54cf9ca057a4}{R\+ST}}
 
 \mbox{\Hypertarget{_t_djangoh_8cc_a707fab975ef99b4f89ff740f55d14602}\label{_t_djangoh_8cc_a707fab975ef99b4f89ff740f55d14602}} 
 \index{T\+Djangoh.\+cc@{T\+Djangoh.\+cc}!F\+C\+YN@{F\+C\+YN}}
 \index{F\+C\+YN@{F\+C\+YN}!T\+Djangoh.\+cc@{T\+Djangoh.\+cc}}
 \subsubsection{\texorpdfstring{F\+C\+YN}{FCYN}}
-{\footnotesize\ttfamily \#define F\+C\+YN(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~\hyperlink{_t_djangoh_8cc_a32036c94dbb166a3f874b7efc169841f}{K\+C\+YN} x \hyperlink{_t_djangoh_8cc_ac5d957e4fd3dc11cd97a54cf9ca057a4}{R\+ST}}
+{\footnotesize\ttfamily \#define F\+C\+YN(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~\hyperlink{genfile_8cc_a32036c94dbb166a3f874b7efc169841f}{K\+C\+YN} x \hyperlink{genfile_8cc_ac5d957e4fd3dc11cd97a54cf9ca057a4}{R\+ST}}
 
 \mbox{\Hypertarget{_t_djangoh_8cc_ab3968f7b5009845811dc102a5b53d898}\label{_t_djangoh_8cc_ab3968f7b5009845811dc102a5b53d898}} 
 \index{T\+Djangoh.\+cc@{T\+Djangoh.\+cc}!F\+G\+RN@{F\+G\+RN}}
 \index{F\+G\+RN@{F\+G\+RN}!T\+Djangoh.\+cc@{T\+Djangoh.\+cc}}
 \subsubsection{\texorpdfstring{F\+G\+RN}{FGRN}}
-{\footnotesize\ttfamily \#define F\+G\+RN(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~\hyperlink{_t_djangoh_8cc_ac081c83b067273757f7a2e54a5957d41}{K\+G\+RN} x \hyperlink{_t_djangoh_8cc_ac5d957e4fd3dc11cd97a54cf9ca057a4}{R\+ST}}
+{\footnotesize\ttfamily \#define F\+G\+RN(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~\hyperlink{genfile_8cc_ac081c83b067273757f7a2e54a5957d41}{K\+G\+RN} x \hyperlink{genfile_8cc_ac5d957e4fd3dc11cd97a54cf9ca057a4}{R\+ST}}
 
 \mbox{\Hypertarget{_t_djangoh_8cc_a957ecba768167bfb215a4bf97e7a0533}\label{_t_djangoh_8cc_a957ecba768167bfb215a4bf97e7a0533}} 
 \index{T\+Djangoh.\+cc@{T\+Djangoh.\+cc}!F\+M\+AG@{F\+M\+AG}}
 \index{F\+M\+AG@{F\+M\+AG}!T\+Djangoh.\+cc@{T\+Djangoh.\+cc}}
 \subsubsection{\texorpdfstring{F\+M\+AG}{FMAG}}
-{\footnotesize\ttfamily \#define F\+M\+AG(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~\hyperlink{_t_djangoh_8cc_a6825f05d3b9d619d91d79d0ef18bb8b2}{K\+M\+AG} x \hyperlink{_t_djangoh_8cc_ac5d957e4fd3dc11cd97a54cf9ca057a4}{R\+ST}}
+{\footnotesize\ttfamily \#define F\+M\+AG(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~\hyperlink{genfile_8cc_a6825f05d3b9d619d91d79d0ef18bb8b2}{K\+M\+AG} x \hyperlink{genfile_8cc_ac5d957e4fd3dc11cd97a54cf9ca057a4}{R\+ST}}
 
 \mbox{\Hypertarget{_t_djangoh_8cc_ae5b789f4a8f720ec20a544c58f9c204d}\label{_t_djangoh_8cc_ae5b789f4a8f720ec20a544c58f9c204d}} 
 \index{T\+Djangoh.\+cc@{T\+Djangoh.\+cc}!F\+R\+ED@{F\+R\+ED}}
 \index{F\+R\+ED@{F\+R\+ED}!T\+Djangoh.\+cc@{T\+Djangoh.\+cc}}
 \subsubsection{\texorpdfstring{F\+R\+ED}{FRED}}
-{\footnotesize\ttfamily \#define F\+R\+ED(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~\hyperlink{_t_djangoh_8cc_a66290957baed5df3930ada4cb8caccf1}{K\+R\+ED} x \hyperlink{_t_djangoh_8cc_ac5d957e4fd3dc11cd97a54cf9ca057a4}{R\+ST}}
+{\footnotesize\ttfamily \#define F\+R\+ED(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~\hyperlink{genfile_8cc_a66290957baed5df3930ada4cb8caccf1}{K\+R\+ED} x \hyperlink{genfile_8cc_ac5d957e4fd3dc11cd97a54cf9ca057a4}{R\+ST}}
 
 \mbox{\Hypertarget{_t_djangoh_8cc_a312c671f34e0d7a772e43cd63bc0f31b}\label{_t_djangoh_8cc_a312c671f34e0d7a772e43cd63bc0f31b}} 
 \index{T\+Djangoh.\+cc@{T\+Djangoh.\+cc}!F\+W\+HT@{F\+W\+HT}}
 \index{F\+W\+HT@{F\+W\+HT}!T\+Djangoh.\+cc@{T\+Djangoh.\+cc}}
 \subsubsection{\texorpdfstring{F\+W\+HT}{FWHT}}
-{\footnotesize\ttfamily \#define F\+W\+HT(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~\hyperlink{_t_djangoh_8cc_af0036c8022c9980079ab17e5c87fd478}{K\+W\+HT} x \hyperlink{_t_djangoh_8cc_ac5d957e4fd3dc11cd97a54cf9ca057a4}{R\+ST}}
+{\footnotesize\ttfamily \#define F\+W\+HT(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~\hyperlink{genfile_8cc_af0036c8022c9980079ab17e5c87fd478}{K\+W\+HT} x \hyperlink{genfile_8cc_ac5d957e4fd3dc11cd97a54cf9ca057a4}{R\+ST}}
 
 \mbox{\Hypertarget{_t_djangoh_8cc_a4bae6c5147cf3957a90c9c6f5b37faac}\label{_t_djangoh_8cc_a4bae6c5147cf3957a90c9c6f5b37faac}} 
 \index{T\+Djangoh.\+cc@{T\+Djangoh.\+cc}!F\+Y\+EL@{F\+Y\+EL}}
 \index{F\+Y\+EL@{F\+Y\+EL}!T\+Djangoh.\+cc@{T\+Djangoh.\+cc}}
 \subsubsection{\texorpdfstring{F\+Y\+EL}{FYEL}}
-{\footnotesize\ttfamily \#define F\+Y\+EL(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~\hyperlink{_t_djangoh_8cc_a897b10d246533c95ba86cb79f92e465a}{K\+Y\+EL} x \hyperlink{_t_djangoh_8cc_ac5d957e4fd3dc11cd97a54cf9ca057a4}{R\+ST}}
+{\footnotesize\ttfamily \#define F\+Y\+EL(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~\hyperlink{genfile_8cc_a897b10d246533c95ba86cb79f92e465a}{K\+Y\+EL} x \hyperlink{genfile_8cc_ac5d957e4fd3dc11cd97a54cf9ca057a4}{R\+ST}}
 
 \mbox{\Hypertarget{_t_djangoh_8cc_a3f838f2fc3a9a3b434be606fc908964b}\label{_t_djangoh_8cc_a3f838f2fc3a9a3b434be606fc908964b}} 
 \index{T\+Djangoh.\+cc@{T\+Djangoh.\+cc}!K\+B\+LU@{K\+B\+LU}}
@@ -315,7 +323,7 @@ Nicolas P\+I\+E\+R\+RE
 \index{T\+Djangoh.\+cc@{T\+Djangoh.\+cc}!S\+U\+B\+V\+E\+R\+S\+I\+ON@{S\+U\+B\+V\+E\+R\+S\+I\+ON}}
 \index{S\+U\+B\+V\+E\+R\+S\+I\+ON@{S\+U\+B\+V\+E\+R\+S\+I\+ON}!T\+Djangoh.\+cc@{T\+Djangoh.\+cc}}
 \subsubsection{\texorpdfstring{S\+U\+B\+V\+E\+R\+S\+I\+ON}{SUBVERSION}}
-{\footnotesize\ttfamily \#define S\+U\+B\+V\+E\+R\+S\+I\+ON~1}
+{\footnotesize\ttfamily \#define S\+U\+B\+V\+E\+R\+S\+I\+ON~2}
 
 \mbox{\Hypertarget{_t_djangoh_8cc_aa1c2e64708a5f94518ab43b6311e7ad2}\label{_t_djangoh_8cc_aa1c2e64708a5f94518ab43b6311e7ad2}} 
 \index{T\+Djangoh.\+cc@{T\+Djangoh.\+cc}!type\+\_\+of\+\_\+call@{type\+\_\+of\+\_\+call}}
@@ -365,11 +373,23 @@ Nicolas P\+I\+E\+R\+RE
 
 
 \subsection{Variable Documentation}
+\mbox{\Hypertarget{_t_djangoh_8cc_a07e2ed6208b458bb655f679dcd222493}\label{_t_djangoh_8cc_a07e2ed6208b458bb655f679dcd222493}} 
+\index{T\+Djangoh.\+cc@{T\+Djangoh.\+cc}!chnumb\+\_\+@{chnumb\+\_\+}}
+\index{chnumb\+\_\+@{chnumb\+\_\+}!T\+Djangoh.\+cc@{T\+Djangoh.\+cc}}
+\subsubsection{\texorpdfstring{chnumb\+\_\+}{chnumb\_}}
+{\footnotesize\ttfamily struct \hyperlink{structchnumb}{chnumb}  chnumb\+\_\+}
+
 \mbox{\Hypertarget{_t_djangoh_8cc_a5c131239b1cd6c762cccbb45a5b5dec7}\label{_t_djangoh_8cc_a5c131239b1cd6c762cccbb45a5b5dec7}} 
 \index{T\+Djangoh.\+cc@{T\+Djangoh.\+cc}!djkin\+\_\+@{djkin\+\_\+}}
 \index{djkin\+\_\+@{djkin\+\_\+}!T\+Djangoh.\+cc@{T\+Djangoh.\+cc}}
 \subsubsection{\texorpdfstring{djkin\+\_\+}{djkin\_}}
 {\footnotesize\ttfamily \hyperlink{struct_djkin__t}{Djkin\+\_\+t} djkin\+\_\+}
+
+\mbox{\Hypertarget{_t_djangoh_8cc_ac02ed53491f7df3d133b24500b8b90a1}\label{_t_djangoh_8cc_ac02ed53491f7df3d133b24500b8b90a1}} 
+\index{T\+Djangoh.\+cc@{T\+Djangoh.\+cc}!hepsav\+\_\+@{hepsav\+\_\+}}
+\index{hepsav\+\_\+@{hepsav\+\_\+}!T\+Djangoh.\+cc@{T\+Djangoh.\+cc}}
+\subsubsection{\texorpdfstring{hepsav\+\_\+}{hepsav\_}}
+{\footnotesize\ttfamily struct \hyperlink{structhepsav}{hepsav}  hepsav\+\_\+}
 
 \mbox{\Hypertarget{_t_djangoh_8cc_a3ad55f8faf0c5bf7b44a361577a0bc3b}\label{_t_djangoh_8cc_a3ad55f8faf0c5bf7b44a361577a0bc3b}} 
 \index{T\+Djangoh.\+cc@{T\+Djangoh.\+cc}!hsalfs\+\_\+@{hsalfs\+\_\+}}
