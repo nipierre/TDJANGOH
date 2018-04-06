@@ -422,6 +422,31 @@ void TDjangoh::GenerateEvent()
   hsegen_();
   fLujets = &lujets_;
   fDjkin = &djkin_;
+  // This a patch in order to obtain the final state in case of (quasi-)elastic events.
+  if(chnumb_.ichngl == 15)
+  {
+    ElasFS();
+  }
+  else if(chnumb_.ichngl == 16 || chnumb_.ichngl == 17)
+  {
+    RadElasFS();
+    fLujets->N = 3;
+    fLujets->K[0][i] ,
+    fLujets->K[1][i] ,
+    fLujets->K[2][i] ,
+    fLujets->K[3][i] ,
+    fLujets->K[4][i] ,
+    fLujets->P[0][i] ,
+    fLujets->P[1][i] ,
+    fLujets->P[2][i] ,
+    fLujets->P[3][i] ,
+    fLujets->P[4][i] ,
+    fLujets->V[0][i] ,
+    fLujets->V[1][i] ,
+    fLujets->V[2][i]
+    fLujets->V[3][i]
+    fLujets->V[4][i]
+  }
   ImportParticles();
 }
 
@@ -520,6 +545,46 @@ Int_t TDjangoh::ImportParticles(TClonesArray *particles, Option_t *option)
    nparts=numpart;
  }
   return nparts;
+}
+
+void TDjangoh::ElasFS()
+{
+  fLujets->N = 2;
+  fLujets->K[0][0] = 21; fLujets->K[1][0] = tDjangoh->GetIDPHEP(1); fLujets->K[2][0] = 0;
+                       fLujets->K[3][0] = 0; fLujets->K[4][0] = 0;
+  fLujets->P[0][0] = 0; fLujets->P[1][0] = 0; fLujets->P[2][0] = hselab_.eele;
+                       fLujets->P[3][0] = hselab_.eele; fLujets->P[4][0] = tDjangoh->GetPHEP(5,1);
+  fLujets->V[0][0] = ; fLujets->V[1][0] = ; fLujets->V[2][0] = ;
+  fLujets->V[3][0] = ; fLujets->V[4][0] = ;
+  fLujets->K[0][1] = ; fLujets->K[1][1] = ; fLujets->K[2][1] = ;
+                       fLujets->K[3][1] = ; fLujets->K[4][1] = ;
+  fLujets->P[0][1] = 0; fLujets->P[1][1] = 0; fLujets->P[2][1] = 0;
+                       fLujets->P[3][1] = ; fLujets->P[4][1] = ;
+  fLujets->V[0][1] = ; fLujets->V[1][1] = ; fLujets->V[2][1] = ;
+  fLujets->V[3][1] = ; fLujets->V[4][1] = ;
+}
+
+void TDjangoh::RadElasFS()
+{
+  fLujets->N = 3;
+  fLujets->K[0][0] = ; fLujets->K[1][0] = ; fLujets->K[2][0] = ;
+                       fLujets->K[3][0] = ; fLujets->K[4][0] = ;
+  fLujets->P[0][0] = ; fLujets->P[1][0] = ; fLujets->P[2][0] = ;
+                       fLujets->P[3][0] = ; fLujets->P[4][0] = ;
+  fLujets->V[0][0] = ; fLujets->V[1][0] = ; fLujets->V[2][0] = ;
+  fLujets->V[3][0] = ; fLujets->V[4][0] = ;
+  fLujets->K[0][1] = ; fLujets->K[1][1] = ; fLujets->K[2][1] = ;
+                       fLujets->K[3][1] = ; fLujets->K[4][1] = ;
+  fLujets->P[0][1] = ; fLujets->P[1][1] = ; fLujets->P[2][1] = ;
+                       fLujets->P[3][1] = ; fLujets->P[4][1] = ;
+  fLujets->V[0][1] = ; fLujets->V[1][1] = ; fLujets->V[2][1] = ;
+  fLujets->V[3][1] = ; fLujets->V[4][1] = ;
+  fLujets->K[0][2] = ; fLujets->K[1][2] = ; fLujets->K[2][2] = ;
+                       fLujets->K[3][2] = ; fLujets->K[4][2] = ;
+  fLujets->P[0][2] = ; fLujets->P[1][2] = ; fLujets->P[2][2] = ;
+                       fLujets->P[3][2] = ; fLujets->P[4][2] = ;
+  fLujets->V[0][2] = ; fLujets->V[1][2] = ; fLujets->V[2][2] = ;
+  fLujets->V[3][2] = ; fLujets->V[4][2] = ;
 }
 
 void TDjangoh::ReadXMLFile(const string pFilename)
@@ -1462,7 +1527,6 @@ void TDjangoh::SetNucleus(double pHpolar, int pHna, int pHnz, double pEpro)
 
 void TDjangoh::WriteFSInFile()
 {
-
   ofstream finalState("finalState.txt", ofstream::out | ofstream::app);
 
   Int_t numpart = fLujets->N;

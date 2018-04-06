@@ -2100,7 +2100,7 @@ int main(int argc,char *argv[])
               P_d[c][i][j]->GetYaxis()->SetNdivisions(304,kTRUE);
               if(i==0)
               {
-                P_d[c][i][j]->GetYaxis()->SetTitle("#font[12]{#eta}^{#font[ 12]{#pi}}+ #font[ 12]{#delta");
+                P_d[c][i][j]->GetYaxis()->SetTitle("#font[12]{#eta}^{#font[ 12]{#pi}}+ #font[ 12]{#delta}");
                 P_d[c][i][j]->GetYaxis()->SetTitleSize(0.08);
               }
               P_d[c][i][0]->Draw("SAMEP");
