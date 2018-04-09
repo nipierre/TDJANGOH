@@ -4,8 +4,8 @@
     \file                         TDjangoh.h
     \brief                        Interface class to Djangoh generator
     \author                       Nicolas PIERRE
-    \version                      1.2
-    \date                         24/01/18
+    \version                      1.3
+    \date                         09/04/18
     Support :                     mail to : nicolas.pierre@cern.ch
 
     TDjangoh is an interface class to DJANGOH
@@ -153,6 +153,14 @@ public:
   * \return TObjArray w/ particles
   */
   TObjArray       *ImportParticles(Option_t *option="");
+  /*!
+  * \brief Patchy method to recover final state for (quasi)elastic events
+  */
+  void             ElasFS()
+  /*!
+  * \brief Patchy method to recover final state for radiative (quasi)elastic events
+  */
+  void             RadElasFS()
 
   // ---------------------------------------------------------------------------
   // Cross-Section
@@ -325,6 +333,11 @@ public:
   * \param pEpro : Energy of the nucleus
   */
   void        SetNucleus(double pHpolar, int pHna, int pHnz, double pEpro=0);
+  /*!
+  * \brief Get nucleus ID (PDG numbering scheme)
+  * \return Nucleus ID
+  */
+  int         GetNucleusID();
 
   // ---------------------------------------------------------------------------
   // Final State utilitaries

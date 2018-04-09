@@ -4,8 +4,8 @@
     \file                         TDjangoh.cc
     \brief                        Interface class to Djangoh generator
     \author                       Nicolas PIERRE
-    \version                      1.2
-    \date                         24/01/18
+    \version                      1.3
+    \date                         09/04/18
     Support :                     mail to : nicolas.pierre@cern.ch
 
     \class TDjangoh
@@ -28,7 +28,7 @@ TDjangoh*  TDjangoh::fgInstance = 0;
 
 # define type_of_call _stdcall
 # define VERSION 1
-# define SUBVERSION 2
+# define SUBVERSION 3
 
 // COLORS
 
@@ -422,7 +422,7 @@ void TDjangoh::GenerateEvent()
   hsegen_();
   fLujets = &lujets_;
   fDjkin = &djkin_;
-  // This a patch in order to obtain the final state in case of (quasi-)elastic events.
+  // Patch in order to obtain the final state in case of (quasi-)elastic events.
   if(chnumb_.ichngl == 15)
   {
     ElasFS();
@@ -430,22 +430,6 @@ void TDjangoh::GenerateEvent()
   else if(chnumb_.ichngl == 16 || chnumb_.ichngl == 17)
   {
     RadElasFS();
-    fLujets->N = 3;
-    fLujets->K[0][i] ,
-    fLujets->K[1][i] ,
-    fLujets->K[2][i] ,
-    fLujets->K[3][i] ,
-    fLujets->K[4][i] ,
-    fLujets->P[0][i] ,
-    fLujets->P[1][i] ,
-    fLujets->P[2][i] ,
-    fLujets->P[3][i] ,
-    fLujets->P[4][i] ,
-    fLujets->V[0][i] ,
-    fLujets->V[1][i] ,
-    fLujets->V[2][i]
-    fLujets->V[3][i]
-    fLujets->V[4][i]
   }
   ImportParticles();
 }
@@ -550,41 +534,41 @@ Int_t TDjangoh::ImportParticles(TClonesArray *particles, Option_t *option)
 void TDjangoh::ElasFS()
 {
   fLujets->N = 2;
-  fLujets->K[0][0] = 21; fLujets->K[1][0] = tDjangoh->GetIDPHEP(1); fLujets->K[2][0] = 0;
-                       fLujets->K[3][0] = 0; fLujets->K[4][0] = 0;
-  fLujets->P[0][0] = 0; fLujets->P[1][0] = 0; fLujets->P[2][0] = hselab_.eele;
-                       fLujets->P[3][0] = hselab_.eele; fLujets->P[4][0] = tDjangoh->GetPHEP(5,1);
-  fLujets->V[0][0] = ; fLujets->V[1][0] = ; fLujets->V[2][0] = ;
-  fLujets->V[3][0] = ; fLujets->V[4][0] = ;
-  fLujets->K[0][1] = ; fLujets->K[1][1] = ; fLujets->K[2][1] = ;
-                       fLujets->K[3][1] = ; fLujets->K[4][1] = ;
-  fLujets->P[0][1] = 0; fLujets->P[1][1] = 0; fLujets->P[2][1] = 0;
-                       fLujets->P[3][1] = ; fLujets->P[4][1] = ;
-  fLujets->V[0][1] = ; fLujets->V[1][1] = ; fLujets->V[2][1] = ;
-  fLujets->V[3][1] = ; fLujets->V[4][1] = ;
+  fLujets->K[0][0] = 1; fLujets->K[1][0] = GetIDPHEP(1); fLujets->K[2][0] = 0;
+  fLujets->K[3][0] = 0; fLujets->K[4][0] = 0;
+  fLujets->P[0][0] = GetPHEP(1,1); fLujets->P[1][0] = GetPHEP(2,1); fLujets->P[2][0] = GetPHEP(3,1);
+  fLujets->P[3][0] = GetPHEP(4,1); fLujets->P[4][0] = GetPHEP(5,1);
+  fLujets->V[0][0] = GetVHKK(1,1); fLujets->V[1][0] = GetVHKK(2,1); fLujets->V[2][0] = GetVHKK(3,1);
+  fLujets->V[3][0] = GetVHKK(4,1); fLujets->V[4][0] = GetVHKK(5,1);
+  fLujets->K[0][1] = 1; fLujets->K[1][1] = GetNucleusID(); fLujets->K[2][1] = 0;
+  fLujets->K[3][1] = 0; fLujets->K[4][1] = 0;
+  fLujets->P[0][1] = GetPHEP(1,2); fLujets->P[1][1] = GetPHEP(2,2); fLujets->P[2][1] = GetPHEP(3,2);
+  fLujets->P[3][1] = GetPHEP(4,2); fLujets->P[4][1] = GetPHEP(5,2);
+  fLujets->V[0][1] = GetVHKK(1,2); fLujets->V[1][1] = GetVHKK(2,2); fLujets->V[2][1] = GetVHKK(3,2);
+  fLujets->V[3][1] = GetVHKK(4,2); fLujets->V[4][1] = GetVHKK(5,2);
 }
 
 void TDjangoh::RadElasFS()
 {
   fLujets->N = 3;
-  fLujets->K[0][0] = ; fLujets->K[1][0] = ; fLujets->K[2][0] = ;
-                       fLujets->K[3][0] = ; fLujets->K[4][0] = ;
-  fLujets->P[0][0] = ; fLujets->P[1][0] = ; fLujets->P[2][0] = ;
-                       fLujets->P[3][0] = ; fLujets->P[4][0] = ;
-  fLujets->V[0][0] = ; fLujets->V[1][0] = ; fLujets->V[2][0] = ;
-  fLujets->V[3][0] = ; fLujets->V[4][0] = ;
-  fLujets->K[0][1] = ; fLujets->K[1][1] = ; fLujets->K[2][1] = ;
-                       fLujets->K[3][1] = ; fLujets->K[4][1] = ;
-  fLujets->P[0][1] = ; fLujets->P[1][1] = ; fLujets->P[2][1] = ;
-                       fLujets->P[3][1] = ; fLujets->P[4][1] = ;
-  fLujets->V[0][1] = ; fLujets->V[1][1] = ; fLujets->V[2][1] = ;
-  fLujets->V[3][1] = ; fLujets->V[4][1] = ;
-  fLujets->K[0][2] = ; fLujets->K[1][2] = ; fLujets->K[2][2] = ;
-                       fLujets->K[3][2] = ; fLujets->K[4][2] = ;
-  fLujets->P[0][2] = ; fLujets->P[1][2] = ; fLujets->P[2][2] = ;
-                       fLujets->P[3][2] = ; fLujets->P[4][2] = ;
-  fLujets->V[0][2] = ; fLujets->V[1][2] = ; fLujets->V[2][2] = ;
-  fLujets->V[3][2] = ; fLujets->V[4][2] = ;
+  fLujets->K[0][0] = 1; fLujets->K[1][0] = GetIDPHEP(1); fLujets->K[2][0] = 0;
+  fLujets->K[3][0] = 0; fLujets->K[4][0] = 0;
+  fLujets->P[0][0] = GetPHEP(1,1); fLujets->P[1][0] = GetPHEP(2,1); fLujets->P[2][0] = GetPHEP(3,1);
+  fLujets->P[3][0] = GetPHEP(4,1); fLujets->P[4][0] = GetPHEP(5,1);
+  fLujets->V[0][0] = GetVHKK(1,1); fLujets->V[1][0] = GetVHKK(2,1); fLujets->V[2][0] = GetVHKK(3,1);
+  fLujets->V[3][0] = GetVHKK(4,1); fLujets->V[4][0] = GetVHKK(5,1);
+  fLujets->K[0][1] = 1; fLujets->K[1][1] = GetNucleusID(); fLujets->K[2][1] = 0;
+  fLujets->K[3][1] = 0; fLujets->K[4][1] = 0;
+  fLujets->P[0][1] = GetPHEP(1,2); fLujets->P[1][1] = GetPHEP(2,2); fLujets->P[2][1] = GetPHEP(3,2);
+  fLujets->P[3][1] = GetPHEP(4,2); fLujets->P[4][1] = GetPHEP(5,2);
+  fLujets->V[0][1] = GetVHKK(1,2); fLujets->V[1][1] = GetVHKK(2,2); fLujets->V[2][1] = GetVHKK(3,2);
+  fLujets->V[3][1] = GetVHKK(4,2); fLujets->V[4][1] = GetVHKK(5,2);
+  fLujets->K[0][2] = 1; fLujets->K[1][2] = tDjangoh->GetIDPHEP(3); fLujets->K[2][2] = 0;
+  fLujets->K[3][2] = 0; fLujets->K[4][2] = 0;
+  fLujets->P[0][2] = GetPHEP(1,3); fLujets->P[1][2] = GetPHEP(2,3); fLujets->P[2][2] = GetPHEP(3,3);
+  fLujets->P[3][2] = GetPHEP(4,3); fLujets->P[4][2] = GetPHEP(5,3);
+  fLujets->V[0][2] = GetVHKK(1,3); fLujets->V[1][2] = GetVHKK(2,3); fLujets->V[2][2] = GetVHKK(3,3);
+  fLujets->V[3][2] = GetVHKK(4,3); fLujets->V[4][2] = GetVHKK(5,3);
 }
 
 void TDjangoh::ReadXMLFile(const string pFilename)
@@ -1575,6 +1559,18 @@ int TDjangoh::GetIDPHEP(int i)
 int TDjangoh::GetChannel()
 {
   return chnumb_.ichngl;
+}
+
+int TDjangoh::GetNucleusID()
+{
+  int id;
+  if(hsnucl_.hna == 1 && hsnucl_.hnz == 1)
+    id=2212;
+  else if(hsnucl_.hna == 1 && hsnucl_.hnz == 1)
+    id=2112;
+  else
+    id=1000000000+hsnucl_.hnz*10000+hsnucl_.hna*10;
+  return id;
 }
 
 void TDjangoh::Clean_File()
