@@ -563,7 +563,7 @@ void TDjangoh::RadElasFS()
   fLujets->P[3][1] = GetPHEP(4,2); fLujets->P[4][1] = GetPHEP(5,2);
   fLujets->V[0][1] = GetVHKK(1,2); fLujets->V[1][1] = GetVHKK(2,2); fLujets->V[2][1] = GetVHKK(3,2);
   fLujets->V[3][1] = GetVHKK(4,2); fLujets->V[4][1] = GetVHKK(5,2);
-  fLujets->K[0][2] = 1; fLujets->K[1][2] = tDjangoh->GetIDPHEP(3); fLujets->K[2][2] = 0;
+  fLujets->K[0][2] = 1; fLujets->K[1][2] = GetIDPHEP(3); fLujets->K[2][2] = 0;
   fLujets->K[3][2] = 0; fLujets->K[4][2] = 0;
   fLujets->P[0][2] = GetPHEP(1,3); fLujets->P[1][2] = GetPHEP(2,3); fLujets->P[2][2] = GetPHEP(3,3);
   fLujets->P[3][2] = GetPHEP(4,3); fLujets->P[4][2] = GetPHEP(5,3);
