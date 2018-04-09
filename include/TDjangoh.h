@@ -156,11 +156,11 @@ public:
   /*!
   * \brief Patchy method to recover final state for (quasi)elastic events
   */
-  void             ElasFS()
+  void             ElasFS();
   /*!
   * \brief Patchy method to recover final state for radiative (quasi)elastic events
   */
-  void             RadElasFS()
+  void             RadElasFS();
 
   // ---------------------------------------------------------------------------
   // Cross-Section
