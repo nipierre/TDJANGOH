@@ -1520,22 +1520,19 @@ void TDjangoh::WriteFSInFile()
 
   for (Int_t i = 0; i<numpart; i++)
   {
-    if (fLujets->K[0][i-1] == 1 && fLujets->K[2][i-1] == 0)
-    {
-      finalState << fLujets->K[0][i-1] << "\t"
-                 << fLujets->K[1][i-1] << "\t" //ID
-                 << fLujets->K[2][i-1] << "\t"
-                 << fLujets->K[3][i-1] << "\t"
-                 << fLujets->K[4][i-1] << "\t"
-                 << fLujets->P[0][i-1] << "\t" //Px
-                 << fLujets->P[1][i-1] << "\t" //Py
-                 << fLujets->P[2][i-1] << "\t" //Pz
-                 << fLujets->P[3][i-1] << "\t" //max(kinE,mass)
-                 << fLujets->V[0][i-1] << "\t"
-                 << fLujets->V[1][i-1] << "\t"
-                 << fLujets->V[2][i-1] << "\t"
-                 << fLujets->V[3][i-1] << endl;
-    }
+    finalState << fLujets->K[0][i-1] << "\t"
+               << fLujets->K[1][i-1] << "\t" //ID
+               << fLujets->K[2][i-1] << "\t"
+               << fLujets->K[3][i-1] << "\t"
+               << fLujets->K[4][i-1] << "\t"
+               << fLujets->P[0][i-1] << "\t" //Px
+               << fLujets->P[1][i-1] << "\t" //Py
+               << fLujets->P[2][i-1] << "\t" //Pz
+               << fLujets->P[3][i-1] << "\t" //max(kinE,mass)
+               << fLujets->V[0][i-1] << "\t"
+               << fLujets->V[1][i-1] << "\t"
+               << fLujets->V[2][i-1] << "\t"
+               << fLujets->V[3][i-1] << endl;
   }
 
   finalState.close();
