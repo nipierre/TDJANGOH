@@ -4026,7 +4026,7 @@ C---
  1010 CONTINUE
 
       IF(K(1,1).EQ.21) THEN
-        GOTO 1002
+        GOTO 103
       ENDIF
 
       NEVE(NCA)=NEVE(NCA) + 1
