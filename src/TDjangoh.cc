@@ -419,7 +419,6 @@ TDjangoh* TDjangoh::Instance()
 
 void TDjangoh::GenerateEvent()
 {
-  fLujets->N = 0;
   hsegen_();
   fLujets = &lujets_;
   fDjkin = &djkin_;
