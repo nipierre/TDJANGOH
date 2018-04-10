@@ -1513,7 +1513,7 @@ void TDjangoh::WriteFSInFile()
 {
   ofstream finalState("finalState.txt", ofstream::out | ofstream::app);
 
-  if(fLujets->K[0][i-1])
+  if(fLujets->K[0][-1])
   {
     Int_t numpart = fLujets->N;
 
@@ -1537,7 +1537,7 @@ void TDjangoh::WriteFSInFile()
                  << fLujets->V[3][i-1] << endl;
     }
   }
-  
+
   finalState.close();
 }
 
