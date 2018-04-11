@@ -16,6 +16,7 @@ C***********************************************************************
       COMMON /HSELAB/ SP,EELE,PELE,EPRO,PPRO
       COMMON /HSIKP/  S,T,U,SS,TS,US,DKP,DKPS,DKQ,DKQS
       COMMON /HSCHNN/ ICHNN
+      COMMON /HSLTYP/ LEPIN1
       COMMON /DJPASS/ NTOT,NPASS,NFAILL
       COMMON /SPPASS/ NSOPH,NSPOUT,NFAILP,NSPACC
       COMMON /DJFAIL/ NFAILI(10)
@@ -97,16 +98,16 @@ C...Event passed fragmentation
       ENDIF
       IF (NP.EQ.0) NFAILP=NFAILP+1
 
-C...Transfer event to JETSET common block DEPRECATED
-C      IF (LLEPT.EQ.-1) THEN
-C        LEPIN=11
-C      ELSEIF (LLEPT.EQ.1) THEN
-C        LEPIN=-11
-C      ELSEIF (LLEPT.EQ.-3) THEN
-C        LEPIN=13
-C      ELSEIF (LLEPT.EQ.3) THEN
-C        LEPIN=-13
-C      ENDIF
+C...Transfer event to JETSET common block
+      IF (LEPIN1.EQ.-1) THEN
+        LEPIN=11
+      ELSEIF (LEPIN1.EQ.1) THEN
+        LEPIN=-11
+      ELSEIF (LEPIN1.EQ.-3) THEN
+        LEPIN=13
+      ELSEIF (LEPIN1.EQ.3) THEN
+        LEPIN=-13
+      ENDIF
       IP1=0
 C...Set initial state, first lepton:
       IP1=IP1+1
