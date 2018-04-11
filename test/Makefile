@@ -10,7 +10,7 @@ LDFLAGS		= `root-config --libs` -L$(TDJANGOH_LIB) -lDjangoh
 all: test xsgen genfile
 
 %.o: %.cc
-	$@(CXX) $(CCFlags) $(ROOTFLAGS) $(INCFLAGS) -c -o $@ $< $(LDFLAGS)
+	@$(CXX) $(CCFlags) $(ROOTFLAGS) $(INCFLAGS) -c -o $@ $< $(LDFLAGS)
 
 test: test.o
 	@$(CXX) $(CCFlags) $(ROOTFLAGS) $(INCFLAGS) -o $@ $< $(LDFLAGS)
