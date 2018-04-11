@@ -97,17 +97,6 @@ C...Event passed fragmentation
       ENDIF
       IF (NP.EQ.0) NFAILP=NFAILP+1
 
-C...Transfer event to JETSET common block
-C      WRITE(6,*) LEPTID
-C      IF (LEPTID.EQ.-1) THEN
-C        LEPIN=11
-C      ELSEIF (LEPTID.EQ.1) THEN
-C        LEPIN=-11
-C      ELSEIF (LEPTID.EQ.-3) THEN
-C        LEPIN=13
-C      ELSEIF (LEPTID.EQ.3) THEN
-C        LEPIN=-13
-C      ENDIF
       IP1=0
 C...Set initial state, first lepton:
       IP1=IP1+1
@@ -120,7 +109,7 @@ C...Set initial state, first lepton:
       P(IP1,2)=0.
       P(IP1,3)=PELE
       P(IP1,4)=EELE
-      P(IP1,5)=ULMASS(-LLEPT*10-LEPTID)
+      P(IP1,5)=JDAHEP(2,1)
 C...then nucleon = proton
       IP1=IP1+1
       K(IP1,1)=201
@@ -131,7 +120,7 @@ C...then nucleon = proton
       P(IP1,1)=0.
       P(IP1,2)=0.
       P(IP1,3)=-PPRO
-      P(IP1,5)=ULMASS(2212)
+      P(IP1,5)=0.938272
       P(IP1,4)=EPRO
 
 C...Virtual boson (non-radiative case)
