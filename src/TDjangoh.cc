@@ -1532,6 +1532,7 @@ void TDjangoh::WriteFSInFile()
                  << fLujets->P[1][i-1] << "\t" //Py
                  << fLujets->P[2][i-1] << "\t" //Pz
                  << fLujets->P[3][i-1] << "\t" //max(kinE,mass)
+                 << fLujets->P[4][i-1] << "\t" //Mass
                  << fLujets->V[0][i-1] << "\t"
                  << fLujets->V[1][i-1] << "\t"
                  << fLujets->V[2][i-1] << "\t"

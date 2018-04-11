@@ -1,23 +1,30 @@
 all: src test utils
 
 src::
-	$(MAKE) -C $@
+	@echo 'Building libDjangoh.so..'
+	@$(MAKE) -C $@
+	@echo 'libDjangoh.so built !'
 
 test::
-	$(MAKE) -C $@
+	@echo 'Building test programs..'
+	@$(MAKE) -C $@
+	@echo 'Test programs built !'
 
 utils::
-	$(MAKE) -C $@
+	@echo 'Building utilitary programs..'
+	@$(MAKE) -C $@
+	@echo 'Utilitary programs built !'
 
 setup::
-	mkdir lib
-	mkdir bin
+	@mkdir lib
+	@mkdir bin
+	@echo 'Directories lib/ and bin/ created !'
 
 clean:
-	(cd utils; make clean)
-	(cd test; make clean)
-	(cd src; make clean)
-	(rm -f lib/* bin/*)
+	(@cd utils; @make clean)
+	(@cd test; @make clean)
+	(@cd src; @make clean)
+	(@rm -f lib/* bin/*)
 
 clfile:
-	rm TDjangoh_*.dat
+	@rm TDjangoh_*.dat

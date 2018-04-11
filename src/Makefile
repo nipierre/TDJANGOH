@@ -19,10 +19,8 @@ endif
 all: modules libDjangoh
 
 libDjangoh: $(OBJSF)
-	echo 'Building libDjangoh.so..'
 	@$(CC) $(CCFlags) -shared $(ROOTFLAGS) $(INCDIR) -o libDjangoh.so $(OBJSF) $(LDFLAGS)
 	@mv libDjangoh.so ../lib
-	echo 'libDjangoh.so built !'
 
 modules: xSectionModule.f90
 	@$(GFF) -c xSectionModule.f90

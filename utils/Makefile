@@ -7,20 +7,20 @@ ROOTVERSION = -D ROOT5
 all: pdist rc_calc lowQ2 sirc
 
 pdist:: pdist.cc
-	$(CX) $(CCFLAGS) $(ROOTFLAGS) $(ROOTVERSION) -o $@ $<
-	mv pdist ../bin
+	@$(CX) $(CCFLAGS) $(ROOTFLAGS) $(ROOTVERSION) -o $@ $<
+	@mv pdist ../bin
 
 rc_calc:: rc_calc.cc
-	$(CX) $(CCFLAGS) $(ROOTFLAGS) $(ROOTVERSION) -o $@ $<
-	mv rc_calc ../bin
+	@$(CX) $(CCFLAGS) $(ROOTFLAGS) $(ROOTVERSION) -o $@ $<
+	@mv rc_calc ../bin
 
 lowQ2:: lowQ2.cc
-	$(CX) $(CCFLAGS) $(ROOTFLAGS) $(ROOTVERSION) -o $@ $<
-	mv lowQ2 ../bin
+	@$(CX) $(CCFLAGS) $(ROOTFLAGS) $(ROOTVERSION) -o $@ $<
+	@mv lowQ2 ../bin
 
 sirc:: sirc.cc
-	$(CX) $(CCFLAGS) $(ROOTFLAGS) $(ROOTVERSION) -o $@ $<
-	mv sirc ../bin
+	@$(CX) $(CCFLAGS) $(ROOTFLAGS) $(ROOTVERSION) -o $@ $<
+	@mv sirc ../bin
 
 clean:
-	rm -rf *.o
+	@rm -rf *.o
