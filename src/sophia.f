@@ -98,7 +98,7 @@ C...Event passed fragmentation
       IF (NP.EQ.0) NFAILP=NFAILP+1
 
 C...Transfer event to JETSET common block
-      WRITE(*,6) LEPTID
+      WRITE(6,*) LEPTID
       IF (LEPTID.EQ.-1) THEN
         LEPIN=11
       ELSEIF (LEPTID.EQ.1) THEN
