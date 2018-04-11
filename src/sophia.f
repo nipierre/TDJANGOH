@@ -99,15 +99,16 @@ C...Event passed fragmentation
       IF (NP.EQ.0) NFAILP=NFAILP+1
 
 C...Transfer event to JETSET common block
-      IF (LEPIN1.EQ.-1) THEN
-        LEPIN=11
-      ELSEIF (LEPIN1.EQ.1) THEN
-        LEPIN=-11
-      ELSEIF (LEPIN1.EQ.-3) THEN
-        LEPIN=13
-      ELSEIF (LEPIN1.EQ.3) THEN
-        LEPIN=-13
-      ENDIF
+C      IF (LEPIN1.EQ.-1) THEN
+C        LEPIN=11
+C      ELSEIF (LEPIN1.EQ.1) THEN
+C        LEPIN=-11
+C      ELSEIF (LEPIN1.EQ.-3) THEN
+C        LEPIN=13
+C      ELSEIF (LEPIN1.EQ.3) THEN
+C        LEPIN=-13
+C      ENDIF
+      LEPIN=-13
       IP1=0
 C...Set initial state, first lepton:
       IP1=IP1+1
