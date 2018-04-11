@@ -120,7 +120,7 @@ C...Set initial state, first lepton:
       P(IP1,2)=0.
       P(IP1,3)=PELE
       P(IP1,4)=EELE
-      P(IP1,5)=ULMASS(LEPIN)
+      P(IP1,5)=ULMASS(-LLEPT*10-LEPTID)
 C...then nucleon = proton
       IP1=IP1+1
       K(IP1,1)=201
@@ -131,7 +131,7 @@ C...then nucleon = proton
       P(IP1,1)=0.
       P(IP1,2)=0.
       P(IP1,3)=-PPRO
-      P(IP1,5)=ULMASS(K(IP1,2))
+      P(IP1,5)=ULMASS(2212)
       P(IP1,4)=EPRO
 
 C...Virtual boson (non-radiative case)
