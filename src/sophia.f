@@ -109,7 +109,7 @@ C...Set initial state, first lepton:
       P(IP1,2)=0.
       P(IP1,3)=PELE
       P(IP1,4)=EELE
-      P(IP1,5)=JDAHEP(2,1)
+      P(IP1,5)=PHEP(5,1)
 C...then nucleon = proton
       IP1=IP1+1
       K(IP1,1)=201
