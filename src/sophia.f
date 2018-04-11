@@ -112,7 +112,7 @@ C      ENDIF
 C...Set initial state, first lepton:
       IP1=IP1+1
       K(IP1,1)=201
-      K(IP1,2)=LLEPT*10+LEPTID
+      K(IP1,2)=-LLEPT*10-LEPTID
       K(IP1,3)=0
       K(IP1,4)=0
       K(IP1,5)=0
