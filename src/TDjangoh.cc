@@ -169,6 +169,7 @@ extern "C" struct hsparm
 {
   double polari;
   double hpolar;
+  int leptid;
   int llept;
   int lqua;
 } hsparm_;
@@ -641,7 +642,7 @@ void TDjangoh::ReadXMLFile(const string pFilename)
             cout<<"Resetting to \"e+\" ."<<endl;
             PID = 1;
           }
-          hsparm_.llept = PID;
+          hsparm_.leptid = PID;
         }
       }
     }
@@ -1024,10 +1025,10 @@ void TDjangoh::WriteXMLFile(const string pFilename)
 {
   string cbeam;
 
-  if(hsparm_.llept==1) cbeam="e+";
-  else if(hsparm_.llept==-1) cbeam="e-";
-  else if(hsparm_.llept==3) cbeam="mu+";
-  else if(hsparm_.llept==-3) cbeam="mu-";
+  if(hsparm_.leptid==1) cbeam="e+";
+  else if(hsparm_.leptid==-1) cbeam="e-";
+  else if(hsparm_.leptid==3) cbeam="mu+";
+  else if(hsparm_.leptid==-3) cbeam="mu-";
 
   ofstream f(pFilename);
   f << "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\" ?>" << endl;
@@ -1309,9 +1310,9 @@ double TDjangoh::GetSigtrr()
   return hsnume_.sigtrr[0];
 }
 
-int TDjangoh::GetBeamType() {return hsparm_.llept;}
+int TDjangoh::GetBeamType() {return hsparm_.leptid;}
 
-void TDjangoh::SetBeamType(int pvalue) {hsparm_.llept=pvalue;}
+void TDjangoh::SetBeamType(int pvalue) {hsparm_.leptid=pvalue;}
 
 void TDjangoh::SetBeamType(const char* pname)
 {
@@ -1328,7 +1329,7 @@ void TDjangoh::SetBeamType(const char* pname)
     cout<<"Resetting to \"e+\" ."<<endl;
     PID = 11;
   }
-  hsparm_.llept = PID;
+  hsparm_.leptid = PID;
 }
 
 void TDjangoh::SetBeam(double pBeamE, double pPol)
