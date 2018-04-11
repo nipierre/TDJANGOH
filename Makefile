@@ -21,10 +21,10 @@ setup::
 	@echo 'Directories lib/ and bin/ created !'
 
 clean:
-	(@cd utils; @make clean)
-	(@cd test; @make clean)
-	(@cd src; @make clean)
-	(@rm -f lib/* bin/*)
+	@(cd utils; make clean)
+	@(cd test; make clean)
+	@(cd src; make clean)
+	@(rm -f lib/* bin/*)
 
 clfile:
 	@rm TDjangoh_*.dat
