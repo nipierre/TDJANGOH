@@ -1034,7 +1034,7 @@ void TDjangoh::ReadXMLFile(const string pFilename)
     }
   }
 
-  for(int i=0; i<27; i++)
+  for(int i=0; i<30; i++)
     ConvertToFortran(ihscw_.inputcodewd[i], sizeof ihscw_.inputcodewd[i], inputcw[i]);
 
   // OUTFILENAME
