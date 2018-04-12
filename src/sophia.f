@@ -2174,7 +2174,7 @@ C  simulate reggeon (one-string topology)
 
             do i=1,NP
               call lund_get(i,LLIST(i),
-     &                      P_S(i,1),P_S(i,2),P_S(i,3),P_S(i,4),P_S(i,5))
+     &          P_S(i,1),P_S(i,2),P_S(i,3),P_S(i,4),P_S(i,5))
             enddo
 
 
@@ -2313,7 +2313,7 @@ C  simulate pomeron (two-string topology)
 
             do i=1,NP
               call lund_get(i,LLIST(i),
-     &                      P_S(i,1),P_S(i,2),P_S(i,3),P_S(i,4),P_S(i,5))
+     &            P_S(i,1),P_S(i,2),P_S(i,3),P_S(i,4),P_S(i,5))
             enddo
 
           endif
@@ -3080,10 +3080,12 @@ C...Lorentz transform decay products to lab frame
 
 C...Weak decays
         IF (MAT .EQ. 1)  THEN
-           F1=P_S(2,4)*P_S(3,4)-P_S(2,1)*P_S(3,1)-P_S(2,2)*P_S(3,2)-P_S(2,3)*P_S(3,3)
+           F1=P_S(2,4)*P_S(3,4)-P_S(2,1)*P_S(3,1)-P_S(2,2)*P_S(3,2)
+     *        -P_S(2,3)*P_S(3,3)
            IF (MBST.EQ.1)  WT = P0(5)*P_S(1,4)*F1
            IF (MBST.EQ.0)
-     +     WT=F1*(P_S(1,4)*P0(4)-P_S(1,1)*P0(1)-P_S(1,2)*P0(2)-P_S(1,3)*P0(3))
+     +     WT=F1*(P_S(1,4)*P0(4)-P_S(1,1)*P0(1)-P_S(1,2)*P0(2)-P_S(1,3)
+     *          *P0(3))
            WTMAX = P0(5)**4/16.D0
            IF(WT.LT.RNDM(0)*WTMAX)   GOTO 240
         ENDIF
