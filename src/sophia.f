@@ -310,7 +310,7 @@ C...virtual boson (non-radiative case)
         P(3,5)=-SQRT(Q2)
       ENDIF
       K(3,1)=21
-      K(3,2)=KSAVE(3)
+      K(3,2)=23
       K(3,3)=1
       K(3,3)=1
       K(3,5)=0
