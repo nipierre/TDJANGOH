@@ -12,7 +12,7 @@ C***********************************************************************
 
       IMPLICIT DOUBLE PRECISION (A-H,O-Z)
       IMPLICIT INTEGER (I-N)
-      COMMON /HSPARM/ POLARI,HPOLAR,LLEPT,LQUA
+      COMMON /HSPARM/ POLARI,HPOLAR,LEPTID,LLEPT,LQUA
       COMMON /HSELAB/ SP,EELE,PELE,EPRO,PPRO
       COMMON /HSIKP/  S,T,U,SS,TS,US,DKP,DKPS,DKQ,DKQS
       COMMON /HSCHNN/ ICHNN
@@ -59,6 +59,7 @@ C...reset counters for failed trials
       DO 1 INF=1,10
  1    NFAILI(INF)=0
       NSPACC=0
+      NFLMAX=10
 
 C...Determine momentum of virtual incoming photon
       IF (ICHNN.LE.2) THEN
@@ -85,9 +86,14 @@ C...Determine momentum of incoming nucleon
 
       N=0
 C...Generate hadronic final state
-      LST(21)=99
+  2   LST(21)=99
       CALL SOPHIA(L0,P_gam,P_nuc,Imode)
 c      call print_event(1)
+      IF (NP.EQ.0) THEN
+        NFAILP=NFAILP+1
+        IF (NFAIL.LT.NFLMAX) GOTO 2
+        GOTO 30
+      ENDIF
 C...Event passed fragmentation
       IF (NP.NE.0) THEN
         LST(21)=0
@@ -95,12 +101,11 @@ C...Event passed fragmentation
         NSOPH=NSOPH+1
         NSPACC=1
       ENDIF
-      IF (NP.EQ.0) NFAILP=NFAILP+1
 
       IP1=0
 C...Set initial state, first lepton:
       IP1=IP1+1
-      K(IP1,1)=201
+      K(IP1,1)=21
       K(IP1,2)=-LLEPT*10-LEPTID
       K(IP1,3)=0
       K(IP1,4)=0
@@ -116,7 +121,7 @@ C...Set initial state, first lepton:
       ENDIF
 C...then nucleon = proton
       IP1=IP1+1
-      K(IP1,1)=201
+      K(IP1,1)=21
       K(IP1,2)=2212
       K(IP1,3)=0
       K(IP1,4)=0
@@ -196,6 +201,9 @@ C...Hadronic final state from SOPHIA
       N=IP1
       RETURN
 
+ 30   CALL SPHLEV
+      RETURN
+
       END
 
 C***********************************************************************
@@ -216,6 +224,117 @@ C***********************************************************************
       N=0
       LST(21)=99
       NSPOUT=NSPOUT+1
+      RETURN
+      END
+
+C***********************************************************************
+
+      SUBROUTINE SPHLEV
+
+Chs...Restore event record from SOPHIA when hadronization has failed
+      COMMON /HSPARM/ POLARI,HPOLAR,LEPTID,LLEPT,LQUA
+      COMMON /HSELAB/ SP,EELE,PELE,EPRO,PPRO
+      COMMON/LUJETS/N,K(4000,5),P(4000,5),V(4000,5)
+      COMMON /LEPTOU/ CUT(14),LST(40),PARL(30),X,Y,W2,Q2,U
+      PARAMETER (NMXHEP=2000)
+      COMMON /HSCHNN/ ICHNN
+      double precision PHEP,VHKK
+      COMMON /HEPEVT/ NEVHEP,NHEP,ISTHEP(NMXHEP),IDHEP(NMXHEP),
+     &             JMOHEP(2,NMXHEP),JDAHEP(2,NMXHEP),
+     &             PHEP(5,NMXHEP),VHKK(4,NMXHEP)
+
+C...Set initial state, first lepton:
+      K(1,1)=21
+      K(1,2)=-LLEPT*10-LEPTID
+      K(1,3)=0
+      K(1,4)=0
+      K(1,5)=0
+      P(1,1)=0.
+      P(1,2)=0.
+      P(1,3)=PELE
+      P(1,4)=EELE
+      IF (K(1,2).EQ.-1.OR.K(1,2).EQ.1) THEN
+        P(1,5)= 0.000511
+      ELSE IF (K(1,2).EQ.-3.OR.K(1,2).EQ.3) THEN
+        P(1,5)= 0.10566
+      ENDIF
+
+C...then nucleon = proton
+      K(2,1)=21
+      K(2,2)=2212
+      K(2,3)=0
+      K(2,4)=0
+      K(2,5)=0
+      P(2,1)=0.
+      P(2,2)=0.
+      P(2,3)=-PPRO
+      P(2,5)=0.938272
+      P(2,4)=EPRO
+
+C...Final electron from HS
+      DO 20 J=1,5
+   20 P(4,J)=PHEP(J,1)
+      K(4,1)=ISTHEP(1)
+      K(4,2)=IDHEP(1)
+      K(4,3)=1
+      K(4,4)=JDAHEP(1,1)
+      K(4,5)=JDAHEP(2,1)
+      N=4
+
+C...Bremsstrahlung photon
+      IF (ICHNN.EQ.6.OR.ICHNN.EQ.7.OR.ICHNN.EQ.8
+     &   .OR.ICHNN.EQ.12) THEN
+        N=N+1
+        K(5,1)=ISTHEP(3)
+        K(5,2)=IDHEP(3)
+C...radiated gamma has origin in e or e'
+        IF(ICHNN.EQ.6.OR.ICHNN.EQ.8.OR.ICHNN.EQ.12) THEN
+          K(5,3)=1
+        ELSE
+          K(5,3)=4
+        ENDIF
+        K(5,4)=JDAHEP(1,3)
+        K(5,5)=JDAHEP(2,3)
+        DO 30 J=1,5
+   30   P(5,J)=PHEP(J,3)
+        DO 40 JV=1,4
+   40   V(5,JV)=VHKK(JV,3)
+C...virtual boson (radiative case)
+        DO 50 JG=1,4
+   50   P(3,JG)=P(1,JG)-PHEP(JG,1)-PHEP(JG,3)
+        P(3,5)=-SQRT(Q2)
+      ELSEIF(ICHNN.EQ.1.OR.ICHNN.EQ.2) THEN
+C...virtual boson (non-radiative case)
+        DO 60 JG=1,4
+   60   P(3,JG)=P(1,JG)-PHEP(JG,1)
+        P(3,5)=-SQRT(Q2)
+      ENDIF
+      K(3,1)=21
+      K(3,2)=KSAVE(3)
+      K(3,3)=1
+      K(3,3)=1
+      K(3,5)=0
+
+C...Unfragmented hadronic final state
+C...scattered quark
+      N=N+1
+      DO 70 J=1,5
+   70 P(N,J)=PHEP(J,2)
+      K(N,1)=ISTHEP(2)
+      K(N,2)=IDHEP(2)
+      K(N,3)=1
+      K(N,4)=JDAHEP(1,2)
+      K(N,5)=JDAHEP(2,2)
+C...spectator
+      N=N+1
+      DO 80 J=1,5
+   80 P(N,J)=PHEP(J,4)
+      K(N,1)=ISTHEP(4)
+      K(N,2)=IDHEP(4)
+      K(N,3)=1
+      K(N,4)=JDAHEP(1,4)
+      K(N,5)=JDAHEP(2,4)
+
       RETURN
       END
 

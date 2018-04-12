@@ -625,7 +625,9 @@ void TDjangoh::ReadXMLFile(const string pFilename)
   inputcw[24] = "FRAG      ";
   inputcw[25] = "CASCADES  ";
   inputcw[26] = "MAX-VIRT  ";
-  inputcw[27] = "CONTINUE  ";
+  inputcw[27] = "KT-PARTON ";
+  inputcw[28] = "BARYON    ";
+  inputcw[29] = "CONTINUE  ";
 
   for ( pugi::xml_node cCodeWord = doc.child ( "Codeword" ); cCodeWord; cCodeWord = cCodeWord.next_sibling() )
   {
