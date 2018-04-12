@@ -91,7 +91,7 @@ C...Generate hadronic final state
 c      call print_event(1)
       IF (NP.EQ.0) THEN
         NFAILP=NFAILP+1
-        IF (NFAIL.LT.NFLMAX) GOTO 2
+        IF (NFAILP.LT.NFLMAX) GOTO 2
         GOTO 30
       ENDIF
 C...Event passed fragmentation

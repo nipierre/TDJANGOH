@@ -2,17 +2,17 @@ all: src test utils
 
 src::
 	@echo 'Building libDjangoh.so..'
-	@$(MAKE) -C $@
+	@$(MAKE) --no-print-directory -C $@
 	@echo 'libDjangoh.so built !'
 
 test::
 	@echo 'Building test programs..'
-	@$(MAKE) -C $@
+	@$(MAKE) --no-print-directory -C $@
 	@echo 'Test programs built !'
 
 utils::
 	@echo 'Building utilitary programs..'
-	@$(MAKE) -C $@
+	@$(MAKE) --no-print-directory -C $@
 	@echo 'Utilitary programs built !'
 
 setup::
@@ -21,9 +21,9 @@ setup::
 	@echo 'Directories lib/ and bin/ created !'
 
 clean:
-	@(cd utils; make clean)
-	@(cd test; make clean)
-	@(cd src; make clean)
+	@$(MAKE) --no-print-directory -C src clean
+	@$(MAKE) --no-print-directory -C test clean
+	@$(MAKE) --no-print-directory -C utils clean
 	@(rm -f lib/* bin/*)
 
 clfile:
