@@ -441,10 +441,6 @@ void TDjangoh::GenerateEvent()
   {
     RadElasFS();
   }
-  if(hslst[21]==0)
-  {
-    fLujets->N = 0;
-  }
   ImportParticles();
 }
 
