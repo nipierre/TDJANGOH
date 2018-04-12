@@ -115,7 +115,7 @@
 
 <!-- FLONG -->
 <Codeword name="FLONG">
-  <Data name="iflopt" value="111"/>
+  <Data name="iflopt" value="122"/>
   <Data name="parl11" value="0.01"/>
   <Data name="parl19" value="0.03"/>
 </Codeword>
@@ -126,6 +126,15 @@
   <Data name="mst115" value="1"/>
   <Data name="par111" value="0.2"/>
   <Data name="par112" value="0.235"/>
+</Codeword>
+
+<!-- HIGH-PT -->
+<Codeword name="HIGH-PT">
+  <Data name="parj21" value="0.34"/>
+  <Data name="parj23" value="0.04"/>
+  <Data name="parj24" value="2.8"/>
+  <Data name="parj41" value="0.025"/>
+  <Data name="parj42" value="0.075"/>
 </Codeword>
 
 <!-- NFLAVORS -->

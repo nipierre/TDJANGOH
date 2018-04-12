@@ -278,6 +278,8 @@ C-------------------------
       COMMON /HSALFS/ PAR111,PAR112,PARL11,PARL19,MST111,MST115
       REAL PAR111,PAR112,PARL11,PARL19
       INTEGER                                     MST111,MST115
+      COMMON /HSHGPT/ PARJ21,PARJ23,PARJ24,PARJ41,PARJ42
+      REAL            PARJ21,PARJ23,PARJ24,PARJ41,PARJ42
       COMMON /HSLPTU/ HSLST(40), HSPARL(30)
       INTEGER         HSLST
       SAVE /HSLPTU/
@@ -319,7 +321,7 @@ C---AND SET STARTING VALUES FOR VARIOUS COUNTERS
      1'TITLE     ','EL-BEAM   ','PR-BEAM   ','KINEM-CUTS','EGAM-MIN  ',
      2'INT-OPT-NC','INT-OPT-CC','INT-POINTS','HYP-CUBES ','GSW-PARAM ',
      3'STRUCTFUNC','NFLAVORS  ','SAM-OPT-NC','SAM-OPT-CC','RNDM-SEEDS',
-     4'GSW-MASS  ','THMIN-QRAD','FLONG     ','ALFAS     ','          ',
+     4'GSW-MASS  ','THMIN-QRAD','FLONG     ','ALFAS     ','HIGH-PT   ',
      5'EP-DIPOLE ','NUCLEUS   ','NUCL-MOD  ','LHAPATH   ','OUTFILENAM',
      6'THETA-CUT ','PT-CUT    ','POLPDF    ','          ','          ',
      7'WEIGHTS   ','GD-OPT    ','          ','          ','          ',
@@ -884,6 +886,23 @@ C***********************************************************************
       CALL DIALFS
       GO TO 1
  2000 CONTINUE
+C
+C***********************************************************************
+C               CONTROL CARD: CODEWD = HIGH-PT
+C
+C    DEFINITION OF LEPTO PARAMETERS DESCRIBING THE FRAGMENTATION
+C    PROCESS
+C
+C***********************************************************************
+      IF(VERBOZ.EQ.1) THEN
+        WRITE(LUNOUT,'(5X,A,F10.4)') ' PARJ21 =  ', PARJ21
+        WRITE(LUNOUT,'(5X,A,F10.4)') ' PARJ23 =  ', PARJ23
+        WRITE(LUNOUT,'(5X,A,F10.4)') ' PARJ24 = ', PARJ24
+        WRITE(LUNOUT,'(5X,A,F10.4)') ' PARJ41 = ', PARJ41
+        WRITE(LUNOUT,'(5X,A,F10.4)') ' PARJ42 = ', PARJ42
+      ENDIF
+      CALL DIHGPT
+      GO TO 1
  2100 CONTINUE
 C
 C***********************************************************************
@@ -2175,6 +2194,8 @@ C-------------------------
       COMMON /HSALFS/ PAR111,PAR112,PARL11,PARL19,MST111,MST115
       REAL            PAR111,PAR112,PARL11,PARL19
       INTEGER                                     MST111,MST115
+      COMMON /HSHGPT/ PARJ21,PARJ23,PARJ24,PARJ41,PARJ42
+      REAL            PARJ21,PARJ23,PARJ24,PARJ41,PARJ42
       CHARACTER*80 LHAPATHI
       CHARACTER*232 LHAPATH
       COMMON /LHAPDFC/ LHAPATH
@@ -2545,6 +2566,8 @@ C-----------------------------
       COMMON /HSALFS/ PAR111,PAR112,PARL11,PARL19,MST111,MST115
       REAL            PAR111,PAR112,PARL11,PARL19
       INTEGER         MST111,MST115
+      COMMON /HSHGPT/ PARJ21,PARJ23,PARJ24,PARJ41,PARJ42
+      REAL            PARJ21,PARJ23,PARJ24,PARJ41,PARJ42
 cs..Sophia
       double precision WSOPHIA
       COMMON /SOPHCT/ WSOPHIA
@@ -2578,6 +2601,8 @@ C---DEFINE GSW PARAMETERS
       DATA NPYMIN /1/, NPYMAX/6/
       DATA PAR111 /0.2/, PAR112/0.25/, MST111/1/, MST115/0/
       DATA PARL11 /0.01/, PARL19/0.03/
+      DATA PARJ21, PARJ23, PARJ24, PARJ41, PARJ42
+     *    /0.34  , 0.04  , 2.8   , 0.025 , 0.075 /
       DATA LPAR / 1, 1, 3, 2, 0, 123041, 2, 0, 0, 0,
      *            1, 1, 0, 0, 0, 0, 0, 2, 0, 0/
       DATA IPDFOP / 1 /
@@ -13742,6 +13767,21 @@ C>   Translate input from FLONG input flag
       RETURN
       END
 
+C*********************************************************************
+C>   Translate input from HIGH-PT input
+      SUBROUTINE DIHGPT
+      COMMON /HSHGPT/ PARJ21,PARJ23,PARJ24,PARJ41,PARJ42
+      COMMON/LUDAT1/MSTU(200),PARU(200),MSTJ(200),PARJ(200)
+      COMMON /LEPTOU/ CUT(14),LST(40),PARL(30),X,Y,W2,Q2,U
+
+      PARJ(21)=PARJ21
+      PARJ(23)=PARJ23
+      PARJ(24)=PARJ24
+      PARJ(41)=PARJ41
+      PARJ(42)=PARJ42
+      RETURN
+      END
+
 C
 C***********************************************************************
 C
@@ -14229,6 +14269,7 @@ C...Set switches and parameters for parton densities in PYSTFU.
 C...Reset parameters from input
         CALL DIALFS
         CALL DIFLOP
+        CALL DIHGPT
         MSTU(112)=NPYMAX
         PARL(26)=PARP(1)
       ENDIF
@@ -14356,6 +14397,8 @@ C
       COMMON /HSALFS/ PAR111,PAR112,PARL11,PARL19,MST111,MST115
       REAL            PAR111,PAR112,PARL11,PARL19
       INTEGER         MST111,MST115
+      COMMON /HSHGPT/ PARJ21,PARJ23,PARJ24,PARJ41,PARJ42
+      REAL            PARJ21,PARJ23,PARJ24,PARJ41,PARJ42
       DOUBLE PRECISION VALUE(20)
       CHARACTER*20 PARM(20)
       DATA VALUE/20*0D0/,PARM/20*' '/

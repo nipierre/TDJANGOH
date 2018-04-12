@@ -198,6 +198,15 @@ extern "C" struct hsalfs
   int mst115;
 } hsalfs_;
 
+extern "C" struct hshgpt
+{
+  float parj21;
+  float parj23;
+  float parj24;
+  float parj41;
+  float parj42;
+} hshgpt_;
+
 extern "C" struct hsintnc
 {
   int inc2;
@@ -432,6 +441,10 @@ void TDjangoh::GenerateEvent()
   {
     RadElasFS();
   }
+  if(hslst[21]==0)
+  {
+    fLujets->N = 0;
+  }
   ImportParticles();
 }
 
@@ -607,15 +620,16 @@ void TDjangoh::ReadXMLFile(const string pFilename)
   inputcw[15] = "LHAPATH   ";
   inputcw[16] = "FLONG     ";
   inputcw[17] = "ALFAS     ";
-  inputcw[18] = "NFLAVORS  ";
-  inputcw[19] = "RNDM-SEEDS";
-  inputcw[20] = "START     ";
-  inputcw[21] = "SOPHIA    ";
-  inputcw[22] = "OUT-LEP   ";
-  inputcw[23] = "FRAG      ";
-  inputcw[24] = "CASCADES  ";
-  inputcw[25] = "MAX-VIRT  ";
-  inputcw[26] = "CONTINUE  ";
+  inputcw[18] = "HIGH-PT   ";
+  inputcw[19] = "NFLAVORS  ";
+  inputcw[20] = "RNDM-SEEDS";
+  inputcw[21] = "START     ";
+  inputcw[22] = "SOPHIA    ";
+  inputcw[23] = "OUT-LEP   ";
+  inputcw[24] = "FRAG      ";
+  inputcw[25] = "CASCADES  ";
+  inputcw[26] = "MAX-VIRT  ";
+  inputcw[27] = "CONTINUE  ";
 
   for ( pugi::xml_node cCodeWord = doc.child ( "Codeword" ); cCodeWord; cCodeWord = cCodeWord.next_sibling() )
   {
@@ -889,6 +903,24 @@ void TDjangoh::ReadXMLFile(const string pFilename)
       }
     }
 
+    if(!strcmp(cCWType.c_str(), "HIGH-PT" ))
+    {
+      cout << "\nCodeword : HIGH-PT" << endl;
+      for(pugi::xml_node cData = cCodeWord.child ( "Data" ); cData; cData = cData.next_sibling())
+      {
+        if(std::string(cData.attribute("name").value()) == "parj21")
+          {hshgpt_.parj21 = cData.attribute("value").as_float();cout<<"parj21 : "<<hshgpt_.parj21<<"\t";}
+        else if(std::string(cData.attribute("name").value()) == "parj23")
+          {hshgpt_.parj23 = cData.attribute("value").as_float();cout<<"parj23 : "<<hshgpt_.parj23<<"\t";}
+        else if(std::string(cData.attribute("name").value()) == "parj24")
+          {hshgpt_.parj24 = cData.attribute("value").as_float();cout<<"parj24 : "<<hshgpt_.parj24<<"\t";}
+        else if(std::string(cData.attribute("name").value()) == "parj41")
+          {hshgpt_.parj41 = cData.attribute("value").as_float();cout<<"parj41 : "<<hshgpt_.parj41<<"\t";}
+        else if(std::string(cData.attribute("name").value()) == "parj42")
+          {hshgpt_.parj42 = cData.attribute("value").as_float();cout<<"parj42 : "<<hshgpt_.parj42<<endl;}
+      }
+    }
+
     if(!strcmp(cCWType.c_str(), "NFLAVORS" ))
     {
       cout <<"\nCodeword : NFLAVORS" << endl;
@@ -1159,6 +1191,15 @@ void TDjangoh::WriteXMLFile(const string pFilename)
   f << "\t<Data name=\"mst115\" value=\"" << hsalfs_.mst115 << "\"/>" << endl;
   f << "\t<Data name=\"par111\" value=\"" << hsalfs_.par111 << "\"/>" << endl;
   f << "\t<Data name=\"par112\" value=\"" << hsalfs_.par112 << "\"/>" << endl;
+  f << "</Codeword>" << endl;
+
+  f << "\n<!-- HIGH-PT -->" << endl;
+  f << "<Codeword name=\"HIGH-PT\">" << endl;
+  f << "\t<Data name=\"parj21\" value=\"" << hshgpt_.parj21 << "\"/>" << endl;
+  f << "\t<Data name=\"parj23\" value=\"" << hshgpt_.parj23 << "\"/>" << endl;
+  f << "\t<Data name=\"parj24\" value=\"" << hshgpt_.parj24 << "\"/>" << endl;
+  f << "\t<Data name=\"parj41\" value=\"" << hshgpt_.parj41 << "\"/>" << endl;
+  f << "\t<Data name=\"parj42\" value=\"" << hshgpt_.parj42 << "\"/>" << endl;
   f << "</Codeword>" << endl;
 
   f << "\n<!-- NFLAVORS -->" << endl;

@@ -240,7 +240,7 @@ C***********************************************************************
       DIMENSION P_gam(4),P_nuc(4)
 
        COMMON /S_RUN/ SQS, S, Q2MIN, XMIN, ZMIN, kb, kt, a1, a2, Nproc
-       COMMON /S_PLIST/ P(2000,5), LLIST(2000), NP, Ideb
+       COMMON /S_PLIST/ P_S(2000,5), LLIST(2000), NP, Ideb
        COMMON /S_MASS1/ AM(49), AM2(49)
        COMMON /S_CHP/ S_LIFE(49), ICHP(49), ISTR(49), IBAR(49)
        COMMON /S_CSYDEC/ CBR(102), IDB(49), KDEC(612), LBARP(49)
@@ -1213,7 +1213,7 @@ c... determine the energy range of the resonance:
        COMMON /S_RESn/ CBRRES1n(18),CBRRES2n(36),CBRRES3n(22),
      +  RESLIMn(36),ELIMITSn(9),KDECRES1n(90),KDECRES2n(180),
      +  KDECRES3n(110),IDBRES1n(9),IDBRES2n(9),IDBRES3n(9)
-       COMMON /S_PLIST/ P(2000,5), LLIST(2000), NP, Ideb
+       COMMON /S_PLIST/ P_S(2000,5), LLIST(2000), NP, Ideb
 c       COMMON /S_CNAM/ NAMP (0:49)
 c      CHARACTER NAMP*6, NAMPRESp*6, NAMPRESn*6
 
@@ -1341,7 +1341,7 @@ c** Date: 16/02/98   **
 c** author: A.Muecke **
 c**********************
 
-       COMMON /S_PLIST/ P(2000,5), LLIST(2000), NP, Ideb
+       COMMON /S_PLIST/ P_S(2000,5), LLIST(2000), NP, Ideb
 
 c ... use rejection method for sampling:
        LA = LLIST(1)
