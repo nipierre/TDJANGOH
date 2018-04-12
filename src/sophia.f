@@ -2974,7 +2974,7 @@ C...Phase space decay into the particles in the list
           MBST = 0
           PS = 0.
           DO J=1,ND
-             P (J,5) = AM(IABS(LL(J)))
+             P_S(J,5) = AM(IABS(LL(J)))
              PV(J,5) = AM(IABS(LL(J)))
              PS = PS+P_S(J,5)
           ENDDO
