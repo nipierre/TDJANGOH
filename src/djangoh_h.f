@@ -397,7 +397,7 @@ C       STRUCTFUNC, NFLAVORS  , SAM-OPT-NC, SAM-OPT-CC, RNDM-SEEDS,
      3  1100      , 1200      , 1300      , 1400      , 1500      ,
 C
 C------------------------------------------------------------------
-C       GSW-MASS  , THMIN-QRAD, FLONG     , ALFAS     ,           ,
+C       GSW-MASS  , THMIN-QRAD, FLONG     , ALFAS     , HIGH-PT   ,
      4  1600      , 1700      , 1800      , 1900      , 2000      ,
 C
 C------------------------------------------------------------------
