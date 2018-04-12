@@ -23,7 +23,7 @@ C***********************************************************************
       COMMON /HEPEVT/ NEVHEP,NHEP,ISTHEP(NMXHEP),IDHEP(NMXHEP),
      &                JMOHEP(2,NMXHEP),JDAHEP(2,NMXHEP),
      &                PHEP(5,NMXHEP),VHKK(4,NMXHEP)
-      COMMON /S_PLIST/ P_S(2000,5), LLIST(2000), NP, Ideb
+      COMMON /S_PLIST/ PUS(2000,5), LLIST(2000), NP, Ideb
       COMMON/LUJETS/N,K(4000,5),P(4000,5),V(4000,5)
       REAL*4 P,V
       COMMON /LEPTOU/ CUT(14),LST(40),PARL(30)
@@ -186,11 +186,11 @@ C...Hadronic final state from SOPHIA
       DO 20 IP=1,NP
         IF (ABS(LLIST(IP)).LT.50) THEN
           IP1=IP1+1
-          P(IP1,1)=P_S(IP,1)
-          P(IP1,2)=P_S(IP,2)
-          P(IP1,3)=P_S(IP,3)
-          P(IP1,4)=P_S(IP,4)
-          P(IP1,5)=P_S(IP,5)
+          P(IP1,1)=PUS(IP,1)
+          P(IP1,2)=PUS(IP,2)
+          P(IP1,3)=PUS(IP,3)
+          P(IP1,4)=PUS(IP,4)
+          P(IP1,5)=PUS(IP,5)
           K(IP1,1)=1
           K(IP1,2)=ICON_SIB_PDG(LLIST(IP))
           K(IP1,3)=0
@@ -359,7 +359,7 @@ C***********************************************************************
       DIMENSION P_gam(4),P_nuc(4)
 
        COMMON /S_RUN/ SQS, S, Q2MIN, XMIN, ZMIN, kb, kt, a1, a2, Nproc
-       COMMON /S_PLIST/ P_S(2000,5), LLIST(2000), NP, Ideb
+       COMMON /S_PLIST/ PUS(2000,5), LLIST(2000), NP, Ideb
        COMMON /S_MASS1/ AM(49), AM2(49)
        COMMON /S_CHP/ S_LIFE(49), ICHP(49), ISTR(49), IBAR(49)
        COMMON /S_CSYDEC/ CBR(102), IDB(49), KDEC(612), LBARP(49)
@@ -376,7 +376,7 @@ C***********************************************************************
       COMMON /RES_PROPn/ AMRESn(9), BGAMMAn(9),WIDTHn(9),
      +                    RATIOJn(9),NAMPRESn(0:9)
 
-       DOUBLE PRECISION P_sum(4),PC(4),GamBet(4)
+       DOUBLE PRECISION PUSum(4),PC(4),GamBet(4)
 
 c       DATA pi /3.141593D0/
        DATA pm /0.93827D0/
@@ -402,20 +402,20 @@ c**             sqrt(s) = CMF energy of the N\gamma-system
 
 
 C  calculate Lorentz boost and rotation
-       P_sum(1) = P_nuc(1)+P_gam(1)
-       P_sum(2) = P_nuc(2)+P_gam(2)
-       P_sum(3) = P_nuc(3)+P_gam(3)
-       P_sum(4) = P_nuc(4)+P_gam(4)
+       PUSum(1) = P_nuc(1)+P_gam(1)
+       PUSum(2) = P_nuc(2)+P_gam(2)
+       PUSum(3) = P_nuc(3)+P_gam(3)
+       PUSum(4) = P_nuc(4)+P_gam(4)
 
-       s = (P_sum(4)-P_sum(3))*(P_sum(4)+P_sum(3))
-     &     -P_sum(1)**2-P_sum(2)**2
+       s = (PUSum(4)-PUSum(3))*(PUSum(4)+PUSum(3))
+     &     -PUSum(1)**2-PUSum(2)**2
 
        sqsm = sqrt(s)
 
        eps_prime = (s-pm*pm)/2.D0/pm
 C  Lorentz transformation into c.m. system
       DO I=1,4
-        GamBet(I) = P_sum(I)/sqsm
+        GamBet(I) = PUSum(I)/sqsm
       ENDDO
 C  calculate rotation angles
       IF(GamBet(4).lt.1.d5) then
@@ -513,21 +513,21 @@ c... consider only stable particles:
          if (abs(LLIST(i)).lt.10000) then
           istable = istable+1
           LLIST(istable) = LLIST(i)
-          P_S(istable,1) = P_S(i,1)
-          P_S(istable,2) = P_S(i,2)
-          P_S(istable,3) = P_S(i,3)
-          P_S(istable,4) = P_S(i,4)
-          P_S(istable,5) = P_S(i,5)
+          PUS(istable,1) = PUS(i,1)
+          PUS(istable,2) = PUS(i,2)
+          PUS(istable,3) = PUS(i,3)
+          PUS(istable,4) = PUS(i,4)
+          PUS(istable,5) = PUS(i,5)
          endif
   16    continue
         if (NP.gt.istable) then
          do i=istable+1,NP
           LLIST(i) = 0
-          P_S(i,1) = 0.
-          P_S(i,2) = 0.
-          P_S(i,3) = 0.
-          P_S(i,4) = 0.
-          P_S(i,5) = 0.
+          PUS(i,1) = 0.
+          PUS(i,2) = 0.
+          PUS(i,3) = 0.
+          PUS(i,4) = 0.
+          PUS(i,5) = 0.
          enddo
         endif
         NP = istable
@@ -537,12 +537,12 @@ c transformation from CM-system to lab-system: *
 c***********************************************
 
       DO I=1,NP
-        CALL PO_TRANS(P_S(I,1),P_S(I,2),P_S(I,3),COD,SID,COF,SIF,
+        CALL PO_TRANS(PUS(I,1),PUS(I,2),PUS(I,3),COD,SID,COF,SIF,
      &    PC(1),PC(2),PC(3))
-        PC(4) = P_S(I,4)
+        PC(4) = PUS(I,4)
         CALL PO_ALTRA(GamBet(4),GamBet(1),GamBet(2),GamBet(3),
      &    PC(1),PC(2),PC(3),PC(4),Ptot,
-     &    P_S(I,1),P_S(I,2),P_S(I,3),P_S(I,4))
+     &    PUS(I,1),PUS(I,2),PUS(I,3),PUS(I,4))
       ENDDO
 
       call check_event(Icount,Esum,PXsum,PYsum,PZsum,IQchr,IQbar,Irej)
@@ -1332,7 +1332,7 @@ c... determine the energy range of the resonance:
        COMMON /S_RESn/ CBRRES1n(18),CBRRES2n(36),CBRRES3n(22),
      +  RESLIMn(36),ELIMITSn(9),KDECRES1n(90),KDECRES2n(180),
      +  KDECRES3n(110),IDBRES1n(9),IDBRES2n(9),IDBRES3n(9)
-       COMMON /S_PLIST/ P_S(2000,5), LLIST(2000), NP, Ideb
+       COMMON /S_PLIST/ PUS(2000,5), LLIST(2000), NP, Ideb
 c       COMMON /S_CNAM/ NAMP (0:49)
 c      CHARACTER NAMP*6, NAMPRESp*6, NAMPRESn*6
 
@@ -1460,7 +1460,7 @@ c** Date: 16/02/98   **
 c** author: A.Muecke **
 c**********************
 
-       COMMON /S_PLIST/ P_S(2000,5), LLIST(2000), NP, Ideb
+       COMMON /S_PLIST/ PUS(2000,5), LLIST(2000), NP, Ideb
 
 c ... use rejection method for sampling:
        LA = LLIST(1)
@@ -1616,7 +1616,7 @@ c***************************
       IMPLICIT DOUBLE PRECISION (A-H,O-Z)
       IMPLICIT INTEGER (I-N)
       SAVE
-       COMMON /S_PLIST/ P_S(2000,5), LLIST(2000), NP, Ideb
+       COMMON /S_PLIST/ PUS(2000,5), LLIST(2000), NP, Ideb
        COMMON /S_CSYDEC/ CBR(102), IDB(49), KDEC(612), LBARP(49)
       COMMON /S_MASS1/ AM(49), AM2(49)
       COMMON /S_CHP/  S_LIFE(49), ICHP(49), ISTR(49), IBAR(49)
@@ -2001,7 +2001,7 @@ C**********************************************************************
       IMPLICIT INTEGER (I-N)
 
       COMMON /S_RUN/ SQS, S, Q2MIN, XMIN, ZMIN, kb, kt, a1, a2, Nproc
-      COMMON /S_PLIST/ P_S(2000,5), LLIST(2000), NP, Ideb
+      COMMON /S_PLIST/ PUS(2000,5), LLIST(2000), NP, Ideb
       COMMON /S_CHP/ S_LIFE(49), ICHP(49), ISTR(49), IBAR(49)
       COMMON /S_MASS1/ AM(49), AM2(49)
       COMMON /S_CFLAFR/ PAR(8)
@@ -2100,17 +2100,17 @@ C  kinematics
         phi = 6.28318530717959D0*RNDM(0)
 
         LLIST(1) = ipa
-        P_S(1,4) = e3
-        P_S(1,1) = SIN(phi)*pt
-        P_S(1,2) = COS(phi)*pt
-        P_S(1,3) = pl
-        P_S(1,5) = am_a
+        PUS(1,4) = e3
+        PUS(1,1) = SIN(phi)*pt
+        PUS(1,2) = COS(phi)*pt
+        PUS(1,3) = pl
+        PUS(1,5) = am_a
         LLIST(2) = ipb
-        P_S(2,1) = -P_S(1,1)
-        P_S(2,2) = -P_S(1,2)
-        P_S(2,3) = -P_S(1,3)
-        P_S(2,4) = Ecm - P_S(1,4)
-        P_S(2,5) = am_b
+        PUS(2,1) = -PUS(1,1)
+        PUS(2,2) = -PUS(1,2)
+        PUS(2,3) = -PUS(1,3)
+        PUS(2,4) = Ecm - PUS(1,4)
+        PUS(2,5) = am_b
         np = 2
 
         call DECSIB
@@ -2193,17 +2193,17 @@ C  kinematics
         phi = 6.28318530717959D0*RNDM(0)
 
         LLIST(1) = ipa
-        P_S(1,4) = e3
-        P_S(1,1) = SIN(phi)*pt
-        P_S(1,2) = COS(phi)*pt
-        P_S(1,3) = pl
-        P_S(1,5) = am_a
+        PUS(1,4) = e3
+        PUS(1,1) = SIN(phi)*pt
+        PUS(1,2) = COS(phi)*pt
+        PUS(1,3) = pl
+        PUS(1,5) = am_a
         LLIST(2) = ipb
-        P_S(2,1) = -P_S(1,1)
-        P_S(2,2) = -P_S(1,2)
-        P_S(2,3) = -P_S(1,3)
-        P_S(2,4) = Ecm - P_S(1,4)
-        P_S(2,5) = am_b
+        PUS(2,1) = -PUS(1,1)
+        PUS(2,2) = -PUS(1,2)
+        PUS(2,3) = -PUS(1,3)
+        PUS(2,4) = Ecm - PUS(1,4)
+        PUS(2,5) = am_b
         np = 2
 
         call DECSIB
@@ -2733,14 +2733,14 @@ C  N gamma --> N pi+ pi- pi0
             do j=1,ND
               LLIST(j) = LL(j)
               do k=1,5
-                P_S(j,k) = P_dec(j,k)
+                PUS(j,k) = P_dec(j,k)
               enddo
               if(((LLIST(j).eq.13).or.(LLIST(j).eq.14))
      &           .and.(P(j,3).lt.0.D0)) Iflip = 1
             enddo
             if(Iflip.ne.0) then
               do j=1,ND
-                P_S(j,3) = -P_S(j,3)
+                PUS(j,3) = -PUS(j,3)
               enddo
             endif
             NP = ND
@@ -2781,7 +2781,7 @@ C**********************************************************************
       IMPLICIT INTEGER (I-N)
 
       COMMON /S_RUN/ SQS, S, Q2MIN, XMIN, ZMIN, kb, kt, a1, a2, Nproc
-       COMMON /S_PLIST/ P_S(2000,5), LLIST(2000), NP, Ideb
+       COMMON /S_PLIST/ PUS(2000,5), LLIST(2000), NP, Ideb
        COMMON /S_CSYDEC/ CBR(102), IDB(49), KDEC(612), LBARP(49)
       COMMON /S_CHP/ S_LIFE(49), ICHP(49), ISTR(49), IBAR(49)
       COMMON /S_MASS1/ AM(49), AM2(49)
@@ -2821,10 +2821,10 @@ C**********************************************************************
           l1 = abs(LLIST(J))
           l = mod(llist(j),10000)
           if(l1.lt.10000) then
-            px = px + P_S(j,1)
-            py = py + P_S(j,2)
-            pz = pz + P_S(j,3)
-            ee = ee + P_S(j,4)
+            px = px + PUS(j,1)
+            py = py + PUS(j,2)
+            pz = pz + PUS(j,3)
+            ee = ee + PUS(j,4)
             ichar = ichar+sign(1,l)*ICHP(iabs(l))
             ibary = ibary+sign(1,l)*IBAR(iabs(l))
           endif
@@ -2861,7 +2861,7 @@ C***********************************************************************
       IMPLICIT INTEGER (I-N)
 
       COMMON /S_RUN/ SQS, S, Q2MIN, XMIN, ZMIN, kb, kt, a1, a2, Nproc
-       COMMON /S_PLIST/ P_S(2000,5), LLIST(2000), NP, Ideb
+       COMMON /S_PLIST/ PUS(2000,5), LLIST(2000), NP, Ideb
        COMMON /S_CSYDEC/ CBR(102), IDB(49), KDEC(612), LBARP(49)
       COMMON /S_CHP/ S_LIFE(49), ICHP(49), ISTR(49), IBAR(49)
       COMMON /S_MASS1/ AM(49), AM2(49)
@@ -2884,10 +2884,10 @@ C***********************************************************************
         l1 = abs(LLIST(J))
         l = mod(llist(j),10000)
         if(l1.lt.10000) then
-          px = px + P_S(j,1)
-          py = py + P_S(j,2)
-          pz = pz + P_S(j,3)
-          ee = ee + P_S(j,4)
+          px = px + PUS(j,1)
+          py = py + PUS(j,2)
+          pz = pz + PUS(j,3)
+          ee = ee + PUS(j,4)
 c          xm2 = (P(j,4)-P(j,3))*(P(j,4)+P(j,3))
 c     &         -P(j,1)**2-P(j,2)**2
 c          if(ABS(xm2-P(j,5)**2)/MAX(AM(l1),1.D0).gt.0.1D0) then
@@ -3020,7 +3020,7 @@ C***********************************************************************
       IMPLICIT INTEGER (I-N)
 
        COMMON /S_CSYDEC/ CBR(102), IDB(49), KDEC(612), LBARP(49)
-       COMMON /S_PLIST/ P_S(2000,5), LLIST(2000), NP, Ideb
+       COMMON /S_PLIST/ PUS(2000,5), LLIST(2000), NP, Ideb
       COMMON /S_PLIST1/ LLIST1(2000)
       SAVE
 
@@ -3034,14 +3034,14 @@ C***********************************************************************
          L= LLIST(NN)
          IF (IDB(IABS(L)) .GT. 0)  THEN
             DO K=1,5
-              P0(K) = P_S(NN,K)
+              P0(K) = PUS(NN,K)
             ENDDO
             ND = 0
             CALL DECPAR (L,P0,ND,LL,PD)
             LLIST(NN) = LLIST(NN)+ISIGN(10000,LLIST(NN))
             DO J=1,ND
                DO K=1,5
-                  P_S(NP+J,K) = PD(J,K)
+                  PUS(NP+J,K) = PD(J,K)
                ENDDO
                LLIST(NP+J)=LL(J)
                LLIST1(NP+J)=NN
