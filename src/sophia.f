@@ -394,21 +394,21 @@ c... consider only stable particles:
          if (abs(LLIST(i)).lt.10000) then
           istable = istable+1
           LLIST(istable) = LLIST(i)
-          P(istable,1) = P(i,1)
-          P(istable,2) = P(i,2)
-          P(istable,3) = P(i,3)
-          P(istable,4) = P(i,4)
-          P(istable,5) = P(i,5)
+          P_S(istable,1) = P(i,1)
+          P_S(istable,2) = P(i,2)
+          P_S(istable,3) = P(i,3)
+          P_S(istable,4) = P(i,4)
+          P_S(istable,5) = P(i,5)
          endif
   16    continue
         if (NP.gt.istable) then
          do i=istable+1,NP
           LLIST(i) = 0
-          P(i,1) = 0.
-          P(i,2) = 0.
-          P(i,3) = 0.
-          P(i,4) = 0.
-          P(i,5) = 0.
+          P_S(i,1) = 0.
+          P_S(i,2) = 0.
+          P_S(i,3) = 0.
+          P_S(i,4) = 0.
+          P_S(i,5) = 0.
          enddo
         endif
         NP = istable
@@ -418,12 +418,12 @@ c transformation from CM-system to lab-system: *
 c***********************************************
 
       DO I=1,NP
-        CALL PO_TRANS(P(I,1),P(I,2),P(I,3),COD,SID,COF,SIF,
+        CALL PO_TRANS(P_S(I,1),P_S(I,2),P_S(I,3),COD,SID,COF,SIF,
      &    PC(1),PC(2),PC(3))
-        PC(4) = P(I,4)
+        PC(4) = P_S(I,4)
         CALL PO_ALTRA(GamBet(4),GamBet(1),GamBet(2),GamBet(3),
      &    PC(1),PC(2),PC(3),PC(4),Ptot,
-     &    P(I,1),P(I,2),P(I,3),P(I,4))
+     &    P_S(I,1),P_S(I,2),P_S(I,3),P_S(I,4))
       ENDDO
 
       call check_event(Icount,Esum,PXsum,PYsum,PZsum,IQchr,IQbar,Irej)
@@ -1497,7 +1497,7 @@ c***************************
       IMPLICIT DOUBLE PRECISION (A-H,O-Z)
       IMPLICIT INTEGER (I-N)
       SAVE
-       COMMON /S_PLIST/ P(2000,5), LLIST(2000), NP, Ideb
+       COMMON /S_PLIST/ P_S(2000,5), LLIST(2000), NP, Ideb
        COMMON /S_CSYDEC/ CBR(102), IDB(49), KDEC(612), LBARP(49)
       COMMON /S_MASS1/ AM(49), AM2(49)
       COMMON /S_CHP/  S_LIFE(49), ICHP(49), ISTR(49), IBAR(49)
@@ -1882,7 +1882,7 @@ C**********************************************************************
       IMPLICIT INTEGER (I-N)
 
       COMMON /S_RUN/ SQS, S, Q2MIN, XMIN, ZMIN, kb, kt, a1, a2, Nproc
-      COMMON /S_PLIST/ P(2000,5), LLIST(2000), NP, Ideb
+      COMMON /S_PLIST/ P_S(2000,5), LLIST(2000), NP, Ideb
       COMMON /S_CHP/ S_LIFE(49), ICHP(49), ISTR(49), IBAR(49)
       COMMON /S_MASS1/ AM(49), AM2(49)
       COMMON /S_CFLAFR/ PAR(8)
@@ -1981,17 +1981,17 @@ C  kinematics
         phi = 6.28318530717959D0*RNDM(0)
 
         LLIST(1) = ipa
-        P(1,4) = e3
-        P(1,1) = SIN(phi)*pt
-        P(1,2) = COS(phi)*pt
-        P(1,3) = pl
-        P(1,5) = am_a
+        P_S(1,4) = e3
+        P_S(1,1) = SIN(phi)*pt
+        P_S(1,2) = COS(phi)*pt
+        P_S(1,3) = pl
+        P_S(1,5) = am_a
         LLIST(2) = ipb
-        P(2,1) = -P(1,1)
-        P(2,2) = -P(1,2)
-        P(2,3) = -P(1,3)
-        P(2,4) = Ecm - P(1,4)
-        P(2,5) = am_b
+        P_S(2,1) = -P(1,1)
+        P_S(2,2) = -P(1,2)
+        P_S(2,3) = -P(1,3)
+        P_S(2,4) = Ecm - P(1,4)
+        P_S(2,5) = am_b
         np = 2
 
         call DECSIB
@@ -2074,17 +2074,17 @@ C  kinematics
         phi = 6.28318530717959D0*RNDM(0)
 
         LLIST(1) = ipa
-        P(1,4) = e3
-        P(1,1) = SIN(phi)*pt
-        P(1,2) = COS(phi)*pt
-        P(1,3) = pl
-        P(1,5) = am_a
+        P_S(1,4) = e3
+        P_S(1,1) = SIN(phi)*pt
+        P_S(1,2) = COS(phi)*pt
+        P_S(1,3) = pl
+        P_S(1,5) = am_a
         LLIST(2) = ipb
-        P(2,1) = -P(1,1)
-        P(2,2) = -P(1,2)
-        P(2,3) = -P(1,3)
-        P(2,4) = Ecm - P(1,4)
-        P(2,5) = am_b
+        P_S(2,1) = -P(1,1)
+        P_S(2,2) = -P(1,2)
+        P_S(2,3) = -P(1,3)
+        P_S(2,4) = Ecm - P(1,4)
+        P_S(2,5) = am_b
         np = 2
 
         call DECSIB
@@ -2174,7 +2174,7 @@ C  simulate reggeon (one-string topology)
 
             do i=1,NP
               call lund_get(i,LLIST(i),
-     &                      P(i,1),P(i,2),P(i,3),P(i,4),P(i,5))
+     &                      P_S(i,1),P_S(i,2),P_S(i,3),P_S(i,4),P_S(i,5))
             enddo
 
 
@@ -2313,7 +2313,7 @@ C  simulate pomeron (two-string topology)
 
             do i=1,NP
               call lund_get(i,LLIST(i),
-     &                      P(i,1),P(i,2),P(i,3),P(i,4),P(i,5))
+     &                      P_S(i,1),P_S(i,2),P_S(i,3),P_S(i,4),P_S(i,5))
             enddo
 
           endif
@@ -2330,12 +2330,12 @@ C  leading baryon/meson effect
 
           do j=1,np
             if(((LLIST(J).eq.13).or.(LLIST(J).eq.14))
-     &         .and.(p(j,3).lt.0.D0)) then
-              if(rndm(0).lt.(2.D0*p(j,4)/Ecm)**2) goto 100
+     &         .and.(p_s(j,3).lt.0.D0)) then
+              if(rndm(0).lt.(2.D0*p_s(j,4)/Ecm)**2) goto 100
             endif
             if((LLIST(J).ge.6).and.(LLIST(J).le.8)
-     &         .and.(p(j,3).lt.-0.4D0)) then
-              if(rndm(0).lt.(2.D0*p(j,4)/Ecm)**2) goto 100
+     &         .and.(p_s(j,3).lt.-0.4D0)) then
+              if(rndm(0).lt.(2.D0*p_s(j,4)/Ecm)**2) goto 100
             endif
           enddo
 
@@ -2614,14 +2614,14 @@ C  N gamma --> N pi+ pi- pi0
             do j=1,ND
               LLIST(j) = LL(j)
               do k=1,5
-                P(j,k) = P_dec(j,k)
+                P_S(j,k) = P_dec(j,k)
               enddo
               if(((LLIST(j).eq.13).or.(LLIST(j).eq.14))
-     &           .and.(P(j,3).lt.0.D0)) Iflip = 1
+     &           .and.(P_S(j,3).lt.0.D0)) Iflip = 1
             enddo
             if(Iflip.ne.0) then
               do j=1,ND
-                P(j,3) = -P(j,3)
+                P_S(j,3) = -P_S(j,3)
               enddo
             endif
             NP = ND
@@ -2662,7 +2662,7 @@ C**********************************************************************
       IMPLICIT INTEGER (I-N)
 
       COMMON /S_RUN/ SQS, S, Q2MIN, XMIN, ZMIN, kb, kt, a1, a2, Nproc
-       COMMON /S_PLIST/ P(2000,5), LLIST(2000), NP, Ideb
+       COMMON /S_PLIST/ P_S(2000,5), LLIST(2000), NP, Ideb
        COMMON /S_CSYDEC/ CBR(102), IDB(49), KDEC(612), LBARP(49)
       COMMON /S_CHP/ S_LIFE(49), ICHP(49), ISTR(49), IBAR(49)
       COMMON /S_MASS1/ AM(49), AM2(49)
@@ -2702,10 +2702,10 @@ C**********************************************************************
           l1 = abs(LLIST(J))
           l = mod(llist(j),10000)
           if(l1.lt.10000) then
-            px = px + P(j,1)
-            py = py + P(j,2)
-            pz = pz + P(j,3)
-            ee = ee + P(j,4)
+            px = px + P_S(j,1)
+            py = py + P_S(j,2)
+            pz = pz + P_S(j,3)
+            ee = ee + P_S(j,4)
             ichar = ichar+sign(1,l)*ICHP(iabs(l))
             ibary = ibary+sign(1,l)*IBAR(iabs(l))
           endif
@@ -2715,7 +2715,7 @@ C**********************************************************************
             code(1:6) = namp(iabs(l))
             if (l .lt. 0) code(7:9) = 'bar'
             write (6,120) i0,CODE,l1*sign(1,l),sign(1,l)*ICHP(iabs(l)),
-     &        (P(j,k),k=1,4)
+     &        (P_S(j,k),k=1,4)
           endif
         enddo
         write (6,122) '   sum: ',px,py,pz,ee
@@ -2742,7 +2742,7 @@ C***********************************************************************
       IMPLICIT INTEGER (I-N)
 
       COMMON /S_RUN/ SQS, S, Q2MIN, XMIN, ZMIN, kb, kt, a1, a2, Nproc
-       COMMON /S_PLIST/ P(2000,5), LLIST(2000), NP, Ideb
+       COMMON /S_PLIST/ P_S(2000,5), LLIST(2000), NP, Ideb
        COMMON /S_CSYDEC/ CBR(102), IDB(49), KDEC(612), LBARP(49)
       COMMON /S_CHP/ S_LIFE(49), ICHP(49), ISTR(49), IBAR(49)
       COMMON /S_MASS1/ AM(49), AM2(49)
@@ -2765,10 +2765,10 @@ C***********************************************************************
         l1 = abs(LLIST(J))
         l = mod(llist(j),10000)
         if(l1.lt.10000) then
-          px = px + P(j,1)
-          py = py + P(j,2)
-          pz = pz + P(j,3)
-          ee = ee + P(j,4)
+          px = px + P_S(j,1)
+          py = py + P_S(j,2)
+          pz = pz + P_S(j,3)
+          ee = ee + P_S(j,4)
 c          xm2 = (P(j,4)-P(j,3))*(P(j,4)+P(j,3))
 c     &         -P(j,1)**2-P(j,2)**2
 c          if(ABS(xm2-P(j,5)**2)/MAX(AM(l1),1.D0).gt.0.1D0) then
@@ -2901,7 +2901,7 @@ C***********************************************************************
       IMPLICIT INTEGER (I-N)
 
        COMMON /S_CSYDEC/ CBR(102), IDB(49), KDEC(612), LBARP(49)
-       COMMON /S_PLIST/ P(2000,5), LLIST(2000), NP, Ideb
+       COMMON /S_PLIST/ P_S(2000,5), LLIST(2000), NP, Ideb
       COMMON /S_PLIST1/ LLIST1(2000)
       SAVE
 
@@ -2915,14 +2915,14 @@ C***********************************************************************
          L= LLIST(NN)
          IF (IDB(IABS(L)) .GT. 0)  THEN
             DO K=1,5
-              P0(K) = P(NN,K)
+              P0(K) = P_S(NN,K)
             ENDDO
             ND = 0
             CALL DECPAR (L,P0,ND,LL,PD)
             LLIST(NN) = LLIST(NN)+ISIGN(10000,LLIST(NN))
             DO J=1,ND
                DO K=1,5
-                  P(NP+J,K) = PD(J,K)
+                  P_S(NP+J,K) = PD(J,K)
                ENDDO
                LLIST(NP+J)=LL(J)
                LLIST1(NP+J)=NN
@@ -2958,7 +2958,7 @@ C***********************************************************************
       COMMON /S_MASS1/ AM(49), AM2(49)
       SAVE
 
-      DIMENSION P0(5), LL(10), P(10,5)
+      DIMENSION P0(5), LL(10), P_S(10,5)
       DIMENSION PV(10,5), RORD(10), UE(3),BE(3), FACN(3:10)
 
       DATA FACN /2.D0,5.D0,15.D0,60.D0,250.D0,
@@ -2976,7 +2976,7 @@ C...Phase space decay into the particles in the list
           DO J=1,ND
              P (J,5) = AM(IABS(LL(J)))
              PV(J,5) = AM(IABS(LL(J)))
-             PS = PS+P(J,5)
+             PS = PS+P_S(J,5)
           ENDDO
           DO J=1,4
              PV(1,J) = P0(J)
@@ -3006,9 +3006,9 @@ C...Choose decay channel
       PS = 0.D0
       DO J=1,ND
          LL(J) = KDEC(KD+1+J)
-         P(J,5)  = AM(LL(J))
+         P_S(J,5)  = AM(LL(J))
          PV(J,5) = AM(LL(J))
-         PS = PS + P(J,5)
+         PS = PS + P_S(J,5)
       ENDDO
       DO J=1,4
          PV(1,J) = 0.D0
@@ -3021,19 +3021,19 @@ C...Choose decay channel
 
       IF (ND .EQ. 1)  THEN
          DO J=1,4
-            P(1,J) = P0(J)
+            P_S(1,J) = P0(J)
          ENDDO
          RETURN
       ENDIF
 
 C...Calculate maximum weight for ND-particle decay
       WWTMAX = 1.D0/FACN(ND)
-      PMAX=PV(1,5)-PS+P(ND,5)
+      PMAX=PV(1,5)-PS+P_S(ND,5)
       PMIN=0.D0
       DO IL=ND-1,1,-1
-         PMAX = PMAX+P(IL,5)
-         PMIN = PMIN+P(IL+1,5)
-         WWTMAX = WWTMAX*PAWT(PMAX,PMIN,P(IL,5))
+         PMAX = PMAX+P_S(IL,5)
+         PMIN = PMIN+P_S(IL+1,5)
+         WWTMAX = WWTMAX*PAWT(PMAX,PMIN,P_S(IL,5))
       ENDDO
 
 C...generation of the masses, compute weight, if rejected try again
@@ -3047,43 +3047,43 @@ C...generation of the masses, compute weight, if rejected try again
       RORD(ND) = 0.D0
       WT = 1.D0
       DO 270 IL=ND-1,1,-1
-      PV(IL,5)=PV(IL+1,5)+P(IL,5)+(RORD(IL)-RORD(IL+1))*(PV(1,5)-PS)
-270   WT=WT*PAWT(PV(IL,5),PV(IL+1,5),P(IL,5))
+      PV(IL,5)=PV(IL+1,5)+P_S(IL,5)+(RORD(IL)-RORD(IL+1))*(PV(1,5)-PS)
+270   WT=WT*PAWT(PV(IL,5),PV(IL+1,5),P_S(IL,5))
       IF (WT.LT.RNDM(0)*WWTMAX)   GOTO 240
 
 C...Perform two particle decays in respective cm frame
 280   DO 300 IL=1,ND-1
-      PA=PAWT(PV(IL,5),PV(IL+1,5),P(IL,5))
+      PA=PAWT(PV(IL,5),PV(IL+1,5),P_S(IL,5))
       UE(3)=2.D0*RNDM(0)-1.D0
       PHI=2.D0*PI*RNDM(0)
       UT = SQRT(1.D0-UE(3)**2)
       UE(1) = UT*COS(PHI)
       UE(2) = UT*SIN(PHI)
       DO 290 J=1,3
-      P(IL,J)=PA*UE(J)
+      P_S(IL,J)=PA*UE(J)
 290   PV(IL+1,J)=-PA*UE(J)
-      P(IL,4)=SQRT(PA**2+P(IL,5)**2)
+      P_S(IL,4)=SQRT(PA**2+P_S(IL,5)**2)
 300   PV(IL+1,4)=SQRT(PA**2+PV(IL+1,5)**2)
 
 C...Lorentz transform decay products to lab frame
       DO 310 J=1,4
-310   P(ND,J)=PV(ND,J)
+310   P_S(ND,J)=PV(ND,J)
       DO 340 IL=ND-1,1,-1
       DO 320 J=1,3
 320   BE(J)=PV(IL,J)/PV(IL,4)
       GA=PV(IL,4)/PV(IL,5)
       DO 340 I=IL,ND
-      BEP = BE(1)*P(I,1)+BE(2)*P(I,2)+BE(3)*P(I,3)
+      BEP = BE(1)*P_S(I,1)+BE(2)*P_S(I,2)+BE(3)*P_S(I,3)
       DO 330 J=1,3
-330   P(I,J)=P(I,J)+GA*(GA*BEP/(1.+GA)+P(I,4))*BE(J)
-340   P(I,4)=GA*(P(I,4)+BEP)
+330   P_S(I,J)=P_S(I,J)+GA*(GA*BEP/(1.+GA)+P_S(I,4))*BE(J)
+340   P_S(I,4)=GA*(P_S(I,4)+BEP)
 
 C...Weak decays
         IF (MAT .EQ. 1)  THEN
-           F1=P(2,4)*P(3,4)-P(2,1)*P(3,1)-P(2,2)*P(3,2)-P(2,3)*P(3,3)
-           IF (MBST.EQ.1)  WT = P0(5)*P(1,4)*F1
+           F1=P_S(2,4)*P_S(3,4)-P_S(2,1)*P_S(3,1)-P_S(2,2)*P_S(3,2)-P_S(2,3)*P_S(3,3)
+           IF (MBST.EQ.1)  WT = P0(5)*P_S(1,4)*F1
            IF (MBST.EQ.0)
-     +     WT=F1*(P(1,4)*P0(4)-P(1,1)*P0(1)-P(1,2)*P0(2)-P(1,3)*P0(3))
+     +     WT=F1*(P_S(1,4)*P0(4)-P_S(1,1)*P0(1)-P_S(1,2)*P0(2)-P_S(1,3)*P0(3))
            WTMAX = P0(5)**4/16.D0
            IF(WT.LT.RNDM(0)*WTMAX)   GOTO 240
         ENDIF
@@ -3095,10 +3095,10 @@ C...Boost back for rapidly moving particle
 440      BE(J)=P0(J)/P0(4)
          GA= P0(4)/P0(5)
          DO 460 I=1,ND
-         BEP=BE(1)*P(I,1)+BE(2)*P(I,2)+BE(3)*P(I,3)
+         BEP=BE(1)*P_S(I,1)+BE(2)*P_S(I,2)+BE(3)*P_S(I,3)
          DO 450 J=1,3
-450         P(I,J)=P(I,J)+GA*(GA*BEP/(1.+GA)+P(I,4))*BE(J)
-460         P(I,4)=GA*(P(I,4)+BEP)
+450         P_S(I,J)=P_S(I,J)+GA*(GA*BEP/(1.+GA)+P_S(I,4))*BE(J)
+460         P_S(I,4)=GA*(P_S(I,4)+BEP)
       ENDIF
 
 C...labels for antiparticle decay
