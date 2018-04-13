@@ -26,9 +26,7 @@ C***********************************************************************
       COMMON /S_PLIST/ P_S(2000,5), LLIST(2000), NP, Ideb
       COMMON/LUJETS/N,K(4000,5),P(4000,5),V(4000,5)
       REAL*4 P,V
-      COMMON /LEPTOU/ CUT(14),LST(40),PARL(30)
-     &,XSCH,YSCH,W2SCH,Q2SCH,USCH
-      REAL*4 CUT,PARL,XSCH,YSCH,W2SCH,Q2SCH,USCH
+      COMMON /LEPTOU/ CUT(14),LST(40),PARL(30),X,Y,W2,Q2,U
       SAVE
       DIMENSION P_gam(4),P_nuc(4)
       LOGICAL FIRST
