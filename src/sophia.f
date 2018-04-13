@@ -85,13 +85,14 @@ C...Determine momentum of incoming nucleon
       P_nuc(4)=EPRO
 
       N=0
+      NFAILS=0
 C...Generate hadronic final state
   2   LST(21)=99
       CALL SOPHIA(L0,P_gam,P_nuc,Imode)
 c      call print_event(1)
       IF (NP.EQ.0) THEN
-        NFAILP=NFAILP+1
-        IF (NFAILP.LT.NFLMAX) GOTO 2
+        NFAILS=NFAILS+1
+        IF (NFAILS.LT.NFLMAX) GOTO 2
         GOTO 30
       ENDIF
 C...Event passed fragmentation
@@ -114,9 +115,9 @@ C...Set initial state, first lepton:
       P(IP1,2)=0.
       P(IP1,3)=PELE
       P(IP1,4)=EELE
-      IF (K(IP1,2).EQ.-1.OR.K(IP1,2).EQ.1) THEN
+      IF (K(IP1,2).EQ.-11.OR.K(IP1,2).EQ.11) THEN
         P(IP1,5)= 0.000511
-      ELSE IF (K(IP1,2).EQ.-3.OR.K(IP1,2).EQ.3) THEN
+      ELSE IF (K(IP1,2).EQ.-13.OR.K(IP1,2).EQ.13) THEN
         P(IP1,5)= 0.10566
       ENDIF
 C...then nucleon = proton
@@ -202,6 +203,7 @@ C...Hadronic final state from SOPHIA
       RETURN
 
  30   CALL SPHLEV
+      NFAILP=NFAILP+1
       RETURN
 
       END
@@ -230,7 +232,8 @@ C***********************************************************************
 C***********************************************************************
 
       SUBROUTINE SPHLEV
-
+      IMPLICIT DOUBLE PRECISION (A-H,O-Z)
+      IMPLICIT INTEGER (I-N)
 Chs...Restore event record from SOPHIA when hadronization has failed
       COMMON /HSPARM/ POLARI,HPOLAR,LEPTID,LLEPT,LQUA
       COMMON /HSELAB/ SP,EELE,PELE,EPRO,PPRO
@@ -251,7 +254,7 @@ C...Set initial state, first lepton:
       K(1,5)=0
       P(1,1)=0.
       P(1,2)=0.
-      P(1,3)=PELE
+      P(1,3)=EELE
       IF (K(1,2).EQ.-1.OR.K(1,2).EQ.1) THEN
         P(1,5)= 0.000511
       ELSE IF (K(1,2).EQ.-3.OR.K(1,2).EQ.3) THEN

@@ -2246,7 +2246,8 @@ ckc..virtual boson (non-radiative case)
 C%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
       SUBROUTINE DJGLEV
-
+      IMPLICIT DOUBLE PRECISION (A-H,O-Z)
+      IMPLICIT INTEGER (I-N)
 Chs...Restore event record from HERACLES when hadronization has failed
       COMMON /LINTRL/ PSAVE(3,4,5),KSAVE(4),XMIN,XMAX,YMIN,YMAX,
      &Q2MIN,Q2MAX,W2MIN,W2MAX,ILEP,INU,IG,IZ
