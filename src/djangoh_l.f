@@ -192,6 +192,7 @@ ckc..LEPIN: e-(11), e+(-11)
 ckc..LEPTO commons & declarations
       COMMON /LINTRL/ PSAVE(3,4,5),KSAVE(4),XMIN,XMAX,YMIN,YMAX,
      &Q2MIN,Q2MAX,W2MIN,W2MAX,ILEP,INU,IG,IZ
+      SAVE /LINTRL/
       COMMON /LEPTOU/ CUT(14),LST(40),PARL(30),X,Y,W2,Q2,U
       COMMON /LINTER/ PARI(40),EWQC(2,2,8),QC(8),ZL(2,4),ZQ(2,8),PQ(17)
       COMMON /LGRID/ NXX,NWW,XX(31),WW(21),PQG(31,21,3),PQQB(31,21,2),
@@ -313,13 +314,13 @@ c      PARL(1)=HNA
 c      PARL(2)=HNZ
       LST(22)=1
       LST(23)=INTER
-      KSAVE(1)=LEPTID
+      KSAVE(1)=LEPIN
 cC incoming proton:
-C      IF (INT(HNA).EQ.1.AND.INT(HNZ).EQ.1) THEN
-C        KSAVE(2)=2212
+c      IF (INT(HNA).EQ.1.AND.INT(HNZ).EQ.1) THEN
+c        KSAVE(2)=2212
 cC incoming neutron:
-C      ELSEIF (INT(HNA).EQ.1.AND.INT(HNZ).EQ.0) THEN
-C        KSAVE(2)=2112
+c      ELSEIF (INT(HNA).EQ.1.AND.INT(HNZ).EQ.0) THEN
+c        KSAVE(2)=2112
 cC other nuclei
 c      ELSE
 c        KSAVE(2)=1000000000+HNZ*10000+HNA*10
@@ -338,7 +339,11 @@ ckc
       P(1,1)=0.
       P(1,2)=0.
       P(1,3)=PLZ
-      P(1,5)=ULMASS(KSAVE(1))
+      IF (K(1,2).EQ.-1.OR.K(1,2).EQ.1) THEN
+        P(1,5)= 0.000511
+      ELSE IF (K(1,2).EQ.-3.OR.K(1,2).EQ.3) THEN
+        P(1,5)= 0.10566
+      ENDIF
       P(1,4)=SQRT(P(1,3)**2+P(1,5)**2)
       P(2,1)=0.
       P(2,2)=0.
@@ -2263,12 +2268,7 @@ C...incoming particles
       K(1,3)=0
       K(1,4)=0
       K(1,5)=0
-      IF (K(1,2).EQ.-1.OR.K(1,2).EQ.1) THEN
-        P(1,5)= 0.000511
-      ELSE IF (K(1,2).EQ.-3.OR.K(1,2).EQ.3) THEN
-        P(1,5)= 0.10566
-      ENDIF
-      
+
       K(2,1)=201
       K(2,2)=KSAVE(2)
       K(2,3)=0
