@@ -254,7 +254,7 @@ C...Set initial state, first lepton:
       K(1,5)=0
       P(1,1)=0.
       P(1,2)=0.
-      P(1,3)=EELE
+      P(1,3)=PELE
       IF (K(1,2).EQ.-1.OR.K(1,2).EQ.1) THEN
         P(1,5)= 0.000511
       ELSE IF (K(1,2).EQ.-3.OR.K(1,2).EQ.3) THEN
