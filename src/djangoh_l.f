@@ -313,13 +313,13 @@ c      PARL(1)=HNA
 c      PARL(2)=HNZ
       LST(22)=1
       LST(23)=INTER
-      KSAVE(1)=LEPIN
+      KSAVE(1)=LEPTID
 cC incoming proton:
-c      IF (INT(HNA).EQ.1.AND.INT(HNZ).EQ.1) THEN
-c        KSAVE(2)=2212
+C      IF (INT(HNA).EQ.1.AND.INT(HNZ).EQ.1) THEN
+C        KSAVE(2)=2212
 cC incoming neutron:
-c      ELSEIF (INT(HNA).EQ.1.AND.INT(HNZ).EQ.0) THEN
-c        KSAVE(2)=2112
+C      ELSEIF (INT(HNA).EQ.1.AND.INT(HNZ).EQ.0) THEN
+C        KSAVE(2)=2112
 cC other nuclei
 c      ELSE
 c        KSAVE(2)=1000000000+HNZ*10000+HNA*10
@@ -2263,6 +2263,12 @@ C...incoming particles
       K(1,3)=0
       K(1,4)=0
       K(1,5)=0
+      IF (K(1,2).EQ.-1.OR.K(1,2).EQ.1) THEN
+        P(1,5)= 0.000511
+      ELSE IF (K(1,2).EQ.-3.OR.K(1,2).EQ.3) THEN
+        P(1,5)= 0.10566
+      ENDIF
+      
       K(2,1)=201
       K(2,2)=KSAVE(2)
       K(2,3)=0
