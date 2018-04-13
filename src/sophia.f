@@ -27,6 +27,7 @@ C***********************************************************************
       COMMON/LUJETS/N,K(4000,5),P(4000,5),V(4000,5)
       REAL*4 P,V
       COMMON /LEPTOU/ CUT(14),LST(40),PARL(30),X,Y,W2,Q2,U
+      REAL            CUT            ,PARL    ,X,Y,W2,Q2,U
       SAVE
       DIMENSION P_gam(4),P_nuc(4)
       LOGICAL FIRST
