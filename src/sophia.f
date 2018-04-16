@@ -186,7 +186,7 @@ C...Hadronic final state from SOPHIA
       DO 20 IP=1,NP
         IF (ABS(LLIST(IP)).LT.50) THEN
           IP1=IP1+1
-          WRITE(6,*) P_S(IP,1), P_S(IP,2), P_S(IP,3), P_S(IP,4), P_S(IP,5)
+          WRITE(6,*) P_S(IP,1), P_S(IP,2), P_S(IP,3), P_S(IP,4)
           P(IP1,1)=P_S(IP,1)
           P(IP1,2)=P_S(IP,2)
           P(IP1,3)=P_S(IP,3)
