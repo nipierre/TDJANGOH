@@ -487,6 +487,7 @@ c*********************************************
 c******* PARTICLE PRODUCTION *****************
 c*********************************************
 c  42   continue
+       WRITE(33,*) Imode
        if (Imode.le.5) then
 c... direct/multipion/diffractive scattering production channel:
         call GAMMA_H(sqsm,L0,Imode,Ifbad)
