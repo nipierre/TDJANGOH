@@ -159,6 +159,9 @@ C...scattered lepton
       DO 12 J=1,5
         P(IP1,J)=PHEP(J,1)
  12   CONTINUE
+      WRITE(33,*) IP1
+      WRITE(33,*) P(IP1,1), P(IP1,2), P(IP1,3), P(IP1,4),
+     &            P(IP1,5)
       K(IP1,1)=ISTHEP(1)
       K(IP1,2)=IDHEP(1)
       K(IP1,3)=1
@@ -170,6 +173,9 @@ C...radiative photon
         DO 13 J=1,5
           P(IP1,J)=PHEP(J,3)
  13     CONTINUE
+        WRITE(33,*) IP1
+        WRITE(33,*) P(IP1,1), P(IP1,2), P(IP1,3), P(IP1,4),
+     &              P(IP1,5)
         K(IP1,1)=ISTHEP(3)
         K(IP1,2)=IDHEP(3)
         K(IP1,3)=1
@@ -188,12 +194,14 @@ C...Hadronic final state from SOPHIA
           IP1=IP1+1
           WRITE(33,*) IP, IP1
           WRITE(33,*) P_S(IP,1), P_S(IP,2), P_S(IP,3), P_S(IP,4)
+     &                P_S(IP,5)
           P(IP1,1)=P_S(IP,1)
           P(IP1,2)=P_S(IP,2)
           P(IP1,3)=P_S(IP,3)
           P(IP1,4)=P_S(IP,4)
           P(IP1,5)=P_S(IP,5)
           WRITE(33,*) P(IP1,1), P(IP1,2), P(IP1,3), P(IP1,4)
+     &                P_S(IP,5)
           K(IP1,1)=1
           K(IP1,2)=ICON_SIB_PDG(LLIST(IP))
           K(IP1,3)=0
