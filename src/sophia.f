@@ -1061,6 +1061,8 @@ c theta is scattering angle in CM frame:
           P2Y = -P2Y
         endif
 
+        WRITE(33,*) P1X,P1Y,P1Z,E1,SM1
+        WRITE(33,*) P2X,P2Y,P2Z,E2,SM2
         Pres(1,1) = P1X
         Pres(1,2) = P1Y
         Pres(1,3) = P1Z
