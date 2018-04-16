@@ -23,7 +23,7 @@ C***********************************************************************
       COMMON /HEPEVT/ NEVHEP,NHEP,ISTHEP(NMXHEP),IDHEP(NMXHEP),
      &                JMOHEP(2,NMXHEP),JDAHEP(2,NMXHEP),
      &                PHEP(5,NMXHEP),VHKK(4,NMXHEP)
-      COMMON /S_PLIST/ P_S(2000,5), LLIST(2000), NP, Ideb
+      COMMON /S_PLIST/ SP(2000,5), LLIST(2000), NP, Ideb
       COMMON/LUJETS/N,K(4000,5),P(4000,5),V(4000,5)
       REAL*4 P,V
       COMMON /LEPTOU/ CUT(14),LST(40),PARL(30),X,Y,W2,Q2,U
@@ -191,13 +191,13 @@ C...Hadronic final state from SOPHIA
         IF (ABS(LLIST(IP)).LT.50) THEN
           IP1=IP1+1
           WRITE(33,*) IP, IP1
-          WRITE(33,*) P_S(IP,1),P_S(IP,2),P_S(IP,3),P_S(IP,4),P_S(IP,5)
-          P(IP1,1)=P_S(IP,1)
-          P(IP1,2)=P_S(IP,2)
-          P(IP1,3)=P_S(IP,3)
-          P(IP1,4)=P_S(IP,4)
-          P(IP1,5)=P_S(IP,5)
-          WRITE(33,*) P(IP1,1),P(IP1,2),P(IP1,3),P(IP1,4),P_S(IP,5)
+          WRITE(33,*) SP(IP,1),SP(IP,2),SP(IP,3),SP(IP,4),SP(IP,5)
+          P(IP1,1)=SP(IP,1)
+          P(IP1,2)=SP(IP,2)
+          P(IP1,3)=SP(IP,3)
+          P(IP1,4)=SP(IP,4)
+          P(IP1,5)=SP(IP,5)
+          WRITE(33,*) P(IP1,1),P(IP1,2),P(IP1,3),P(IP1,4),SP(IP,5)
           K(IP1,1)=1
           K(IP1,2)=ICON_SIB_PDG(LLIST(IP))
           K(IP1,3)=0
