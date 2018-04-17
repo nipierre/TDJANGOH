@@ -179,8 +179,7 @@ c
 c%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 c
       SUBROUTINE DJGINIT(LEPIN,PLZ,PPZ,INTER)
-      IMPLICIT DOUBLE PRECISION (A-H,O-Z)
-      IMPLICIT INTEGER (I-N)
+        
 chs..from LINIT, L61
 chs..updated for L62, L63, L65
 C...Initialize for an incoming lepton (type LEPIN, momentum pz=PLZ)
