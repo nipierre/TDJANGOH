@@ -179,7 +179,8 @@ c
 c%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 c
       SUBROUTINE DJGINIT(LEPIN,PLZ,PPZ,INTER)
-
+      IMPLICIT DOUBLE PRECISION (A-H,O-Z)
+      IMPLICIT INTEGER (I-N)
 chs..from LINIT, L61
 chs..updated for L62, L63, L65
 C...Initialize for an incoming lepton (type LEPIN, momentum pz=PLZ)
@@ -2248,8 +2249,8 @@ ckc..virtual boson (non-radiative case)
 C%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
       SUBROUTINE DJGLEV
-C      IMPLICIT DOUBLE PRECISION (A-H,O-Z)
-C      IMPLICIT INTEGER (I-N)
+      IMPLICIT DOUBLE PRECISION (A-H,O-Z)
+      IMPLICIT INTEGER (I-N)
 Chs...Restore event record from HERACLES when hadronization has failed
       COMMON /LINTRL/ PSAVE(3,4,5),KSAVE(4),XMIN,XMAX,YMIN,YMAX,
      &Q2MIN,Q2MAX,W2MIN,W2MAX,ILEP,INU,IG,IZ
@@ -2580,7 +2581,7 @@ C--       global variables
       INTEGER N,K
       REAL P,V
       COMMON/LEPTOU/ CUT(14),LST(40),PARL(30),X,Y,W2,Q2,U
-      REAL CUT,PARL,X,Y,W2,Q2,U
+C      REAL CUT,PARL,X,Y,W2,Q2,U
       INTEGER LST
 
 C--       functions
@@ -2833,8 +2834,8 @@ C--       global variables
       INTEGER N,K
       REAL P,V
       COMMON /LUJETS/N,K(4000,5),P(4000,5),V(4000,5)
-      INTEGER LST
-      REAL CUT,PARL,X,Y,W2,Q2,U
+C      INTEGER LST
+C      REAL CUT,PARL,X,Y,W2,Q2,U
       COMMON /LEPTOU/ CUT(14),LST(40),PARL(30),X,Y,W2,Q2,U
       INTEGER MSTU,MSTJ
       REAL PARU,PARJ
