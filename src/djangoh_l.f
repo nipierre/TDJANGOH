@@ -314,8 +314,8 @@ c      PARL(1)=HNA
 c      PARL(2)=HNZ
       LST(22)=1
       LST(23)=INTER
-      WRITE(33,*) LEPIN
-      KSAVE(1)=LEPIN
+      WRITE(33,*) LLEPT, LEPTID
+      KSAVE(1)=-LLEPT*10-LEPTID
       WRITE(33,*) KSAVE(1)
 cC incoming proton:
 c      IF (INT(HNA).EQ.1.AND.INT(HNZ).EQ.1) THEN
