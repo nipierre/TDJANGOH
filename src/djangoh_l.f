@@ -192,6 +192,9 @@ ckc..LEPIN: e-(11), e+(-11)
 ckc..LEPTO commons & declarations
       COMMON /LINTRL/ PSAVE(3,4,5),KSAVE(4),XMIN,XMAX,YMIN,YMAX,
      &Q2MIN,Q2MAX,W2MIN,W2MAX,ILEP,INU,IG,IZ
+      DOUBLE PRECISION PSAVE,XMIN,XMAX,YMIN,YMAX,Q2MIN,Q2MAX,
+     &W2MIN,W2MAX
+      INTEGER KSAVE
       SAVE /LINTRL/
       COMMON /LEPTOU/ CUT(14),LST(40),PARL(30),X,Y,W2,Q2,U
       COMMON /LINTER/ PARI(40),EWQC(2,2,8),QC(8),ZL(2,4),ZQ(2,8),PQ(17)
@@ -315,9 +318,7 @@ c      PARL(1)=HNA
 c      PARL(2)=HNZ
       LST(22)=1
       LST(23)=INTER
-      WRITE(33,*) LLEPT, LEPTID
       KSAVE(1)=-LLEPT*10-LEPTID
-      WRITE(33,*) KSAVE(1)
 cC incoming proton:
 c      IF (INT(HNA).EQ.1.AND.INT(HNZ).EQ.1) THEN
 c        KSAVE(2)=2212
@@ -2254,6 +2255,9 @@ C%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Chs...Restore event record from HERACLES when hadronization has failed
       COMMON /LINTRL/ PSAVE(3,4,5),KSAVE(4),XMIN,XMAX,YMIN,YMAX,
      &Q2MIN,Q2MAX,W2MIN,W2MAX,ILEP,INU,IG,IZ
+      DOUBLE PRECISION PSAVE,XMIN,XMAX,YMIN,YMAX,Q2MIN,Q2MAX,
+     &W2MIN,W2MAX
+      INTEGER KSAVE
       COMMON/LUJETS/N,K(4000,5),P(4000,5),V(4000,5)
       COMMON /LEPTOU/ CUT(14),LST(40),PARL(30),X,Y,W2,Q2,U
       PARAMETER (NMXHEP=2000)

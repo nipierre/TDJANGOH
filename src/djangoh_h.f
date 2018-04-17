@@ -475,7 +475,6 @@ C...27.05.2016: new option for muon scattering via this input
       LEPIN=LEPIN1
       IF (LEPTID.EQ.-3.OR.LEPTID.EQ.-1) LLEPT=-1
       IF (LEPTID.EQ.3.OR.LEPTID.EQ.1) LLEPT=1
-      WRITE(33,*) LLEPT, LEPTID
       GO TO 1
 C
 C***********************************************************************
