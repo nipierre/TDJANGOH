@@ -449,7 +449,7 @@ C     POLARI  =  DEGREE OF ELECTRON BEAM POLARIZATION
 C     LLEPT   =  -1  ELECTRON BEAM
 C             =  +1  POSITRON BEAM
 C     LLEPT   =  -3  muon- BEAM
-C             =  +4  muon+ BEAM
+C             =  +3  muon+ BEAM
 C
 C     03/02/17 : Modification by NP, removed EELE, handled in
 C                subroutine HSEGEN.
@@ -473,6 +473,7 @@ C...27.05.2016: new option for muon scattering via this input
       LEPIN=LEPIN1
       IF (LEPTID.EQ.-3.OR.LEPTID.EQ.-1) LLEPT=-1
       IF (LEPTID.EQ.3.OR.LEPTID.EQ.1) LLEPT=1
+      WRITE(33,*) LLEPT, LEPTID
       GO TO 1
 C
 C***********************************************************************
