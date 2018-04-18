@@ -345,9 +345,9 @@ ckc
       P(1,1)=0.
       P(1,2)=0.
       P(1,3)=PLZ
-      IF (K(1,2).EQ.-1.OR.K(1,2).EQ.1) THEN
+      IF (K(1,2).EQ.-11.OR.K(1,2).EQ.11) THEN
         P(1,5)= 0.000511
-      ELSE IF (K(1,2).EQ.-3.OR.K(1,2).EQ.3) THEN
+      ELSE IF (K(1,2).EQ.-13.OR.K(1,2).EQ.13) THEN
         P(1,5)= 0.10566
       ENDIF
       P(1,4)=SQRT(P(1,3)**2+P(1,5)**2)
