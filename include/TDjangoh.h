@@ -51,6 +51,7 @@ protected:
 
   Lujets_t*  fLujets; /*!< Container of the lujets_ common block */
   Djkin_t*   fDjkin; /*!< Container of the djkin_ common block */
+  int        fUnfragSave; /*!< Flag enabling saving of unfragmented final state */
 
   /*!
   * \class TDjangohCleaner
@@ -346,9 +347,17 @@ public:
   */
   void        WriteFSInFile();
   /*!
+  * \brief Save unfragmented final state infos in file
+  */
+  void        SaveUnfragState();
+  /*!
   * \brief Remove final state file
   */
   void        CleanFSFile() { remove("finalState.txt"); }
+  /*!
+  * \brief Remove final state file
+  */
+  void        CleanUSFile() { remove("unfragState.txt"); }
 
   // ---------------------------------------------------------------------------
   // Accessors for MC for (quasi)elastic case (for more infos, see manual)

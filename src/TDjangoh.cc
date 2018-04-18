@@ -406,7 +406,8 @@ TDjangoh::TDjangoh() : TGenerator("TDjangoh","TDjangoh")
 TDjangoh::TDjangoh(const TDjangoh& dj) :
  TGenerator(dj),
  fLujets(dj.fLujets),
- fDjkin(dj.fDjkin)
+ fDjkin(dj.fDjkin),
+ fUnfragSave(0)
 
 {}
 
@@ -432,6 +433,12 @@ void TDjangoh::GenerateEvent()
   hsegen_();
   fLujets = &lujets_;
   fDjkin = &djkin_;
+  // Remove unfragmented events, saving it into file if specified.
+  if(fLujets->K[0][-1]==21)
+  {
+    if(fUnfragSave) SaveUnfragState();
+    fLujets->N=0;
+  }
   // Patch in order to obtain the final state in case of (quasi-)elastic events.
   if(chnumb_.ichngl == 15)
   {
@@ -1032,6 +1039,16 @@ void TDjangoh::ReadXMLFile(const string pFilename)
           {hsvrbz_.verboz = cData.attribute("value").as_int();cout<<"vrboz : "<<hsvrbz_.verboz<<endl;}
       }
     }
+
+    if(!strcmp(cCWType.c_str(), "UNFRAG-SAVE" ))
+    {
+      cout << "\nCodeword : UNFRAG-SAVE" << endl;
+      for(pugi::xml_node cData = cCodeWord.child ( "Data" ); cData; cData = cData.next_sibling())
+      {
+        if(std::string(cData.attribute("name").value()) == "unfrag")
+          {fUnfragSave = cData.attribute("value").as_int();cout<<"unfrag : "<<fUnfragSave<<endl;}
+      }
+    }
   }
 
   for(int i=0; i<30; i++)
@@ -1257,6 +1274,11 @@ void TDjangoh::WriteXMLFile(const string pFilename)
   f << "\t<Data name=\"verboz\" value=\"" << hsvrbz_.verboz << "\"/>" << endl;
   f << "</Codeword>" << endl;
 
+  f << "\n<!-- UNFRAG-SAVE -->" << endl;
+  f << "<Codeword name=\"UNFRAG-SAVE\">" << endl;
+  f << "\t<Data name=\"unfrag\" value=\"" << fUnfragSave << "\"/>" << endl;
+  f << "</Codeword>" << endl;
+
   f.close();
 
   cout << ">>> ****************** <<<" << endl;
@@ -1268,6 +1290,8 @@ void TDjangoh::WriteXMLFile(const string pFilename)
 void TDjangoh::Initialize()
 {
   hsinpt_();
+
+  CleanUSFile();
 
   cout << ">>> ********************* <<<" << endl;
   cout << ">>>   TDJANGOH message :  <<<" << endl;
@@ -1580,6 +1604,39 @@ void TDjangoh::WriteFSInFile()
   }
 
   finalState.close();
+}
+
+void TDjangoh::SaveUnfragState()
+{
+  ofstream unfragState("unfragState.txt", ofstream::out | ofstream::app);
+
+  if(fLujets->N)
+  {
+    Int_t numpart = fLujets->N;
+
+    finalState << numpart << endl;
+    finalState << hselab_.eele << "\t" << fDjkin->DJX << "\t" << fDjkin->DJY << "\t" << fDjkin->DJQ2 << endl;
+
+    for (Int_t i = 0; i<numpart; i++)
+    {
+      finalState << fLujets->K[0][i-1] << "\t"
+                 << fLujets->K[1][i-1] << "\t" //ID
+                 << fLujets->K[2][i-1] << "\t"
+                 << fLujets->K[3][i-1] << "\t"
+                 << fLujets->K[4][i-1] << "\t"
+                 << fLujets->P[0][i-1] << "\t" //Px
+                 << fLujets->P[1][i-1] << "\t" //Py
+                 << fLujets->P[2][i-1] << "\t" //Pz
+                 << fLujets->P[3][i-1] << "\t" //max(kinE,mass)
+                 << fLujets->P[4][i-1] << "\t" //Mass
+                 << fLujets->V[0][i-1] << "\t"
+                 << fLujets->V[1][i-1] << "\t"
+                 << fLujets->V[2][i-1] << "\t"
+                 << fLujets->V[3][i-1] << endl;
+    }
+  }
+
+  unfragState.close();
 }
 
 double TDjangoh::GetPHEP(int ip, int i)
