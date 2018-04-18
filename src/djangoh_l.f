@@ -2585,7 +2585,7 @@ C--       global variables
       INTEGER N,K
       REAL P,V
       COMMON/LEPTOU/ CUT(14),LST(40),PARL(30),X,Y,W2,Q2,U
-C      REAL CUT,PARL,X,Y,W2,Q2,U
+      DOUBLE PRECISION CUT,PARL,X,Y,W2,Q2,U
       INTEGER LST
 
 C--       functions
@@ -2839,7 +2839,7 @@ C--       global variables
       REAL P,V
       COMMON /LUJETS/N,K(4000,5),P(4000,5),V(4000,5)
       INTEGER LST
-C      REAL CUT,PARL,X,Y,W2,Q2,U
+      DOUBLE PRECISION CUT,PARL,X,Y,W2,Q2,U
       COMMON /LEPTOU/ CUT(14),LST(40),PARL(30),X,Y,W2,Q2,U
       INTEGER MSTU,MSTJ
       REAL PARU,PARJ
