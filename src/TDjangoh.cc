@@ -1614,25 +1614,25 @@ void TDjangoh::SaveUnfragState()
   {
     Int_t numpart = fLujets->N;
 
-    finalState << numpart << endl;
-    finalState << hselab_.eele << "\t" << fDjkin->DJX << "\t" << fDjkin->DJY << "\t" << fDjkin->DJQ2 << endl;
+    unfragState << numpart << endl;
+    unfragState << hselab_.eele << "\t" << fDjkin->DJX << "\t" << fDjkin->DJY << "\t" << fDjkin->DJQ2 << endl;
 
     for (Int_t i = 0; i<numpart; i++)
     {
-      finalState << fLujets->K[0][i-1] << "\t"
-                 << fLujets->K[1][i-1] << "\t" //ID
-                 << fLujets->K[2][i-1] << "\t"
-                 << fLujets->K[3][i-1] << "\t"
-                 << fLujets->K[4][i-1] << "\t"
-                 << fLujets->P[0][i-1] << "\t" //Px
-                 << fLujets->P[1][i-1] << "\t" //Py
-                 << fLujets->P[2][i-1] << "\t" //Pz
-                 << fLujets->P[3][i-1] << "\t" //max(kinE,mass)
-                 << fLujets->P[4][i-1] << "\t" //Mass
-                 << fLujets->V[0][i-1] << "\t"
-                 << fLujets->V[1][i-1] << "\t"
-                 << fLujets->V[2][i-1] << "\t"
-                 << fLujets->V[3][i-1] << endl;
+      unfragState << fLujets->K[0][i-1] << "\t"
+                  << fLujets->K[1][i-1] << "\t" //ID
+                  << fLujets->K[2][i-1] << "\t"
+                  << fLujets->K[3][i-1] << "\t"
+                  << fLujets->K[4][i-1] << "\t"
+                  << fLujets->P[0][i-1] << "\t" //Px
+                  << fLujets->P[1][i-1] << "\t" //Py
+                  << fLujets->P[2][i-1] << "\t" //Pz
+                  << fLujets->P[3][i-1] << "\t" //max(kinE,mass)
+                  << fLujets->P[4][i-1] << "\t" //Mass
+                  << fLujets->V[0][i-1] << "\t"
+                  << fLujets->V[1][i-1] << "\t"
+                  << fLujets->V[2][i-1] << "\t"
+                  << fLujets->V[3][i-1] << endl;
     }
   }
 
