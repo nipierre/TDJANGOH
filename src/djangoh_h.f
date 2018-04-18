@@ -295,7 +295,7 @@ C-------------------------
       COMMON /LHAPDFC/ LHAPATH
       SAVE /LHAPDFC/
       COMMON /LEPTOU/ CUT(14),LST(40),PARL(30),X,Y,W2,Q2,U
-C      REAL            CUT,            PARL,    X,Y,W2,Q2,U
+      REAL            CUT,            PARL,    X,Y,W2,Q2,U
       COMMON /DJKIN/ DJX,DJY,DJW2,DJQ2,DJU
       SAVE /DJKIN/
       COMMON /ISDEBUG/ ISDBG
@@ -2204,7 +2204,7 @@ C-------------------------
       COMMON /LHAPDFC/ LHAPATH
       SAVE /LHAPDFC/
       COMMON /LEPTOU/ CUT(14),LST(40),PARL(30),X,Y,W2,Q2,U
-C      REAL            CUT,            PARL,    X,Y,W2,Q2,U
+      REAL            CUT,            PARL,    X,Y,W2,Q2,U
       INTEGER                   LST
       COMMON /DJKIN/ DJX,DJY,DJW2,DJQ2,DJU
       SAVE /DJKIN/
@@ -2361,7 +2361,7 @@ C> HSUSER
       COMMON /SPPASS/ NSOPH,NSPOUT,NFAILP,NSPACC
       COMMON /DJPASS/ NTOTDJ,NPASDJ,NFAILL
       COMMON /LEPTOU/ CUT(14),LST(40),PARL(30),X,Y,W2,Q2,U
-C      REAL            CUT,            PARL,    X,Y,W2,Q2,U
+      REAL            CUT,            PARL,    X,Y,W2,Q2,U
       CHARACTER*80 OUTFILENAM
       COMMON /HSOUTF/ OUTFILENAM,ICH
       CHARACTER*45 CHNAME
@@ -13667,7 +13667,7 @@ C...COMMON BLOCKS FROM HERACLES (NOTE: NAMES HAVE PARTLY BEEN CHANGED)
       REAL            PYSTOP,PYSLAM
 C...COMMON BLOCKS FROM LEPTO
       COMMON /LEPTOU/ CUT(14),LST(40),PARL(30),X,Y,W2,Q2,U
-C      REAL            CUT            ,PARL    ,X,Y,W2,Q2,U
+      REAL            CUT            ,PARL    ,X,Y,W2,Q2,U
       COMMON /LINTER/ PARI(40),EWQC(2,2,8),QC(8),ZL(2,4),ZQ(2,8),PQ(17)
       REAL            PARI    ,EWQC       ,QC   ,ZL     ,ZQ     ,PQ
       COMMON /FLGRID/ NFX,NFQ,XR(2),QR(2),FLQT(41,16),FLGT(41,16),
