@@ -2834,11 +2834,11 @@ C--   Last update: 960109                                            --C
 C--   Purpose:     Take care of small mass systems with one diquark  --C
 C--                                                                  --C
 
-      IMPLICIT NONE
+C      IMPLICIT NONE
 
 C--       global variables
-      INTEGER N,K
-      REAL P,V
+C      INTEGER N,K
+C      REAL P,V
       COMMON /LUJETS/N,K(4000,5),P(4000,5),V(4000,5)
       INTEGER LST
       REAL CUT,PARL,X,Y,W2,Q2,U
