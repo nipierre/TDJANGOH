@@ -157,7 +157,8 @@ TLine* l2[5];
 // Others
 
 int id, npart;
-double E, E_prime, xbj, y, Q2, px, py, pz, Eh, dummy, pt, z, nu, W;
+double E, E_prime, xbj, y, Q2, px, py, pz, Eh, pt, z, nu, W;
+string dummy;
 
 int fId;
 double fNu_max[3][14];
