@@ -172,9 +172,9 @@ int main(int argc,char *argv[])
        cout << "DEBUG: READ CHECK RE FILE" << endl;
        cout << dummy << "\tid : " << id << "\t" << dummy << "\t" << dummy << "\t" << dummy << "\t";
 #endif
-        revt >> px >> py >> pz >> Eh;
+        revt >> px >> py >> pz >> Eh >> dummy;
 #ifdef DEBUG
-       cout << px << "\t" << py << "\t" << pz << "\t" << Eh << "\t";
+       cout << px << "\t" << py << "\t" << pz << "\t" << Eh << "\t" << dummy << "\t";
 #endif
         revt >> dummy >> dummy >> dummy >> dummy;
 #ifdef DEBUG
@@ -442,9 +442,9 @@ int main(int argc,char *argv[])
        cout << "DEBUG: READ CHECK BORN FILE" << endl;
        cout << dummy << "\tid : " << id << "\t" << dummy << "\t" << dummy << "\t" << dummy << "\t";
 #endif
-        bevt >> px >> py >> pz >> Eh;
+        bevt >> px >> py >> pz >> Eh >> dummy;
 #ifdef DEBUG
-       cout << px << "\t" << py << "\t" << pz << "\t" << Eh << "\t";
+       cout << px << "\t" << py << "\t" << pz << "\t" << Eh << "\t" << dummy << "\t";
 #endif
         bevt >> dummy >> dummy >> dummy >> dummy;
 #ifdef DEBUG
@@ -718,9 +718,9 @@ int main(int argc,char *argv[])
           cout << "DEBUG: READ CHECK RE FILE" << endl;
           cout << dummy << "\tid : " << id << "\t" << dummy << "\t" << dummy << "\t" << dummy << "\t";
 #endif
-          revt >> px >> py >> pz >> Eh;
+          revt >> px >> py >> pz >> Eh >> dummy;
 #ifdef DEBUG
-          cout << px << "\t" << py << "\t" << pz << "\t" << Eh << "\t";
+          cout << px << "\t" << py << "\t" << pz << "\t" << Eh << "\t" << "\t";
 #endif
           revt >> dummy >> dummy >> dummy >> dummy;
 #ifdef DEBUG
@@ -986,9 +986,9 @@ int main(int argc,char *argv[])
           cout << "DEBUG: READ CHECK BORN FILE" << endl;
           cout << dummy << "\tid : " << id << "\t" << dummy << "\t" << dummy << "\t" << dummy << "\t";
 #endif
-          bevt >> px >> py >> pz >> Eh;
+          bevt >> px >> py >> pz >> Eh >> dummy;
 #ifdef DEBUG
-          cout << px << "\t" << py << "\t" << pz << "\t" << Eh << "\t";
+          cout << px << "\t" << py << "\t" << pz << "\t" << Eh << "\t" << dummy "\t";
 #endif
           bevt >> dummy >> dummy >> dummy >> dummy;
 #ifdef DEBUG
