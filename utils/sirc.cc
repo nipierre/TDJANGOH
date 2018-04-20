@@ -988,7 +988,7 @@ int main(int argc,char *argv[])
 #endif
           bevt >> px >> py >> pz >> Eh >> dummy;
 #ifdef DEBUG
-          cout << px << "\t" << py << "\t" << pz << "\t" << Eh << "\t" << dummy "\t";
+          cout << px << "\t" << py << "\t" << pz << "\t" << Eh << "\t" << dummy << "\t";
 #endif
           bevt >> dummy >> dummy >> dummy >> dummy;
 #ifdef DEBUG
