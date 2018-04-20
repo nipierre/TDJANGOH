@@ -2838,7 +2838,7 @@ C--                                                                  --C
 
 C--       global variables
       INTEGER N,K
-      DOUBLE PRECISION P,V
+      REAL P,V
       COMMON /LUJETS/N,K(4000,5),P(4000,5),V(4000,5)
       INTEGER LST
       REAL CUT,PARL,X,Y,W2,Q2,U
