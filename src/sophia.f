@@ -544,9 +544,6 @@ c***********************************************
         CALL PO_ALTRA(GamBet(4),GamBet(1),GamBet(2),GamBet(3),
      &    PC(1),PC(2),PC(3),PC(4),Ptot,
      &    SP(I,1),SP(I,2),SP(I,3),SP(I,4))
-C        IF(Imode.eq.6) THEN
-          WRITE(33,*) SP(I,1),SP(I,2),SP(I,3),SP(I,4)
-C        ENDIF
       ENDDO
 
       call check_event(Icount,Esum,PXsum,PYsum,PZsum,IQchr,IQbar,Irej)
