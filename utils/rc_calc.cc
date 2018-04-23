@@ -1191,9 +1191,9 @@ int main(int argc,char *argv[])
     cout << endl;
   }
 
-  outfile.setprecision(5);
-
   outfile << "x/y";
+
+  outfile << setprecision(5);
 
   for(int i=0;i<YRANGE;i++)
     outfile << "\t" << ytab[i];
