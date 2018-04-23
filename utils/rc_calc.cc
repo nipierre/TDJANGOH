@@ -1191,7 +1191,7 @@ int main(int argc,char *argv[])
     cout << endl;
   }
 
-  outfile << setprecision(5);
+  outfile.setprecision(5);
 
   outfile << "x/y";
 
