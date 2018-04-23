@@ -1,6 +1,6 @@
 CX=g++
 
-CCFLAGS = -g -O1 -W -Wall #-pedantic -fPIC
+CCFLAGS = -g -O1 -std=c++11 -W -Wall #-pedantic -fPIC
 ROOTFLAGS = `root-config --cflags --glibs`
 ROOTVERSION = -D ROOT5
 

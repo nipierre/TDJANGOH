@@ -1,6 +1,6 @@
 CC              = gcc
 CXX             = g++
-CCFlags         = -g -O1 -Wall -fPIC
+CCFlags         = -g -O1 -std=c++11 -Wall -fPIC
 ROOTFLAGS 	= `root-config --cflags`
 INCFLAGS	= -I../include/
 TDJANGOH_LIB=$(TDJANGOH)/lib
