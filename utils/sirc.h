@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <algorithm>
 #include <TFile.h>
 #include <TH1F.h>
 #include <TH2F.h>
