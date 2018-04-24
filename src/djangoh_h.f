@@ -366,8 +366,8 @@ C---PRINT THE TITLE
      3//,10X,'                         HERACLES '
      4//,10X,'     Event generator for deep-inelastic l-P collisions '
      5 /,10X,'              including radiative corrections  '
-     6//,10X,'                 VERSION 4.7.0I, XX.02.2017 '//
-     8//,10X,'                       H. Spiesberger '//
+     6//,10X,'                VERSION 4.8.0.I, 23.04.2018 '//
+     8//,10X,'                      H. Spiesberger '//
      9' **************************************************',
      1'****************************',//)
 C

@@ -448,7 +448,6 @@ void TDjangoh::GenerateEvent()
   {
     RadElasFS();
   }
-  ImportParticles();
 }
 
 
