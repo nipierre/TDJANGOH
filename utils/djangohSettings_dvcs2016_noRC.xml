@@ -110,7 +110,7 @@
 <Codeword name="STRUCTFUNC">
   <Data name="ilqmod" value="0"/>
   <Data name="ilib" value="2"/>
-  <Data name="icode" value="10150"/>
+  <Data name="icode" value="21000"/>
 </Codeword>
 
 <!-- FLONG -->
