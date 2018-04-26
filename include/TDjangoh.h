@@ -149,12 +149,6 @@ public:
   */
   Int_t            ImportParticles(TClonesArray *particles, Option_t *option="");
   /*!
-  * \brief Import particles from lujets_ subroutine and copy it in TClonesArray*
-  * \param option :
-  * \return TObjArray w/ particles
-  */
-  TObjArray       *ImportParticles(Option_t *option="");
-  /*!
   * \brief Patchy method to recover final state for (quasi)elastic events
   */
   void             ElasFS();

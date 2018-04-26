@@ -397,9 +397,6 @@ TDjangoh::TDjangoh() : TGenerator("TDjangoh","TDjangoh")
   << BOLD(FBLU("    *//-----"))<<BOLD(FCYN(" TDjangoh : An Interface to Djangoh"))<<BOLD(FBLU(" ----- "))<<BOLD(FCYN("N. PIERRE, nicolas.pierre@cern.ch"))<<BOLD(FBLU(" -----//*\n"))
   << BOLD(FBLU("   *//--------------------------------------------------------------------------------------//*\n\n\n"));
 
-  delete fParticles;
-
-  fParticles = new TClonesArray("TMCParticle",50);
 }
 
 
@@ -413,11 +410,7 @@ TDjangoh::TDjangoh(const TDjangoh& dj) :
 
 TDjangoh::~TDjangoh()
 {
-  if (fParticles) {
-     fParticles->Delete();
-     delete fParticles;
-     fParticles = 0;
-  }
+
 }
 
 
@@ -455,35 +448,6 @@ void TDjangoh::EndRecap()
 {
   hsrcap_();
 }
-
-
-TObjArray *TDjangoh::ImportParticles(Option_t *)
-{
-  fParticles->Clear();
-  Int_t numpart   = fLujets->N;
-  TClonesArray &a = *((TClonesArray*)fParticles);
-
-  for (Int_t i = 0; i<numpart; i++)
-  {
-     new(a[i]) TMCParticle(fLujets->K[0][i] ,
-                           fLujets->K[1][i] ,
-                           fLujets->K[2][i] ,
-                           fLujets->K[3][i] ,
-                           fLujets->K[4][i] ,
-                           fLujets->P[0][i] ,
-                           fLujets->P[1][i] ,
-                           fLujets->P[2][i] ,
-                           fLujets->P[3][i] ,
-                           fLujets->P[4][i] ,
-                           fLujets->V[0][i] ,
-                           fLujets->V[1][i] ,
-                           fLujets->V[2][i] ,
-                           fLujets->V[3][i] ,
-                           fLujets->V[4][i]);
-  }
-  return fParticles;
-}
-
 
 Int_t TDjangoh::ImportParticles(TClonesArray *particles, Option_t *option)
 {
