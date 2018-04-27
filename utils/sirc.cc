@@ -1614,7 +1614,7 @@ int main(int argc,char *argv[])
           if(!h_a_d[k-1]) {h_a_d.erase(h_a_d.begin()+k-1); h_err_d.erase(h_err_d.begin()+k-1); z_range_h_d.erase(z_range_h_d.begin()+k-1);}
         }
 
-        for(int k=13; k>0; k--)
+        for(int k=12; k>0; k--)
         {
           if(!p_pt_r[k-1]) {p_pt_r.erase(p_pt_r.begin()+k-1); p_pt_err_r.erase(p_pt_err_r.begin()+k-1); pt_range_p_r.erase(pt_range_p_r.begin()+k-1);}
           if(!p_pt_b[k-1]) {p_pt_b.erase(p_pt_b.begin()+k-1); p_pt_err_b.erase(p_pt_err_b.begin()+k-1); pt_range_p_b.erase(pt_range_p_b.begin()+k-1);}
