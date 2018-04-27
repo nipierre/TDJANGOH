@@ -26,7 +26,7 @@ libDjangoh: $(OBJSF)
 	@mv libDjangoh.so ../lib
 
 modules: xSectionModule.f90
-	@$(GFF) -c xSectionModule.f90
+	@$(GFF) $(CCFlags) -c xSectionModule.f90
 
 pugixml.o:
 	@$(CC) $(CCFlags) $(ROOTFLAGS) $(INCDIR) -o pugixml.o -c pugixml.cpp $(LDFLAGS)
