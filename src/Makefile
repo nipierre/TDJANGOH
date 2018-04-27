@@ -5,7 +5,7 @@ CC              = gcc
 CXX             = g++
 GFF							= gfortran
 LHAPDF5_LIB=$(LHAPDF5)/lib
-CCFlags         = -g -O1 -fPIC -std=c++11 -w
+CCFlags         = -g -O1 -fPIC -w
 FFFlags					= -fno-automatic
 ROOTFLAGS 	= `root-config --cflags`
 INCDIR		= -I`root-config --incdir` -I../include/
