@@ -1424,7 +1424,7 @@ CHS.. IF(LST(21).NE.0) GOTO 1
         GOTO 900
       ENDIF
 CJR--       take care of small systems
-C      CALL LSMALL
+      CALL LSMALL
       IF(LST(21).NE.0) THEN
         IF(LST(3).GE.1) WRITE(6,*)' LSMALL error LST(21)= ',LST(21),
      &                            ', New event generated'
@@ -1435,7 +1435,7 @@ C      CALL LSMALL
         GOTO 900
       ENDIF
       MSTJ(14)=1
-      CALL LUPREP(0)
+C      CALL LUPREP(0)
       IF(MSTU(24).NE.0) THEN
          IF(LST(3).GE.1) WRITE(6,*)' LUPREP error MSTU(24)= ',MSTU(24),
      &                             ', New event generated'
