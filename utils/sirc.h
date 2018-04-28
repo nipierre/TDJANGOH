@@ -103,8 +103,8 @@ vector<double> fQ2[2][9][6][14];
 
 int fMarkerColor[2] = {4,2};
 int fMarkerStyle[2][2] = {{24,20},{26,22}};
-int fMarkerColorAlt[5] = {2,95,209,226,221};
-int fMarkerStyleAlt[5][2] = {{24,20},{26,22},{25,21},{27,33},{28,34}};
+int fMarkerColorAlt[6] = {2,95,209,226,4,221};
+int fMarkerStyleAlt[6][2] = {{24,20},{26,22},{25,21},{27,33},{28,34},{30,29}};
 
 //Constants
 
@@ -152,8 +152,8 @@ TGraphErrors* H_pt_d[2][9][6];
 TGraphErrors* P_pt_d[2][9][6];
 TGraphErrors* K_pt_d[2][9][6];
 
-TLine* l1[5];
-TLine* l2[5];
+TLine* l1[6];
+TLine* l2[6];
 
 // Others
 
