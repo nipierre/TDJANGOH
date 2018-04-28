@@ -3007,13 +3007,11 @@ C--       isotropic decay in cms (dcostheta*dphi)
 C--       K-vector
             K(N+1,1)=1
             K(N+1,2)=KFH1
-            WRITE(33,*) KFH1
             K(N+1,3)=N
             K(N+1,4)=0
             K(N+1,5)=0
             K(N+2,1)=1
             K(N+2,2)=KFH2
-            WRITE(33,*) KFH2
             K(N+2,3)=N
             K(N+2,4)=0
             K(N+2,5)=0
@@ -3047,7 +3045,6 @@ C--       isospin conservation
             IF (KFH1.EQ.-2114) KFH1=-2112
             K(N+1,1)=1
             K(N+1,2)=KFH1
-            WRITE(33,*) KFH1
             K(N+1,3)=N
             K(N+1,4)=0
             K(N+1,5)=0

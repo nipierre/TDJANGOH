@@ -193,6 +193,7 @@ C...Hadronic final state from SOPHIA
           P(IP1,5)=P_S(IP,5)
           K(IP1,1)=1
           K(IP1,2)=ICON_SIB_PDG(LLIST(IP))
+          WRITE(33,*) K(IP1,2)
           K(IP1,3)=0
           K(IP1,4)=0
           K(IP1,5)=0
