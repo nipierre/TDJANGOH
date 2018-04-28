@@ -3006,7 +3006,7 @@ C--       isotropic decay in cms (dcostheta*dphi)
             P(N+2,1)=-P(N+1,1)
 C--       K-vector
             K(N+1,1)=1
-            WRITE(33,*) KFH1
+C            WRITE(33,*) KFH1
             K(N+1,2)=KFH1
             K(N+1,3)=N
             K(N+1,4)=0
