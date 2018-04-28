@@ -92,7 +92,7 @@ c      call print_event(1)
       IF (NP.EQ.0) THEN
         NFAILS=NFAILS+1
         IF (NFAILS.LT.NFLMAX) GOTO 2
-        
+
         GOTO 30
       ENDIF
 C...Event passed fragmentation
@@ -237,6 +237,7 @@ Chs...Restore event record from SOPHIA when hadronization has failed
       COMMON /HSPARM/ POLARI,HPOLAR,LEPTID,LLEPT,LQUA
       COMMON /HSELAB/ SP,EELE,PELE,EPRO,PPRO
       COMMON /LUJETS/ N,K(4000,5),P(4000,5),V(4000,5)
+      REAL*4 P,V
       COMMON /LEPTOU/ CUT(14),LST(40),PARL(30),X,Y,W2,Q2,U
       PARAMETER (NMXHEP=2000)
       COMMON /HSCHNN/ ICHNN
