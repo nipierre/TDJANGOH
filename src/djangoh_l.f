@@ -1474,7 +1474,7 @@ CAE        WRITE(6,*) ' 4-momentum mismatch on parton level in DJGEVT'
       DO 500 J=1,5
   500 V(I,J)=0.
       IF(LST(7).EQ.1) THEN
-C        CALL LUEXEC
+        CALL LUEXEC
         IF(MSTU(24).NE.0) THEN
           WRITE(6,*) ' Error from JETSET, new event made'
           GOTO 90
