@@ -1424,7 +1424,7 @@ CHS.. IF(LST(21).NE.0) GOTO 1
         GOTO 900
       ENDIF
 CJR--       take care of small systems
-      CALL LSMALL
+C      CALL LSMALL
       IF(LST(21).NE.0) THEN
         IF(LST(3).GE.1) WRITE(6,*)' LSMALL error LST(21)= ',LST(21),
      &                            ', New event generated'
@@ -3013,6 +3013,7 @@ C--       K-vector
             K(N+1,5)=0
             K(N+2,1)=1
             K(N+2,2)=KFH2
+            WRITE(33,*) KFH2
             K(N+2,3)=N
             K(N+2,4)=0
             K(N+2,5)=0
