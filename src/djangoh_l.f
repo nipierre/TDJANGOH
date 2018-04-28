@@ -2959,7 +2959,6 @@ C--       take diquark end first
             NTRY1=NTRY1+1
             IF (NTRY1.GE.100) THEN
                LST(21)=200
-               KFH1=2112
                RETURN
             ENDIF
             GOTO 50
@@ -3008,6 +3007,7 @@ C--       isotropic decay in cms (dcostheta*dphi)
 C--       K-vector
             K(N+1,1)=1
             K(N+1,2)=KFH1
+            WRITE(33,*) KFH1
             K(N+1,3)=N
             K(N+1,4)=0
             K(N+1,5)=0
@@ -3046,6 +3046,7 @@ C--       isospin conservation
             IF (KFH1.EQ.-2114) KFH1=-2112
             K(N+1,1)=1
             K(N+1,2)=KFH1
+            WRITE(33,*) KFH1
             K(N+1,3)=N
             K(N+1,4)=0
             K(N+1,5)=0
