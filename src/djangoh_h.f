@@ -7100,7 +7100,7 @@ C
         IF (IDJSPH) THEN
           CALL DJGSPH(13,IMODE)
         ELSE
-C          CALL DJGEVT
+          CALL DJGEVT
         ENDIF
       ENDIF
 C-------------------------
@@ -7109,7 +7109,7 @@ chs...ISTHEP according to H1 standard
       NHEP = NHEP + 2
 C---incoming electron:
       IHEP=NHEP-1
-      ISTHEP(IHEP)=201
+      ISTHEP(IHEP)=21
       IDHEP(IHEP)=LEPIN1
       PHEP(5,IHEP)=0D0
       PHEP(4,IHEP)=EELE
@@ -7126,7 +7126,7 @@ C---incoming electron:
       JDAHEP(2,IHEP)=0
 C incoming nucleon:
       IHEP = NHEP
-      ISTHEP(IHEP)=201
+      ISTHEP(IHEP)=21
 C incoming proton:
       IF (INT(HNA).EQ.1.AND.INT(HNZ).EQ.1) THEN
         IDHEP(IHEP)=2212
