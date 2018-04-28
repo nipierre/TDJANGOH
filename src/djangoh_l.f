@@ -3039,12 +3039,13 @@ C--       make one particle instead
             KFH1=0
             CALL LUKFDI(KIDQ,KIQ,KDUMMY,KFH1)
             IF (KFH1.EQ.0) GOTO 70
-            WRITE(33,*) KFH1
+C            WRITE(33,*) KFH1
 C--       isospin conservation
             IF (KFH1.EQ.2214) KFH1=2212
             IF (KFH1.EQ.2114) KFH1=2112
             IF (KFH1.EQ.-2214) KFH1=-2212
             IF (KFH1.EQ.-2114) KFH1=-2112
+            WRITE(33,*) KFH1
             K(N+1,1)=1
             K(N+1,2)=KFH1
             K(N+1,3)=N
