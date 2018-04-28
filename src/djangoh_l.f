@@ -3038,8 +3038,8 @@ C--       make one particle instead
             KDUMMY=0
             KFH1=0
             CALL LUKFDI(KIDQ,KIQ,KDUMMY,KFH1)
-            WRITE(33,*) KFH1
             IF (KFH1.EQ.0) GOTO 70
+            WRITE(33,*) KFH1
 C--       isospin conservation
             IF (KFH1.EQ.2214) KFH1=2212
             IF (KFH1.EQ.2114) KFH1=2112
