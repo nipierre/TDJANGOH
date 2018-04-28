@@ -7099,7 +7099,6 @@ C
         NSPACC=0
         IF (IDJSPH) THEN
           CALL DJGSPH(13,IMODE)
-          WRITE(33,*) LST(21)
         ELSE
 C          CALL DJGEVT
         ENDIF
