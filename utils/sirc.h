@@ -96,7 +96,7 @@ double fYrange[7] = {.1,.15,.2,.3,.5,.7,.9};
 int fFlag_r[3][9][6][14];
 int fFlag_b[3][9][6][14];
 double fZ_bin_width[14] = {.1,.05,.05,.05,.05,.05,.05,.05,.05,.05,.05,.05,.1,.15};
-double fPt_bin_width = 0.15;
+double fPt_bin_width = 0.5;
 vector<double> fQ2[2][9][6][14];
 
 //Graphic Style

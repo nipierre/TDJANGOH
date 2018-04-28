@@ -1213,9 +1213,9 @@ int main(int argc,char *argv[])
   }
 
   double z_range[14] = {.1,.225,.275,.325,.375,.425,.475,.525,.575,.625,.675,.725,.8,.925};
-  double pt_range[13] = {0.075,0.225,0.375,0.525,0.675,
-                      0.825,0.975,1.125,1.275,1.425,
-                      1.575,1.725,1.875};
+  double pt_range[12] = {0.25,0.75,1.25,1.75,2.25,
+                      2.75,3.25,3.75,4.25,4.75,
+                      5.25,5.75};
 
   ofstream shout("semi_inclusive.txt",std::ofstream::out | std::ofstream::trunc);
   ofstream ofs_multKp("K+_p_MC.txt",std::ofstream::out | std::ofstream::trunc);
