@@ -203,6 +203,7 @@ C...Hadronic final state from SOPHIA
       RETURN
 
  30   CALL SPHLEV
+      WRITE(33,*) SPHLEV
       NFAILP=NFAILP+1
       RETURN
 
