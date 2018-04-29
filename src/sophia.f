@@ -28,6 +28,8 @@ C***********************************************************************
       REAL*4 P,V
       COMMON /LEPTOU/ CUT(14),LST(40),PARL(30),X,Y,W2,Q2,U
 C      REAL            CUT            ,PARL    ,X,Y,W2,Q2,U
+      COMMON /LUDAT1/ MSTU(200),PARU(200),MSTJ(200),PARJ(200)
+      REAL PARU,PARJ
       SAVE
       DIMENSION P_gam(4),P_nuc(4)
       LOGICAL FIRST
@@ -93,6 +95,7 @@ c      call print_event(1)
         NFAILS=NFAILS+1
         IF (NFAILS.LT.NFLMAX) GOTO 2
         LST(21)=1
+        MSTU(1)=0
         GOTO 30
       ENDIF
 C...Event passed fragmentation

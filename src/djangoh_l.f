@@ -1358,7 +1358,7 @@ CHS..
           NFAIL=NFAIL+1
           NFAILI(2)=NFAILI(2)+1
           IF (NFAIL.LT.NFLMAX) GOTO 300
-C          MSTU(1)=0
+          MSTU(1)=0
           GOTO 900
         ENDIF
       ENDIF
