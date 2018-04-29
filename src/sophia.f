@@ -245,6 +245,7 @@ Chs...Restore event record from SOPHIA when hadronization has failed
       COMMON /LEPTOU/ CUT(14),LST(40),PARL(30),X,Y,W2,Q2,U
       PARAMETER (NMXHEP=2000)
       COMMON /HSCHNN/ ICHNN
+      COMMON /S_PLIST/ P_S(2000,5), LLIST(2000), NP, Ideb
       double precision PHEP,VHKK
       COMMON /HEPEVT/ NEVHEP,NHEP,ISTHEP(NMXHEP),IDHEP(NMXHEP),
      &             JMOHEP(2,NMXHEP),JDAHEP(2,NMXHEP),
@@ -329,24 +330,21 @@ C...radiative photon
 
 
 C...Unfragmented hadronic final state
-C...scattered quark
-      N=N+1
-      DO 70 J=1,5
-   70 P(N,J)=PHEP(J,2)
-      K(N,1)=ISTHEP(2)
-      K(N,2)=IDHEP(2)
-      K(N,3)=1
-      K(N,4)=JDAHEP(1,2)
-      K(N,5)=JDAHEP(2,2)
-C...spectator
-      N=N+1
-      DO 80 J=1,5
-   80 P(N,J)=PHEP(J,4)
-      K(N,1)=ISTHEP(4)
-      K(N,2)=IDHEP(4)
-      K(N,3)=1
-      K(N,4)=JDAHEP(1,4)
-      K(N,5)=JDAHEP(2,4)
+      DO 40 IP=1,NP
+        IF (ABS(LLIST(IP)).LT.50) THEN
+          N=N+1
+          P(N,1)=P_S(IP,1)
+          P(N,2)=P_S(IP,2)
+          P(N,3)=P_S(IP,3)
+          P(N,4)=P_S(IP,4)
+          P(N,5)=P_S(IP,5)
+          K(N,1)=1
+          K(N,2)=ICON_SIB_PDG(LLIST(IP))
+          K(N,3)=0
+          K(N,4)=0
+          K(N,5)=0
+        ENDIF
+ 40   CONTINUE
 
       RETURN
       END
