@@ -7100,7 +7100,7 @@ C
         IF (IDJSPH) THEN
           CALL DJGSPH(13,IMODE)
         ELSE
-C          CALL DJGEVT
+          CALL DJGEVT
         ENDIF
       ENDIF
 C-------------------------
