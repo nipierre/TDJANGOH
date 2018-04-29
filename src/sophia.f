@@ -94,9 +94,9 @@ c      call print_event(1)
       IF (NP.EQ.0) THEN
         NFAILS=NFAILS+1
         IF (NFAILS.LT.NFLMAX) GOTO 2
-        LST(21)=1
-        MSTU(1)=0
-        GOTO 30
+C        LST(21)=1
+C        MSTU(1)=0
+C        GOTO 30
       ENDIF
 C...Event passed fragmentation
       IF (NP.NE.0) THEN
