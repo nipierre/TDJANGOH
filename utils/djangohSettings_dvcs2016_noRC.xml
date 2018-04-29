@@ -16,7 +16,7 @@
   <Data name="iymax" value="0.95"/>
   <Data name="iq2min" value="0.9"/>
   <Data name="iq2max" value="80"/>
-  <Data name="iwmin" value="1.4"/>
+  <Data name="iwmin" value="0"/>
 </Codeword>
 
 <!-- GSW-PARAM -->
