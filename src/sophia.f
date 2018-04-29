@@ -250,77 +250,83 @@ Chs...Restore event record from SOPHIA when hadronization has failed
      &             JMOHEP(2,NMXHEP),JDAHEP(2,NMXHEP),
      &             PHEP(5,NMXHEP),VHKK(4,NMXHEP)
 
+      N=0
+      N=N+1
 C...Set initial state, first lepton:
-      K(1,1)=21
-      K(1,2)=-LLEPT*10-LEPTID
-      K(1,3)=0
-      K(1,4)=0
-      K(1,5)=0
-      P(1,1)=0.
-      P(1,2)=0.
-      P(1,3)=PELE
-      IF (K(1,2).EQ.-1.OR.K(1,2).EQ.1) THEN
-        P(1,5)= 0.000511
-      ELSE IF (K(1,2).EQ.-3.OR.K(1,2).EQ.3) THEN
-        P(1,5)= 0.10566
+      K(N,1)=21
+      K(N,2)=-LLEPT*10-LEPTID
+      K(N,3)=0
+      K(N,4)=0
+      K(N,5)=0
+      P(N,1)=0.
+      P(N,2)=0.
+      P(N,3)=PELE
+      IF (K(N,2).EQ.-11.OR.K(N,2).EQ.11) THEN
+        P(N,5)= 0.000511
+      ELSE IF (K(N,2).EQ.-13.OR.K(N,2).EQ.13) THEN
+        P(N,5)= 0.10566
       ENDIF
-      P(1,4)=SQRT(P(1,3)**2+P(1,5)**2)
+      P(N,4)=SQRT(P(N,3)**2+P(N,5)**2)
 
 C...then nucleon = proton
-      K(2,1)=21
-      K(2,2)=2212
-      K(2,3)=0
-      K(2,4)=0
-      K(2,5)=0
-      P(2,1)=0.
-      P(2,2)=0.
-      P(2,3)=-PPRO
-      P(2,5)=0.938272
-      P(2,4)=EPRO
+      N=N+1
+      K(N,1)=21
+      K(N,2)=2212
+      K(N,3)=0
+      K(N,4)=0
+      K(N,5)=0
+      P(N,1)=0.
+      P(N,2)=0.
+      P(N,3)=-PPRO
+      P(N,5)=0.938272
+      P(N,4)=EPRO
 
-C...Final electron from HS
-      DO 20 J=1,5
-   20 P(4,J)=PHEP(J,1)
-      K(4,1)=ISTHEP(1)
-      K(4,2)=IDHEP(1)
-      K(4,3)=1
-      K(4,4)=JDAHEP(1,1)
-      K(4,5)=JDAHEP(2,1)
-      N=4
-
-C...Bremsstrahlung photon
-      IF (ICHNN.EQ.6.OR.ICHNN.EQ.7.OR.ICHNN.EQ.8
-     &   .OR.ICHNN.EQ.12) THEN
-        N=N+1
-        K(5,1)=ISTHEP(3)
-        K(5,2)=IDHEP(3)
-C...radiated gamma has origin in e or e'
-        IF(ICHNN.EQ.6.OR.ICHNN.EQ.8.OR.ICHNN.EQ.12) THEN
-          K(5,3)=1
-        ELSE
-          K(5,3)=4
-        ENDIF
-        K(5,4)=JDAHEP(1,3)
-        K(5,5)=JDAHEP(2,3)
-        DO 30 J=1,5
-   30   P(5,J)=PHEP(J,3)
-        DO 40 JV=1,4
-   40   V(5,JV)=VHKK(JV,3)
+C...virtual boson (non-radiative case)
+      N=N+1
+      K(N,1)=21
+      K(N,2)=23
+      K(N,3)=1
+      K(N,4)=0
+      K(N,5)=0
+      IF(ICHNN.EQ.1.OR.ICHNN.EQ.2) THEN
+        DO 60 JG=1,4
+  60       P(N,JG)=P(1,JG)-PHEP(JG,1)
+        P(N,5)=-SQRT(Q2)
+      ELSE
 C...virtual boson (radiative case)
         DO 50 JG=1,4
-   50   P(3,JG)=P(1,JG)-PHEP(JG,1)-PHEP(JG,3)
-        P(3,5)=-SQRT(Q2)
-      ELSEIF(ICHNN.EQ.1.OR.ICHNN.EQ.2) THEN
-C...virtual boson (non-radiative case)
-        DO 60 JG=1,4
-   60   P(3,JG)=P(1,JG)-PHEP(JG,1)
-        P(3,5)=-SQRT(Q2)
+  50       P(N,JG)=P(1,JG)-PHEP(JG,1)-PHEP(JG,3)
+        P(N,5)=-SQRT(Q2)
       ENDIF
-      K(3,1)=21
-      K(3,2)=23
-      K(3,3)=1
-      K(3,3)=1
-      K(3,5)=0
+
+C...scattered lepton
+      N=N+1
+      DO 20 J=1,5
+        P(N,J)=PHEP(J,1)
+   20 CONTINUE
+      K(N,1)=ISTHEP(1)
+      K(N,2)=IDHEP(1)
+      K(N,3)=1
+      K(N,4)=JDAHEP(1,1)
+      K(N,5)=JDAHEP(2,1)
+
+C...radiative photon
+      IF (ICHNN.GT.2) THEN
+        N=N+1
+        DO 30 J=1,5
+   30     P(N,J)=PHEP(J,3)
+        K(N,1)=ISTHEP(3)
+        K(N,2)=IDHEP(3)
+        K(N,3)=1
+        IF(ICHNN.EQ.6.OR.ICHNN.EQ.8.OR.ICHNN.EQ.12) THEN
+          K(N,3)=1
+        ELSE
+          K(N,3)=4
+        ENDIF
+        K(N,4)=JDAHEP(1,3)
+        K(N,5)=JDAHEP(2,3)
+      ENDIF
+
 
 C...Unfragmented hadronic final state
 C...scattered quark
