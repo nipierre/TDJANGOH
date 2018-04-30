@@ -206,6 +206,7 @@ C...Hadronic final state from SOPHIA
 
  30   CONTINUE
 C      CALL SPHLEV
+      N=0
       NFAILP=NFAILP+1
       RETURN
 

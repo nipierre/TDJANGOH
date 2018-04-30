@@ -433,11 +433,11 @@ void TDjangoh::GenerateEvent()
     fLujets->N=0;
   }
   // Patch in order to obtain the final state in case of (quasi-)elastic events.
-  if(chnumb_.ichngl == 15)
+  if(chnumb_.ichngl == 3)
   {
     ElasFS();
   }
-  else if(chnumb_.ichngl == 16 || chnumb_.ichngl == 17)
+  else if(chnumb_.ichngl == 15 || chnumb_.ichngl == 16 || chnumb_.ichngl == 17)
   {
     RadElasFS();
   }

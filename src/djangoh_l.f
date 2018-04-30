@@ -321,6 +321,7 @@ c      PARL(2)=HNZ
       LST(22)=1
       LST(23)=INTER
       KSAVE(1)=-LLEPT*10-LEPTID
+      LEPIN=-LLEPT*10-LEPTID
 cC incoming proton:
 c      IF (INT(HNA).EQ.1.AND.INT(HNZ).EQ.1) THEN
 c        KSAVE(2)=2212
