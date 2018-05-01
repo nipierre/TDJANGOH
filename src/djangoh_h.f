@@ -2301,9 +2301,10 @@ C---CONTROL OF EVENT GENERATION IN HSEVTG
         CALL HSEVTG
 
 C--- SECURE TEST TO KNOW IF DIS EVENT WAS WELL GENERATED.
-C        IF(K(1,1).EQ.21) THEN
-C          GOTO 3995
-C        ENDIF
+        IF(LST(21).NE.0) THEN
+          GOTO 3995
+        ENDIF
+
 C
 C---FINAL CALL OF USER TO GENERATE USER MONITORED OUTPUT
 C---Correct total cross sections for failed hadronization
