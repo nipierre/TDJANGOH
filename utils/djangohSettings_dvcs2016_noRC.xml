@@ -198,3 +198,8 @@
 <Codeword name="UNFRAG-SAVE">
   <Data name="unfrag" value="1"/>
 </Codeword>
+
+<!-- FORCE-GEN -->
+<Codeword name="FORCE-GEN">
+  <Data name="frcgen" value="1"/>
+</Codeword>
