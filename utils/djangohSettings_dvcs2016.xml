@@ -14,9 +14,9 @@
   <Data name="ixmax" value="0.95"/>
   <Data name="iymin" value="0.01"/>
   <Data name="iymax" value="0.95"/>
-  <Data name="iq2min" value="0.9"/>
+  <Data name="iq2min" value="0.8"/>
   <Data name="iq2max" value="80"/>
-  <Data name="iwmin" value="0"/>
+  <Data name="iwmin" value="4"/>
 </Codeword>
 
 <!-- GSW-PARAM -->
@@ -191,12 +191,12 @@
 
 <!-- VERBOZE -->
 <Codeword name="VERBOSE">
-  <Data name="verboz" value="1"/>
+  <Data name="verboz" value="0"/>
 </Codeword>
 
 <!-- UNFRAG-SAVE -->
 <Codeword name="UNFRAG-SAVE">
-  <Data name="unfrag" value="1"/>
+  <Data name="unfrag" value="0"/>
 </Codeword>
 
 <!-- FORCE-GEN -->
