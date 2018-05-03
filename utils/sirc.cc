@@ -1204,7 +1204,7 @@ int main(int argc,char *argv[])
 
   for(int i=0; i<6; i++)
   {
-    l1[i] = new TLine(0.1,1+i*0.1,0.9,1+i*0.1);
+    l1[i] = new TLine(0.,1+i*0.1,1.0,1+i*0.1);
     l1[i]->SetLineStyle(4);
     l1[i]->SetLineColor(fMarkerColorAlt[i]);
     l2[i] = new TLine(0.,1+i*0.1,6.,1+i*0.1);
@@ -1400,9 +1400,38 @@ int main(int argc,char *argv[])
           else fMult[i][j][k].tab[c][1][3] = sqrt(pow(fBornMult[i][j][k].tab[c][1][3],2)+pow(fReMult[i][j][k].tab[c][1][3],2));
 
 
-          if((i==7 && j==4) || (i==8 && j==0) || (i==8 && j==4)
-                            || (i==0 && j==0) || (i==0 && j==1)
-                            || (i==0 && j==2) || (i==1 && j==0))
+          // if((i==8 && j==0) || (i==0 && j==0) || (i==0 && j==1)
+          //                   || (i==0 && j==2) || (i==1 && j==0))
+          // {
+          //   fReMult[i][j][k].tab[c][0][0] = 0;
+          //   fReMult[i][j][k].tab[c][0][1] = 0;
+          //   fReMult[i][j][k].tab[c][0][2] = 0;
+          //   fReMult[i][j][k].tab[c][0][3] = 0;
+          //   fReMult[i][j][k].tab[c][1][0] = 0;
+          //   fReMult[i][j][k].tab[c][1][1] = 0;
+          //   fReMult[i][j][k].tab[c][1][2] = 0;
+          //   fReMult[i][j][k].tab[c][1][3] = 0;
+          //
+          //   fBornMult[i][j][k].tab[c][0][0] = 0;
+          //   fBornMult[i][j][k].tab[c][0][1] = 0;
+          //   fBornMult[i][j][k].tab[c][0][2] = 0;
+          //   fBornMult[i][j][k].tab[c][0][3] = 0;
+          //   fBornMult[i][j][k].tab[c][1][0] = 0;
+          //   fBornMult[i][j][k].tab[c][1][1] = 0;
+          //   fBornMult[i][j][k].tab[c][1][2] = 0;
+          //   fBornMult[i][j][k].tab[c][1][3] = 0;
+          //
+          //   fMult[i][j][k].tab[c][0][0] = 0;
+          //   fMult[i][j][k].tab[c][0][1] = 0;
+          //   fMult[i][j][k].tab[c][0][2] = 0;
+          //   fMult[i][j][k].tab[c][0][3] = 0;
+          //   fMult[i][j][k].tab[c][1][0] = 0;
+          //   fMult[i][j][k].tab[c][1][1] = 0;
+          //   fMult[i][j][k].tab[c][1][2] = 0;
+          //   fMult[i][j][k].tab[c][1][3] = 0;
+          // }
+
+          if((k==4 && j==5))
           {
             fReMult[i][j][k].tab[c][0][0] = 0;
             fReMult[i][j][k].tab[c][0][1] = 0;

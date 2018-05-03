@@ -333,6 +333,11 @@ extern "C" struct hepsav
   double vhkksv[3][4];
 } hepsav_;
 
+extern "C" struct djfgen
+{
+  int frcgen;
+} djfgen_;
+
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
 
@@ -1012,6 +1017,16 @@ void TDjangoh::ReadXMLFile(const string pFilename)
           {fUnfragSave = cData.attribute("value").as_int();cout<<"unfrag : "<<fUnfragSave<<endl;}
       }
     }
+
+    if(!strcmp(cCWType.c_str(), "FORCE-GEN" ))
+    {
+      cout << "\nCodeword : FORCE-GEN" << endl;
+      for(pugi::xml_node cData = cCodeWord.child ( "Data" ); cData; cData = cData.next_sibling())
+      {
+        if(std::string(cData.attribute("name").value()) == "frcgen")
+          {djfgen_.frcgen = cData.attribute("value").as_int();cout<<"unfrag : "<<djfgen_.frcgen<<endl;}
+      }
+    }
   }
 
   for(int i=0; i<30; i++)
@@ -1240,6 +1255,11 @@ void TDjangoh::WriteXMLFile(const string pFilename)
   f << "\n<!-- UNFRAG-SAVE -->" << endl;
   f << "<Codeword name=\"UNFRAG-SAVE\">" << endl;
   f << "\t<Data name=\"unfrag\" value=\"" << fUnfragSave << "\"/>" << endl;
+  f << "</Codeword>" << endl;
+
+  f << "\n<!-- FORCE-GEN -->" << endl;
+  f << "<Codeword name=\"FORCE-GEN\">" << endl;
+  f << "\t<Data name=\"frcgen\" value=\"" << djfgen_.frcgen << "\"/>" << endl;
   f << "</Codeword>" << endl;
 
   f.close();
