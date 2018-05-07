@@ -2218,7 +2218,7 @@ C-------------------------
       INTEGER         ICHNGL
       SAVE /CHNUMB/
       COMMON /DJFGEN/ FRCGEN
-      INTEGER         FRCGEN 
+      INTEGER         FRCGEN
       DIMENSION CODE(40)
       DIMENSION UIO(97)
       DIMENSION INT2C(5),ISAM2C(5),INT3C(15),ISAM3C(15)
@@ -3736,6 +3736,7 @@ C-------------------------
       INTEGER         ICHNGL
       SAVE /CHNUMB/
       COMMON /HEPSAV/ IDHSV(3), PHEPSV(5,3), VHKKSV(4,3)
+      DOUBLE PRECISION          PHEPSV(5,3), VHKKSV(4,3)
       INTEGER         IDHSV
       SAVE /HEPSAV/
 C-------------------------
@@ -6182,6 +6183,7 @@ C---------------------------------------------------------------------
      *                IOPLOT,IPRINT,ICUT
       COMMON /HSUNTS/ LUNTES,LUNDAT,LUNIN,LUNOUT,LUNRND
       COMMON /HEPSAV/ IDHSV(3), PHEPSV(5,3), VHKKSV(4,3)
+      DOUBLE PRECISION          PHEPSV(5,3), VHKKSV(4,3)
       INTEGER         IDHSV
       SAVE /HEPSAV/
       PARAMETER (NDIMX=10)
@@ -6803,6 +6805,7 @@ C
       DATA IQFLCC /-5,-6,-3,-4,-2,-1,0,1,2,4,3,6,5/
       DATA NCEVE /0/
       COMMON /HEPSAV/ IDHSV(3), PHEPSV(5,3), VHKKSV(4,3)
+      DOUBLE PRECISION          PHEPSV(5,3), VHKKSV(4,3)
       INTEGER         IDHSV
       SAVE /HEPSAV/
       IELAST=.FALSE.
