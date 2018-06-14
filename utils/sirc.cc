@@ -1431,7 +1431,7 @@ int main(int argc,char *argv[])
           //   fMult[i][j][k].tab[c][1][3] = 0;
           // }
 
-          if((k==4 && j==5))
+          if((k>=4 && j==5))
           {
             fReMult[i][j][k].tab[c][0][0] = 0;
             fReMult[i][j][k].tab[c][0][1] = 0;
