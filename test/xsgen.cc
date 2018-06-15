@@ -69,7 +69,6 @@ int main(int argc,char *argv[])
         cout << FBLU("\n(x,y) : (") << j << FBLU(",") << k << FBLU(")..") << endl;
 
         tDjangoh->ModKineCuts(3,xtab[j]-epsilon,xtab[j]+epsilon,ytab[k]-epsilon,ytab[k]+epsilon,0.1,1E5,1.4);
-        tDjangoh->SetBeamType("mu+");
 
         tDjangoh->Initialize();
 
