@@ -53,18 +53,18 @@ using namespace std;
 
 //Outputs
 
-#define hadron_z_pdf "/sps/compass/npierre/TDJANGOH/hadron_z.pdf"
-#define pion_z_pdf "/sps/compass/npierre/TDJANGOH/pion_z.pdf"
-#define kaon_z_pdf "/sps/compass/npierre/TDJANGOH/kaon_z.pdf"
-#define hadron_pt_pdf "/sps/compass/npierre/TDJANGOH/hadron_pt.pdf"
-#define pion_pt_pdf "/sps/compass/npierre/TDJANGOH/pion_pt.pdf"
-#define kaon_pt_pdf "/sps/compass/npierre/TDJANGOH/kaon_pt.pdf"
-#define hadron_ratio_pdf "/sps/compass/npierre/TDJANGOH/hadron_ratio.pdf"
-#define pion_ratio_pdf "/sps/compass/npierre/TDJANGOH/pion_ratio.pdf"
-#define kaon_ratio_pdf "/sps/compass/npierre/TDJANGOH/kaon_ratio.pdf"
-#define hadron_ratio_pt_pdf "/sps/compass/npierre/TDJANGOH/hadron_pt_ratio.pdf"
-#define pion_ratio_pt_pdf "/sps/compass/npierre/TDJANGOH/pion_pt_ratio.pdf"
-#define kaon_ratio_pt_pdf "/sps/compass/npierre/TDJANGOH/kaon_pt_ratio.pdf"
+#define hadron_z_pdf "hadron_z.pdf"
+#define pion_z_pdf "pion_z.pdf"
+#define kaon_z_pdf "kaon_z.pdf"
+#define hadron_pt_pdf "hadron_pt.pdf"
+#define pion_pt_pdf "pion_pt.pdf"
+#define kaon_pt_pdf "kaon_pt.pdf"
+#define hadron_ratio_pdf "hadron_ratio.pdf"
+#define pion_ratio_pdf "pion_ratio.pdf"
+#define kaon_ratio_pdf "kaon_ratio.pdf"
+#define hadron_ratio_pt_pdf "hadron_pt_ratio.pdf"
+#define pion_ratio_pt_pdf "pion_pt_ratio.pdf"
+#define kaon_ratio_pt_pdf "kaon_pt_ratio.pdf"
 
 // Structures
 
