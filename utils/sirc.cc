@@ -183,7 +183,7 @@ int main(int argc,char *argv[])
 
         if(!fDIScuts) continue;
 
-        if(abs(id)==13)
+        if(abs(id)==13 || abs(id)==11)
         {
           E_prime = Eh;
           nu = E - E_prime;
@@ -212,7 +212,7 @@ int main(int argc,char *argv[])
         {
           fId = 5;
         }
-        else if(id != 22 && abs(id) != 13)//Hadron
+        else if(id != 22 && abs(id) != 13 && abs(id) != 11)//Hadron
         {
           if(id>0)
           {
@@ -224,7 +224,7 @@ int main(int argc,char *argv[])
           }
         }
 
-        if(abs(id) == 13 || id == 22) continue;
+        if(abs(id) == 13 || abs(id) == 11 || id == 22) continue;
 
         pt = sqrt(pow(px,2)+pow(py,2));
 
@@ -452,7 +452,7 @@ int main(int argc,char *argv[])
 
         if(!fDIScuts) continue;
 
-        if(abs(id)==13)
+        if(abs(id)==13 || abs(id)==11)
         {
           E_prime = Eh;
           nu = E - E_prime;
@@ -481,7 +481,7 @@ int main(int argc,char *argv[])
         {
           fId = 5;
         }
-        else if(id != 22 && abs(id) != 13)//Hadron
+        else if(id != 22 && abs(id) != 13 && abs(id) != 11)//Hadron
         {
           if(id>0)
           {
@@ -493,7 +493,7 @@ int main(int argc,char *argv[])
           }
         }
 
-        if(abs(id) == 13 || id == 22) continue;
+        if(abs(id) == 13 || id == 22 || abs(id)==11) continue;
 
         pt = sqrt(pow(px,2)+pow(py,2));
 
@@ -727,7 +727,7 @@ int main(int argc,char *argv[])
 
           if(!fDIScuts) continue;
 
-          if(abs(id)==13)
+          if(abs(id)==13 || abs(id)==11)
           {
             E_prime = Eh;
             nu = E - E_prime;
@@ -756,7 +756,7 @@ int main(int argc,char *argv[])
           {
             fId = 5;
           }
-          else if(id != 22 && abs(id) != 13)//Hadron
+          else if(id != 22 && abs(id) != 13 && abs(id)!=11)//Hadron
           {
             if(id>0)
             {
@@ -768,7 +768,7 @@ int main(int argc,char *argv[])
             }
           }
 
-          if(abs(id) == 13 || id == 22) continue;
+          if(abs(id) == 13 || id == 22 || abs(id)==11) continue;
 
           pt = sqrt(pow(px,2)+pow(py,2));
 
@@ -994,7 +994,7 @@ int main(int argc,char *argv[])
 
           if(!fDIScuts) continue;
 
-          if(abs(id)==13)
+          if(abs(id)==13 || abs(id)==11)
           {
             E_prime = Eh;
             nu = E - E_prime;
@@ -1023,7 +1023,7 @@ int main(int argc,char *argv[])
           {
             fId = 5;
           }
-          else if(id != 22 && abs(id) != 13)//Hadron
+          else if(id != 22 && abs(id) != 13 && abs(id)!=11)//Hadron
           {
             if(id>0)
             {
@@ -1035,7 +1035,7 @@ int main(int argc,char *argv[])
             }
           }
 
-          if(abs(id) == 13 || id == 22) continue;
+          if(abs(id) == 13 || id == 22 || abs(id)==11) continue;
 
           pt = sqrt(pow(px,2)+pow(py,2));
 
