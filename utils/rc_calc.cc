@@ -1077,7 +1077,7 @@ int main(int argc,char *argv[])
     rcy_g[i]->SetMarkerStyle(22);
     rcy_g[i]->SetMarkerColor(601);
     rcy_g[i]->SetMarkerSize(3);
-    rcy_g[i]->GetYaxis()->SetRangeUser(0,1.2);
+    rcy_g[i]->GetYaxis()->SetRangeUser(0,1.5);
     rcy_g[i]->GetXaxis()->SetTitleSize(.05);
     rcy_g[i]->GetYaxis()->SetTitleSize(.05);
     rcy_g[i]->SetFillColor(601);
