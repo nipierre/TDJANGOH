@@ -1,23 +1,19 @@
-NO_COLOR=\x1b[0m
-OK_COLOR=\x1b[32;01m
-OK_STRING=$(OK_COLOR)[OK]$(NO_COLOR)
-
 all: src test utils
 
 src::
 	@echo 'Building libDjangoh.so..'
 	@$(MAKE) --no-print-directory -C $@
-	@echo "\x1b[0m[OK]\x1b[32;01m"
+	@echo 'libDjangoh.so built !'
 
 test::
 	@echo 'Building test programs..'
 	@$(MAKE) --no-print-directory -C $@
-	@echo "$(OK_STRING)"
+	@echo 'Test programs built !'
 
 utils::
 	@echo 'Building utilitary programs..'
 	@$(MAKE) --no-print-directory -C $@
-	@echo "$(OK_STRING)"
+	@echo 'Utilitary programs built !'
 
 setup::
 	@mkdir lib
