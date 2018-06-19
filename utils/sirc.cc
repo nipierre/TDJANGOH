@@ -91,6 +91,9 @@ int main(int argc,char *argv[])
     fNu_min[0][i] = sqrt(pow(3,2)+pow(fM_pi,2))/fZrange[i];
   }
 
+  fIsMu = 0;
+  fIsE = 0;
+
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
 //                       SINGLE FILES
@@ -172,9 +175,9 @@ int main(int argc,char *argv[])
        cout << "DEBUG: READ CHECK RE FILE" << endl;
        cout << dummy << "\tid : " << id << "\t" << dummy << "\t" << dummy << "\t" << dummy << "\t";
 #endif
-        revt >> px >> py >> pz >> Eh;
+        revt >> px >> py >> pz >> Eh >> dummy;
 #ifdef DEBUG
-       cout << px << "\t" << py << "\t" << pz << "\t" << Eh << "\t";
+       cout << px << "\t" << py << "\t" << pz << "\t" << Eh << "\t" << dummy << "\t";
 #endif
         revt >> dummy >> dummy >> dummy >> dummy;
 #ifdef DEBUG
@@ -183,10 +186,15 @@ int main(int argc,char *argv[])
 
         if(!fDIScuts) continue;
 
-        if(abs(id)==13)
+        if(abs(id)==13 || abs(id)==11)
         {
           E_prime = Eh;
           nu = E - E_prime;
+          if(!fIsMu && !fIsE)
+          {
+            if(abs(id)==11) fIsE = 1;
+            else fIsMu = 1;
+          }
         }
         else if(id == 211)//pi+
         {
@@ -212,7 +220,7 @@ int main(int argc,char *argv[])
         {
           fId = 5;
         }
-        else if(id != 22 && abs(id) != 13)//Hadron
+        else if(id != 22 && abs(id) != 13 && abs(id) != 11)//Hadron
         {
           if(id>0)
           {
@@ -224,7 +232,7 @@ int main(int argc,char *argv[])
           }
         }
 
-        if(abs(id) == 13 || id == 22) continue;
+        if(abs(id) == 13 || abs(id) == 11 || id == 22) continue;
 
         pt = sqrt(pow(px,2)+pow(py,2));
 
@@ -265,19 +273,18 @@ int main(int argc,char *argv[])
         else if(0.75<=z && z<0.85) zbin = 12;
         else zbin = 13;
 
-        if(0.00<pt && pt<0.15) ptbin = 0;
-        else if(0.15<pt && pt<0.30) ptbin = 1;
-        else if(0.30<pt && pt<0.45) ptbin = 2;
-        else if(0.45<pt && pt<0.60) ptbin = 3;
-        else if(0.60<pt && pt<0.75) ptbin = 4;
-        else if(0.75<pt && pt<0.90) ptbin = 5;
-        else if(0.90<pt && pt<1.05) ptbin = 6;
-        else if(1.05<pt && pt<1.20) ptbin = 7;
-        else if(1.20<pt && pt<1.35) ptbin = 8;
-        else if(1.35<pt && pt<1.50) ptbin = 9;
-        else if(1.50<pt && pt<1.65) ptbin = 10;
-        else if(1.65<pt && pt<1.80) ptbin = 11;
-        else if(1.80<pt && pt<1.95) ptbin = 12;
+        if(0.0<pt && pt<0.25) ptbin = 0;
+        else if(0.25<pt && pt<0.5) ptbin = 1;
+        else if(0.5<pt && pt<0.75) ptbin = 2;
+        else if(0.75<pt && pt<1.) ptbin = 3;
+        else if(1.<pt && pt<1.25) ptbin = 4;
+        else if(1.25<pt && pt<1.5) ptbin = 5;
+        else if(1.5<pt && pt<1.75) ptbin = 6;
+        else if(1.75<pt && pt<2.) ptbin = 7;
+        else if(2.<pt && pt<2.25) ptbin = 8;
+        else if(2.25<pt && pt<2.5) ptbin = 9;
+        else if(2.5<pt && pt<2.75) ptbin = 10;
+        else if(2.75<pt && pt<3) ptbin = 11;
         if(pt>6) cout << "large pt : " << pt << " > 6.0." << endl;
 
         if(fId==0)
@@ -442,9 +449,9 @@ int main(int argc,char *argv[])
        cout << "DEBUG: READ CHECK BORN FILE" << endl;
        cout << dummy << "\tid : " << id << "\t" << dummy << "\t" << dummy << "\t" << dummy << "\t";
 #endif
-        bevt >> px >> py >> pz >> Eh;
+        bevt >> px >> py >> pz >> Eh >> dummy;
 #ifdef DEBUG
-       cout << px << "\t" << py << "\t" << pz << "\t" << Eh << "\t";
+       cout << px << "\t" << py << "\t" << pz << "\t" << Eh << "\t" << dummy << "\t";
 #endif
         bevt >> dummy >> dummy >> dummy >> dummy;
 #ifdef DEBUG
@@ -453,10 +460,15 @@ int main(int argc,char *argv[])
 
         if(!fDIScuts) continue;
 
-        if(abs(id)==13)
+        if(abs(id)==13 || abs(id)==11)
         {
           E_prime = Eh;
           nu = E - E_prime;
+          if(!fIsMu && !fIsE)
+          {
+            if(abs(id)==11) fIsE = 1;
+            else fIsMu = 1;
+          }
         }
         else if(id == 211)//pi+
         {
@@ -482,7 +494,7 @@ int main(int argc,char *argv[])
         {
           fId = 5;
         }
-        else if(id != 22 && abs(id) != 13)//Hadron
+        else if(id != 22 && abs(id) != 13 && abs(id) != 11)//Hadron
         {
           if(id>0)
           {
@@ -494,7 +506,7 @@ int main(int argc,char *argv[])
           }
         }
 
-        if(abs(id) == 13 || id == 22) continue;
+        if(abs(id) == 13 || id == 22 || abs(id)==11) continue;
 
         pt = sqrt(pow(px,2)+pow(py,2));
 
@@ -535,19 +547,18 @@ int main(int argc,char *argv[])
         else if(0.75<=z && z<0.85) zbin = 12;
         else zbin = 13;
 
-        if(0.00<pt && pt<0.15) ptbin = 0;
-        else if(0.15<pt && pt<0.30) ptbin = 1;
-        else if(0.30<pt && pt<0.45) ptbin = 2;
-        else if(0.45<pt && pt<0.60) ptbin = 3;
-        else if(0.60<pt && pt<0.75) ptbin = 4;
-        else if(0.75<pt && pt<0.90) ptbin = 5;
-        else if(0.90<pt && pt<1.05) ptbin = 6;
-        else if(1.05<pt && pt<1.20) ptbin = 7;
-        else if(1.20<pt && pt<1.35) ptbin = 8;
-        else if(1.35<pt && pt<1.50) ptbin = 9;
-        else if(1.50<pt && pt<1.65) ptbin = 10;
-        else if(1.65<pt && pt<1.80) ptbin = 11;
-        else if(1.80<pt && pt<1.95) ptbin = 12;
+        if(0.0<pt && pt<0.25) ptbin = 0;
+        else if(0.25<pt && pt<0.5) ptbin = 1;
+        else if(0.5<pt && pt<0.75) ptbin = 2;
+        else if(0.75<pt && pt<1.) ptbin = 3;
+        else if(1.<pt && pt<1.25) ptbin = 4;
+        else if(1.25<pt && pt<1.5) ptbin = 5;
+        else if(1.5<pt && pt<1.75) ptbin = 6;
+        else if(1.75<pt && pt<2.) ptbin = 7;
+        else if(2.<pt && pt<2.25) ptbin = 8;
+        else if(2.25<pt && pt<2.5) ptbin = 9;
+        else if(2.5<pt && pt<2.75) ptbin = 10;
+        else if(2.75<pt && pt<3) ptbin = 11;
         if(pt>6) cout << "large pt : " << pt << " > 6.0." << endl;
 
         if(fId==0)
@@ -718,9 +729,9 @@ int main(int argc,char *argv[])
           cout << "DEBUG: READ CHECK RE FILE" << endl;
           cout << dummy << "\tid : " << id << "\t" << dummy << "\t" << dummy << "\t" << dummy << "\t";
 #endif
-          revt >> px >> py >> pz >> Eh;
+          revt >> px >> py >> pz >> Eh >> dummy;
 #ifdef DEBUG
-          cout << px << "\t" << py << "\t" << pz << "\t" << Eh << "\t";
+          cout << px << "\t" << py << "\t" << pz << "\t" << Eh << "\t" << "\t";
 #endif
           revt >> dummy >> dummy >> dummy >> dummy;
 #ifdef DEBUG
@@ -729,10 +740,15 @@ int main(int argc,char *argv[])
 
           if(!fDIScuts) continue;
 
-          if(abs(id)==13)
+          if(abs(id)==13 || abs(id)==11)
           {
             E_prime = Eh;
             nu = E - E_prime;
+            if(!fIsMu && !fIsE)
+            {
+              if(abs(id)==11) fIsE = 1;
+              else fIsMu = 1;
+            }
           }
           else if(id == 211)//pi+
           {
@@ -758,7 +774,7 @@ int main(int argc,char *argv[])
           {
             fId = 5;
           }
-          else if(id != 22 && abs(id) != 13)//Hadron
+          else if(id != 22 && abs(id) != 13 && abs(id)!=11)//Hadron
           {
             if(id>0)
             {
@@ -770,7 +786,7 @@ int main(int argc,char *argv[])
             }
           }
 
-          if(abs(id) == 13 || id == 22) continue;
+          if(abs(id) == 13 || id == 22 || abs(id)==11) continue;
 
           pt = sqrt(pow(px,2)+pow(py,2));
 
@@ -811,19 +827,18 @@ int main(int argc,char *argv[])
           else if(0.75<=z && z<0.85) zbin = 12;
           else zbin = 13;
 
-          if(0.00<pt && pt<0.15) ptbin = 0;
-          else if(0.15<pt && pt<0.30) ptbin = 1;
-          else if(0.30<pt && pt<0.45) ptbin = 2;
-          else if(0.45<pt && pt<0.60) ptbin = 3;
-          else if(0.60<pt && pt<0.75) ptbin = 4;
-          else if(0.75<pt && pt<0.90) ptbin = 5;
-          else if(0.90<pt && pt<1.05) ptbin = 6;
-          else if(1.05<pt && pt<1.20) ptbin = 7;
-          else if(1.20<pt && pt<1.35) ptbin = 8;
-          else if(1.35<pt && pt<1.50) ptbin = 9;
-          else if(1.50<pt && pt<1.65) ptbin = 10;
-          else if(1.65<pt && pt<1.80) ptbin = 11;
-          else if(1.80<pt && pt<1.95) ptbin = 12;
+          if(0.0<pt && pt<0.25) ptbin = 0;
+          else if(0.25<pt && pt<0.5) ptbin = 1;
+          else if(0.5<pt && pt<0.75) ptbin = 2;
+          else if(0.75<pt && pt<1.) ptbin = 3;
+          else if(1.<pt && pt<1.25) ptbin = 4;
+          else if(1.25<pt && pt<1.5) ptbin = 5;
+          else if(1.5<pt && pt<1.75) ptbin = 6;
+          else if(1.75<pt && pt<2.) ptbin = 7;
+          else if(2.<pt && pt<2.25) ptbin = 8;
+          else if(2.25<pt && pt<2.5) ptbin = 9;
+          else if(2.5<pt && pt<2.75) ptbin = 10;
+          else if(2.75<pt && pt<3) ptbin = 11;
           if(pt>6) cout << "large pt : " << pt << " > 6.0." << endl;
 
           if(fId==0)
@@ -986,9 +1001,9 @@ int main(int argc,char *argv[])
           cout << "DEBUG: READ CHECK BORN FILE" << endl;
           cout << dummy << "\tid : " << id << "\t" << dummy << "\t" << dummy << "\t" << dummy << "\t";
 #endif
-          bevt >> px >> py >> pz >> Eh;
+          bevt >> px >> py >> pz >> Eh >> dummy;
 #ifdef DEBUG
-          cout << px << "\t" << py << "\t" << pz << "\t" << Eh << "\t";
+          cout << px << "\t" << py << "\t" << pz << "\t" << Eh << "\t" << dummy << "\t";
 #endif
           bevt >> dummy >> dummy >> dummy >> dummy;
 #ifdef DEBUG
@@ -997,10 +1012,15 @@ int main(int argc,char *argv[])
 
           if(!fDIScuts) continue;
 
-          if(abs(id)==13)
+          if(abs(id)==13 || abs(id)==11)
           {
             E_prime = Eh;
             nu = E - E_prime;
+            if(!fIsMu && !fIsE)
+            {
+              if(abs(id)==11) fIsE = 1;
+              else fIsMu = 1;
+            }
           }
           else if(id == 211)//pi+
           {
@@ -1026,7 +1046,7 @@ int main(int argc,char *argv[])
           {
             fId = 5;
           }
-          else if(id != 22 && abs(id) != 13)//Hadron
+          else if(id != 22 && abs(id) != 13 && abs(id)!=11)//Hadron
           {
             if(id>0)
             {
@@ -1038,7 +1058,7 @@ int main(int argc,char *argv[])
             }
           }
 
-          if(abs(id) == 13 || id == 22) continue;
+          if(abs(id) == 13 || id == 22 || abs(id)==11) continue;
 
           pt = sqrt(pow(px,2)+pow(py,2));
 
@@ -1080,19 +1100,18 @@ int main(int argc,char *argv[])
           else if(0.75<=z && z<0.85) zbin = 12;
           else zbin = 13;
 
-          if(0.00<pt && pt<0.15) ptbin = 0;
-          else if(0.15<pt && pt<0.30) ptbin = 1;
-          else if(0.30<pt && pt<0.45) ptbin = 2;
-          else if(0.45<pt && pt<0.60) ptbin = 3;
-          else if(0.60<pt && pt<0.75) ptbin = 4;
-          else if(0.75<pt && pt<0.90) ptbin = 5;
-          else if(0.90<pt && pt<1.05) ptbin = 6;
-          else if(1.05<pt && pt<1.20) ptbin = 7;
-          else if(1.20<pt && pt<1.35) ptbin = 8;
-          else if(1.35<pt && pt<1.50) ptbin = 9;
-          else if(1.50<pt && pt<1.65) ptbin = 10;
-          else if(1.65<pt && pt<1.80) ptbin = 11;
-          else if(1.80<pt && pt<1.95) ptbin = 12;
+          if(0.0<pt && pt<0.25) ptbin = 0;
+          else if(0.25<pt && pt<0.5) ptbin = 1;
+          else if(0.5<pt && pt<0.75) ptbin = 2;
+          else if(0.75<pt && pt<1.) ptbin = 3;
+          else if(1.<pt && pt<1.25) ptbin = 4;
+          else if(1.25<pt && pt<1.5) ptbin = 5;
+          else if(1.5<pt && pt<1.75) ptbin = 6;
+          else if(1.75<pt && pt<2.) ptbin = 7;
+          else if(2.<pt && pt<2.25) ptbin = 8;
+          else if(2.25<pt && pt<2.5) ptbin = 9;
+          else if(2.5<pt && pt<2.75) ptbin = 10;
+          else if(2.75<pt && pt<3) ptbin = 11;
           if(pt>6) cout << "large pt : " << pt << " > 6.0." << endl;
 
           if(fId==0)
@@ -1206,20 +1225,20 @@ int main(int argc,char *argv[])
   c11.Divide(5,2,0,0);
   c12.Divide(5,2,0,0);
 
-  for(int i=0; i<5; i++)
+  for(int i=0; i<6; i++)
   {
-    l1[i] = new TLine(0.1,1+i*0.1,0.9,1+i*0.1);
+    l1[i] = new TLine(0.,1+i*0.1,1.0,1+i*0.1);
     l1[i]->SetLineStyle(4);
     l1[i]->SetLineColor(fMarkerColorAlt[i]);
-    l2[i] = new TLine(0.,1+i*0.1,2.,1+i*0.1);
+    l2[i] = new TLine(0.,1+i*0.1,6.,1+i*0.1);
     l2[i]->SetLineStyle(4);
     l2[i]->SetLineColor(fMarkerColorAlt[i]);
   }
 
   double z_range[14] = {.1,.225,.275,.325,.375,.425,.475,.525,.575,.625,.675,.725,.8,.925};
-  double pt_range[13] = {0.075,0.225,0.375,0.525,0.675,
-                      0.825,0.975,1.125,1.275,1.425,
-                      1.575,1.725,1.875};
+  double pt_range[12] = {0.125,0.375,0.625,0.875,1.125,
+                      1.375,1.625,1.875,2.125,2.375,
+                      2.625,2.875};
 
   ofstream shout("semi_inclusive.txt",std::ofstream::out | std::ofstream::trunc);
   ofstream ofs_multKp("K+_p_MC.txt",std::ofstream::out | std::ofstream::trunc);
@@ -1229,7 +1248,7 @@ int main(int argc,char *argv[])
   {
     for(int i=0; i<9; i++)
     {
-      for(int j=0; j<5; j++)
+      for(int j=0; j<6; j++)
       {
 
         std::vector<double> p_a_r;
@@ -1404,9 +1423,38 @@ int main(int argc,char *argv[])
           else fMult[i][j][k].tab[c][1][3] = sqrt(pow(fBornMult[i][j][k].tab[c][1][3],2)+pow(fReMult[i][j][k].tab[c][1][3],2));
 
 
-          if((i==7 && j==4) || (i==8 && j==0) || (i==8 && j==4)
-                            || (i==0 && j==0) || (i==0 && j==1)
-                            || (i==0 && j==2) || (i==1 && j==0))
+          // if((i==8 && j==0) || (i==0 && j==0) || (i==0 && j==1)
+          //                   || (i==0 && j==2) || (i==1 && j==0))
+          // {
+          //   fReMult[i][j][k].tab[c][0][0] = 0;
+          //   fReMult[i][j][k].tab[c][0][1] = 0;
+          //   fReMult[i][j][k].tab[c][0][2] = 0;
+          //   fReMult[i][j][k].tab[c][0][3] = 0;
+          //   fReMult[i][j][k].tab[c][1][0] = 0;
+          //   fReMult[i][j][k].tab[c][1][1] = 0;
+          //   fReMult[i][j][k].tab[c][1][2] = 0;
+          //   fReMult[i][j][k].tab[c][1][3] = 0;
+          //
+          //   fBornMult[i][j][k].tab[c][0][0] = 0;
+          //   fBornMult[i][j][k].tab[c][0][1] = 0;
+          //   fBornMult[i][j][k].tab[c][0][2] = 0;
+          //   fBornMult[i][j][k].tab[c][0][3] = 0;
+          //   fBornMult[i][j][k].tab[c][1][0] = 0;
+          //   fBornMult[i][j][k].tab[c][1][1] = 0;
+          //   fBornMult[i][j][k].tab[c][1][2] = 0;
+          //   fBornMult[i][j][k].tab[c][1][3] = 0;
+          //
+          //   fMult[i][j][k].tab[c][0][0] = 0;
+          //   fMult[i][j][k].tab[c][0][1] = 0;
+          //   fMult[i][j][k].tab[c][0][2] = 0;
+          //   fMult[i][j][k].tab[c][0][3] = 0;
+          //   fMult[i][j][k].tab[c][1][0] = 0;
+          //   fMult[i][j][k].tab[c][1][1] = 0;
+          //   fMult[i][j][k].tab[c][1][2] = 0;
+          //   fMult[i][j][k].tab[c][1][3] = 0;
+          // }
+
+          if((k>=4 && j==5))
           {
             fReMult[i][j][k].tab[c][0][0] = 0;
             fReMult[i][j][k].tab[c][0][1] = 0;
@@ -1493,7 +1541,7 @@ int main(int argc,char *argv[])
 
         }
 
-        for(int k=0; k<13; k++)
+        for(int k=0; k<12; k++)
         {
 
           int max_el = *max_element(fNDIS_evt_r[0][i][j],fNDIS_evt_r[0][i][j]+14);
@@ -1618,7 +1666,7 @@ int main(int argc,char *argv[])
           if(!h_a_d[k-1]) {h_a_d.erase(h_a_d.begin()+k-1); h_err_d.erase(h_err_d.begin()+k-1); z_range_h_d.erase(z_range_h_d.begin()+k-1);}
         }
 
-        for(int k=13; k>0; k--)
+        for(int k=12; k>0; k--)
         {
           if(!p_pt_r[k-1]) {p_pt_r.erase(p_pt_r.begin()+k-1); p_pt_err_r.erase(p_pt_err_r.begin()+k-1); pt_range_p_r.erase(pt_range_p_r.begin()+k-1);}
           if(!p_pt_b[k-1]) {p_pt_b.erase(p_pt_b.begin()+k-1); p_pt_err_b.erase(p_pt_err_b.begin()+k-1); pt_range_p_b.erase(pt_range_p_b.begin()+k-1);}
@@ -2024,7 +2072,8 @@ int main(int argc,char *argv[])
               H_d[c][i][j]->Draw("SAMEPA");
               H_d[c][i][j]->GetXaxis()->SetLimits(-0.05,1.05);
               H_d[c][i][j]->SetMinimum(0.85);
-              H_d[c][i][j]->SetMaximum(1.55);
+              if(fIsMu) H_d[c][i][j]->SetMaximum(1.65);
+              else if(fIsE) H_d[c][i][j]->SetMaximum(1.75);
               H_d[c][i][j]->GetXaxis()->SetLabelSize(0.06);
               H_d[c][i][j]->GetYaxis()->SetLabelSize(0.06);
               H_d[c][i][j]->SetTitle("");
@@ -2046,28 +2095,34 @@ int main(int argc,char *argv[])
               H_d[c][i][0]->Draw("SAMEP");
               H_d[c][i][0]->GetXaxis()->SetLimits(-0.05,1.05);
               H_d[c][i][0]->SetMinimum(0.85);
-              H_d[c][i][0]->SetMaximum(1.55);
+              if(fIsMu) H_d[c][i][0]->SetMaximum(1.65);
+              else if(fIsE) H_d[c][i][0]->SetMaximum(1.75);
               H_d[c][i][1]->Draw("SAMEP");
               H_d[c][i][1]->GetXaxis()->SetLimits(-0.05,1.05);
               H_d[c][i][1]->SetMinimum(0.85);
-              H_d[c][i][1]->SetMaximum(1.55);
+              if(fIsMu) H_d[c][i][1]->SetMaximum(1.65);
+              else if(fIsE) H_d[c][i][1]->SetMaximum(1.75);
               H_d[c][i][2]->Draw("SAMEP");
               H_d[c][i][2]->GetXaxis()->SetLimits(-0.05,1.05);
               H_d[c][i][2]->SetMinimum(0.85);
-              H_d[c][i][2]->SetMaximum(1.55);
-              c7.Range(.0,.85,1.,1.55);
+              if(fIsMu) H_d[c][i][2]->SetMaximum(1.65);
+              else if(fIsE) H_d[c][i][2]->SetMaximum(1.75);
+              if(fIsMu) c7.Range(0.,.85,1.,1.65);
+              else if(fIsE) c7.Range(0.,.85,1.,1.75);
               l1[0]->Draw();
               l1[1]->Draw();
               l1[2]->Draw();
               l1[3]->Draw();
               l1[4]->Draw();
+              l1[5]->Draw();
             }
             else
             {
               H_d[c][i][j]->Draw("SAMEP");
               H_d[c][i][j]->GetXaxis()->SetLimits(-0.05,1.05);
               H_d[c][i][j]->SetMinimum(0.85);
-              H_d[c][i][j]->SetMaximum(1.55);
+              if(fIsMu) H_d[c][i][j]->SetMaximum(1.65);
+              else if(fIsE) H_d[c][i][j]->SetMaximum(1.75);
             }
           }
           c7.Update();
@@ -2084,7 +2139,8 @@ int main(int argc,char *argv[])
               P_d[c][i][j]->Draw("SAMEPA");
               P_d[c][i][j]->GetXaxis()->SetLimits(-0.05,1.05);
               P_d[c][i][j]->SetMinimum(0.85);
-              P_d[c][i][j]->SetMaximum(1.55);
+              if(fIsMu) P_d[c][i][j]->SetMaximum(1.65);
+              else if(fIsE) P_d[c][i][j]->SetMaximum(1.75);
               P_d[c][i][j]->GetXaxis()->SetLabelSize(0.06);
               P_d[c][i][j]->GetYaxis()->SetLabelSize(0.06);
               P_d[c][i][j]->SetTitle("");
@@ -2100,34 +2156,40 @@ int main(int argc,char *argv[])
               P_d[c][i][j]->GetYaxis()->SetNdivisions(304,kTRUE);
               if(i==0)
               {
-                P_d[c][i][j]->GetYaxis()->SetTitle("#font[12]{#eta}^{#font[ 12]{#pi}}+ #font[ 12]{#delta");
+                P_d[c][i][j]->GetYaxis()->SetTitle("#font[12]{#eta}^{#font[ 12]{#pi}}+ #font[ 12]{#delta}");
                 P_d[c][i][j]->GetYaxis()->SetTitleSize(0.08);
               }
               P_d[c][i][0]->Draw("SAMEP");
               P_d[c][i][0]->GetXaxis()->SetLimits(-0.05,1.05);
               P_d[c][i][0]->SetMinimum(0.85);
-              P_d[c][i][0]->SetMaximum(1.55);
+              if(fIsMu) P_d[c][i][0]->SetMaximum(1.65);
+              else if(fIsE) P_d[c][i][0]->SetMaximum(1.75);
               P_d[c][i][1]->Draw("SAMEP");
               P_d[c][i][1]->GetXaxis()->SetLimits(-0.05,1.05);
               P_d[c][i][1]->SetMinimum(0.85);
-              P_d[c][i][1]->SetMaximum(1.55);
+              if(fIsMu) P_d[c][i][1]->SetMaximum(1.65);
+              else if(fIsE) P_d[c][i][1]->SetMaximum(1.75);
               P_d[c][i][2]->Draw("SAMEP");
               P_d[c][i][2]->GetXaxis()->SetLimits(-0.05,1.05);
               P_d[c][i][2]->SetMinimum(0.85);
-              P_d[c][i][2]->SetMaximum(1.55);
-              c8.Range(0.,.85,1.,1.55);
+              if(fIsMu) P_d[c][i][2]->SetMaximum(1.65);
+              else if(fIsE) P_d[c][i][2]->SetMaximum(1.75);
+              if(fIsMu) c8.Range(0.,.85,1.,1.65);
+              else if(fIsE) c8.Range(0.,.85,1.,1.75);
               l1[0]->Draw();
               l1[1]->Draw();
               l1[2]->Draw();
               l1[3]->Draw();
               l1[4]->Draw();
+              l1[5]->Draw();
             }
             else
             {
               P_d[c][i][j]->Draw("SAMEP");
               P_d[c][i][j]->GetXaxis()->SetLimits(-0.05,1.05);
               P_d[c][i][j]->SetMinimum(0.85);
-              P_d[c][i][j]->SetMaximum(1.55);
+              if(fIsMu) P_d[c][i][j]->SetMaximum(1.65);
+              else if(fIsE) P_d[c][i][j]->SetMaximum(1.75);
             }
           }
           c8.Update();
@@ -2144,7 +2206,8 @@ int main(int argc,char *argv[])
               K_d[c][i][j]->Draw("SAMEPA");
               K_d[c][i][j]->GetXaxis()->SetLimits(-0.05,1.05);
               K_d[c][i][j]->SetMinimum(0.85);
-              K_d[c][i][j]->SetMaximum(1.55);
+              if(fIsMu) K_d[c][i][j]->SetMaximum(1.65);
+              else if(fIsE) K_d[c][i][j]->SetMaximum(1.75);
               K_d[c][i][j]->GetXaxis()->SetLabelSize(0.06);
               K_d[c][i][j]->GetYaxis()->SetLabelSize(0.06);
               K_d[c][i][j]->SetTitle("");
@@ -2166,28 +2229,34 @@ int main(int argc,char *argv[])
               K_d[c][i][0]->Draw("SAMEP");
               K_d[c][i][0]->GetXaxis()->SetLimits(-0.05,1.05);
               K_d[c][i][0]->SetMinimum(0.85);
-              K_d[c][i][0]->SetMaximum(1.55);
+              if(fIsMu) K_d[c][i][0]->SetMaximum(1.65);
+              else if(fIsE) K_d[c][i][0]->SetMaximum(1.75);
               K_d[c][i][1]->Draw("SAMEP");
               K_d[c][i][1]->GetXaxis()->SetLimits(-0.05,1.05);
               K_d[c][i][1]->SetMinimum(0.85);
-              K_d[c][i][1]->SetMaximum(1.55);
+              if(fIsMu) K_d[c][i][1]->SetMaximum(1.65);
+              else if(fIsE) K_d[c][i][1]->SetMaximum(1.75);
               K_d[c][i][2]->Draw("SAMEP");
               K_d[c][i][2]->GetXaxis()->SetLimits(-0.05,1.05);
               K_d[c][i][2]->SetMinimum(0.85);
-              K_d[c][i][2]->SetMaximum(1.55);
-              c9.Range(0.,.85,1.,1.55);
+              if(fIsMu) K_d[c][i][2]->SetMaximum(1.65);
+              else if(fIsE) K_d[c][i][2]->SetMaximum(1.75);
+              if(fIsMu) c9.Range(0.,.85,1.,1.65);
+              else if(fIsE) c9.Range(0.,.85,1.,1.75);
               l1[0]->Draw();
               l1[1]->Draw();
               l1[2]->Draw();
               l1[3]->Draw();
               l1[4]->Draw();
+              l1[5]->Draw();
             }
             else
             {
               K_d[c][i][j]->Draw("SAMEP");
               K_d[c][i][j]->GetXaxis()->SetLimits(-0.05,1.05);
               K_d[c][i][j]->SetMinimum(0.85);
-              K_d[c][i][j]->SetMaximum(1.55);
+              if(fIsMu) K_d[c][i][j]->SetMaximum(1.65);
+              else if(fIsE) K_d[c][i][j]->SetMaximum(1.75);
             }
           }
           c9.Update();
@@ -2230,9 +2299,9 @@ int main(int argc,char *argv[])
             if(!c && j==3)
             {
               H_pt_d[c][i][j]->Draw("SAMEPA");
-              H_pt_d[c][i][j]->GetXaxis()->SetLimits(.05,1.95);
+              H_pt_d[c][i][j]->GetXaxis()->SetLimits(0,3);
               H_pt_d[c][i][j]->SetMinimum(0.85);
-              H_pt_d[c][i][j]->SetMaximum(1.55);
+              H_pt_d[c][i][j]->SetMaximum(1.65);
               H_pt_d[c][i][j]->GetXaxis()->SetLabelSize(0.06);
               H_pt_d[c][i][j]->GetYaxis()->SetLabelSize(0.06);
               H_pt_d[c][i][j]->SetTitle("");
@@ -2252,31 +2321,31 @@ int main(int argc,char *argv[])
                 H_pt_d[c][i][j]->GetYaxis()->SetTitleSize(0.08);
               }
               H_pt_d[c][i][0]->Draw("SAMEP");
-              H_pt_d[c][i][0]->GetXaxis()->SetLimits(.05,1.95);
+              H_pt_d[c][i][0]->GetXaxis()->SetLimits(0,3);
               H_pt_d[c][i][0]->SetMinimum(0.85);
-              H_pt_d[c][i][0]->SetMaximum(1.55);
+              H_pt_d[c][i][0]->SetMaximum(1.65);
               H_pt_d[c][i][1]->Draw("SAMEP");
-              H_pt_d[c][i][1]->GetXaxis()->SetLimits(.05,1.95);
+              H_pt_d[c][i][1]->GetXaxis()->SetLimits(0,3);
               H_pt_d[c][i][1]->SetMinimum(0.85);
-              H_pt_d[c][i][1]->SetMaximum(1.55);
+              H_pt_d[c][i][1]->SetMaximum(1.65);
               H_pt_d[c][i][2]->Draw("SAMEP");
-              H_pt_d[c][i][2]->GetXaxis()->SetLimits(.05,1.95);
+              H_pt_d[c][i][2]->GetXaxis()->SetLimits(0,3);
               H_pt_d[c][i][2]->SetMinimum(0.85);
-              H_pt_d[c][i][2]->SetMaximum(1.55);
-              c10.Range(.05,.85,1.95,1.55);
+              H_pt_d[c][i][2]->SetMaximum(1.65);
+              c10.Range(0,.85,3,1.65);
               l2[0]->Draw();
               l2[1]->Draw();
               l2[2]->Draw();
               l2[3]->Draw();
               l2[4]->Draw();
-
+              l2[5]->Draw();
             }
             else
             {
               H_pt_d[c][i][j]->Draw("SAMEP");
-              H_pt_d[c][i][j]->GetXaxis()->SetLimits(.05,1.95);
+              H_pt_d[c][i][j]->GetXaxis()->SetLimits(0,3);
               H_pt_d[c][i][j]->SetMinimum(0.85);
-              H_pt_d[c][i][j]->SetMaximum(1.55);
+              H_pt_d[c][i][j]->SetMaximum(1.65);
             }
           }
           c10.Update();
@@ -2291,9 +2360,9 @@ int main(int argc,char *argv[])
             if(!c && j==3)
             {
               P_pt_d[c][i][j]->Draw("SAMEPA");
-              P_pt_d[c][i][j]->GetXaxis()->SetLimits(.05,1.95);
+              P_pt_d[c][i][j]->GetXaxis()->SetLimits(.05,5.95);
               P_pt_d[c][i][j]->SetMinimum(0.85);
-              P_pt_d[c][i][j]->SetMaximum(1.55);
+              P_pt_d[c][i][j]->SetMaximum(1.65);
               P_pt_d[c][i][j]->GetXaxis()->SetLabelSize(0.06);
               P_pt_d[c][i][j]->GetYaxis()->SetLabelSize(0.06);
               P_pt_d[c][i][j]->SetTitle("");
@@ -2313,31 +2382,31 @@ int main(int argc,char *argv[])
                 P_pt_d[c][i][j]->GetYaxis()->SetTitleSize(0.08);
               }
               P_pt_d[c][i][0]->Draw("SAMEP");
-              P_pt_d[c][i][0]->GetXaxis()->SetLimits(.05,1.95);
+              P_pt_d[c][i][0]->GetXaxis()->SetLimits(.05,5.95);
               P_pt_d[c][i][0]->SetMinimum(0.85);
-              P_pt_d[c][i][0]->SetMaximum(1.55);
+              P_pt_d[c][i][0]->SetMaximum(1.65);
               P_pt_d[c][i][1]->Draw("SAMEP");
-              P_pt_d[c][i][1]->GetXaxis()->SetLimits(.05,1.95);
+              P_pt_d[c][i][1]->GetXaxis()->SetLimits(.05,5.95);
               P_pt_d[c][i][1]->SetMinimum(0.85);
-              P_pt_d[c][i][1]->SetMaximum(1.55);
+              P_pt_d[c][i][1]->SetMaximum(1.65);
               P_pt_d[c][i][2]->Draw("SAMEP");
-              P_pt_d[c][i][2]->GetXaxis()->SetLimits(.05,1.95);
+              P_pt_d[c][i][2]->GetXaxis()->SetLimits(.05,5.95);
               P_pt_d[c][i][2]->SetMinimum(0.85);
-              P_pt_d[c][i][2]->SetMaximum(1.55);
-              c11.Range(.05,.85,1.95,1.55);
+              P_pt_d[c][i][2]->SetMaximum(1.65);
+              c11.Range(.05,.85,5.95,1.65);
               l2[0]->Draw();
               l2[1]->Draw();
               l2[2]->Draw();
               l2[3]->Draw();
               l2[4]->Draw();
-
+              l2[5]->Draw();
             }
             else
             {
               P_pt_d[c][i][j]->Draw("SAMEP");
-              P_pt_d[c][i][j]->GetXaxis()->SetLimits(.05,1.95);
+              P_pt_d[c][i][j]->GetXaxis()->SetLimits(.05,5.95);
               P_pt_d[c][i][j]->SetMinimum(0.85);
-              P_pt_d[c][i][j]->SetMaximum(1.55);
+              P_pt_d[c][i][j]->SetMaximum(1.65);
             }
           }
           c11.Update();
@@ -2352,9 +2421,9 @@ int main(int argc,char *argv[])
             if(!c && j==3)
             {
               K_pt_d[c][i][j]->Draw("SAMEPA");
-              K_pt_d[c][i][j]->GetXaxis()->SetLimits(.05,1.95);
+              K_pt_d[c][i][j]->GetXaxis()->SetLimits(.05,5.95);
               K_pt_d[c][i][j]->SetMinimum(0.85);
-              K_pt_d[c][i][j]->SetMaximum(1.55);
+              K_pt_d[c][i][j]->SetMaximum(1.65);
               K_pt_d[c][i][j]->GetXaxis()->SetLabelSize(0.06);
               K_pt_d[c][i][j]->GetYaxis()->SetLabelSize(0.06);
               K_pt_d[c][i][j]->SetTitle("");
@@ -2374,31 +2443,31 @@ int main(int argc,char *argv[])
                 K_pt_d[c][i][j]->GetYaxis()->SetTitleSize(0.08);
               }
               K_pt_d[c][i][0]->Draw("SAMEP");
-              K_pt_d[c][i][0]->GetXaxis()->SetLimits(.05,1.95);
+              K_pt_d[c][i][0]->GetXaxis()->SetLimits(.05,5.95);
               K_pt_d[c][i][0]->SetMinimum(0.85);
-              K_pt_d[c][i][0]->SetMaximum(1.55);
+              K_pt_d[c][i][0]->SetMaximum(1.65);
               K_pt_d[c][i][1]->Draw("SAMEP");
-              K_pt_d[c][i][1]->GetXaxis()->SetLimits(.05,1.95);
+              K_pt_d[c][i][1]->GetXaxis()->SetLimits(.05,5.95);
               K_pt_d[c][i][1]->SetMinimum(0.85);
-              K_pt_d[c][i][1]->SetMaximum(1.55);
+              K_pt_d[c][i][1]->SetMaximum(1.65);
               K_pt_d[c][i][2]->Draw("SAMEP");
-              K_pt_d[c][i][2]->GetXaxis()->SetLimits(.05,1.95);
+              K_pt_d[c][i][2]->GetXaxis()->SetLimits(.05,5.95);
               K_pt_d[c][i][2]->SetMinimum(0.85);
-              K_pt_d[c][i][2]->SetMaximum(1.55);
-              c12.Range(.05,.85,1.95,1.55);
+              K_pt_d[c][i][2]->SetMaximum(1.65);
+              c12.Range(.05,.85,5.95,1.65);
               l2[0]->Draw();
               l2[1]->Draw();
               l2[2]->Draw();
               l2[3]->Draw();
               l2[4]->Draw();
-
+              l2[5]->Draw();
             }
             else
             {
               K_pt_d[c][i][j]->Draw("SAMEP");
-              K_pt_d[c][i][j]->GetXaxis()->SetLimits(.05,1.95);
+              K_pt_d[c][i][j]->GetXaxis()->SetLimits(.05,5.95);
               K_pt_d[c][i][j]->SetMinimum(0.85);
-              K_pt_d[c][i][j]->SetMaximum(1.55);
+              K_pt_d[c][i][j]->SetMaximum(1.65);
             }
           }
           c12.Update();
@@ -2416,52 +2485,53 @@ int main(int argc,char *argv[])
   c7.cd(1);
   fTitle.SetTextSize(0.078);
   fTitle.SetTextAlign(21);
-  fTitle.DrawLatex(0.5, 1.5,"0.004#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.01");
+  fTitle.DrawLatex(0.5, 1.6,"0.004#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.01");
 
   c7.cd(2);
   fTitle.SetTextSize(0.078);
   fTitle.SetTextAlign(21);
-  fTitle.DrawLatex(0.5, 1.5,"0.01#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.02");
+  fTitle.DrawLatex(0.5, 1.6,"0.01#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.02");
 
   c7.cd(3);
   fTitle.SetTextSize(0.078);
   fTitle.SetTextAlign(21);
-  fTitle.DrawLatex(0.5, 1.5,"0.02#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.03");
+  fTitle.DrawLatex(0.5, 1.6,"0.02#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.03");
 
   c7.cd(4);
   fTitle.SetTextSize(0.078);
   fTitle.SetTextAlign(21);
-  fTitle.DrawLatex(0.5, 1.5,"0.03#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.04");
+  fTitle.DrawLatex(0.5, 1.6,"0.03#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.04");
 
   c7.cd(5);
   fTitle.SetTextSize(0.078);
   fTitle.SetTextAlign(21);
-  fTitle.DrawLatex(0.5, 1.5,"0.04#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.06");
+  fTitle.DrawLatex(0.5, 1.6,"0.04#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.06");
 
   c7.cd(6);
   fTitle.SetTextSize(0.078);
   fTitle.SetTextAlign(21);
-  fTitle.DrawLatex(0.5, 1.5,"0.06#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.1");
+  fTitle.DrawLatex(0.5, 1.6,"0.06#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.1");
 
   c7.cd(7);
   fTitle.SetTextSize(0.078);
   fTitle.SetTextAlign(21);
-  fTitle.DrawLatex(0.5, 1.5,"0.1#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.14");
+  fTitle.DrawLatex(0.5, 1.6,"0.1#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.14");
 
   c7.cd(8);
   fTitle.SetTextSize(0.078);
   fTitle.SetTextAlign(21);
-  fTitle.DrawLatex(0.5, 1.5,"0.14#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.18");
+  fTitle.DrawLatex(0.5, 1.6,"0.14#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.18");
 
   c7.cd(9);
   fTitle.SetTextSize(0.078);
   fTitle.SetTextAlign(21);
-  fTitle.DrawLatex(0.5, 1.5,"0.18#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.4");
+  fTitle.DrawLatex(0.5, 1.6,"0.18#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.4");
 
   c7.cd(10);
   fTitle.SetTextSize(0.095);
   fTitle.SetTextAlign(11);
-  fTitle.DrawLatex(0.05, 0.64,"#color[221]{0.50#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{y}#scale[0.5]{ }<#scale[0.5]{ }0.70, #delta = 0.4}");
+  fTitle.DrawLatex(0.05, 0.72,"#color[221]{0.70#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{y}#scale[0.5]{ }<#scale[0.5]{ }0.90, #delta = 0.5}");
+  fTitle.DrawLatex(0.05, 0.64,"#color[4]{0.50#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{y}#scale[0.5]{ }<#scale[0.5]{ }0.70, #delta = 0.4}");
   fTitle.DrawLatex(0.05, 0.56,"#color[226]{0.30#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{y}#scale[0.5]{ }<#scale[0.5]{ }0.50, #delta = 0.3}");
   fTitle.DrawLatex(0.05, 0.48,"#color[209]{0.20#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{y}#scale[0.5]{ }<#scale[0.5]{ }0.30, #delta = 0.2}");
   fTitle.DrawLatex(0.05, 0.40,"#color[95]{0.15#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{y}#scale[0.5]{ }<#scale[0.5]{ }0.20, #delta = 0.1}");
@@ -2471,52 +2541,53 @@ int main(int argc,char *argv[])
   c8.cd(1);
   fTitle.SetTextSize(0.078);
   fTitle.SetTextAlign(21);
-  fTitle.DrawLatex(0.5, 1.5,"0.004#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.01");
+  fTitle.DrawLatex(0.5, 1.6,"0.004#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.01");
 
   c8.cd(2);
   fTitle.SetTextSize(0.078);
   fTitle.SetTextAlign(21);
-  fTitle.DrawLatex(0.5, 1.5,"0.01#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.02");
+  fTitle.DrawLatex(0.5, 1.6,"0.01#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.02");
 
   c8.cd(3);
   fTitle.SetTextSize(0.078);
   fTitle.SetTextAlign(21);
-  fTitle.DrawLatex(0.5, 1.5,"0.02#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.03");
+  fTitle.DrawLatex(0.5, 1.6,"0.02#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.03");
 
   c8.cd(4);
   fTitle.SetTextSize(0.078);
   fTitle.SetTextAlign(21);
-  fTitle.DrawLatex(0.5, 1.5,"0.03#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.04");
+  fTitle.DrawLatex(0.5, 1.6,"0.03#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.04");
 
   c8.cd(5);
   fTitle.SetTextSize(0.078);
   fTitle.SetTextAlign(21);
-  fTitle.DrawLatex(0.5, 1.5,"0.04#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.06");
+  fTitle.DrawLatex(0.5, 1.6,"0.04#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.06");
 
   c8.cd(6);
   fTitle.SetTextSize(0.078);
   fTitle.SetTextAlign(21);
-  fTitle.DrawLatex(0.5, 1.5,"0.06#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.1");
+  fTitle.DrawLatex(0.5, 1.6,"0.06#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.1");
 
   c8.cd(7);
   fTitle.SetTextSize(0.078);
   fTitle.SetTextAlign(21);
-  fTitle.DrawLatex(0.5, 1.5,"0.1#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.14");
+  fTitle.DrawLatex(0.5, 1.6,"0.1#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.14");
 
   c8.cd(8);
   fTitle.SetTextSize(0.078);
   fTitle.SetTextAlign(21);
-  fTitle.DrawLatex(0.5, 1.5,"0.14#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.18");
+  fTitle.DrawLatex(0.5, 1.6,"0.14#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.18");
 
   c8.cd(9);
   fTitle.SetTextSize(0.078);
   fTitle.SetTextAlign(21);
-  fTitle.DrawLatex(0.5, 1.5,"0.18#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.4");
+  fTitle.DrawLatex(0.5, 1.6,"0.18#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.4");
 
   c8.cd(10);
   fTitle.SetTextSize(0.095);
   fTitle.SetTextAlign(11);
-  fTitle.DrawLatex(0.05, 0.64,"#color[221]{0.50#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{y}#scale[0.5]{ }<#scale[0.5]{ }0.70, #delta = 0.4}");
+  fTitle.DrawLatex(0.05, 0.72,"#color[221]{0.70#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{y}#scale[0.5]{ }<#scale[0.5]{ }0.90, #delta = 0.5}");
+  fTitle.DrawLatex(0.05, 0.64,"#color[4]{0.50#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{y}#scale[0.5]{ }<#scale[0.5]{ }0.70, #delta = 0.4}");
   fTitle.DrawLatex(0.05, 0.56,"#color[226]{0.30#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{y}#scale[0.5]{ }<#scale[0.5]{ }0.50, #delta = 0.3}");
   fTitle.DrawLatex(0.05, 0.48,"#color[209]{0.20#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{y}#scale[0.5]{ }<#scale[0.5]{ }0.30, #delta = 0.2}");
   fTitle.DrawLatex(0.05, 0.40,"#color[95]{0.15#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{y}#scale[0.5]{ }<#scale[0.5]{ }0.20, #delta = 0.1}");
@@ -2525,52 +2596,53 @@ int main(int argc,char *argv[])
   c9.cd(1);
   fTitle.SetTextSize(0.078);
   fTitle.SetTextAlign(21);
-  fTitle.DrawLatex(0.5, 1.5,"0.004#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.01");
+  fTitle.DrawLatex(0.5, 1.6,"0.004#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.01");
 
   c9.cd(2);
   fTitle.SetTextSize(0.078);
   fTitle.SetTextAlign(21);
-  fTitle.DrawLatex(0.5, 1.5,"0.01#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.02");
+  fTitle.DrawLatex(0.5, 1.6,"0.01#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.02");
 
   c9.cd(3);
   fTitle.SetTextSize(0.078);
   fTitle.SetTextAlign(21);
-  fTitle.DrawLatex(0.5, 1.5,"0.02#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.03");
+  fTitle.DrawLatex(0.5, 1.6,"0.02#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.03");
 
   c9.cd(4);
   fTitle.SetTextSize(0.078);
   fTitle.SetTextAlign(21);
-  fTitle.DrawLatex(0.5, 1.5,"0.03#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.04");
+  fTitle.DrawLatex(0.5, 1.6,"0.03#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.04");
 
   c9.cd(5);
   fTitle.SetTextSize(0.078);
   fTitle.SetTextAlign(21);
-  fTitle.DrawLatex(0.5, 1.5,"0.04#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.06");
+  fTitle.DrawLatex(0.5, 1.6,"0.04#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.06");
 
   c9.cd(6);
   fTitle.SetTextSize(0.078);
   fTitle.SetTextAlign(21);
-  fTitle.DrawLatex(0.5, 1.5,"0.06#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.1");
+  fTitle.DrawLatex(0.5, 1.6,"0.06#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.1");
 
   c9.cd(7);
   fTitle.SetTextSize(0.078);
   fTitle.SetTextAlign(21);
-  fTitle.DrawLatex(0.5, 1.5,"0.1#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.14");
+  fTitle.DrawLatex(0.5, 1.6,"0.1#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.14");
 
   c9.cd(8);
   fTitle.SetTextSize(0.078);
   fTitle.SetTextAlign(21);
-  fTitle.DrawLatex(0.5, 1.5,"0.14#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.18");
+  fTitle.DrawLatex(0.5, 1.6,"0.14#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.18");
 
   c9.cd(9);
   fTitle.SetTextSize(0.078);
   fTitle.SetTextAlign(21);
-  fTitle.DrawLatex(0.5, 1.5,"0.18#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.4");
+  fTitle.DrawLatex(0.5, 1.6,"0.18#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.4");
 
   c9.cd(10);
   fTitle.SetTextSize(0.095);
   fTitle.SetTextAlign(11);
-  fTitle.DrawLatex(0.05, 0.64,"#color[221]{0.50#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{y}#scale[0.5]{ }<#scale[0.5]{ }0.70, #delta = 0.4}");
+  fTitle.DrawLatex(0.05, 0.72,"#color[221]{0.70#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{y}#scale[0.5]{ }<#scale[0.5]{ }0.90, #delta = 0.5}");
+  fTitle.DrawLatex(0.05, 0.64,"#color[4]{0.50#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{y}#scale[0.5]{ }<#scale[0.5]{ }0.70, #delta = 0.4}");
   fTitle.DrawLatex(0.05, 0.56,"#color[226]{0.30#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{y}#scale[0.5]{ }<#scale[0.5]{ }0.50, #delta = 0.3}");
   fTitle.DrawLatex(0.05, 0.48,"#color[209]{0.20#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{y}#scale[0.5]{ }<#scale[0.5]{ }0.30, #delta = 0.2}");
   fTitle.DrawLatex(0.05, 0.40,"#color[95]{0.15#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{y}#scale[0.5]{ }<#scale[0.5]{ }0.20, #delta = 0.1}");
@@ -2580,52 +2652,53 @@ int main(int argc,char *argv[])
   c10.cd(1);
   fTitle.SetTextSize(0.078);
   fTitle.SetTextAlign(21);
-  fTitle.DrawLatex(1, 1.5,"0.004#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.01");
+  fTitle.DrawLatex(1.5, 1.6,"0.004#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.01");
 
   c10.cd(2);
   fTitle.SetTextSize(0.078);
   fTitle.SetTextAlign(21);
-  fTitle.DrawLatex(1, 1.5,"0.01#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.02");
+  fTitle.DrawLatex(3, 1.6,"0.01#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.02");
 
   c10.cd(3);
   fTitle.SetTextSize(0.078);
   fTitle.SetTextAlign(21);
-  fTitle.DrawLatex(1, 1.5,"0.02#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.03");
+  fTitle.DrawLatex(1.5, 1.6,"0.02#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.03");
 
   c10.cd(4);
   fTitle.SetTextSize(0.078);
   fTitle.SetTextAlign(21);
-  fTitle.DrawLatex(1, 1.5,"0.03#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.04");
+  fTitle.DrawLatex(1.5, 1.6,"0.03#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.04");
 
   c10.cd(5);
   fTitle.SetTextSize(0.078);
   fTitle.SetTextAlign(21);
-  fTitle.DrawLatex(1, 1.5,"0.04#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.06");
+  fTitle.DrawLatex(1.5, 1.6,"0.04#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.06");
 
   c10.cd(6);
   fTitle.SetTextSize(0.078);
   fTitle.SetTextAlign(21);
-  fTitle.DrawLatex(1, 1.5,"0.06#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.1");
+  fTitle.DrawLatex(1.5, 1.6,"0.06#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.1");
 
   c10.cd(7);
   fTitle.SetTextSize(0.078);
   fTitle.SetTextAlign(21);
-  fTitle.DrawLatex(1, 1.5,"0.1#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.14");
+  fTitle.DrawLatex(1.5, 1.6,"0.1#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.14");
 
   c10.cd(8);
   fTitle.SetTextSize(0.078);
   fTitle.SetTextAlign(21);
-  fTitle.DrawLatex(1, 1.5,"0.14#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.18");
+  fTitle.DrawLatex(1.5, 1.6,"0.14#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.18");
 
   c10.cd(9);
   fTitle.SetTextSize(0.078);
   fTitle.SetTextAlign(21);
-  fTitle.DrawLatex(1, 1.5,"0.18#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.4");
+  fTitle.DrawLatex(1.5, 1.6,"0.18#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.4");
 
   c10.cd(10);
   fTitle.SetTextSize(0.095);
   fTitle.SetTextAlign(11);
-  fTitle.DrawLatex(0.05, 0.64,"#color[221]{0.50#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{y}#scale[0.5]{ }<#scale[0.5]{ }0.70, #delta = 0.4}");
+  fTitle.DrawLatex(0.05, 0.72,"#color[221]{0.70#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{y}#scale[0.5]{ }<#scale[0.5]{ }0.90, #delta = 0.5}");
+  fTitle.DrawLatex(0.05, 0.64,"#color[4]{0.50#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{y}#scale[0.5]{ }<#scale[0.5]{ }0.70, #delta = 0.4}");
   fTitle.DrawLatex(0.05, 0.56,"#color[226]{0.30#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{y}#scale[0.5]{ }<#scale[0.5]{ }0.50, #delta = 0.3}");
   fTitle.DrawLatex(0.05, 0.48,"#color[209]{0.20#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{y}#scale[0.5]{ }<#scale[0.5]{ }0.30, #delta = 0.2}");
   fTitle.DrawLatex(0.05, 0.40,"#color[95]{0.15#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{y}#scale[0.5]{ }<#scale[0.5]{ }0.20, #delta = 0.1}");
@@ -2635,52 +2708,53 @@ int main(int argc,char *argv[])
   c11.cd(1);
   fTitle.SetTextSize(0.078);
   fTitle.SetTextAlign(21);
-  fTitle.DrawLatex(1, 1.5,"0.004#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.01");
+  fTitle.DrawLatex(1.5, 1.6,"0.004#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.01");
 
   c11.cd(2);
   fTitle.SetTextSize(0.078);
   fTitle.SetTextAlign(21);
-  fTitle.DrawLatex(1, 1.5,"0.01#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.02");
+  fTitle.DrawLatex(1.5, 1.6,"0.01#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.02");
 
   c11.cd(3);
   fTitle.SetTextSize(0.078);
   fTitle.SetTextAlign(21);
-  fTitle.DrawLatex(1, 1.5,"0.02#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.03");
+  fTitle.DrawLatex(1.5, 1.6,"0.02#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.03");
 
   c11.cd(4);
   fTitle.SetTextSize(0.078);
   fTitle.SetTextAlign(21);
-  fTitle.DrawLatex(1, 1.5,"0.03#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.04");
+  fTitle.DrawLatex(1.5, 1.6,"0.03#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.04");
 
   c11.cd(5);
   fTitle.SetTextSize(0.078);
   fTitle.SetTextAlign(21);
-  fTitle.DrawLatex(1, 1.5,"0.04#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.06");
+  fTitle.DrawLatex(1.5, 1.6,"0.04#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.06");
 
   c11.cd(6);
   fTitle.SetTextSize(0.078);
   fTitle.SetTextAlign(21);
-  fTitle.DrawLatex(1, 1.5,"0.06#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.1");
+  fTitle.DrawLatex(1.5, 1.6,"0.06#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.1");
 
   c11.cd(7);
   fTitle.SetTextSize(0.078);
   fTitle.SetTextAlign(21);
-  fTitle.DrawLatex(1, 1.5,"0.1#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.14");
+  fTitle.DrawLatex(1.5, 1.6,"0.1#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.14");
 
   c11.cd(8);
   fTitle.SetTextSize(0.078);
   fTitle.SetTextAlign(21);
-  fTitle.DrawLatex(1, 1.5,"0.14#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.18");
+  fTitle.DrawLatex(1.5, 1.6,"0.14#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.18");
 
   c11.cd(9);
   fTitle.SetTextSize(0.078);
   fTitle.SetTextAlign(21);
-  fTitle.DrawLatex(1, 1.5,"0.18#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.4");
+  fTitle.DrawLatex(1.5, 1.6,"0.18#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.4");
 
   c11.cd(10);
   fTitle.SetTextSize(0.095);
   fTitle.SetTextAlign(11);
-  fTitle.DrawLatex(0.05, 0.64,"#color[221]{0.50#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{y}#scale[0.5]{ }<#scale[0.5]{ }0.70, #delta = 0.4}");
+  fTitle.DrawLatex(0.05, 0.72,"#color[221]{0.70#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{y}#scale[0.5]{ }<#scale[0.5]{ }0.90, #delta = 0.5}");
+  fTitle.DrawLatex(0.05, 0.64,"#color[4]{0.50#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{y}#scale[0.5]{ }<#scale[0.5]{ }0.70, #delta = 0.4}");
   fTitle.DrawLatex(0.05, 0.56,"#color[226]{0.30#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{y}#scale[0.5]{ }<#scale[0.5]{ }0.50, #delta = 0.3}");
   fTitle.DrawLatex(0.05, 0.48,"#color[209]{0.20#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{y}#scale[0.5]{ }<#scale[0.5]{ }0.30, #delta = 0.2}");
   fTitle.DrawLatex(0.05, 0.40,"#color[95]{0.15#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{y}#scale[0.5]{ }<#scale[0.5]{ }0.20, #delta = 0.1}");
@@ -2690,52 +2764,53 @@ int main(int argc,char *argv[])
   c12.cd(1);
   fTitle.SetTextSize(0.078);
   fTitle.SetTextAlign(21);
-  fTitle.DrawLatex(1, 1.5,"0.004#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.01");
+  fTitle.DrawLatex(1.5, 1.6,"0.004#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.01");
 
   c12.cd(2);
   fTitle.SetTextSize(0.078);
   fTitle.SetTextAlign(21);
-  fTitle.DrawLatex(1, 1.5,"0.01#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.02");
+  fTitle.DrawLatex(1.5, 1.6,"0.01#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.02");
 
   c12.cd(3);
   fTitle.SetTextSize(0.078);
   fTitle.SetTextAlign(21);
-  fTitle.DrawLatex(1, 1.5,"0.02#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.03");
+  fTitle.DrawLatex(1.5, 1.6,"0.02#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.03");
 
   c12.cd(4);
   fTitle.SetTextSize(0.078);
   fTitle.SetTextAlign(21);
-  fTitle.DrawLatex(1, 1.5,"0.03#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.04");
+  fTitle.DrawLatex(1.5, 1.6,"0.03#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.04");
 
   c12.cd(5);
   fTitle.SetTextSize(0.078);
   fTitle.SetTextAlign(21);
-  fTitle.DrawLatex(1, 1.5,"0.04#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.06");
+  fTitle.DrawLatex(1.5, 1.6,"0.04#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.06");
 
   c12.cd(6);
   fTitle.SetTextSize(0.078);
   fTitle.SetTextAlign(21);
-  fTitle.DrawLatex(1, 1.5,"0.06#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.1");
+  fTitle.DrawLatex(1.5, 1.6,"0.06#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.1");
 
   c12.cd(7);
   fTitle.SetTextSize(0.078);
   fTitle.SetTextAlign(21);
-  fTitle.DrawLatex(1, 1.5,"0.1#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.14");
+  fTitle.DrawLatex(1.5, 1.6,"0.1#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.14");
 
   c12.cd(8);
   fTitle.SetTextSize(0.078);
   fTitle.SetTextAlign(21);
-  fTitle.DrawLatex(1, 1.5,"0.14#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.18");
+  fTitle.DrawLatex(1.5, 1.6,"0.14#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.18");
 
   c12.cd(9);
   fTitle.SetTextSize(0.078);
   fTitle.SetTextAlign(21);
-  fTitle.DrawLatex(1, 1.5,"0.18#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.4");
+  fTitle.DrawLatex(1.5, 1.6,"0.18#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{x}#scale[0.5]{ }<#scale[0.5]{ }0.4");
 
   c12.cd(10);
   fTitle.SetTextSize(0.095);
   fTitle.SetTextAlign(11);
-  fTitle.DrawLatex(0.05, 0.64,"#color[221]{0.50#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{y}#scale[0.5]{ }<#scale[0.5]{ }0.70, #delta = 0.4}");
+  fTitle.DrawLatex(0.05, 0.72,"#color[221]{0.70#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{y}#scale[0.5]{ }<#scale[0.5]{ }0.90, #delta = 0.5}");
+  fTitle.DrawLatex(0.05, 0.64,"#color[4]{0.50#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{y}#scale[0.5]{ }<#scale[0.5]{ }0.70, #delta = 0.4}");
   fTitle.DrawLatex(0.05, 0.56,"#color[226]{0.30#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{y}#scale[0.5]{ }<#scale[0.5]{ }0.50, #delta = 0.3}");
   fTitle.DrawLatex(0.05, 0.48,"#color[209]{0.20#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{y}#scale[0.5]{ }<#scale[0.5]{ }0.30, #delta = 0.2}");
   fTitle.DrawLatex(0.05, 0.40,"#color[95]{0.15#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{y}#scale[0.5]{ }<#scale[0.5]{ }0.20, #delta = 0.1}");

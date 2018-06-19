@@ -101,6 +101,7 @@ chs..updated for L65
 
 C...Give sensible default values to switches and parameters.
       COMMON /LEPTOU/ CUT(14),LST(40),PARL(30),X,Y,W2,Q2,U
+      REAL CUT,            PARL,    X,Y,W2,Q2,U
       COMMON /LINTER/ PARI(40),EWQC(2,2,8),QC(8),ZL(2,4),ZQ(2,8),PQ(17)
       COMMON /LFLMIX/ CABIBO(4,4)
       COMMON /LOPTIM/ OPTX(4),OPTY(4),OPTQ2(4),OPTW2(4),COMFAC
@@ -192,7 +193,12 @@ ckc..LEPIN: e-(11), e+(-11)
 ckc..LEPTO commons & declarations
       COMMON /LINTRL/ PSAVE(3,4,5),KSAVE(4),XMIN,XMAX,YMIN,YMAX,
      &Q2MIN,Q2MAX,W2MIN,W2MAX,ILEP,INU,IG,IZ
+C      DOUBLE PRECISION PSAVE,XMIN,XMAX,YMIN,YMAX,Q2MIN,Q2MAX,
+C     &W2MIN,W2MAX
+C      INTEGER KSAVE
+      SAVE /LINTRL/
       COMMON /LEPTOU/ CUT(14),LST(40),PARL(30),X,Y,W2,Q2,U
+      REAL CUT,            PARL,    X,Y,W2,Q2,U
       COMMON /LINTER/ PARI(40),EWQC(2,2,8),QC(8),ZL(2,4),ZQ(2,8),PQ(17)
       COMMON /LGRID/ NXX,NWW,XX(31),WW(21),PQG(31,21,3),PQQB(31,21,2),
      &QGMAX(31,21,3),QQBMAX(31,21,2),YCUT(31,21),XTOT(31,21),NP
@@ -212,8 +218,7 @@ ckc..DJANGO
       COMMON /DJPASS/ NTOT,NPASS,NFAILL
 ckc..HERACLES
       DOUBLE PRECISION
-     &       HXMIN,HXMAX,HQ2MIN,HQ2MAX,HYMIN,HYMAX,HWMIN,HGMIN
-     &      ,POLARI
+     &       HXMIN,HXMAX,HQ2MIN,HQ2MAX,HYMIN,HYMAX,HWMIN,HGMI
      &      ,SW,CW,SW2,CW2
      &            ,MW,MZ,MH,ME,MMY,MTAU,MU,MD,MS,MC,MB,MT
      &            ,MW2,MZ2,MH2,ME2,MMY2,MTAU2,MU2,MD2,MS2,MC2,MB2,MT2
@@ -223,7 +228,9 @@ ckc..HERACLES
      &            ,PLZ,PPZ
       COMMON /HSCUTS/ HXMIN,HXMAX,HQ2MIN,HQ2MAX,HYMIN,HYMAX,HWMIN,HGMIN
       COMMON /HSPARL/ LPAR(20),LPARIN(12)
-      COMMON /HSPARM/ POLARI,HPOLAR,LLEPT,LQUA
+      COMMON /HSPARM/ POLARI,HPOLAR,LEPTID,LLEPT,LQUA
+      DOUBLE PRECISION POLARI, HPOLAR
+      INTEGER LEPTID, LLEPT, LQUA
       COMMON /HSGSW/  SW,CW,SW2,CW2
      *              ,MW,MZ,MH,ME,MMY,MTAU,MU,MD,MS,MC,MB,MT
      *              ,MW2,MZ2,MH2,ME2,MMY2,MTAU2,MU2,MD2,MS2,MC2,MB2,MT2
@@ -313,7 +320,8 @@ c      PARL(1)=HNA
 c      PARL(2)=HNZ
       LST(22)=1
       LST(23)=INTER
-      KSAVE(1)=LEPIN
+      KSAVE(1)=-LLEPT*10-LEPTID
+      LEPIN=-LLEPT*10-LEPTID
 cC incoming proton:
 c      IF (INT(HNA).EQ.1.AND.INT(HNZ).EQ.1) THEN
 c        KSAVE(2)=2212
@@ -338,7 +346,11 @@ ckc
       P(1,1)=0.
       P(1,2)=0.
       P(1,3)=PLZ
-      P(1,5)=ULMASS(KSAVE(1))
+      IF (K(1,2).EQ.-11.OR.K(1,2).EQ.11) THEN
+        P(1,5)= 0.000511
+      ELSE IF (K(1,2).EQ.-13.OR.K(1,2).EQ.13) THEN
+        P(1,5)= 0.10566
+      ENDIF
       P(1,4)=SQRT(P(1,3)**2+P(1,5)**2)
       P(2,1)=0.
       P(2,2)=0.
@@ -2241,10 +2253,14 @@ ckc..virtual boson (non-radiative case)
 C%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
       SUBROUTINE DJGLEV
-
+C      IMPLICIT DOUBLE PRECISION (A-H,O-Z)
+C      IMPLICIT INTEGER (I-N)
 Chs...Restore event record from HERACLES when hadronization has failed
       COMMON /LINTRL/ PSAVE(3,4,5),KSAVE(4),XMIN,XMAX,YMIN,YMAX,
      &Q2MIN,Q2MAX,W2MIN,W2MAX,ILEP,INU,IG,IZ
+C      DOUBLE PRECISION PSAVE,XMIN,XMAX,YMIN,YMAX,Q2MIN,Q2MAX,
+C     &W2MIN,W2MAX
+C      INTEGER KSAVE
       COMMON/LUJETS/N,K(4000,5),P(4000,5),V(4000,5)
       COMMON /LEPTOU/ CUT(14),LST(40),PARL(30),X,Y,W2,Q2,U
       PARAMETER (NMXHEP=2000)
@@ -2263,6 +2279,7 @@ C...incoming particles
       K(1,3)=0
       K(1,4)=0
       K(1,5)=0
+
       K(2,1)=21
       K(2,2)=KSAVE(2)
       K(2,3)=0

@@ -4,8 +4,8 @@
     \file                         TDjangoh.cc
     \brief                        Interface class to Djangoh generator
     \author                       Nicolas PIERRE
-    \version                      1.2
-    \date                         24/01/18
+    \version                      1.3
+    \date                         09/04/18
     Support :                     mail to : nicolas.pierre@cern.ch
 
     \class TDjangoh
@@ -28,7 +28,7 @@ TDjangoh*  TDjangoh::fgInstance = 0;
 
 # define type_of_call _stdcall
 # define VERSION 1
-# define SUBVERSION 2
+# define SUBVERSION 3
 
 // COLORS
 
@@ -169,6 +169,7 @@ extern "C" struct hsparm
 {
   double polari;
   double hpolar;
+  int leptid;
   int llept;
   int lqua;
 } hsparm_;
@@ -196,6 +197,15 @@ extern "C" struct hsalfs
   int mst111;
   int mst115;
 } hsalfs_;
+
+extern "C" struct hshgpt
+{
+  float parj21;
+  float parj23;
+  float parj24;
+  float parj41;
+  float parj42;
+} hshgpt_;
 
 extern "C" struct hsintnc
 {
@@ -323,6 +333,11 @@ extern "C" struct hepsav
   double vhkksv[3][4];
 } hepsav_;
 
+extern "C" struct djfgen
+{
+  int frcgen;
+} djfgen_;
+
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
 
@@ -387,26 +402,20 @@ TDjangoh::TDjangoh() : TGenerator("TDjangoh","TDjangoh")
   << BOLD(FBLU("    *//-----"))<<BOLD(FCYN(" TDjangoh : An Interface to Djangoh"))<<BOLD(FBLU(" ----- "))<<BOLD(FCYN("N. PIERRE, nicolas.pierre@cern.ch"))<<BOLD(FBLU(" -----//*\n"))
   << BOLD(FBLU("   *//--------------------------------------------------------------------------------------//*\n\n\n"));
 
-  delete fParticles;
-
-  fParticles = new TClonesArray("TMCParticle",50);
 }
 
 
 TDjangoh::TDjangoh(const TDjangoh& dj) :
  TGenerator(dj),
  fLujets(dj.fLujets),
- fDjkin(dj.fDjkin)
+ fDjkin(dj.fDjkin),
+ fUnfragSave(0)
 
 {}
 
 TDjangoh::~TDjangoh()
 {
-  if (fParticles) {
-     fParticles->Delete();
-     delete fParticles;
-     fParticles = 0;
-  }
+
 }
 
 
@@ -422,7 +431,21 @@ void TDjangoh::GenerateEvent()
   hsegen_();
   fLujets = &lujets_;
   fDjkin = &djkin_;
-  ImportParticles();
+  // Remove unfragmented events, saving it into file if specified.
+  if(fLujets->K[0][-1]==21)
+  {
+    if(fUnfragSave) SaveUnfragState();
+    fLujets->N=0;
+  }
+  // Patch in order to obtain the final state in case of (quasi-)elastic events.
+  if(chnumb_.ichngl == 3)
+  {
+    ElasFS();
+  }
+  else if(chnumb_.ichngl == 15 || chnumb_.ichngl == 16 || chnumb_.ichngl == 17)
+  {
+    RadElasFS();
+  }
 }
 
 
@@ -430,35 +453,6 @@ void TDjangoh::EndRecap()
 {
   hsrcap_();
 }
-
-
-TObjArray *TDjangoh::ImportParticles(Option_t *)
-{
-  fParticles->Clear();
-  Int_t numpart   = fLujets->N;
-  TClonesArray &a = *((TClonesArray*)fParticles);
-
-  for (Int_t i = 0; i<numpart; i++)
-  {
-     new(a[i]) TMCParticle(fLujets->K[0][i] ,
-                           fLujets->K[1][i] ,
-                           fLujets->K[2][i] ,
-                           fLujets->K[3][i] ,
-                           fLujets->K[4][i] ,
-                           fLujets->P[0][i] ,
-                           fLujets->P[1][i] ,
-                           fLujets->P[2][i] ,
-                           fLujets->P[3][i] ,
-                           fLujets->P[4][i] ,
-                           fLujets->V[0][i] ,
-                           fLujets->V[1][i] ,
-                           fLujets->V[2][i] ,
-                           fLujets->V[3][i] ,
-                           fLujets->V[4][i]);
-  }
-  return fParticles;
-}
-
 
 Int_t TDjangoh::ImportParticles(TClonesArray *particles, Option_t *option)
 {
@@ -522,6 +516,46 @@ Int_t TDjangoh::ImportParticles(TClonesArray *particles, Option_t *option)
   return nparts;
 }
 
+void TDjangoh::ElasFS()
+{
+  fLujets->N = 2;
+  fLujets->K[0][-1] = 1; fLujets->K[1][-1] = GetIDPHEP(1); fLujets->K[2][-1] = 0;
+  fLujets->K[3][-1] = 0; fLujets->K[4][-1] = 0;
+  fLujets->P[0][-1] = GetPHEP(1,1); fLujets->P[1][-1] = GetPHEP(2,1); fLujets->P[2][-1] = GetPHEP(3,1);
+  fLujets->P[3][-1] = GetPHEP(4,1); fLujets->P[4][-1] = GetPHEP(5,1);
+  fLujets->V[0][-1] = GetVHKK(1,1); fLujets->V[1][-1] = GetVHKK(2,1); fLujets->V[2][-1] = GetVHKK(3,1);
+  fLujets->V[3][-1] = GetVHKK(4,1); fLujets->V[4][-1] = GetVHKK(5,1);
+  fLujets->K[0][0] = 1; fLujets->K[1][0] = GetNucleusID(); fLujets->K[2][0] = 0;
+  fLujets->K[3][0] = 0; fLujets->K[4][0] = 0;
+  fLujets->P[0][0] = GetPHEP(1,2); fLujets->P[1][0] = GetPHEP(2,2); fLujets->P[2][0] = GetPHEP(3,2);
+  fLujets->P[3][0] = GetPHEP(4,2); fLujets->P[4][0] = GetPHEP(5,2);
+  fLujets->V[0][0] = GetVHKK(1,2); fLujets->V[1][0] = GetVHKK(2,2); fLujets->V[2][0] = GetVHKK(3,2);
+  fLujets->V[3][0] = GetVHKK(4,2); fLujets->V[4][0] = GetVHKK(5,2);
+}
+
+void TDjangoh::RadElasFS()
+{
+  fLujets->N = 3;
+  fLujets->K[0][-1] = 1; fLujets->K[1][-1] = GetIDPHEP(1); fLujets->K[2][-1] = 0;
+  fLujets->K[3][-1] = 0; fLujets->K[4][-1] = 0;
+  fLujets->P[0][-1] = GetPHEP(1,1); fLujets->P[1][-1] = GetPHEP(2,1); fLujets->P[2][-1] = GetPHEP(3,1);
+  fLujets->P[3][-1] = GetPHEP(4,1); fLujets->P[4][-1] = GetPHEP(5,1);
+  fLujets->V[0][-1] = GetVHKK(1,1); fLujets->V[1][-1] = GetVHKK(2,1); fLujets->V[2][-1] = GetVHKK(3,1);
+  fLujets->V[3][-1] = GetVHKK(4,1); fLujets->V[4][-1] = GetVHKK(5,1);
+  fLujets->K[0][0] = 1; fLujets->K[1][0] = GetNucleusID(); fLujets->K[2][0] = 0;
+  fLujets->K[3][0] = 0; fLujets->K[4][0] = 0;
+  fLujets->P[0][0] = GetPHEP(1,2); fLujets->P[1][0] = GetPHEP(2,2); fLujets->P[2][0] = GetPHEP(3,2);
+  fLujets->P[3][0] = GetPHEP(4,2); fLujets->P[4][0] = GetPHEP(5,2);
+  fLujets->V[0][0] = GetVHKK(1,2); fLujets->V[1][0] = GetVHKK(2,2); fLujets->V[2][0] = GetVHKK(3,2);
+  fLujets->V[3][0] = GetVHKK(4,2); fLujets->V[4][0] = GetVHKK(5,2);
+  fLujets->K[0][1] = 1; fLujets->K[1][1] = GetIDPHEP(3); fLujets->K[2][1] = 0;
+  fLujets->K[3][1] = 0; fLujets->K[4][1] = 0;
+  fLujets->P[0][1] = GetPHEP(1,3); fLujets->P[1][1] = GetPHEP(2,3); fLujets->P[2][1] = GetPHEP(3,3);
+  fLujets->P[3][1] = GetPHEP(4,3); fLujets->P[4][1] = GetPHEP(5,3);
+  fLujets->V[0][1] = GetVHKK(1,3); fLujets->V[1][1] = GetVHKK(2,3); fLujets->V[2][1] = GetVHKK(3,3);
+  fLujets->V[3][1] = GetVHKK(4,3); fLujets->V[4][1] = GetVHKK(5,3);
+}
+
 void TDjangoh::ReadXMLFile(const string pFilename)
 {
   int PID;
@@ -557,15 +591,18 @@ void TDjangoh::ReadXMLFile(const string pFilename)
   inputcw[15] = "LHAPATH   ";
   inputcw[16] = "FLONG     ";
   inputcw[17] = "ALFAS     ";
-  inputcw[18] = "NFLAVORS  ";
-  inputcw[19] = "RNDM-SEEDS";
-  inputcw[20] = "START     ";
-  inputcw[21] = "SOPHIA    ";
-  inputcw[22] = "OUT-LEP   ";
-  inputcw[23] = "FRAG      ";
-  inputcw[24] = "CASCADES  ";
-  inputcw[25] = "MAX-VIRT  ";
-  inputcw[26] = "CONTINUE  ";
+  inputcw[18] = "HIGH-PT   ";
+  inputcw[19] = "NFLAVORS  ";
+  inputcw[20] = "RNDM-SEEDS";
+  inputcw[21] = "START     ";
+  inputcw[22] = "SOPHIA    ";
+  inputcw[23] = "OUT-LEP   ";
+  inputcw[24] = "FRAG      ";
+  inputcw[25] = "CASCADES  ";
+  inputcw[26] = "MAX-VIRT  ";
+  inputcw[27] = "KT-PARTON ";
+  inputcw[28] = "BARYON    ";
+  inputcw[29] = "CONTINUE  ";
 
   for ( pugi::xml_node cCodeWord = doc.child ( "Codeword" ); cCodeWord; cCodeWord = cCodeWord.next_sibling() )
   {
@@ -592,7 +629,7 @@ void TDjangoh::ReadXMLFile(const string pFilename)
             cout<<"Resetting to \"e+\" ."<<endl;
             PID = 1;
           }
-          hsparm_.llept = PID;
+          hsparm_.leptid = PID;
         }
       }
     }
@@ -839,6 +876,24 @@ void TDjangoh::ReadXMLFile(const string pFilename)
       }
     }
 
+    if(!strcmp(cCWType.c_str(), "HIGH-PT" ))
+    {
+      cout << "\nCodeword : HIGH-PT" << endl;
+      for(pugi::xml_node cData = cCodeWord.child ( "Data" ); cData; cData = cData.next_sibling())
+      {
+        if(std::string(cData.attribute("name").value()) == "parj21")
+          {hshgpt_.parj21 = cData.attribute("value").as_float();cout<<"parj21 : "<<hshgpt_.parj21<<"\t";}
+        else if(std::string(cData.attribute("name").value()) == "parj23")
+          {hshgpt_.parj23 = cData.attribute("value").as_float();cout<<"parj23 : "<<hshgpt_.parj23<<"\t";}
+        else if(std::string(cData.attribute("name").value()) == "parj24")
+          {hshgpt_.parj24 = cData.attribute("value").as_float();cout<<"parj24 : "<<hshgpt_.parj24<<"\t";}
+        else if(std::string(cData.attribute("name").value()) == "parj41")
+          {hshgpt_.parj41 = cData.attribute("value").as_float();cout<<"parj41 : "<<hshgpt_.parj41<<"\t";}
+        else if(std::string(cData.attribute("name").value()) == "parj42")
+          {hshgpt_.parj42 = cData.attribute("value").as_float();cout<<"parj42 : "<<hshgpt_.parj42<<endl;}
+      }
+    }
+
     if(!strcmp(cCWType.c_str(), "NFLAVORS" ))
     {
       cout <<"\nCodeword : NFLAVORS" << endl;
@@ -952,9 +1007,29 @@ void TDjangoh::ReadXMLFile(const string pFilename)
           {hsvrbz_.verboz = cData.attribute("value").as_int();cout<<"vrboz : "<<hsvrbz_.verboz<<endl;}
       }
     }
+
+    if(!strcmp(cCWType.c_str(), "UNFRAG-SAVE" ))
+    {
+      cout << "\nCodeword : UNFRAG-SAVE" << endl;
+      for(pugi::xml_node cData = cCodeWord.child ( "Data" ); cData; cData = cData.next_sibling())
+      {
+        if(std::string(cData.attribute("name").value()) == "unfrag")
+          {fUnfragSave = cData.attribute("value").as_int();cout<<"unfrag : "<<fUnfragSave<<endl;}
+      }
+    }
+
+    if(!strcmp(cCWType.c_str(), "FORCE-GEN" ))
+    {
+      cout << "\nCodeword : FORCE-GEN" << endl;
+      for(pugi::xml_node cData = cCodeWord.child ( "Data" ); cData; cData = cData.next_sibling())
+      {
+        if(std::string(cData.attribute("name").value()) == "frcgen")
+          {djfgen_.frcgen = cData.attribute("value").as_int();cout<<"unfrag : "<<djfgen_.frcgen<<endl;}
+      }
+    }
   }
 
-  for(int i=0; i<27; i++)
+  for(int i=0; i<30; i++)
     ConvertToFortran(ihscw_.inputcodewd[i], sizeof ihscw_.inputcodewd[i], inputcw[i]);
 
   // OUTFILENAME
@@ -975,10 +1050,10 @@ void TDjangoh::WriteXMLFile(const string pFilename)
 {
   string cbeam;
 
-  if(hsparm_.llept==1) cbeam="e+";
-  else if(hsparm_.llept==-1) cbeam="e-";
-  else if(hsparm_.llept==3) cbeam="mu+";
-  else if(hsparm_.llept==-3) cbeam="mu-";
+  if(hsparm_.leptid==1) cbeam="e+";
+  else if(hsparm_.leptid==-1) cbeam="e-";
+  else if(hsparm_.leptid==3) cbeam="mu+";
+  else if(hsparm_.leptid==-3) cbeam="mu-";
 
   ofstream f(pFilename);
   f << "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\" ?>" << endl;
@@ -1111,6 +1186,15 @@ void TDjangoh::WriteXMLFile(const string pFilename)
   f << "\t<Data name=\"par112\" value=\"" << hsalfs_.par112 << "\"/>" << endl;
   f << "</Codeword>" << endl;
 
+  f << "\n<!-- HIGH-PT -->" << endl;
+  f << "<Codeword name=\"HIGH-PT\">" << endl;
+  f << "\t<Data name=\"parj21\" value=\"" << hshgpt_.parj21 << "\"/>" << endl;
+  f << "\t<Data name=\"parj23\" value=\"" << hshgpt_.parj23 << "\"/>" << endl;
+  f << "\t<Data name=\"parj24\" value=\"" << hshgpt_.parj24 << "\"/>" << endl;
+  f << "\t<Data name=\"parj41\" value=\"" << hshgpt_.parj41 << "\"/>" << endl;
+  f << "\t<Data name=\"parj42\" value=\"" << hshgpt_.parj42 << "\"/>" << endl;
+  f << "</Codeword>" << endl;
+
   f << "\n<!-- NFLAVORS -->" << endl;
   f << "<Codeword name=\"NFLAVORS\">" << endl;
   f << "\t<Data name=\"npymin\" value=\"" << hystfu_.npymin << "\"/>" << endl;
@@ -1168,6 +1252,16 @@ void TDjangoh::WriteXMLFile(const string pFilename)
   f << "\t<Data name=\"verboz\" value=\"" << hsvrbz_.verboz << "\"/>" << endl;
   f << "</Codeword>" << endl;
 
+  f << "\n<!-- UNFRAG-SAVE -->" << endl;
+  f << "<Codeword name=\"UNFRAG-SAVE\">" << endl;
+  f << "\t<Data name=\"unfrag\" value=\"" << fUnfragSave << "\"/>" << endl;
+  f << "</Codeword>" << endl;
+
+  f << "\n<!-- FORCE-GEN -->" << endl;
+  f << "<Codeword name=\"FORCE-GEN\">" << endl;
+  f << "\t<Data name=\"frcgen\" value=\"" << djfgen_.frcgen << "\"/>" << endl;
+  f << "</Codeword>" << endl;
+
   f.close();
 
   cout << ">>> ****************** <<<" << endl;
@@ -1179,6 +1273,8 @@ void TDjangoh::WriteXMLFile(const string pFilename)
 void TDjangoh::Initialize()
 {
   hsinpt_();
+
+  CleanUSFile();
 
   cout << ">>> ********************* <<<" << endl;
   cout << ">>>   TDJANGOH message :  <<<" << endl;
@@ -1260,9 +1356,9 @@ double TDjangoh::GetSigtrr()
   return hsnume_.sigtrr[0];
 }
 
-int TDjangoh::GetBeamType() {return hsparm_.llept;}
+int TDjangoh::GetBeamType() {return hsparm_.leptid;}
 
-void TDjangoh::SetBeamType(int pvalue) {hsparm_.llept=pvalue;}
+void TDjangoh::SetBeamType(int pvalue) {hsparm_.leptid=pvalue;}
 
 void TDjangoh::SetBeamType(const char* pname)
 {
@@ -1279,7 +1375,7 @@ void TDjangoh::SetBeamType(const char* pname)
     cout<<"Resetting to \"e+\" ."<<endl;
     PID = 11;
   }
-  hsparm_.llept = PID;
+  hsparm_.leptid = PID;
 }
 
 void TDjangoh::SetBeam(double pBeamE, double pPol)
@@ -1462,17 +1558,16 @@ void TDjangoh::SetNucleus(double pHpolar, int pHna, int pHnz, double pEpro)
 
 void TDjangoh::WriteFSInFile()
 {
-
   ofstream finalState("finalState.txt", ofstream::out | ofstream::app);
 
-  Int_t numpart = fLujets->N;
-
-  finalState << numpart << endl;
-  finalState << hselab_.eele << "\t" << fDjkin->DJX << "\t" << fDjkin->DJY << "\t" << fDjkin->DJQ2 << endl;
-
-  for (Int_t i = 0; i<numpart; i++)
+  if(fLujets->N)
   {
-    if (fLujets->K[0][i-1] == 1 && fLujets->K[2][i-1] == 0)
+    Int_t numpart = fLujets->N;
+
+    finalState << numpart << endl;
+    finalState << hselab_.eele << "\t" << fDjkin->DJX << "\t" << fDjkin->DJY << "\t" << fDjkin->DJQ2 << endl;
+
+    for (Int_t i = 0; i<numpart; i++)
     {
       finalState << fLujets->K[0][i-1] << "\t"
                  << fLujets->K[1][i-1] << "\t" //ID
@@ -1483,6 +1578,7 @@ void TDjangoh::WriteFSInFile()
                  << fLujets->P[1][i-1] << "\t" //Py
                  << fLujets->P[2][i-1] << "\t" //Pz
                  << fLujets->P[3][i-1] << "\t" //max(kinE,mass)
+                 << fLujets->P[4][i-1] << "\t" //Mass
                  << fLujets->V[0][i-1] << "\t"
                  << fLujets->V[1][i-1] << "\t"
                  << fLujets->V[2][i-1] << "\t"
@@ -1491,6 +1587,39 @@ void TDjangoh::WriteFSInFile()
   }
 
   finalState.close();
+}
+
+void TDjangoh::SaveUnfragState()
+{
+  ofstream unfragState("unfragState.txt", ofstream::out | ofstream::app);
+
+  if(fLujets->N)
+  {
+    Int_t numpart = fLujets->N;
+
+    unfragState << numpart << endl;
+    unfragState << hselab_.eele << "\t" << fDjkin->DJX << "\t" << fDjkin->DJY << "\t" << fDjkin->DJQ2 << endl;
+
+    for (Int_t i = 0; i<numpart; i++)
+    {
+      unfragState << fLujets->K[0][i-1] << "\t"
+                  << fLujets->K[1][i-1] << "\t" //ID
+                  << fLujets->K[2][i-1] << "\t"
+                  << fLujets->K[3][i-1] << "\t"
+                  << fLujets->K[4][i-1] << "\t"
+                  << fLujets->P[0][i-1] << "\t" //Px
+                  << fLujets->P[1][i-1] << "\t" //Py
+                  << fLujets->P[2][i-1] << "\t" //Pz
+                  << fLujets->P[3][i-1] << "\t" //max(kinE,mass)
+                  << fLujets->P[4][i-1] << "\t" //Mass
+                  << fLujets->V[0][i-1] << "\t"
+                  << fLujets->V[1][i-1] << "\t"
+                  << fLujets->V[2][i-1] << "\t"
+                  << fLujets->V[3][i-1] << endl;
+    }
+  }
+
+  unfragState.close();
 }
 
 double TDjangoh::GetPHEP(int ip, int i)
@@ -1511,6 +1640,18 @@ int TDjangoh::GetIDPHEP(int i)
 int TDjangoh::GetChannel()
 {
   return chnumb_.ichngl;
+}
+
+int TDjangoh::GetNucleusID()
+{
+  int id;
+  if(hsnucl_.hna == 1 && hsnucl_.hnz == 1)
+    id=2212;
+  else if(hsnucl_.hna == 1 && hsnucl_.hnz == 1)
+    id=2112;
+  else
+    id=1000000000+hsnucl_.hnz*10000+hsnucl_.hna*10;
+  return id;
 }
 
 void TDjangoh::Clean_File()

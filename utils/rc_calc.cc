@@ -1,4 +1,5 @@
 #include <iostream>
+#include <iomanip>
 #include <fstream>
 #include <TFile.h>
 #include <TH1F.h>
@@ -1076,7 +1077,7 @@ int main(int argc,char *argv[])
     rcy_g[i]->SetMarkerStyle(22);
     rcy_g[i]->SetMarkerColor(601);
     rcy_g[i]->SetMarkerSize(3);
-    rcy_g[i]->GetYaxis()->SetRangeUser(0.6,1.2);
+    rcy_g[i]->GetYaxis()->SetRangeUser(0,1.5);
     rcy_g[i]->GetXaxis()->SetTitleSize(.05);
     rcy_g[i]->GetYaxis()->SetTitleSize(.05);
     rcy_g[i]->SetFillColor(601);
@@ -1191,9 +1192,9 @@ int main(int argc,char *argv[])
     cout << endl;
   }
 
-  outfile << setprecision(5);
-
   outfile << "x/y";
+
+  outfile << setprecision(5);
 
   for(int i=0;i<YRANGE;i++)
     outfile << "\t" << ytab[i];

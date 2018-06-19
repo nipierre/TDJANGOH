@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <algorithm>
 #include <TFile.h>
 #include <TH1F.h>
 #include <TH2F.h>
@@ -52,18 +53,18 @@ using namespace std;
 
 //Outputs
 
-#define hadron_z_pdf "/sps/compass/npierre/TDJANGOH/hadron_z.pdf"
-#define pion_z_pdf "/sps/compass/npierre/TDJANGOH/pion_z.pdf"
-#define kaon_z_pdf "/sps/compass/npierre/TDJANGOH/kaon_z.pdf"
-#define hadron_pt_pdf "/sps/compass/npierre/TDJANGOH/hadron_pt.pdf"
-#define pion_pt_pdf "/sps/compass/npierre/TDJANGOH/pion_pt.pdf"
-#define kaon_pt_pdf "/sps/compass/npierre/TDJANGOH/kaon_pt.pdf"
-#define hadron_ratio_pdf "/sps/compass/npierre/TDJANGOH/hadron_ratio.pdf"
-#define pion_ratio_pdf "/sps/compass/npierre/TDJANGOH/pion_ratio.pdf"
-#define kaon_ratio_pdf "/sps/compass/npierre/TDJANGOH/kaon_ratio.pdf"
-#define hadron_ratio_pt_pdf "/sps/compass/npierre/TDJANGOH/hadron_pt_ratio.pdf"
-#define pion_ratio_pt_pdf "/sps/compass/npierre/TDJANGOH/pion_pt_ratio.pdf"
-#define kaon_ratio_pt_pdf "/sps/compass/npierre/TDJANGOH/kaon_pt_ratio.pdf"
+#define hadron_z_pdf "hadron_z.pdf"
+#define pion_z_pdf "pion_z.pdf"
+#define kaon_z_pdf "kaon_z.pdf"
+#define hadron_pt_pdf "hadron_pt.pdf"
+#define pion_pt_pdf "pion_pt.pdf"
+#define kaon_pt_pdf "kaon_pt.pdf"
+#define hadron_ratio_pdf "hadron_ratio.pdf"
+#define pion_ratio_pdf "pion_ratio.pdf"
+#define kaon_ratio_pdf "kaon_ratio.pdf"
+#define hadron_ratio_pt_pdf "hadron_pt_ratio.pdf"
+#define pion_ratio_pt_pdf "pion_pt_ratio.pdf"
+#define kaon_ratio_pt_pdf "kaon_pt_ratio.pdf"
 
 // Structures
 
@@ -79,11 +80,11 @@ Wrapper fBorn[9][6][14];
 Wrapper fReMult[9][6][14];
 Wrapper fBornMult[9][6][14];
 Wrapper fMult[9][6][14];
-Wrapper fRept[9][6][13];
-Wrapper fBornpt[9][6][13];
-Wrapper fReptMult[9][6][13];
-Wrapper fBornptMult[9][6][13];
-Wrapper fPtMult[9][6][13];
+Wrapper fRept[9][6][12];
+Wrapper fBornpt[9][6][12];
+Wrapper fReptMult[9][6][12];
+Wrapper fBornptMult[9][6][12];
+Wrapper fPtMult[9][6][12];
 double fNDIS_evt_r[3][9][6][14];
 double fNDIS_evt_b[3][9][6][14];
 double fNSIDIS_evt_r[4][9][6];
@@ -95,15 +96,15 @@ double fYrange[7] = {.1,.15,.2,.3,.5,.7,.9};
 int fFlag_r[3][9][6][14];
 int fFlag_b[3][9][6][14];
 double fZ_bin_width[14] = {.1,.05,.05,.05,.05,.05,.05,.05,.05,.05,.05,.05,.1,.15};
-double fPt_bin_width = 0.15;
-vector<double> fQ2[2][9][5][14];
+double fPt_bin_width = 0.5;
+vector<double> fQ2[2][9][6][14];
 
 //Graphic Style
 
 int fMarkerColor[2] = {4,2};
 int fMarkerStyle[2][2] = {{24,20},{26,22}};
-int fMarkerColorAlt[5] = {2,95,209,226,221};
-int fMarkerStyleAlt[5][2] = {{24,20},{26,22},{25,21},{27,33},{28,34}};
+int fMarkerColorAlt[6] = {2,95,209,226,4,221};
+int fMarkerStyleAlt[6][2] = {{24,20},{26,22},{25,21},{27,33},{28,34},{30,29}};
 
 //Constants
 
@@ -151,15 +152,18 @@ TGraphErrors* H_pt_d[2][9][6];
 TGraphErrors* P_pt_d[2][9][6];
 TGraphErrors* K_pt_d[2][9][6];
 
-TLine* l1[5];
-TLine* l2[5];
+TLine* l1[6];
+TLine* l2[6];
 
 // Others
 
 int id, npart;
-double E, E_prime, xbj, y, Q2, px, py, pz, Eh, dummy, pt, z, nu, W;
+double E, E_prime, xbj, y, Q2, px, py, pz, Eh, pt, z, nu, W;
+string dummy;
 
 int fId;
 double fNu_max[3][14];
 double fNu_min[3][14];
 int fDIScuts;
+
+int fIsMu, fIsE;

@@ -4,8 +4,8 @@
     \file                         TDjangoh.h
     \brief                        Interface class to Djangoh generator
     \author                       Nicolas PIERRE
-    \version                      1.2
-    \date                         24/01/18
+    \version                      1.3
+    \date                         09/04/18
     Support :                     mail to : nicolas.pierre@cern.ch
 
     TDjangoh is an interface class to DJANGOH
@@ -51,6 +51,7 @@ protected:
 
   Lujets_t*  fLujets; /*!< Container of the lujets_ common block */
   Djkin_t*   fDjkin; /*!< Container of the djkin_ common block */
+  int        fUnfragSave; /*!< Flag enabling saving of unfragmented final state */
 
   /*!
   * \class TDjangohCleaner
@@ -148,11 +149,13 @@ public:
   */
   Int_t            ImportParticles(TClonesArray *particles, Option_t *option="");
   /*!
-  * \brief Import particles from lujets_ subroutine and copy it in TClonesArray*
-  * \param option :
-  * \return TObjArray w/ particles
+  * \brief Patchy method to recover final state for (quasi)elastic events
   */
-  TObjArray       *ImportParticles(Option_t *option="");
+  void             ElasFS();
+  /*!
+  * \brief Patchy method to recover final state for radiative (quasi)elastic events
+  */
+  void             RadElasFS();
 
   // ---------------------------------------------------------------------------
   // Cross-Section
@@ -325,6 +328,11 @@ public:
   * \param pEpro : Energy of the nucleus
   */
   void        SetNucleus(double pHpolar, int pHna, int pHnz, double pEpro=0);
+  /*!
+  * \brief Get nucleus ID (PDG numbering scheme)
+  * \return Nucleus ID
+  */
+  int         GetNucleusID();
 
   // ---------------------------------------------------------------------------
   // Final State utilitaries
@@ -333,9 +341,17 @@ public:
   */
   void        WriteFSInFile();
   /*!
+  * \brief Save unfragmented final state infos in file
+  */
+  void        SaveUnfragState();
+  /*!
   * \brief Remove final state file
   */
   void        CleanFSFile() { remove("finalState.txt"); }
+  /*!
+  * \brief Remove final state file
+  */
+  void        CleanUSFile() { remove("unfragState.txt"); }
 
   // ---------------------------------------------------------------------------
   // Accessors for MC for (quasi)elastic case (for more infos, see manual)

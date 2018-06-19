@@ -14,9 +14,9 @@
   <Data name="ixmax" value="0.95"/>
   <Data name="iymin" value="0.01"/>
   <Data name="iymax" value="0.95"/>
-  <Data name="iq2min" value="0.9"/>
+  <Data name="iq2min" value="0.8"/>
   <Data name="iq2max" value="80"/>
-  <Data name="iwmin" value="0"/>
+  <Data name="iwmin" value="4"/>
 </Codeword>
 
 <!-- GSW-PARAM -->
@@ -110,12 +110,12 @@
 <Codeword name="STRUCTFUNC">
   <Data name="ilqmod" value="0"/>
   <Data name="ilib" value="2"/>
-  <Data name="icode" value="10150"/>
+  <Data name="icode" value="21000"/>
 </Codeword>
 
 <!-- FLONG -->
 <Codeword name="FLONG">
-  <Data name="iflopt" value="111"/>
+  <Data name="iflopt" value="122"/>
   <Data name="parl11" value="0.01"/>
   <Data name="parl19" value="0.03"/>
 </Codeword>
@@ -126,6 +126,15 @@
   <Data name="mst115" value="1"/>
   <Data name="par111" value="0.2"/>
   <Data name="par112" value="0.235"/>
+</Codeword>
+
+<!-- HIGH-PT -->
+<Codeword name="HIGH-PT">
+  <Data name="parj21" value="0.34"/>
+  <Data name="parj23" value="0.04"/>
+  <Data name="parj24" value="2.8"/>
+  <Data name="parj41" value="0.025"/>
+  <Data name="parj42" value="0.075"/>
 </Codeword>
 
 <!-- NFLAVORS -->
@@ -182,5 +191,15 @@
 
 <!-- VERBOZE -->
 <Codeword name="VERBOSE">
-  <Data name="verboz" value="1"/>
+  <Data name="verboz" value="0"/>
+</Codeword>
+
+<!-- UNFRAG-SAVE -->
+<Codeword name="UNFRAG-SAVE">
+  <Data name="unfrag" value="0"/>
+</Codeword>
+
+<!-- FORCE-GEN -->
+<Codeword name="FORCE-GEN">
+  <Data name="frcgen" value="1"/>
 </Codeword>

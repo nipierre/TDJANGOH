@@ -12,9 +12,9 @@ C***********************************************************************
 
       IMPLICIT DOUBLE PRECISION (A-H,O-Z)
       IMPLICIT INTEGER (I-N)
-      COMMON /HSPARM/ POLARI,HPOLAR,LLEPT,LQUA
+      COMMON /HSPARM/ POLARI,HPOLAR,LEPTID,LLEPT,LQUA
       COMMON /HSELAB/ SP,EELE,PELE,EPRO,PPRO
-      COMMON /HSIKP/  S,T,U,SS,TS,US,DKP,DKPS,DKQ,DKQS
+      COMMON /HSIKP/  S,T,UR,SS,TS,US,DKP,DKPS,DKQ,DKQS
       COMMON /HSCHNN/ ICHNN
       COMMON /DJPASS/ NTOT,NPASS,NFAILL
       COMMON /SPPASS/ NSOPH,NSPOUT,NFAILP,NSPACC
@@ -26,9 +26,10 @@ C***********************************************************************
       COMMON /S_PLIST/ P_S(2000,5), LLIST(2000), NP, Ideb
       COMMON/LUJETS/N,K(4000,5),P(4000,5),V(4000,5)
       REAL*4 P,V
-      COMMON /LEPTOU/ CUT(14),LST(40),PARL(30)
-     &,XSCH,YSCH,W2SCH,Q2SCH,USCH
-      REAL*4 CUT,PARL,XSCH,YSCH,W2SCH,Q2SCH,USCH
+      COMMON /LEPTOU/ CUT(14),LST(40),PARL(30),X,Y,W2,Q2,U
+C      REAL            CUT            ,PARL    ,X,Y,W2,Q2,U
+      COMMON /LUDAT1/ MSTU(200),PARU(200),MSTJ(200),PARJ(200)
+      REAL PARU,PARJ
       SAVE
       DIMENSION P_gam(4),P_nuc(4)
       LOGICAL FIRST
@@ -59,6 +60,7 @@ C...reset counters for failed trials
       DO 1 INF=1,10
  1    NFAILI(INF)=0
       NSPACC=0
+      NFLMAX=10
 
 C...Determine momentum of virtual incoming photon
       IF (ICHNN.LE.2) THEN
@@ -84,10 +86,17 @@ C...Determine momentum of incoming nucleon
       P_nuc(4)=EPRO
 
       N=0
+      NFAILS=0
 C...Generate hadronic final state
-      LST(21)=99
+  2   LST(21)=99
       CALL SOPHIA(L0,P_gam,P_nuc,Imode)
 c      call print_event(1)
+      IF (NP.EQ.0) THEN
+        NFAILS=NFAILS+1
+        IF (NFAILS.LT.NFLMAX) GOTO 2
+        MSTU(1)=0
+        GOTO 30
+      ENDIF
 C...Event passed fragmentation
       IF (NP.NE.0) THEN
         LST(21)=0
@@ -95,19 +104,12 @@ C...Event passed fragmentation
         NSOPH=NSOPH+1
         NSPACC=1
       ENDIF
-      IF (NP.EQ.0) NFAILP=NFAILP+1
 
-C...Transfer event to JETSET common block
-      IF (LLEPT.EQ.-1) THEN
-        LEPIN=11
-      ELSEIF (LLEPT.EQ.1) THEN
-        LEPIN=-11
-      ENDIF
       IP1=0
 C...Set initial state, first lepton:
       IP1=IP1+1
-      K(IP1,1)=201
-      K(IP1,2)=LEPIN
+      K(IP1,1)=21
+      K(IP1,2)=-LLEPT*10-LEPTID
       K(IP1,3)=0
       K(IP1,4)=0
       K(IP1,5)=0
@@ -115,10 +117,14 @@ C...Set initial state, first lepton:
       P(IP1,2)=0.
       P(IP1,3)=PELE
       P(IP1,4)=EELE
-      P(IP1,5)=ULMASS(LEPIN)
+      IF (K(IP1,2).EQ.-11.OR.K(IP1,2).EQ.11) THEN
+        P(IP1,5)= 0.000511
+      ELSE IF (K(IP1,2).EQ.-13.OR.K(IP1,2).EQ.13) THEN
+        P(IP1,5)= 0.10566
+      ENDIF
 C...then nucleon = proton
       IP1=IP1+1
-      K(IP1,1)=201
+      K(IP1,1)=21
       K(IP1,2)=2212
       K(IP1,3)=0
       K(IP1,4)=0
@@ -126,7 +132,7 @@ C...then nucleon = proton
       P(IP1,1)=0.
       P(IP1,2)=0.
       P(IP1,3)=-PPRO
-      P(IP1,5)=ULMASS(K(IP1,2))
+      P(IP1,5)=0.938272
       P(IP1,4)=EPRO
 
 C...Virtual boson (non-radiative case)
@@ -161,7 +167,7 @@ C...scattered lepton
       K(IP1,3)=1
       K(IP1,4)=JDAHEP(1,1)
       K(IP1,5)=JDAHEP(2,1)
-C...radiative photon 
+C...radiative photon
       IF (ICHNN.GT.2) THEN
         IP1=IP1+1
         DO 13 J=1,5
@@ -198,6 +204,12 @@ C...Hadronic final state from SOPHIA
       N=IP1
       RETURN
 
+ 30   CONTINUE
+C      CALL SPHLEV
+      N=0
+      NFAILP=NFAILP+1
+      RETURN
+
       END
 
 C***********************************************************************
@@ -213,11 +225,130 @@ C***********************************************************************
       COMMON/LUJETS/N,K(4000,5),P(4000,5),V(4000,5)
       REAL*4 P,V
       COMMON /LEPTOU/ CUT(14),LST(40),PARL(30),X,Y,W2,Q2,U
-      REAL*4 CUT,PARL,X,Y,W2,Q2,U
       SAVE
       N=0
       LST(21)=99
       NSPOUT=NSPOUT+1
+      RETURN
+      END
+
+C***********************************************************************
+
+      SUBROUTINE SPHLEV
+      IMPLICIT DOUBLE PRECISION (A-H,O-Z)
+      IMPLICIT INTEGER (I-N)
+Chs...Restore event record from SOPHIA when hadronization has failed
+      COMMON /HSPARM/ POLARI,HPOLAR,LEPTID,LLEPT,LQUA
+      COMMON /HSELAB/ SP,EELE,PELE,EPRO,PPRO
+      COMMON /LUJETS/ N,K(4000,5),P(4000,5),V(4000,5)
+      REAL*4 P,V
+      COMMON /LEPTOU/ CUT(14),LST(40),PARL(30),X,Y,W2,Q2,U
+      PARAMETER (NMXHEP=2000)
+      COMMON /HSCHNN/ ICHNN
+      COMMON /S_PLIST/ P_S(2000,5), LLIST(2000), NP, Ideb
+      double precision PHEP,VHKK
+      COMMON /HEPEVT/ NEVHEP,NHEP,ISTHEP(NMXHEP),IDHEP(NMXHEP),
+     &             JMOHEP(2,NMXHEP),JDAHEP(2,NMXHEP),
+     &             PHEP(5,NMXHEP),VHKK(4,NMXHEP)
+
+      N=0
+      N=N+1
+C...Set initial state, first lepton:
+      K(N,1)=21
+      K(N,2)=-LLEPT*10-LEPTID
+      K(N,3)=0
+      K(N,4)=0
+      K(N,5)=0
+      P(N,1)=0.
+      P(N,2)=0.
+      P(N,3)=PELE
+      IF (K(N,2).EQ.-11.OR.K(N,2).EQ.11) THEN
+        P(N,5)= 0.000511
+      ELSE IF (K(N,2).EQ.-13.OR.K(N,2).EQ.13) THEN
+        P(N,5)= 0.10566
+      ENDIF
+      P(N,4)=SQRT(P(N,3)**2+P(N,5)**2)
+
+C...then nucleon = proton
+      N=N+1
+      K(N,1)=21
+      K(N,2)=2212
+      K(N,3)=0
+      K(N,4)=0
+      K(N,5)=0
+      P(N,1)=0.
+      P(N,2)=0.
+      P(N,3)=-PPRO
+      P(N,5)=0.938272
+      P(N,4)=EPRO
+
+C...virtual boson (non-radiative case)
+      N=N+1
+      K(N,1)=21
+      K(N,2)=23
+      K(N,3)=1
+      K(N,4)=0
+      K(N,5)=0
+      IF(ICHNN.EQ.1.OR.ICHNN.EQ.2) THEN
+        DO 60 JG=1,4
+  60       P(N,JG)=P(1,JG)-PHEP(JG,1)
+        P(N,5)=-SQRT(Q2)
+      ELSE
+C...virtual boson (radiative case)
+        DO 50 JG=1,4
+  50       P(N,JG)=P(1,JG)-PHEP(JG,1)-PHEP(JG,3)
+        P(N,5)=-SQRT(Q2)
+      ENDIF
+
+C...scattered lepton
+      N=N+1
+      DO 20 J=1,5
+        P(N,J)=PHEP(J,1)
+   20 CONTINUE
+      K(N,1)=ISTHEP(1)
+      K(N,2)=IDHEP(1)
+      K(N,3)=1
+      K(N,4)=JDAHEP(1,1)
+      K(N,5)=JDAHEP(2,1)
+
+C...radiative photon
+      IF (ICHNN.GT.2) THEN
+        N=N+1
+        DO 30 J=1,5
+   30     P(N,J)=PHEP(J,3)
+        K(N,1)=ISTHEP(3)
+        K(N,2)=IDHEP(3)
+        K(N,3)=1
+        IF(ICHNN.EQ.6.OR.ICHNN.EQ.8.OR.ICHNN.EQ.12) THEN
+          K(N,3)=1
+        ELSE
+          K(N,3)=4
+        ENDIF
+        K(N,4)=JDAHEP(1,3)
+        K(N,5)=JDAHEP(2,3)
+      ENDIF
+
+
+C...Unfragmented hadronic final state
+C...scattered quark
+      N=N+1
+      DO 70 J=1,5
+   70 P(N,J)=PHEP(J,2)
+      K(N,1)=ISTHEP(2)
+      K(N,2)=IDHEP(2)
+      K(N,3)=1
+      K(N,4)=JDAHEP(1,2)
+      K(N,5)=JDAHEP(2,2)
+C...spectator
+      N=N+1
+      DO 80 J=1,5
+   80 P(N,J)=PHEP(J,4)
+      K(N,1)=ISTHEP(4)
+      K(N,2)=IDHEP(4)
+      K(N,3)=1
+      K(N,4)=JDAHEP(1,4)
+      K(N,5)=JDAHEP(2,4)
+
       RETURN
       END
 
@@ -242,7 +373,7 @@ C***********************************************************************
       DIMENSION P_gam(4),P_nuc(4)
 
        COMMON /S_RUN/ SQS, S, Q2MIN, XMIN, ZMIN, kb, kt, a1, a2, Nproc
-       COMMON /S_PLIST/ P(2000,5), LLIST(2000), NP, Ideb
+       COMMON /S_PLIST/ SP(2000,5), LLIST(2000), NP, Ideb
        COMMON /S_MASS1/ AM(49), AM2(49)
        COMMON /S_CHP/ S_LIFE(49), ICHP(49), ISTR(49), IBAR(49)
        COMMON /S_CSYDEC/ CBR(102), IDB(49), KDEC(612), LBARP(49)
@@ -299,7 +430,7 @@ C  calculate Lorentz boost and rotation
 C  Lorentz transformation into c.m. system
       DO I=1,4
         GamBet(I) = P_sum(I)/sqsm
-      ENDDO   
+      ENDDO
 C  calculate rotation angles
       IF(GamBet(4).lt.1.d5) then
 C  transform nucleon vector
@@ -332,7 +463,7 @@ C  rotation angle: nucleon moves along +z
       endif
 
 c... check for threshold:
-       sth = 1.1646D0       
+       sth = 1.1646D0
        if (s.lt.sth) then
         iphpi=iphpi+1
         if (iphpi.le.10) then
@@ -351,7 +482,7 @@ c... check for threshold:
 c*******************************************************************
 c decide which process occurs:                                   ***
 c (1) decay of resonance                                         ***
-c (2) direct pion production (interaction of photon with         *** 
+c (2) direct pion production (interaction of photon with         ***
 c     virtual pions in nucleon cloud) and diffractive scattering ***
 c (3) multipion production                                       ***
 c*******************************************************************
@@ -371,8 +502,8 @@ c... direct/multipion/diffractive scattering production channel:
         endif
        else if (Imode.eq.6) then
 c... Resonances:
-c... decide which resonance decays with ID=IRES in list:  
-c... IRESMAX = number of considered resonances = 9 so far 
+c... decide which resonance decays with ID=IRES in list:
+c... IRESMAX = number of considered resonances = 9 so far
        IRES = 0
  46    call dec_res2(eps_prime,IRES,IRESMAX,L0)
        Nproc = 10+IRES
@@ -396,36 +527,36 @@ c... consider only stable particles:
          if (abs(LLIST(i)).lt.10000) then
           istable = istable+1
           LLIST(istable) = LLIST(i)
-          P(istable,1) = P(i,1)
-          P(istable,2) = P(i,2)
-          P(istable,3) = P(i,3)
-          P(istable,4) = P(i,4)
-          P(istable,5) = P(i,5)
+          SP(istable,1) = SP(i,1)
+          SP(istable,2) = SP(i,2)
+          SP(istable,3) = SP(i,3)
+          SP(istable,4) = SP(i,4)
+          SP(istable,5) = SP(i,5)
          endif
   16    continue
         if (NP.gt.istable) then
          do i=istable+1,NP
           LLIST(i) = 0
-          P(i,1) = 0.
-          P(i,2) = 0.
-          P(i,3) = 0.
-          P(i,4) = 0.
-          P(i,5) = 0.
+          SP(i,1) = 0.
+          SP(i,2) = 0.
+          SP(i,3) = 0.
+          SP(i,4) = 0.
+          SP(i,5) = 0.
          enddo
         endif
-        NP = istable       
+        NP = istable
 
 c***********************************************
 c transformation from CM-system to lab-system: *
 c***********************************************
 
       DO I=1,NP
-        CALL PO_TRANS(P(I,1),P(I,2),P(I,3),COD,SID,COF,SIF,
+        CALL PO_TRANS(SP(I,1),SP(I,2),SP(I,3),COD,SID,COF,SIF,
      &    PC(1),PC(2),PC(3))
-        PC(4) = P(I,4)
+        PC(4) = SP(I,4)
         CALL PO_ALTRA(GamBet(4),GamBet(1),GamBet(2),GamBet(3),
      &    PC(1),PC(2),PC(3),PC(4),Ptot,
-     &    P(I,1),P(I,2),P(I,3),P(I,4))
+     &    SP(I,1),SP(I,2),SP(I,3),SP(I,4))
       ENDDO
 
       call check_event(Icount,Esum,PXsum,PYsum,PZsum,IQchr,IQbar,Irej)
@@ -453,11 +584,11 @@ c*******************************************************************
       IMPLICIT DOUBLE PRECISION (A-H,O-Z)
       IMPLICIT INTEGER (I-N)
       SAVE
-      COMMON /RES_PROP/ AMRES(9),SIG0(9),WIDTH(9), 
+      COMMON /RES_PROP/ AMRES(9),SIG0(9),WIDTH(9),
      +                    NAMPRES(0:9)
-      COMMON /RES_PROPp/ AMRESp(9), BGAMMAp(9),WIDTHp(9),  
+      COMMON /RES_PROPp/ AMRESp(9), BGAMMAp(9),WIDTHp(9),
      +                    RATIOJp(9),NAMPRESp(0:9)
-      COMMON /RES_PROPn/ AMRESn(9), BGAMMAn(9),WIDTHn(9),  
+      COMMON /RES_PROPn/ AMRESn(9), BGAMMAn(9),WIDTHn(9),
      +                    RATIOJn(9),NAMPRESn(0:9)
       COMMON /S_MASS1/ AM(49), AM2(49)
       CHARACTER NAMPRESp*6, NAMPRESn*6
@@ -507,7 +638,7 @@ C...for interface to DJANGOH
       SAVE
 
       CHARACTER NAMPRES*6
-      COMMON /RES_PROP/ AMRES(9), SIG0(9),WIDTH(9), 
+      COMMON /RES_PROP/ AMRES(9), SIG0(9),WIDTH(9),
      +                    NAMPRES(0:9)
 
       DIMENSION sig_res(9)
@@ -519,7 +650,7 @@ C...for interface to DJANGOH
 
 c*****************************************************
 C calculates crossection of N-gamma-interaction
-C (see thesis of J.Rachen, p.45ff and corrections 
+C (see thesis of J.Rachen, p.45ff and corrections
 C  report from 27/04/98, 5/05/98, 22/05/98 of J.Rachen)
 C*****************************************************
 c** Date: 20/01/98   **
@@ -531,7 +662,7 @@ c
 c x = eps_prime in GeV
 c       x = eps_prime
        s = pm*pm+2.D0*pm*x
-       
+
        if (s.lt.sth) then
 c       if (x.lt.0.15275) then
         crossection = 0.
@@ -549,7 +680,7 @@ c only multipion production:
 
 c****************************
 c RESONANCES:
-c****************************  
+c****************************
 
       cross_res = 0.D0
 
@@ -566,7 +697,7 @@ c****************************
 
 c****************************
 c DIRECT CHANNEL:
-c****************************  
+c****************************
 
        if((x.gt.0.1D0).and.(x.lt.0.6D0)) then
          cross_dir1 = singleback(x)
@@ -581,12 +712,12 @@ c****************************
 
 c****************************
 c FRAGMENTATION 2:
-c**************************** 
- 10   continue 
+c****************************
+ 10   continue
        if (NL0.eq.13) then
-        cross_frag2 = 80.3D0*Ef(x,0.5D0,0.1D0)*(s**(-0.34D0)) 
+        cross_frag2 = 80.3D0*Ef(x,0.5D0,0.1D0)*(s**(-0.34D0))
        else if (NL0.eq.14) then
-c        cross_frag2 = 72.3*Ef(x,0.5D0,0.1D0)*(s**(-0.34)) 
+c        cross_frag2 = 72.3*Ef(x,0.5D0,0.1D0)*(s**(-0.34))
         cross_frag2 = 60.2D0*Ef(x,0.5D0,0.1D0)*(s**(-0.34D0))
        endif
 
@@ -605,7 +736,7 @@ c****************************************************
 
 c****************************
 c DIFFRACTIVE SCATTERING:
-c****************************  
+c****************************
 
         ss1 = ((x-.85D0)**.75D0)/.64D0
         ss2 = 74.1D0*(x**(-.44D0))+62.D0*(s**.08D0)
@@ -696,7 +827,7 @@ c****************************
         STOP
 
        endif
-      
+
        END
 
 
@@ -710,8 +841,8 @@ c****************************
 
 c***************************************************************************
 c calculates Breit-Wigner cross section of a resonance with width Gamma [GeV],
-c mass DMM [GeV], max. cross section sigma_0 [mubarn] and total mass of the 
-c interaction s [GeV] 
+c mass DMM [GeV], max. cross section sigma_0 [mubarn] and total mass of the
+c interaction s [GeV]
 c***************************************************************************
        pm = 0.93827D0
        s = pm*pm+2.D0*pm*eps_prime
@@ -720,7 +851,7 @@ c***************************************************************************
      &              *(s/eps_prime**2)*gam2s/((s-DMM*DMM)**2+gam2s)
 
        RETURN
-       
+
        END
 
 
@@ -781,8 +912,8 @@ c***************************************************************************
 
 c*** decides which process takes place at eps_prime ********
 c (6) excitation/decay of resonance                      ***
-c (2) direct pion production: N\gamma --> N \pi          *** 
-c (3) direct pion production: N\gamma --> \Delta \pi     *** 
+c (2) direct pion production: N\gamma --> N \pi          ***
+c (3) direct pion production: N\gamma --> \Delta \pi     ***
 c (1) diffractive scattering: N\gamma --> N \rho         ***
 c (4) diffractive scattering: N\gamma --> N \omega       ***
 c (0) multipion production (fragmentation)               ***
@@ -897,7 +1028,7 @@ c ...      particle LB is a resonance:
          E1 = AMD-E2
           if (E1.lt.XLIMRES(LA).or.E2.lt.XLIMRES(LB)) nbad = 1
          endif
-c ...     both particles are NOT resonances: -> error !  
+c ...     both particles are NOT resonances: -> error !
          if (FRES(LA).eq.0.D0.and.FRES(LB).eq.0.D0) then
           print*,'SM1 + SM2 > AMD in PROC_TWOPART',SM1,SM2,AMD,LA,LB
           STOP
@@ -910,10 +1041,10 @@ c ...     both particles are NOT resonances: -> error !
         Pres(2,4) = E2
         Pres(1,5) = SM1
         Pres(2,5) = SM2
-        
-        
+
+
 C *********************************************************
-c theta is scattering angle in CM frame: 
+c theta is scattering angle in CM frame:
         r = RNDM(0)
         P1Z= PC*costheta
         P2Z=-PC*costheta
@@ -944,7 +1075,7 @@ c theta is scattering angle in CM frame:
        endif
 
         RETURN
- 
+
         END
 
 
@@ -1211,11 +1342,11 @@ c... determine the energy range of the resonance:
 
        COMMON /S_RESp/ CBRRES1p(18),CBRRES2p(36),CBRRES3p(26),
      +  RESLIMp(36),ELIMITSp(9),KDECRES1p(90),KDECRES2p(180),
-     +  KDECRES3p(130),IDBRES1p(9),IDBRES2p(9),IDBRES3p(9) 
+     +  KDECRES3p(130),IDBRES1p(9),IDBRES2p(9),IDBRES3p(9)
        COMMON /S_RESn/ CBRRES1n(18),CBRRES2n(36),CBRRES3n(22),
      +  RESLIMn(36),ELIMITSn(9),KDECRES1n(90),KDECRES2n(180),
-     +  KDECRES3n(110),IDBRES1n(9),IDBRES2n(9),IDBRES3n(9) 
-       COMMON /S_PLIST/ P(2000,5), LLIST(2000), NP, Ideb
+     +  KDECRES3n(110),IDBRES1n(9),IDBRES2n(9),IDBRES3n(9)
+       COMMON /S_PLIST/ SP(2000,5), LLIST(2000), NP, Ideb
 c       COMMON /S_CNAM/ NAMP (0:49)
 c      CHARACTER NAMP*6, NAMPRESp*6, NAMPRESn*6
 
@@ -1248,7 +1379,7 @@ c ... proton is incident nucleon:
         else if (IRANGE.eq.3) then
          LA = KDECRES3p(5*(IPROC-1)+3)
          LB = KDECRES3p(5*(IPROC-1)+4)
-        else 
+        else
           print*,'error in res_decay3'
         endif
         else if (L0.eq.14) then
@@ -1262,7 +1393,7 @@ c ... neutron is incident nucleon:
         else if (IRANGE.eq.3) then
          LA = KDECRES3n(5*(IPROC-1)+3)
          LB = KDECRES3n(5*(IPROC-1)+4)
-        else 
+        else
           print*,'error in res_decay3'
         endif
 
@@ -1276,16 +1407,16 @@ c ... neutron is incident nucleon:
 
 c... sample scattering angle:
        call scatangle(anglescat,IRES,L0)
-       
+
 c ... 2-particle decay:
-        call proc_twopart(LA,LB,sqrt(s),LLIST,P,anglescat,nbad)
+        call proc_twopart(LA,LB,sqrt(s),LLIST,SP,anglescat,nbad)
 
         RETURN
 
         END
 
 c***********************************************************
-C calculates functions for crossection of direct channel 
+C calculates functions for crossection of direct channel
 c NOT isospin-corrected, simply a samelsurium of functions
 c x is eps_prime in GeV (see main program)
 C (see thesis of J.Rachen, p.45ff)
@@ -1300,7 +1431,7 @@ c
        DOUBLE PRECISION FUNCTION singleback(x)
 c****************************
 c SINGLE PION CHANNEL
-c****************************  
+c****************************
       IMPLICIT DOUBLE PRECISION (A-H,O-Z)
       IMPLICIT INTEGER (I-N)
 
@@ -1343,7 +1474,7 @@ c** Date: 16/02/98   **
 c** author: A.Muecke **
 c**********************
 
-       COMMON /S_PLIST/ P(2000,5), LLIST(2000), NP, Ideb
+       COMMON /S_PLIST/ SP(2000,5), LLIST(2000), NP, Ideb
 
 c ... use rejection method for sampling:
        LA = LLIST(1)
@@ -1351,7 +1482,7 @@ c ... use rejection method for sampling:
   10   continue
        r = RNDM(0)
 c*** sample anglescat random between -1 ... 1 **
-      anglescat = 2.D0*(r-0.5D0) 
+      anglescat = 2.D0*(r-0.5D0)
 c ... distribution is isotropic for other than one-pion decays:
        if ((LA.eq.13.or.LA.eq.14).and.LB.ge.6.and.LB.le.8) then
         prob = probangle(IRES,L0,anglescat)
@@ -1363,7 +1494,7 @@ c ... distribution is isotropic for other than one-pion decays:
           RETURN
         else
          goto 10
-       endif       
+       endif
  12   continue
 
        END
@@ -1381,32 +1512,32 @@ c IRES and incident nucleon L0 ;                                   **
 c z is cosine of scattering angle in CMF frame                     **
 c********************************************************************
 
-       if (IRES.eq.4.or.IRES.eq.5.or.IRES.eq.2) then  
-c ... N1535 andf N1650 decay isotropically. 
-        probangle = 0.5D0 
+       if (IRES.eq.4.or.IRES.eq.5.or.IRES.eq.2) then
+c ... N1535 andf N1650 decay isotropically.
+        probangle = 0.5D0
         return
        endif
 
        if (IRES.eq.1) then
-c ... for D1232:  
+c ... for D1232:
         probangle =  0.636263D0 - 0.408790D0*z*z
         return
        endif
 
        if (IRES.eq.3.and.L0.eq.14) then
-c ... for N1520 and incident n: 
+c ... for N1520 and incident n:
         probangle =  0.673669D0 - 0.521007D0*z*z
         return
        endif
 
        if (IRES.eq.3.and.L0.eq.13) then
-c ... for N1520 and incident p: 
+c ... for N1520 and incident p:
         probangle =  0.739763D0 - 0.719288D0*z*z
         return
        endif
 
        if (IRES.eq.6.and.L0.eq.14) then
-c ... for N1680 (more precisely: N1675) and incident n: 
+c ... for N1680 (more precisely: N1675) and incident n:
         q=z*z
         probangle = 0.254005D0 + 1.427918D0*q - 1.149888D0*q*q
         return
@@ -1414,21 +1545,21 @@ c ... for N1680 (more precisely: N1675) and incident n:
 
 
        if (IRES.eq.6.and.L0.eq.13) then
-c ... for N1680 and incident p: 
+c ... for N1680 and incident p:
         q=z*z
         probangle = 0.189855D0 + 2.582610D0*q - 2.753625D0*q*q
         return
        endif
 
       if (IRES.eq.7) then
-c ... for D1700:  
+c ... for D1700:
        probangle =  0.450238D0 + 0.149285D0*z*z
        return
       endif
 
 
       if (IRES.eq.8) then
-c ... for D1905:  
+c ... for D1905:
        q=z*z
        probangle = 0.230034D0 + 1.859396D0*q - 1.749161D0*q*q
        return
@@ -1436,7 +1567,7 @@ c ... for D1905:
 
 
       if (IRES.eq.9) then
-c ... for D1950:  
+c ... for D1950:
        q=z*z
        probangle = 0.397430D0 - 1.498240D0*q + 5.880814D0*q*q
      &                - 4.019252D0*q*q*q
@@ -1474,7 +1605,7 @@ C...........................................................
          GAUSS = 0.D0
 c         print*,'A=B in integration routine'
          RETURN
-        endif 
+        endif
 	XM = 0.5D0*(B+A)
 	XR = 0.5D0*(B-A)
 	SS = 0.D0
@@ -1499,18 +1630,18 @@ c***************************
       IMPLICIT DOUBLE PRECISION (A-H,O-Z)
       IMPLICIT INTEGER (I-N)
       SAVE
-       COMMON /S_PLIST/ P(2000,5), LLIST(2000), NP, Ideb
+       COMMON /S_PLIST/ SP(2000,5), LLIST(2000), NP, Ideb
        COMMON /S_CSYDEC/ CBR(102), IDB(49), KDEC(612), LBARP(49)
       COMMON /S_MASS1/ AM(49), AM2(49)
       COMMON /S_CHP/  S_LIFE(49), ICHP(49), ISTR(49), IBAR(49)
       COMMON /S_CNAM/ NAMP (0:49)
 
       CHARACTER NAMPRESp*6
-      COMMON /RES_PROPp/ AMRESp(9), BGAMMAp(9),WIDTHp(9),  
+      COMMON /RES_PROPp/ AMRESp(9), BGAMMAp(9),WIDTHp(9),
      +                    RATIOJp(9),NAMPRESp(0:9)
 
       CHARACTER NAMPRESn*6
-      COMMON /RES_PROPn/ AMRESn(9), BGAMMAn(9),WIDTHn(9),  
+      COMMON /RES_PROPn/ AMRESn(9), BGAMMAn(9),WIDTHn(9),
      +                    RATIOJn(9),NAMPRESn(0:9)
 
        COMMON /S_RESp/ CBRRES1p(18),CBRRES2p(36),CBRRES3p(26),
@@ -1527,27 +1658,27 @@ c       COMMON /LCH/ LCH(49)
 
 c       DATA LCH/0,1,-1,1,-1,0,1,-1,1,-1,0,0,1,5*0,1,5*0,1,-1,0,
 c     +     1,-1,0,0,0,0,1,0,-1,0,-1,0,2,1,0,-1,1,0,-1,0,-1,-1/
-      DATA FRES /0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 
+      DATA FRES /0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
      +    1,1,1,0,0,0,0,1,1,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,1/
       DATA XLIMRES /0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.
-     +     ,0.,0.,0.,0.,0.,0.,0.,0.,0.,0., 
+     +     ,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,
      +    .275,.275,.28,0.,0.,0.,0.,.41,.9954,0.,0.,0.,0.,0.,0.,
      +     1.078,1.08,1.078,1.08,0,0,0,0,0,1/
       DATA AMRESp / 1.231,1.440,1.515,1.525,1.675,1.680,1.690,
      +           1.895,1.950/
       DATA AMRESn / 1.231,1.440,1.515,1.525,1.675,1.675,1.690,
      +           1.895,1.950/
-      DATA IDBRES1p / 
+      DATA IDBRES1p /
      +  1,3,5,7,9,11,13,15,17/
-      DATA IDBRES2p / 
+      DATA IDBRES2p /
      +  0,1,6,11,14,19,24,27,32/
-      DATA IDBRES3p / 
+      DATA IDBRES3p /
      +  0,0,1,0,3,9,16,21,26/
-      DATA IDBRES1n / 
+      DATA IDBRES1n /
      +  1,3,5,7,9,11,13,15,17/
-      DATA IDBRES2n / 
+      DATA IDBRES2n /
      +  0,1,6,11,14,19,24,27,32/
-      DATA IDBRES3n / 
+      DATA IDBRES3n /
      +  0,0,1,0,3,0,9,14,19/
 
       DATA CBRRES1p /
@@ -1855,11 +1986,11 @@ C**********************************************************************
 C
 C     simple simulation of low-energy interactions (R.E. 03/98)
 C
-C     changed to simulate superposition of reggeon and pomeron exchange 
+C     changed to simulate superposition of reggeon and pomeron exchange
 C     interface to Lund / JETSET 7.4 fragmentation
 C                                                  (R.E. 08/98)
 C
-C     
+C
 C
 C     input: ip1    incoming particle
 C                   13 - p
@@ -1868,9 +1999,9 @@ C            Ecm    CM energy in GeV
 C            Imode  interaction mode
 C                   0 - multi-pion fragmentation
 C                   5 - fragmentation in resonance region
-C                   1 - quasi-elastic / diffractive interaction 
+C                   1 - quasi-elastic / diffractive interaction
 C                       (p/n-gamma  --> n/p rho)
-C                   4 - quasi-elastic / diffractive interaction 
+C                   4 - quasi-elastic / diffractive interaction
 C                       (p/n-gamma  --> n/p omega)
 C                   2 - direct interaction (p/n-gamma  --> n/p pi)
 C                   3 - direct interaction (p/n-gamma  --> delta pi)
@@ -1884,7 +2015,7 @@ C**********************************************************************
       IMPLICIT INTEGER (I-N)
 
       COMMON /S_RUN/ SQS, S, Q2MIN, XMIN, ZMIN, kb, kt, a1, a2, Nproc
-      COMMON /S_PLIST/ P(2000,5), LLIST(2000), NP, Ideb
+      COMMON /S_PLIST/ SP(2000,5), LLIST(2000), NP, Ideb
       COMMON /S_CHP/ S_LIFE(49), ICHP(49), ISTR(49), IBAR(49)
       COMMON /S_MASS1/ AM(49), AM2(49)
       COMMON /S_CFLAFR/ PAR(8)
@@ -1983,17 +2114,17 @@ C  kinematics
         phi = 6.28318530717959D0*RNDM(0)
 
         LLIST(1) = ipa
-        P(1,4) = e3
-        P(1,1) = SIN(phi)*pt
-        P(1,2) = COS(phi)*pt
-        P(1,3) = pl
-        P(1,5) = am_a
+        SP(1,4) = e3
+        SP(1,1) = SIN(phi)*pt
+        SP(1,2) = COS(phi)*pt
+        SP(1,3) = pl
+        SP(1,5) = am_a
         LLIST(2) = ipb
-        P(2,1) = -P(1,1)
-        P(2,2) = -P(1,2)
-        P(2,3) = -P(1,3)
-        P(2,4) = Ecm - P(1,4)
-        P(2,5) = am_b
+        SP(2,1) = -SP(1,1)
+        SP(2,2) = -SP(1,2)
+        SP(2,3) = -SP(1,3)
+        SP(2,4) = Ecm - SP(1,4)
+        SP(2,5) = am_b
         np = 2
 
         call DECSIB
@@ -2076,17 +2207,17 @@ C  kinematics
         phi = 6.28318530717959D0*RNDM(0)
 
         LLIST(1) = ipa
-        P(1,4) = e3
-        P(1,1) = SIN(phi)*pt
-        P(1,2) = COS(phi)*pt
-        P(1,3) = pl
-        P(1,5) = am_a
+        SP(1,4) = e3
+        SP(1,1) = SIN(phi)*pt
+        SP(1,2) = COS(phi)*pt
+        SP(1,3) = pl
+        SP(1,5) = am_a
         LLIST(2) = ipb
-        P(2,1) = -P(1,1)
-        P(2,2) = -P(1,2)
-        P(2,3) = -P(1,3)
-        P(2,4) = Ecm - P(1,4)
-        P(2,5) = am_b
+        SP(2,1) = -SP(1,1)
+        SP(2,2) = -SP(1,2)
+        SP(2,3) = -SP(1,3)
+        SP(2,4) = Ecm - SP(1,4)
+        SP(2,5) = am_b
         np = 2
 
         call DECSIB
@@ -2142,7 +2273,7 @@ C  simulate reggeon (one-string topology)
             enddo
             print *,'gamma_h: simulation of reggeon impossible:',ip1,ip2
             goto 100
-            
+
  200        continue
 
             np = 0
@@ -2155,7 +2286,7 @@ C  simulate reggeon (one-string topology)
             phi = 6.2831853D0*RNDM(0)
             px = pt*COS(phi)
             py = pt*SIN(phi)
-            
+
             pz = SQRT(ee**2-px**2-py**2)
             call lund_put(1,Ifl1a,px,py,pz,ee)
             px = -px
@@ -2168,7 +2299,7 @@ C  simulate reggeon (one-string topology)
 
             call lund_frag(Ecm,NP)
             if(NP.lt.0) then
-              if(Ideb.ge.5) 
+              if(Ideb.ge.5)
      &          print *,' gamma_h: rejection (1) by lund_frag, sqs:',Ecm
               NP = 0
               goto 100
@@ -2176,9 +2307,9 @@ C  simulate reggeon (one-string topology)
 
             do i=1,NP
               call lund_get(i,LLIST(i),
-     &                      P(i,1),P(i,2),P(i,3),P(i,4),P(i,5))
+     &                      SP(i,1),SP(i,2),SP(i,3),SP(i,4),SP(i,5))
             enddo
-              
+
 
 C  simulate pomeron (two-string topology)
 
@@ -2306,7 +2437,7 @@ C  simulate pomeron (two-string topology)
 
             call lund_frag(Ecm,NP)
             if(NP.lt.0) then
-              if(Ideb.ge.5) 
+              if(Ideb.ge.5)
      &          print *,' gamma_h: rejection (2) by lund_frag, sqs:',Ecm
               NP = 0
               prob_reg = prob_reg+0.1D0
@@ -2315,9 +2446,9 @@ C  simulate pomeron (two-string topology)
 
             do i=1,NP
               call lund_get(i,LLIST(i),
-     &                      P(i,1),P(i,2),P(i,3),P(i,4),P(i,5))
+     &                      SP(i,1),SP(i,2),SP(i,3),SP(i,4),SP(i,5))
             enddo
-              
+
           endif
 
           if(Ideb.ge.10) then
@@ -2332,12 +2463,12 @@ C  leading baryon/meson effect
 
           do j=1,np
             if(((LLIST(J).eq.13).or.(LLIST(J).eq.14))
-     &         .and.(p(j,3).lt.0.D0)) then
-              if(rndm(0).lt.(2.D0*p(j,4)/Ecm)**2) goto 100
+     &         .and.(SP(j,3).lt.0.D0)) then
+              if(rndm(0).lt.(2.D0*SP(j,4)/Ecm)**2) goto 100
             endif
             if((LLIST(J).ge.6).and.(LLIST(J).le.8)
-     &         .and.(p(j,3).lt.-0.4D0)) then
-              if(rndm(0).lt.(2.D0*p(j,4)/Ecm)**2) goto 100
+     &         .and.(SP(j,3).lt.-0.4D0)) then
+              if(rndm(0).lt.(2.D0*SP(j,4)/Ecm)**2) goto 100
             endif
           enddo
 
@@ -2381,7 +2512,7 @@ C  remove elastic/diffractive channels
               if(LLIST(J).eq.ibb_2) imb_2 = 1
               imul = imul+1
             endif
-          enddo 
+          enddo
 
           if(imul.eq.2) then
             if(ima_0*imb_0.eq.1) goto 100
@@ -2422,7 +2553,7 @@ C  remove direct channels
               iba_3 = 14
               ibb_3 = 23
             endif
-  
+
             do j=1,np
               l1 = abs(LLIST(J))
               if(l1.lt.10000) then
@@ -2436,7 +2567,7 @@ C  remove direct channels
                 if(LLIST(J).eq.ibb_3) imb_3 = 1
               endif
             enddo
-            
+
             if(ima_0*imb_0.eq.1) goto 100
             if(ima_1*imb_1.eq.1) goto 100
             if(ima_2*imb_2.eq.1) goto 100
@@ -2520,8 +2651,8 @@ C  incoming neutron
 C  N gamma --> N pi+ pi-
             if(ima_0*ima_1*ima_2.eq.1) then
               Elog = LOG(Ecm)
-              Elog_1 = LOG(E_ref_1) 
-              Elog_2 = LOG(E_ref_2) 
+              Elog_1 = LOG(E_ref_1)
+              Elog_2 = LOG(E_ref_2)
               prob = 0.1D0*4.D0/(Elog_2-Elog_1)**2
      &                   *(Elog-Elog_1)*(Elog_2-Elog)
 
@@ -2580,8 +2711,8 @@ C  incoming neutron
 C  N gamma --> N pi+ pi- pi0
             if(ima_0*ima_1*ima_2*imb_1.eq.1) then
               Elog = LOG(Ecm)
-              Elog_2 = LOG(E_ref_2) 
-              Elog_1 = LOG(E_ref_1) 
+              Elog_2 = LOG(E_ref_2)
+              Elog_1 = LOG(E_ref_1)
               prob = 0.1D0*4.D0/(Elog_2-Elog_1)**2
      &                   *(Elog-Elog_1)*(Elog_2-Elog)
 
@@ -2616,14 +2747,14 @@ C  N gamma --> N pi+ pi- pi0
             do j=1,ND
               LLIST(j) = LL(j)
               do k=1,5
-                P(j,k) = P_dec(j,k)
+                SP(j,k) = P_dec(j,k)
               enddo
               if(((LLIST(j).eq.13).or.(LLIST(j).eq.14))
-     &           .and.(P(j,3).lt.0.D0)) Iflip = 1
+     &           .and.(SP(j,3).lt.0.D0)) Iflip = 1
             enddo
             if(Iflip.ne.0) then
               do j=1,ND
-                P(j,3) = -P(j,3)
+                SP(j,3) = -SP(j,3)
               enddo
             endif
             NP = ND
@@ -2664,7 +2795,7 @@ C**********************************************************************
       IMPLICIT INTEGER (I-N)
 
       COMMON /S_RUN/ SQS, S, Q2MIN, XMIN, ZMIN, kb, kt, a1, a2, Nproc
-       COMMON /S_PLIST/ P(2000,5), LLIST(2000), NP, Ideb
+       COMMON /S_PLIST/ SP(2000,5), LLIST(2000), NP, Ideb
        COMMON /S_CSYDEC/ CBR(102), IDB(49), KDEC(612), LBARP(49)
       COMMON /S_CHP/ S_LIFE(49), ICHP(49), ISTR(49), IBAR(49)
       COMMON /S_MASS1/ AM(49), AM2(49)
@@ -2674,7 +2805,7 @@ C**********************************************************************
       SAVE
 
       if(iout.gt.0) then
-       
+
         print *,' --------------------------------------------------'
 
         if(Nproc.eq.1) then
@@ -2704,10 +2835,10 @@ C**********************************************************************
           l1 = abs(LLIST(J))
           l = mod(llist(j),10000)
           if(l1.lt.10000) then
-            px = px + P(j,1)
-            py = py + P(j,2)
-            pz = pz + P(j,3)
-            ee = ee + P(j,4)
+            px = px + SP(j,1)
+            py = py + SP(j,2)
+            pz = pz + SP(j,3)
+            ee = ee + SP(j,4)
             ichar = ichar+sign(1,l)*ICHP(iabs(l))
             ibary = ibary+sign(1,l)*IBAR(iabs(l))
           endif
@@ -2717,7 +2848,7 @@ C**********************************************************************
             code(1:6) = namp(iabs(l))
             if (l .lt. 0) code(7:9) = 'bar'
             write (6,120) i0,CODE,l1*sign(1,l),sign(1,l)*ICHP(iabs(l)),
-     &        (P(j,k),k=1,4)
+     &        (SP(j,k),k=1,4)
           endif
         enddo
         write (6,122) '   sum: ',px,py,pz,ee
@@ -2744,7 +2875,7 @@ C***********************************************************************
       IMPLICIT INTEGER (I-N)
 
       COMMON /S_RUN/ SQS, S, Q2MIN, XMIN, ZMIN, kb, kt, a1, a2, Nproc
-       COMMON /S_PLIST/ P(2000,5), LLIST(2000), NP, Ideb
+       COMMON /S_PLIST/ SP(2000,5), LLIST(2000), NP, Ideb
        COMMON /S_CSYDEC/ CBR(102), IDB(49), KDEC(612), LBARP(49)
       COMMON /S_CHP/ S_LIFE(49), ICHP(49), ISTR(49), IBAR(49)
       COMMON /S_MASS1/ AM(49), AM2(49)
@@ -2759,7 +2890,7 @@ C***********************************************************************
       ichar = 0
       ibary = 0
       Iprint = 0
-      
+
       PLscale = Esum
       PTscale = 1.D0
 
@@ -2767,10 +2898,10 @@ C***********************************************************************
         l1 = abs(LLIST(J))
         l = mod(llist(j),10000)
         if(l1.lt.10000) then
-          px = px + P(j,1)
-          py = py + P(j,2)
-          pz = pz + P(j,3)
-          ee = ee + P(j,4)
+          px = px + SP(j,1)
+          py = py + SP(j,2)
+          pz = pz + SP(j,3)
+          ee = ee + SP(j,4)
 c          xm2 = (P(j,4)-P(j,3))*(P(j,4)+P(j,3))
 c     &         -P(j,1)**2-P(j,2)**2
 c          if(ABS(xm2-P(j,5)**2)/MAX(AM(l1),1.D0).gt.0.1D0) then
@@ -2903,7 +3034,7 @@ C***********************************************************************
       IMPLICIT INTEGER (I-N)
 
        COMMON /S_CSYDEC/ CBR(102), IDB(49), KDEC(612), LBARP(49)
-       COMMON /S_PLIST/ P(2000,5), LLIST(2000), NP, Ideb
+       COMMON /S_PLIST/ SP(2000,5), LLIST(2000), NP, Ideb
       COMMON /S_PLIST1/ LLIST1(2000)
       SAVE
 
@@ -2917,14 +3048,14 @@ C***********************************************************************
          L= LLIST(NN)
          IF (IDB(IABS(L)) .GT. 0)  THEN
             DO K=1,5
-              P0(K) = P(NN,K)
+              P0(K) = SP(NN,K)
             ENDDO
             ND = 0
             CALL DECPAR (L,P0,ND,LL,PD)
             LLIST(NN) = LLIST(NN)+ISIGN(10000,LLIST(NN))
             DO J=1,ND
                DO K=1,5
-                  P(NP+J,K) = PD(J,K)
+                  SP(NP+J,K) = PD(J,K)
                ENDDO
                LLIST(NP+J)=LL(J)
                LLIST1(NP+J)=NN
@@ -2943,14 +3074,14 @@ C
 C   This subroutine generates the decay of a particle
 C   with ID = LA, and 5-momentum P0(1:5)
 C   into ND particles of 5-momenta P(j,1:5) (j=1:ND)
-C 
+C
 C   If the initial particle code is LA=0
 C   then ND and LL(1:ND) are considered as  input and
 C   the routine generates a phase space decay into ND
 C   particles of codes LL(1:nd)
 C
 C   (taken from SIBYLL 1.7, muon decay corrected, R.E. 04/98)
-C 
+C
 C***********************************************************************
 
       IMPLICIT DOUBLE PRECISION (A-H,O-Z)
@@ -3082,9 +3213,9 @@ C...Lorentz transform decay products to lab frame
 
 C...Weak decays
         IF (MAT .EQ. 1)  THEN
-           F1=P(2,4)*P(3,4)-P(2,1)*P(3,1)-P(2,2)*P(3,2)-P(2,3)*P(3,3)   
+           F1=P(2,4)*P(3,4)-P(2,1)*P(3,1)-P(2,2)*P(3,2)-P(2,3)*P(3,3)
            IF (MBST.EQ.1)  WT = P0(5)*P(1,4)*F1
-           IF (MBST.EQ.0)  
+           IF (MBST.EQ.0)
      +     WT=F1*(P(1,4)*P0(4)-P(1,1)*P0(1)-P(1,2)*P0(2)-P(1,3)*P0(3))
            WTMAX = P0(5)**4/16.D0
            IF(WT.LT.RNDM(0)*WTMAX)   GOTO 240
@@ -3249,7 +3380,7 @@ C********************************************************************
 C
 C    random number selection from gamma distribution
 C    F(X) = ALAM**ETA*X**(ETA-1)*EXP(-ALAM*X) / GAM(ETA)
-C       
+C
 C    (taken from PHOJET v1.12, R.E. 08/98)
 C
 C********************************************************************
@@ -3392,7 +3523,7 @@ C***********************************************************************
 
       COMMON/LUJETS/N,K(4000,5),P(4000,5),V(4000,5)
       REAL P,V
-      COMMON/LUDAT1/MSTU(200),PARU(200),MSTJ(200),PARJ(200) 
+      COMMON/LUDAT1/MSTU(200),PARU(200),MSTJ(200),PARJ(200)
       REAL PARU,PARJ
       COMMON/LUDAT3/MDCY(500,3),MDME(2000,2),BRAT(2000),KFDP(2000,5)
       REAL BRAT
@@ -3449,7 +3580,7 @@ C***********************************************************************
 
       COMMON/LUJETS/N,K(4000,5),P(4000,5),V(4000,5)
       REAL P,V
-      COMMON/LUDAT1/MSTU(200),PARU(200),MSTJ(200),PARJ(200) 
+      COMMON/LUDAT1/MSTU(200),PARU(200),MSTJ(200),PARJ(200)
       REAL PARU,PARJ
       COMMON/LUDAT3/MDCY(500,3),MDME(2000,2),BRAT(2000),KFDP(2000,5)
       REAL BRAT
@@ -3470,7 +3601,7 @@ C  convert particle ID
       IFL = ICON_PDG_SIB(Il)
 
       END
-      
+
       INTEGER FUNCTION ICON_PDG_SIB(ID)
 C************************************************************************
 C
@@ -3610,7 +3741,7 @@ CHS changed:
 
       IF(IDPDG.EQ.80000) THEN
         ICON_PDG_SIB = 13
-      ELSE  
+      ELSE
 *       IF(IDA.EQ.411) THEN
 *         IDPDG = SIGN(311,IDPDG)
 *       ELSE IF(IDA.EQ.421) THEN
@@ -3860,4 +3991,3 @@ C***********************************************************************
       RNDM = DBLE(RLU(IDUMMY))
 
       END
-
