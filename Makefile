@@ -7,7 +7,7 @@ all: src test utils
 src::
 	@echo 'Building libDjangoh.so..'
 	@$(MAKE) --no-print-directory -C $@
-	@echo "$(OK_STRING)"
+	@echo "\x1b[0m[OK]\x1b[32;01m"
 
 test::
 	@echo 'Building test programs..'
