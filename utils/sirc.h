@@ -165,3 +165,5 @@ int fId;
 double fNu_max[3][14];
 double fNu_min[3][14];
 int fDIScuts;
+
+int fIsMu, fIsE;

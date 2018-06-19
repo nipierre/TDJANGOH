@@ -91,6 +91,9 @@ int main(int argc,char *argv[])
     fNu_min[0][i] = sqrt(pow(3,2)+pow(fM_pi,2))/fZrange[i];
   }
 
+  fIsMu = 0;
+  fIsE = 0;
+
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
 //                       SINGLE FILES
@@ -187,6 +190,11 @@ int main(int argc,char *argv[])
         {
           E_prime = Eh;
           nu = E - E_prime;
+          if(!fIsMu && !fIsE)
+          {
+            if(abs(id)==11) fIsE = 1;
+            else fIsMu = 1;
+          }
         }
         else if(id == 211)//pi+
         {
@@ -456,6 +464,11 @@ int main(int argc,char *argv[])
         {
           E_prime = Eh;
           nu = E - E_prime;
+          if(!fIsMu && !fIsE)
+          {
+            if(abs(id)==11) fIsE = 1;
+            else fIsMu = 1;
+          }
         }
         else if(id == 211)//pi+
         {
@@ -731,6 +744,11 @@ int main(int argc,char *argv[])
           {
             E_prime = Eh;
             nu = E - E_prime;
+            if(!fIsMu && !fIsE)
+            {
+              if(abs(id)==11) fIsE = 1;
+              else fIsMu = 1;
+            }
           }
           else if(id == 211)//pi+
           {
@@ -998,6 +1016,11 @@ int main(int argc,char *argv[])
           {
             E_prime = Eh;
             nu = E - E_prime;
+            if(!fIsMu && !fIsE)
+            {
+              if(abs(id)==11) fIsE = 1;
+              else fIsMu = 1;
+            }
           }
           else if(id == 211)//pi+
           {
@@ -2049,7 +2072,8 @@ int main(int argc,char *argv[])
               H_d[c][i][j]->Draw("SAMEPA");
               H_d[c][i][j]->GetXaxis()->SetLimits(-0.05,1.05);
               H_d[c][i][j]->SetMinimum(0.85);
-              H_d[c][i][j]->SetMaximum(1.65);
+              if(fIsMu) H_d[c][i][j]->SetMaximum(1.65);
+              else if(fIsE) H_d[c][i][j]->SetMaximum(1.75);
               H_d[c][i][j]->GetXaxis()->SetLabelSize(0.06);
               H_d[c][i][j]->GetYaxis()->SetLabelSize(0.06);
               H_d[c][i][j]->SetTitle("");
@@ -2071,16 +2095,20 @@ int main(int argc,char *argv[])
               H_d[c][i][0]->Draw("SAMEP");
               H_d[c][i][0]->GetXaxis()->SetLimits(-0.05,1.05);
               H_d[c][i][0]->SetMinimum(0.85);
-              H_d[c][i][0]->SetMaximum(1.65);
+              if(fIsMu) H_d[c][i][0]->SetMaximum(1.65);
+              else if(fIsE) H_d[c][i][0]->SetMaximum(1.75);
               H_d[c][i][1]->Draw("SAMEP");
               H_d[c][i][1]->GetXaxis()->SetLimits(-0.05,1.05);
               H_d[c][i][1]->SetMinimum(0.85);
-              H_d[c][i][1]->SetMaximum(1.65);
+              if(fIsMu) H_d[c][i][1]->SetMaximum(1.65);
+              else if(fIsE) H_d[c][i][1]->SetMaximum(1.75);
               H_d[c][i][2]->Draw("SAMEP");
               H_d[c][i][2]->GetXaxis()->SetLimits(-0.05,1.05);
               H_d[c][i][2]->SetMinimum(0.85);
-              H_d[c][i][2]->SetMaximum(1.65);
-              c7.Range(.0,.85,1.,1.65);
+              if(fIsMu) H_d[c][i][2]->SetMaximum(1.65);
+              else if(fIsE) H_d[c][i][2]->SetMaximum(1.75);
+              if(fIsMu) c7.Range(0.,.85,1.,1.65);
+              else if(fIsE) c7.Range(0.,.85,1.,1.75);
               l1[0]->Draw();
               l1[1]->Draw();
               l1[2]->Draw();
@@ -2093,7 +2121,8 @@ int main(int argc,char *argv[])
               H_d[c][i][j]->Draw("SAMEP");
               H_d[c][i][j]->GetXaxis()->SetLimits(-0.05,1.05);
               H_d[c][i][j]->SetMinimum(0.85);
-              H_d[c][i][j]->SetMaximum(1.65);
+              if(fIsMu) H_d[c][i][j]->SetMaximum(1.65);
+              else if(fIsE) H_d[c][i][j]->SetMaximum(1.75);
             }
           }
           c7.Update();
@@ -2110,7 +2139,8 @@ int main(int argc,char *argv[])
               P_d[c][i][j]->Draw("SAMEPA");
               P_d[c][i][j]->GetXaxis()->SetLimits(-0.05,1.05);
               P_d[c][i][j]->SetMinimum(0.85);
-              P_d[c][i][j]->SetMaximum(1.65);
+              if(fIsMu) P_d[c][i][j]->SetMaximum(1.65);
+              else if(fIsE) P_d[c][i][j]->SetMaximum(1.75);
               P_d[c][i][j]->GetXaxis()->SetLabelSize(0.06);
               P_d[c][i][j]->GetYaxis()->SetLabelSize(0.06);
               P_d[c][i][j]->SetTitle("");
@@ -2132,16 +2162,20 @@ int main(int argc,char *argv[])
               P_d[c][i][0]->Draw("SAMEP");
               P_d[c][i][0]->GetXaxis()->SetLimits(-0.05,1.05);
               P_d[c][i][0]->SetMinimum(0.85);
-              P_d[c][i][0]->SetMaximum(1.65);
+              if(fIsMu) P_d[c][i][0]->SetMaximum(1.65);
+              else if(fIsE) P_d[c][i][0]->SetMaximum(1.75);
               P_d[c][i][1]->Draw("SAMEP");
               P_d[c][i][1]->GetXaxis()->SetLimits(-0.05,1.05);
               P_d[c][i][1]->SetMinimum(0.85);
-              P_d[c][i][1]->SetMaximum(1.65);
+              if(fIsMu) P_d[c][i][1]->SetMaximum(1.65);
+              else if(fIsE) P_d[c][i][1]->SetMaximum(1.75);
               P_d[c][i][2]->Draw("SAMEP");
               P_d[c][i][2]->GetXaxis()->SetLimits(-0.05,1.05);
               P_d[c][i][2]->SetMinimum(0.85);
-              P_d[c][i][2]->SetMaximum(1.65);
-              c8.Range(0.,.85,1.,1.65);
+              if(fIsMu) P_d[c][i][2]->SetMaximum(1.65);
+              else if(fIsE) P_d[c][i][2]->SetMaximum(1.75);
+              if(fIsMu) c8.Range(0.,.85,1.,1.65);
+              else if(fIsE) c8.Range(0.,.85,1.,1.75);
               l1[0]->Draw();
               l1[1]->Draw();
               l1[2]->Draw();
@@ -2154,7 +2188,8 @@ int main(int argc,char *argv[])
               P_d[c][i][j]->Draw("SAMEP");
               P_d[c][i][j]->GetXaxis()->SetLimits(-0.05,1.05);
               P_d[c][i][j]->SetMinimum(0.85);
-              P_d[c][i][j]->SetMaximum(1.55);
+              if(fIsMu) P_d[c][i][j]->SetMaximum(1.65);
+              else if(fIsE) P_d[c][i][j]->SetMaximum(1.75);
             }
           }
           c8.Update();
@@ -2171,7 +2206,8 @@ int main(int argc,char *argv[])
               K_d[c][i][j]->Draw("SAMEPA");
               K_d[c][i][j]->GetXaxis()->SetLimits(-0.05,1.05);
               K_d[c][i][j]->SetMinimum(0.85);
-              K_d[c][i][j]->SetMaximum(1.65);
+              if(fIsMu) K_d[c][i][j]->SetMaximum(1.65);
+              else if(fIsE) K_d[c][i][j]->SetMaximum(1.75);
               K_d[c][i][j]->GetXaxis()->SetLabelSize(0.06);
               K_d[c][i][j]->GetYaxis()->SetLabelSize(0.06);
               K_d[c][i][j]->SetTitle("");
@@ -2193,16 +2229,20 @@ int main(int argc,char *argv[])
               K_d[c][i][0]->Draw("SAMEP");
               K_d[c][i][0]->GetXaxis()->SetLimits(-0.05,1.05);
               K_d[c][i][0]->SetMinimum(0.85);
-              K_d[c][i][0]->SetMaximum(1.65);
+              if(fIsMu) K_d[c][i][0]->SetMaximum(1.65);
+              else if(fIsE) K_d[c][i][0]->SetMaximum(1.75);
               K_d[c][i][1]->Draw("SAMEP");
               K_d[c][i][1]->GetXaxis()->SetLimits(-0.05,1.05);
               K_d[c][i][1]->SetMinimum(0.85);
-              K_d[c][i][1]->SetMaximum(1.65);
+              if(fIsMu) K_d[c][i][1]->SetMaximum(1.65);
+              else if(fIsE) K_d[c][i][1]->SetMaximum(1.75);
               K_d[c][i][2]->Draw("SAMEP");
               K_d[c][i][2]->GetXaxis()->SetLimits(-0.05,1.05);
               K_d[c][i][2]->SetMinimum(0.85);
-              K_d[c][i][2]->SetMaximum(1.65);
-              c9.Range(0.,.85,1.,1.65);
+              if(fIsMu) K_d[c][i][2]->SetMaximum(1.65);
+              else if(fIsE) K_d[c][i][2]->SetMaximum(1.75);
+              if(fIsMu) c9.Range(0.,.85,1.,1.65);
+              else if(fIsE) c9.Range(0.,.85,1.,1.75);
               l1[0]->Draw();
               l1[1]->Draw();
               l1[2]->Draw();
@@ -2215,7 +2255,8 @@ int main(int argc,char *argv[])
               K_d[c][i][j]->Draw("SAMEP");
               K_d[c][i][j]->GetXaxis()->SetLimits(-0.05,1.05);
               K_d[c][i][j]->SetMinimum(0.85);
-              K_d[c][i][j]->SetMaximum(1.65);
+              if(fIsMu) K_d[c][i][j]->SetMaximum(1.65);
+              else if(fIsE) K_d[c][i][j]->SetMaximum(1.75);
             }
           }
           c9.Update();
