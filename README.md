@@ -1,5 +1,8 @@
-# TDJANGOH Usage Instructions
+# TDJANGOH v. 1.3
 
+## Patchnote
+
+[TDJANGOH v. 1.3 Patchnote](PATCHNOTE.md)
 
 ## Requirements
 
