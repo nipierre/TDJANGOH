@@ -1551,6 +1551,8 @@ int main(int argc,char *argv[])
           fReptMult[i][j][k].tab[c][0][2] = ((max_el) ? double(fRept[i][j][k].tab[c][0][2])/double(max_el*fPt_bin_width) : 0);
           fReptMult[i][j][k].tab[c][0][3] = ((max_el) ? double(fRept[i][j][k].tab[c][0][3])/double(max_el*fPt_bin_width) : 0);
 
+          max_el = *max_element(fNDIS_evt_b[0][i][j],fNDIS_evt_b[0][i][j]+14);
+
           fBornptMult[i][j][k].tab[c][0][0] = ((max_el) ? double(fBornpt[i][j][k].tab[c][0][0])/double(max_el*fPt_bin_width) : 0);
           fBornptMult[i][j][k].tab[c][0][1] = ((max_el) ? double(fBornpt[i][j][k].tab[c][0][1])/double(max_el*fPt_bin_width) : 0);
           fBornptMult[i][j][k].tab[c][0][2] = ((max_el) ? double(fBornpt[i][j][k].tab[c][0][2])/double(max_el*fPt_bin_width) : 0);
@@ -1571,6 +1573,8 @@ int main(int argc,char *argv[])
           fPtMult[i][j][k].tab[c][0][2] = ((fReptMult[i][j][k].tab[c][0][2] && fBornptMult[i][j][k].tab[c][0][2]) ? (fBornptMult[i][j][k].tab[c][0][2]/fReptMult[i][j][k].tab[c][0][2])+j*0.1 : 0);
           fPtMult[i][j][k].tab[c][0][3] = ((fReptMult[i][j][k].tab[c][0][3] && fBornptMult[i][j][k].tab[c][0][3]) ? (fBornptMult[i][j][k].tab[c][0][3]/fReptMult[i][j][k].tab[c][0][3])+j*0.1 : 0);
 
+          max_el = *max_element(fNDIS_evt_r[0][i][j],fNDIS_evt_r[0][i][j]+14);
+
           if(fReptMult[i][j][k].tab[c][0][0]==0) fReptMult[i][j][k].tab[c][1][0]=0;
           else fReptMult[i][j][k].tab[c][1][0] = sqrt(pow(1/sqrt(fRept[i][j][k].tab[c][0][0]),2)+pow(1/sqrt(max_el),2));
           if(fReptMult[i][j][k].tab[c][0][1]==0) fReptMult[i][j][k].tab[c][1][1]=0;
@@ -1579,6 +1583,8 @@ int main(int argc,char *argv[])
           else fReptMult[i][j][k].tab[c][1][2] = sqrt(pow(1/sqrt(fRept[i][j][k].tab[c][0][2]),2)+pow(1/sqrt(max_el),2));
           if(fReptMult[i][j][k].tab[c][0][3]==0) fReptMult[i][j][k].tab[c][1][3]=0;
           else fReptMult[i][j][k].tab[c][1][3] = sqrt(pow(1/sqrt(fRept[i][j][k].tab[c][0][3]),2)+pow(1/sqrt(max_el),2));
+
+          max_el = *max_element(fNDIS_evt_b[0][i][j],fNDIS_evt_b[0][i][j]+14);
 
           if(fBornptMult[i][j][k].tab[c][0][0]==0) fBornptMult[i][j][k].tab[c][1][0]=0;
           else fBornptMult[i][j][k].tab[c][1][0] = sqrt(pow(1/sqrt(fBornpt[i][j][k].tab[c][0][0]),2)+pow(1/sqrt(max_el),2));
@@ -1599,37 +1605,37 @@ int main(int argc,char *argv[])
           else fPtMult[i][j][k].tab[c][1][3] = sqrt(pow(fBornptMult[i][j][k].tab[c][1][3],2)+pow(fReptMult[i][j][k].tab[c][1][3],2));
 
 
-          if((i==7 && j==4) || (i==8 && j==0) || (i==8 && j==4)
-                            || (i==0 && j==0) || (i==0 && j==1)
-                            || (i==0 && j==2) || (i==1 && j==0))
-          {
-            fReptMult[i][j][k].tab[c][0][0] = 0;
-            fReptMult[i][j][k].tab[c][0][1] = 0;
-            fReptMult[i][j][k].tab[c][0][2] = 0;
-            fReptMult[i][j][k].tab[c][0][3] = 0;
-            fReptMult[i][j][k].tab[c][1][0] = 0;
-            fReptMult[i][j][k].tab[c][1][1] = 0;
-            fReptMult[i][j][k].tab[c][1][2] = 0;
-            fReptMult[i][j][k].tab[c][1][3] = 0;
-
-            fBornptMult[i][j][k].tab[c][0][0] = 0;
-            fBornptMult[i][j][k].tab[c][0][1] = 0;
-            fBornptMult[i][j][k].tab[c][0][2] = 0;
-            fBornptMult[i][j][k].tab[c][0][3] = 0;
-            fBornptMult[i][j][k].tab[c][1][0] = 0;
-            fBornptMult[i][j][k].tab[c][1][1] = 0;
-            fBornptMult[i][j][k].tab[c][1][2] = 0;
-            fBornptMult[i][j][k].tab[c][1][3] = 0;
-
-            fPtMult[i][j][k].tab[c][0][0] = 0;
-            fPtMult[i][j][k].tab[c][0][1] = 0;
-            fPtMult[i][j][k].tab[c][0][2] = 0;
-            fPtMult[i][j][k].tab[c][0][3] = 0;
-            fPtMult[i][j][k].tab[c][1][0] = 0;
-            fPtMult[i][j][k].tab[c][1][1] = 0;
-            fPtMult[i][j][k].tab[c][1][2] = 0;
-            fPtMult[i][j][k].tab[c][1][3] = 0;
-          }
+          // if((i==7 && j==4) || (i==8 && j==0) || (i==8 && j==4)
+          //                   || (i==0 && j==0) || (i==0 && j==1)
+          //                   || (i==0 && j==2) || (i==1 && j==0))
+          // {
+          //   fReptMult[i][j][k].tab[c][0][0] = 0;
+          //   fReptMult[i][j][k].tab[c][0][1] = 0;
+          //   fReptMult[i][j][k].tab[c][0][2] = 0;
+          //   fReptMult[i][j][k].tab[c][0][3] = 0;
+          //   fReptMult[i][j][k].tab[c][1][0] = 0;
+          //   fReptMult[i][j][k].tab[c][1][1] = 0;
+          //   fReptMult[i][j][k].tab[c][1][2] = 0;
+          //   fReptMult[i][j][k].tab[c][1][3] = 0;
+          //
+          //   fBornptMult[i][j][k].tab[c][0][0] = 0;
+          //   fBornptMult[i][j][k].tab[c][0][1] = 0;
+          //   fBornptMult[i][j][k].tab[c][0][2] = 0;
+          //   fBornptMult[i][j][k].tab[c][0][3] = 0;
+          //   fBornptMult[i][j][k].tab[c][1][0] = 0;
+          //   fBornptMult[i][j][k].tab[c][1][1] = 0;
+          //   fBornptMult[i][j][k].tab[c][1][2] = 0;
+          //   fBornptMult[i][j][k].tab[c][1][3] = 0;
+          //
+          //   fPtMult[i][j][k].tab[c][0][0] = 0;
+          //   fPtMult[i][j][k].tab[c][0][1] = 0;
+          //   fPtMult[i][j][k].tab[c][0][2] = 0;
+          //   fPtMult[i][j][k].tab[c][0][3] = 0;
+          //   fPtMult[i][j][k].tab[c][1][0] = 0;
+          //   fPtMult[i][j][k].tab[c][1][1] = 0;
+          //   fPtMult[i][j][k].tab[c][1][2] = 0;
+          //   fPtMult[i][j][k].tab[c][1][3] = 0;
+          // }
 
           p_pt_r.push_back(fReptMult[i][j][k].tab[c][0][0]);
           k_pt_r.push_back(fReptMult[i][j][k].tab[c][0][1]);
