@@ -285,7 +285,6 @@ int main(int argc,char *argv[])
         else if(2.25<pt && pt<2.5) ptbin = 9;
         else if(2.5<pt && pt<2.75) ptbin = 10;
         else if(2.75<pt && pt<3) ptbin = 11;
-        if(pt>6) cout << "large pt : " << pt << " > 6.0." << endl;
 
         if(fId==0)
         {
@@ -559,7 +558,6 @@ int main(int argc,char *argv[])
         else if(2.25<pt && pt<2.5) ptbin = 9;
         else if(2.5<pt && pt<2.75) ptbin = 10;
         else if(2.75<pt && pt<3) ptbin = 11;
-        if(pt>6) cout << "large pt : " << pt << " > 6.0." << endl;
 
         if(fId==0)
         {
@@ -839,7 +837,6 @@ int main(int argc,char *argv[])
           else if(2.25<pt && pt<2.5) ptbin = 9;
           else if(2.5<pt && pt<2.75) ptbin = 10;
           else if(2.75<pt && pt<3) ptbin = 11;
-          if(pt>6) cout << "large pt : " << pt << " > 6.0." << endl;
 
           if(fId==0)
           {
@@ -1112,7 +1109,6 @@ int main(int argc,char *argv[])
           else if(2.25<pt && pt<2.5) ptbin = 9;
           else if(2.5<pt && pt<2.75) ptbin = 10;
           else if(2.75<pt && pt<3) ptbin = 11;
-          if(pt>6) cout << "large pt : " << pt << " > 6.0." << endl;
 
           if(fId==0)
           {
