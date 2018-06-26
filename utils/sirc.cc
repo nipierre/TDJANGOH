@@ -234,7 +234,7 @@ int main(int argc,char *argv[])
 
         if(abs(id) == 13 || abs(id) == 11 || id == 22) continue;
 
-        pt = sqrt(pow(px,2)+pow(py,2));
+        pt = pow(px,2)+pow(py,2);
 
         if(nu)
         {
@@ -508,7 +508,7 @@ int main(int argc,char *argv[])
 
         if(abs(id) == 13 || id == 22 || abs(id)==11) continue;
 
-        pt = sqrt(pow(px,2)+pow(py,2));
+        pt = pow(px,2)+pow(py,2);
 
         if(nu)
         {
@@ -788,7 +788,7 @@ int main(int argc,char *argv[])
 
           if(abs(id) == 13 || id == 22 || abs(id)==11) continue;
 
-          pt = sqrt(pow(px,2)+pow(py,2));
+          pt = pow(px,2)+pow(py,2);
 
           if(nu)
           {
@@ -1060,7 +1060,7 @@ int main(int argc,char *argv[])
 
           if(abs(id) == 13 || id == 22 || abs(id)==11) continue;
 
-          pt = sqrt(pow(px,2)+pow(py,2));
+          pt = pow(px,2)+pow(py,2);
 
           if(nu)
           {
