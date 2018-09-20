@@ -2835,8 +2835,6 @@ C--   Last update: 960109                                            --C
 C--   Purpose:     Take care of small mass systems with one diquark  --C
 C--                                                                  --C
 
-C TODO : Fix routine, gives buggy final states.
-
       IMPLICIT NONE
 
 C--       global variables
