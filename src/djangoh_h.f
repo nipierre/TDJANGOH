@@ -283,6 +283,8 @@ C-------------------------
       INTEGER                                     MST111,MST115
       COMMON /HSHGPT/ PARJ21,PARJ23,PARJ24,PARJ41,PARJ42
       REAL            PARJ21,PARJ23,PARJ24,PARJ41,PARJ42
+      COMMON /HSDECY/ DCYP(12)
+      REAL            DCYP
       COMMON /HSLPTU/ HSLST(40), HSPARL(30)
       INTEGER         HSLST
       SAVE /HSLPTU/
@@ -408,7 +410,7 @@ C       EP-DIPOLE , NUCLEUS   , NUCL-MOD  , LHAPATH   , OUTFILENAM,
      5  2100      , 2200      , 2300      , 2400      , 2500      ,
 C
 C------------------------------------------------------------------
-C       THETA-CUT , PT-CUT    , POLPDF    ,           ,           ,
+C       THETA-CUT , PT-CUT    , POLPDF    , DECAYPAR  ,           ,
      6  2600      , 2700      , 2800      , 2900      , 3000      ,
 C
 C------------------------------------------------------------------
@@ -1015,6 +1017,29 @@ C***********************************************************************
       ENDIF
       GO TO 1
  2900 CONTINUE
+C
+C***********************************************************************
+C               CONTROL CARD: CODEWD = DECAYPAR
+C
+C    ENABLE/DISABLE THE DECAY OF PARTICLE INSIDE DJANGOH
+C
+C***********************************************************************
+      IF(VERBOZ.EQ.1) THEN
+        WRITE(LUNOUT,'(5X,A,F10.4)') ' K0_S =  ', DCYP(1)
+        WRITE(LUNOUT,'(5X,A,F10.4)') ' SIGMA- =  ', DCYP(2)
+        WRITE(LUNOUT,'(5X,A,F10.4)') ' LAMBDA0 = ', DCYP(3)
+        WRITE(LUNOUT,'(5X,A,F10.4)') ' SIGMA+ = ', DCYP(4)
+        WRITE(LUNOUT,'(5X,A,F10.4)') ' XI- = ', DCYP(5)
+        WRITE(LUNOUT,'(5X,A,F10.4)') ' XI0 = ', DCYP(6)
+        WRITE(LUNOUT,'(5X,A,F10.4)') ' OMEGA- = ', DCYP(7)
+        WRITE(LUNOUT,'(5X,A,F10.4)') ' SIGMA*+ = ', DCYP(8)
+        WRITE(LUNOUT,'(5X,A,F10.4)') ' SIGMA*0 = ', DCYP(9)
+        WRITE(LUNOUT,'(5X,A,F10.4)') ' SIGMA0 = ', DCYP(10)
+        WRITE(LUNOUT,'(5X,A,F10.4)') ' SIGMA*- = ', DCYP(11)
+        WRITE(LUNOUT,'(5X,A,F10.4)') ' ANTISIG*0 = ', DCYP(12)
+      ENDIF
+      CALL DIDECY
+      GO TO 1
  3000 CONTINUE
  3100 CONTINUE
 C
@@ -2199,6 +2224,8 @@ C-------------------------
       INTEGER                                     MST111,MST115
       COMMON /HSHGPT/ PARJ21,PARJ23,PARJ24,PARJ41,PARJ42
       REAL            PARJ21,PARJ23,PARJ24,PARJ41,PARJ42
+      COMMON /HSDECY/ DCYP(12)
+      REAL            DCYP
       CHARACTER*232 LHAPATHI
       CHARACTER*232 LHAPATH
       COMMON /LHAPDFC/ LHAPATH
@@ -2576,6 +2603,8 @@ C-----------------------------
       INTEGER         MST111,MST115
       COMMON /HSHGPT/ PARJ21,PARJ23,PARJ24,PARJ41,PARJ42
       REAL            PARJ21,PARJ23,PARJ24,PARJ41,PARJ42
+      COMMON /HSDECY/ DCYP(12)
+      REAL            DCYP
 cs..Sophia
       double precision WSOPHIA
       COMMON /SOPHCT/ WSOPHIA
@@ -13793,6 +13822,29 @@ C>   Translate input from HIGH-PT input
       RETURN
       END
 
+C*********************************************************************
+C>   Translate input from DECAYPAR input
+      SUBROUTINE DIDECY
+      COMMON /HSDECY/ DCYP(12)
+      COMMON/LUDAT3/MDCY(500,3),MDME(2000,2),BRAT(2000),KFDP(2000,5)
+      COMMON /LEPTOU/ CUT(14),LST(40),PARL(30),X,Y,W2,Q2,U
+
+      MDCY(LUCOMP( 310),1) = DCYP(1)   ! K0_S
+      MDCY(LUCOMP(3112),1) = DCYP(2)   ! Sigma-
+      MDCY(LUCOMP(3122),1) = DCYP(3)   ! lambda0
+      MDCY(LUCOMP(3222),1) = DCYP(4)   ! Sigma+
+      MDCY(LUCOMP(3312),1) = DCYP(5)   ! Xi-
+      MDCY(LUCOMP(3322),1) = DCYP(6)   ! Xi0
+      MDCY(LUCOMP(3334),1) = DCYP(7)   ! Omega-
+      MDCY(LUCOMP(3224),1) = DCYP(8)   ! Sigma*+
+      MDCY(LUCOMP(3214),1) = DCYP(9)   ! Sigma*0
+      MDCY(LUCOMP(3212),1) = DCYP(10)   ! Sigma0
+      MDCY(LUCOMP(3114),1) = DCYP(11)   ! Sigma*-
+      MDCY(LUCOMP(3224),1) = DCYP(12)   ! AntiSigma*0
+
+      RETURN
+      END
+
 C
 C***********************************************************************
 C
@@ -14281,6 +14333,7 @@ C...Reset parameters from input
         CALL DIALFS
         CALL DIFLOP
         CALL DIHGPT
+        CALL DIDECY
         MSTU(112)=NPYMAX
         PARL(26)=PARP(1)
       ENDIF
@@ -14410,6 +14463,8 @@ C
       INTEGER         MST111,MST115
       COMMON /HSHGPT/ PARJ21,PARJ23,PARJ24,PARJ41,PARJ42
       REAL            PARJ21,PARJ23,PARJ24,PARJ41,PARJ42
+      COMMON /HSDECY/ DCYP(12)
+      REAL            DCYP
       DOUBLE PRECISION VALUE(20)
       CHARACTER*20 PARM(20)
       DATA VALUE/20*0D0/,PARM/20*' '/
