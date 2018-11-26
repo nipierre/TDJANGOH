@@ -250,7 +250,7 @@ int main(int argc,char *argv[])
           z = 0;
         }
 
-        if(!(3<Eh && Eh<40))
+        if(!(12<Eh && Eh<40))
         {
 #ifdef DEBUG
           cout << "Eh not good : " << Eh << endl;
@@ -524,7 +524,7 @@ int main(int argc,char *argv[])
           z = 0;
         }
 
-        if(!(3<Eh && Eh<40))
+        if(!(12<Eh && Eh<40))
         {
 #ifdef DEBUG
           cout << "Eh not good : " << Eh << endl;
@@ -804,7 +804,7 @@ int main(int argc,char *argv[])
             z = 0;
           }
 
-          if(!(3<Eh && Eh<40))
+          if(!(12<Eh && Eh<40))
           {
 #ifdef DEBUG
             cout << "Eh not good : " << Eh << endl;
@@ -1076,7 +1076,7 @@ int main(int argc,char *argv[])
             z = 0;
           }
 
-          if(!(3<Eh && Eh<40))
+          if(!(12<Eh && Eh<40))
           {
 #ifdef DEBUG
             cout << "Eh not good : " << Eh << endl;
