@@ -82,13 +82,13 @@ int main(int argc,char *argv[])
   for(int i=0; i<14; i++)
   {
     fNu_max[1][i] = sqrt(pow(40,2)+pow(fM_K,2))/fZrange[i+1];
-    fNu_min[1][i] = sqrt(pow(3,2)+pow(fM_K,2))/fZrange[i];
+    fNu_min[1][i] = sqrt(pow(12,2)+pow(fM_K,2))/fZrange[i];
 
     fNu_max[2][i] = sqrt(pow(40,2)+pow(fM_p,2))/fZrange[i+1];
-    fNu_min[2][i] = sqrt(pow(3,2)+pow(fM_p,2))/fZrange[i];
+    fNu_min[2][i] = sqrt(pow(12,2)+pow(fM_p,2))/fZrange[i];
 
     fNu_max[0][i] = sqrt(pow(40,2)+pow(fM_pi,2))/fZrange[i+1];
-    fNu_min[0][i] = sqrt(pow(3,2)+pow(fM_pi,2))/fZrange[i];
+    fNu_min[0][i] = sqrt(pow(12,2)+pow(fM_pi,2))/fZrange[i];
   }
 
   fIsMu = 0;
@@ -194,6 +194,33 @@ int main(int argc,char *argv[])
           {
             if(abs(id)==11) fIsE = 1;
             else fIsMu = 1;
+          }
+          for(int zb=0; zb<14; zb++)
+          {
+            if(!(fNu_min[0][zb]<nu && nu<fNu_max[0][zb]))
+            {
+              fFlag_r[0][xbin][ybin][zb]=1;
+            }
+            if(!(fNu_min[1][zb]<nu && nu<fNu_max[1][zb]))
+            {
+              fFlag_r[1][xbin][ybin][zb]=1;
+            }
+            if(!(fNu_min[2][zb]<nu && nu<fNu_max[2][zb]))
+            {
+              fFlag_r[2][xbin][ybin][zb]=1
+            }
+            if(fFlag_r[0][xbin][ybin][zb])
+            {
+              fNDIS_evt_r[0][xbin][ybin][zb]--;
+            }
+            if(fFlag_r[1][xbin][ybin][zb])
+            {
+              fNDIS_evt_r[1][xbin][ybin][zb]--;
+            }
+            if(fFlag_r[2][xbin][ybin][zb])
+            {
+              fNDIS_evt_r[2][xbin][ybin][zb]--;
+            }
           }
         }
         else if(id == 211)//pi+
@@ -468,6 +495,33 @@ int main(int argc,char *argv[])
           {
             if(abs(id)==11) fIsE = 1;
             else fIsMu = 1;
+            for(int zb=0; zb<14; zb++)
+            {
+              if(!(fNu_min[0][zb]<nu && nu<fNu_max[0][zb]))
+              {
+                fFlag_b[0][xbin][ybin][zb]=1;
+              }
+              if(!(fNu_min[1][zb]<nu && nu<fNu_max[1][zb]))
+              {
+                fFlag_b[1][xbin][ybin][zb]=1;
+              }
+              if(!(fNu_min[2][zb]<nu && nu<fNu_max[2][zb]))
+              {
+                fFlag_b[2][xbin][ybin][zb]=1
+              }
+              if(fFlag_b[0][xbin][ybin][zb])
+              {
+                fNDIS_evt_b[0][xbin][ybin][zb]--;
+              }
+              if(fFlag_b[1][xbin][ybin][zb])
+              {
+                fNDIS_evt_b[1][xbin][ybin][zb]--;
+              }
+              if(fFlag_b[2][xbin][ybin][zb])
+              {
+                fNDIS_evt_b[2][xbin][ybin][zb]--;
+              }
+            }
           }
         }
         else if(id == 211)//pi+
@@ -559,7 +613,7 @@ int main(int argc,char *argv[])
         else if(2.25<pt && pt<2.5) ptbin = 9;
         else if(2.5<pt && pt<2.75) ptbin = 10;
         else if(2.75<pt && pt<3) ptbin = 11;
-        if(pt>6) cout << "large pt : " << pt << " > 6.0." << endl;
+        if(pt>6) continue;
 
         if(fId==0)
         {
@@ -748,6 +802,33 @@ int main(int argc,char *argv[])
             {
               if(abs(id)==11) fIsE = 1;
               else fIsMu = 1;
+              for(int zb=0; zb<14; zb++)
+              {
+                if(!(fNu_min[0][zb]<nu && nu<fNu_max[0][zb]))
+                {
+                  fFlag_r[0][xbin][ybin][zb]=1;
+                }
+                if(!(fNu_min[1][zb]<nu && nu<fNu_max[1][zb]))
+                {
+                  fFlag_r[1][xbin][ybin][zb]=1;
+                }
+                if(!(fNu_min[2][zb]<nu && nu<fNu_max[2][zb]))
+                {
+                  fFlag_r[2][xbin][ybin][zb]=1
+                }
+                if(fFlag_r[0][xbin][ybin][zb])
+                {
+                  fNDIS_evt_r[0][xbin][ybin][zb]--;
+                }
+                if(fFlag_r[1][xbin][ybin][zb])
+                {
+                  fNDIS_evt_r[1][xbin][ybin][zb]--;
+                }
+                if(fFlag_r[2][xbin][ybin][zb])
+                {
+                  fNDIS_evt_r[2][xbin][ybin][zb]--;
+                }
+              }
             }
           }
           else if(id == 211)//pi+
@@ -1020,6 +1101,33 @@ int main(int argc,char *argv[])
             {
               if(abs(id)==11) fIsE = 1;
               else fIsMu = 1;
+              for(int zb=0; zb<14; zb++)
+              {
+                if(!(fNu_min[0][zb]<nu && nu<fNu_max[0][zb]))
+                {
+                  fFlag_b[0][xbin][ybin][zb]=1;
+                }
+                if(!(fNu_min[1][zb]<nu && nu<fNu_max[1][zb]))
+                {
+                  fFlag_b[1][xbin][ybin][zb]=1;
+                }
+                if(!(fNu_min[2][zb]<nu && nu<fNu_max[2][zb]))
+                {
+                  fFlag_b[2][xbin][ybin][zb]=1
+                }
+                if(fFlag_b[0][xbin][ybin][zb])
+                {
+                  fNDIS_evt_b[0][xbin][ybin][zb]--;
+                }
+                if(fFlag_b[1][xbin][ybin][zb])
+                {
+                  fNDIS_evt_b[1][xbin][ybin][zb]--;
+                }
+                if(fFlag_b[2][xbin][ybin][zb])
+                {
+                  fNDIS_evt_b[2][xbin][ybin][zb]--;
+                }
+              }
             }
           }
           else if(id == 211)//pi+
