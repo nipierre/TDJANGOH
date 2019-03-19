@@ -207,7 +207,7 @@ int main(int argc,char *argv[])
             }
             if(!(fNu_min[2][zb]<nu && nu<fNu_max[2][zb]))
             {
-              fFlag_r[2][xbin][ybin][zb]=1
+              fFlag_r[2][xbin][ybin][zb]=1;
             }
             if(fFlag_r[0][xbin][ybin][zb])
             {
@@ -507,7 +507,7 @@ int main(int argc,char *argv[])
               }
               if(!(fNu_min[2][zb]<nu && nu<fNu_max[2][zb]))
               {
-                fFlag_b[2][xbin][ybin][zb]=1
+                fFlag_b[2][xbin][ybin][zb]=1;
               }
               if(fFlag_b[0][xbin][ybin][zb])
               {
@@ -814,7 +814,7 @@ int main(int argc,char *argv[])
                 }
                 if(!(fNu_min[2][zb]<nu && nu<fNu_max[2][zb]))
                 {
-                  fFlag_r[2][xbin][ybin][zb]=1
+                  fFlag_r[2][xbin][ybin][zb]=1;
                 }
                 if(fFlag_r[0][xbin][ybin][zb])
                 {
@@ -1113,7 +1113,7 @@ int main(int argc,char *argv[])
                 }
                 if(!(fNu_min[2][zb]<nu && nu<fNu_max[2][zb]))
                 {
-                  fFlag_b[2][xbin][ybin][zb]=1
+                  fFlag_b[2][xbin][ybin][zb]=1;
                 }
                 if(fFlag_b[0][xbin][ybin][zb])
                 {
