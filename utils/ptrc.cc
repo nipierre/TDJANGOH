@@ -68,13 +68,8 @@ int main(int argc,char *argv[])
     {
       for(int k=0; k<5; k++)
       {
-        fNSIDIS_evt_r[i][j][k]=0;
-        fNSIDIS_evt_b[i][j][k]=0;
-        for(int l=0; l<14; l++)
-        {
-          fNDIS_evt_r[i][j][k][l]=0;
-          fNDIS_evt_b[i][j][k][l]=0;
-        }
+        fNDIS_evt_r[i][j][k]=0;
+        fNDIS_evt_b[i][j][k]=0;
       }
     }
   }
