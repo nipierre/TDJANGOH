@@ -1051,18 +1051,18 @@ int main(int argc,char *argv[])
             else fBornMult[i][j][k][l].tab[c][1][3] = sqrt(pow(1/sqrt(fBorn[i][j][k][l].tab[c][0][3]),2)+pow(1/sqrt(fNDIS_evt_r[0][i][j]),2));
 
             if(fMult[i][j][k][l].tab[c][0][0]==0) fMult[i][j][k][l].tab[c][1][0]=0;
-            else fMult[i][j][k][l].tab[c][1][0] = sqrt(pow(fBornMult[i][j][k][l].tab[c][1][0],2)+pow(fReMult[i][j].tab[c][1][0],2));
+            else fMult[i][j][k][l].tab[c][1][0] = sqrt(pow(fBornMult[i][j][k][l].tab[c][1][0],2)+pow(fReMult[i][j][k][l].tab[c][1][0],2));
             if(fMult[i][j][k][l].tab[c][0][1]==0) fMult[i][j][k][l].tab[c][1][1]=0;
-            else fMult[i][j][k][l].tab[c][1][1] = sqrt(pow(fBornMult[i][j][k][l].tab[c][1][1],2)+pow(fReMult[i][j].tab[c][1][1],2));
-            if(fMult[i][j][k[l]].tab[c][0][2]==0) fMult[i][j][k][l].tab[c][1][2]=0;
-            else fMult[i][j][k][l].tab[c][1][2] = sqrt(pow(fBornMult[i][j][k][l].tab[c][1][2],2)+pow(fReMult[i][j].tab[c][1][2],2));
+            else fMult[i][j][k][l].tab[c][1][1] = sqrt(pow(fBornMult[i][j][k][l].tab[c][1][1],2)+pow(fReMult[i][j][k][l].tab[c][1][1],2));
+            if(fMult[i][j][k][l].tab[c][0][2]==0) fMult[i][j][k][l].tab[c][1][2]=0;
+            else fMult[i][j][k][l].tab[c][1][2] = sqrt(pow(fBornMult[i][j][k][l].tab[c][1][2],2)+pow(fReMult[i][j][k][l].tab[c][1][2],2));
             if(fMult[i][j][k][l].tab[c][0][3]==0) fMult[i][j][k][l].tab[c][1][3]=0;
-            else fMult[i][j][k][l].tab[c][1][3] = sqrt(pow(fBornMult[i][j][k][l].tab[c][1][3],2)+pow(fReMult[i][j].tab[c][1][3],2));
+            else fMult[i][j][k][l].tab[c][1][3] = sqrt(pow(fBornMult[i][j][k][l].tab[c][1][3],2)+pow(fReMult[i][j][k][l].tab[c][1][3],2));
 
             if((k==0 && ((j==4 && i<5) || (j==3 && i<4) || (j==2 && i<3) || (j==3 && i>7) || (j==2 && i>6) || (j==1 && i>5) || (j==0 && i>4)))
-                || k==1 && ((j==4 && i<5) || (j==3 && i<4) || (j==2 && i<3) || (j==2 && i>7) || (j==1 && i>6) || (j==0 && i>5)))
-                || k==2 && ((j==4 && i<5) || (j==3 && i<4) || (j==2 && i<3) || (j==2 && i>7) || (j==1 && i>6) || (j==0 && i>5)))
-                || k==3 && ((j==4 && i<5) || (j==3 && i<4) || (j==2 && i<3) || (j==1 && i<2) || (j==2 && i>7) || (j==1 && i>6) || (j==0 && i>5))))
+                || (k==1 && ((j==4 && i<5) || (j==3 && i<4) || (j==2 && i<3) || (j==2 && i>7) || (j==1 && i>6) || (j==0 && i>5)))
+                || (k==2 && ((j==4 && i<5) || (j==3 && i<4) || (j==2 && i<3) || (j==2 && i>7) || (j==1 && i>6) || (j==0 && i>5)))
+                || (k==3 && ((j==4 && i<5) || (j==3 && i<4) || (j==2 && i<3) || (j==1 && i<2) || (j==2 && i>7) || (j==1 && i>6) || (j==0 && i>5))))
             {
               fReMult[i][j][k][l].tab[c][0][0] = 0;
               fReMult[i][j][k][l].tab[c][0][1] = 0;
@@ -1092,7 +1092,7 @@ int main(int argc,char *argv[])
               fMult[i][j][k][l].tab[c][1][3] = 0;
             }
 
-            shout << c << "\t" fXrange[i] << "\t" << fQ2range[j] << "\t" << fZrange[k] << "\t" << fpTrange[k]
+            shout << c << "\t" << fXrange[i] << "\t" << fQ2range[j] << "\t" << fZrange[k] << "\t" << fpTrange[k]
                   << "\t" << fReMult[i][j][k][l].tab[c][0][3]
                   << "\t" << fReMult[i][j][k][l].tab[c][1][3]
                   << "\t" << fBornMult[i][j][k][l].tab[c][0][3]
