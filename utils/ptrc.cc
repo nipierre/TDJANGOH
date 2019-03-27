@@ -210,11 +210,11 @@ int main(int argc,char *argv[])
         had.SetPxPyPzE(px,py,pz,Eh);
         TVector3 hadv = had.Vect();
 
-        double theta_mu = acos(muv.Dot(mupv)/(muv.Mag()*mupv.Mag()))
-        double theta_gs = acos((muv.Mag()-mupv.Mag()*cos(theta_mu))/gammastarv.Mag())
+        double theta_mu = acos(muv.Dot(mupv)/(muv.Mag()*mupv.Mag()));
+        double theta_gs = acos((muv.Mag()-mupv.Mag()*cos(theta_mu))/gammastarv.Mag());
 
         double phi = (gammastarv.Cross(muv)).Dot(hadv)/(gammastarv.Cross(muv).Mag()*hadv.Mag())
-                      *acos((gammastarv.Cross(muv)).Dot(gammastarv.Cross(hadv)))/(gammastarv.Cross(muv).Mag()*gammastarv.Cross(hadv).Mag()))
+                      *acos((gammastarv.Cross(muv)).Dot(gammastarv.Cross(hadv)))/(gammastarv.Cross(muv).Mag()*gammastarv.Cross(hadv).Mag()));
 
         hadv.RotateY(theta_gs);
         hadv.RotateZ(phi);
