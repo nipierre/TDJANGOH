@@ -90,7 +90,6 @@ int main(int argc,char *argv[])
 
     while(revt >> npart)
     {
-      fDIScuts = 0;
 #ifdef DEBUG
       cout << "DEBUG: READ CHECK" << endl;
       cout << npart << endl;
@@ -328,7 +327,6 @@ int main(int argc,char *argv[])
 
     while(bevt >> npart)
     {
-      fDIScuts = 0;
 #ifdef DEBUG
       cout << "DEBUG: READ CHECK" << endl;
       cout << npart << endl;
@@ -391,8 +389,6 @@ int main(int argc,char *argv[])
 #ifdef DEBUG
        cout << dummy << "\t" << dummy << "\t" << dummy << "\t" << dummy << endl;
 #endif
-
-        if(!fDIScuts) continue;
 
         if(abs(id)==13 || abs(id)==11)
         {
@@ -582,7 +578,6 @@ int main(int argc,char *argv[])
 
       while(revt >> npart)
       {
-        fDIScuts = 0;
 #ifdef DEBUG
         cout << "DEBUG: READ CHECK" << endl;
         cout << npart << endl;
@@ -603,8 +598,6 @@ int main(int argc,char *argv[])
         if(!(.1<y && y<.9)) continue;
 
         if(!(5<sqrt(W))) continue;
-
-        cout << "pouet" << endl;
 
         if(fXrange[0]<xbj && xbj<fXrange[1]) xbin = 0;
         else if(fXrange[1]<=xbj && xbj<fXrange[2]) xbin = 1;
@@ -647,8 +640,6 @@ int main(int argc,char *argv[])
 #ifdef DEBUG
           cout << dummy << "\t" << dummy << "\t" << dummy << "\t" << dummy << endl;
 #endif
-
-          if(!fDIScuts) continue;
 
           if(abs(id)==13 || abs(id)==11)
           {
@@ -830,7 +821,6 @@ int main(int argc,char *argv[])
 
       while(bevt >> npart)
       {
-        fDIScuts = 0;
 #ifdef DEBUG
         cout << "DEBUG: READ CHECK" << endl;
         cout << npart << endl;
@@ -893,8 +883,6 @@ int main(int argc,char *argv[])
 #ifdef DEBUG
           cout << dummy << "\t" << dummy << "\t" << dummy << "\t" << dummy << endl;
 #endif
-
-          if(!fDIScuts) continue;
 
           if(abs(id)==13 || abs(id)==11)
           {
