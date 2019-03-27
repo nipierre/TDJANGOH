@@ -160,7 +160,7 @@ int main(int argc,char *argv[])
           nu = E - E_prime;
           if(!fIsMu && !fIsE)
           {
-            mup.Px() = px; mup.Py() = py; mup.Pz() = pz; mup.E() = Eh;
+            mup.SetPxPyPzE(px,py,pz,Eh);
             mupv = mup.Vect();
             gammastar = mu - mup;
             gammastarv = gammastar.Vect();
@@ -207,14 +207,14 @@ int main(int argc,char *argv[])
         if(abs(id) == 13 || abs(id) == 11 || id == 22) continue;
 
         TLorentzVector had;
-        had.Px() = px; had.Py() = py; had.Pz() = pz; had.E() = Eh;
+        had.SetPxPyPzE(px,py,pz,Eh);
         TVector3 hadv = had.Vect();
 
-        double theta_mu = acos(muv.Dot(mupv)/(muv.M()*mupv.M()))
-        double theta_gs = acos((muv.M()-mupv.M()*cos(theta_mu))/gammastarv.M())
+        double theta_mu = acos(muv.Dot(mupv)/(muv.Mag()*mupv.Mag()))
+        double theta_gs = acos((muv.Mag()-mupv.Mag()*cos(theta_mu))/gammastarv.Mag())
 
-        double phi = (gammastarv.Cross(muv)).Dot(hadv)/(gammastarv.Cross(muv).M()*hadv.M())
-                      *acos((gammastarv.Cross(muv)).Dot(gammastarv.Cross(hadv)))/(gammastarv.Cross(muv).M()*gammastarv.Cross(hadv).M()))
+        double phi = (gammastarv.Cross(muv)).Dot(hadv)/(gammastarv.Cross(muv).Mag()*hadv.Mag())
+                      *acos((gammastarv.Cross(muv)).Dot(gammastarv.Cross(hadv)))/(gammastarv.Cross(muv).Mag()*gammastarv.Cross(hadv).Mag()))
 
         hadv.RotateY(theta_gs);
         hadv.RotateZ(phi);
