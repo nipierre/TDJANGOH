@@ -369,6 +369,13 @@ int main(int argc,char *argv[])
       fNDIS_evt_r[1][xbin][Q2bin]++;
       fNDIS_evt_r[2][xbin][Q2bin]++;
 
+      TLorentzVector mu(0,0,160,160);
+      TVector3 muv = mu.Vect();
+      TLorentzVector mup;
+      TVector3 mupv;
+      TLorentzVector gammastar;
+      TVector3 gammastarv;
+
       for(int i=0; i<npart; i++)
       {
         bevt >> dummy >> id >> dummy >> dummy >> dummy;
@@ -393,6 +400,10 @@ int main(int argc,char *argv[])
           nu = E - E_prime;
           if(!fIsMu && !fIsE)
           {
+            mup.SetPxPyPzE(px,py,pz,Eh);
+            mupv = mup.Vect();
+            gammastar = mu - mup;
+            gammastarv = gammastar.Vect();
             if(abs(id)==11) fIsE = 1;
             else fIsMu = 1;
           }
@@ -435,7 +446,21 @@ int main(int argc,char *argv[])
 
         if(abs(id) == 13 || id == 22 || abs(id)==11) continue;
 
-        pt = pow(px,2)+pow(py,2);
+        TLorentzVector had;
+        had.SetPxPyPzE(px,py,pz,Eh);
+        TVector3 hadv = had.Vect();
+
+        double theta_mu = acos(muv.Dot(mupv)/(muv.Mag()*mupv.Mag()));
+        double theta_gs = acos((muv.Mag()-mupv.Mag()*cos(theta_mu))/gammastarv.Mag());
+
+        double phi = (gammastarv.Cross(muv)).Dot(hadv)/(gammastarv.Cross(muv).Mag()*hadv.Mag())
+                      *acos((gammastarv.Cross(muv)).Dot(gammastarv.Cross(hadv))/(gammastarv.Cross(muv).Mag()*gammastarv.Cross(hadv).Mag()));
+
+        hadv.RotateY(theta_gs);
+        hadv.RotateZ(phi);
+
+        pt = pow(hadv.X(),2)+pow(hadv.Y(),2);
+        cout << pt << endl;
 
         if(nu)
         {
@@ -598,6 +623,13 @@ int main(int argc,char *argv[])
         fNDIS_evt_r[1][xbin][Q2bin]++;
         fNDIS_evt_r[2][xbin][Q2bin]++;
 
+        TLorentzVector mu(0,0,160,160);
+        TVector3 muv = mu.Vect();
+        TLorentzVector mup;
+        TVector3 mupv;
+        TLorentzVector gammastar;
+        TVector3 gammastarv;
+
         for(int i=0; i<npart; i++)
         {
           revt >> dummy >> id >> dummy >> dummy >> dummy;
@@ -622,6 +654,10 @@ int main(int argc,char *argv[])
             nu = E - E_prime;
             if(!fIsMu && !fIsE)
             {
+              mup.SetPxPyPzE(px,py,pz,Eh);
+              mupv = mup.Vect();
+              gammastar = mu - mup;
+              gammastarv = gammastar.Vect();
               if(abs(id)==11) fIsE = 1;
               else fIsMu = 1;
             }
@@ -664,7 +700,21 @@ int main(int argc,char *argv[])
 
           if(abs(id) == 13 || id == 22 || abs(id)==11) continue;
 
-          pt = pow(px,2)+pow(py,2);
+          TLorentzVector had;
+          had.SetPxPyPzE(px,py,pz,Eh);
+          TVector3 hadv = had.Vect();
+
+          double theta_mu = acos(muv.Dot(mupv)/(muv.Mag()*mupv.Mag()));
+          double theta_gs = acos((muv.Mag()-mupv.Mag()*cos(theta_mu))/gammastarv.Mag());
+
+          double phi = (gammastarv.Cross(muv)).Dot(hadv)/(gammastarv.Cross(muv).Mag()*hadv.Mag())
+                        *acos((gammastarv.Cross(muv)).Dot(gammastarv.Cross(hadv))/(gammastarv.Cross(muv).Mag()*gammastarv.Cross(hadv).Mag()));
+
+          hadv.RotateY(theta_gs);
+          hadv.RotateZ(phi);
+
+          pt = pow(hadv.X(),2)+pow(hadv.Y(),2);
+          cout << pt << endl;
 
           if(nu)
           {
@@ -819,6 +869,13 @@ int main(int argc,char *argv[])
         fNDIS_evt_r[1][xbin][Q2bin]++;
         fNDIS_evt_r[2][xbin][Q2bin]++;
 
+        TLorentzVector mu(0,0,160,160);
+        TVector3 muv = mu.Vect();
+        TLorentzVector mup;
+        TVector3 mupv;
+        TLorentzVector gammastar;
+        TVector3 gammastarv;
+
         for(int i=0; i<npart; i++)
         {
           bevt >> dummy >> id >> dummy >> dummy >> dummy;
@@ -843,6 +900,10 @@ int main(int argc,char *argv[])
             nu = E - E_prime;
             if(!fIsMu && !fIsE)
             {
+              mup.SetPxPyPzE(px,py,pz,Eh);
+              mupv = mup.Vect();
+              gammastar = mu - mup;
+              gammastarv = gammastar.Vect();
               if(abs(id)==11) fIsE = 1;
               else fIsMu = 1;
             }
@@ -885,7 +946,21 @@ int main(int argc,char *argv[])
 
           if(abs(id) == 13 || id == 22 || abs(id)==11) continue;
 
-          pt = pow(px,2)+pow(py,2);
+          TLorentzVector had;
+          had.SetPxPyPzE(px,py,pz,Eh);
+          TVector3 hadv = had.Vect();
+
+          double theta_mu = acos(muv.Dot(mupv)/(muv.Mag()*mupv.Mag()));
+          double theta_gs = acos((muv.Mag()-mupv.Mag()*cos(theta_mu))/gammastarv.Mag());
+
+          double phi = (gammastarv.Cross(muv)).Dot(hadv)/(gammastarv.Cross(muv).Mag()*hadv.Mag())
+                        *acos((gammastarv.Cross(muv)).Dot(gammastarv.Cross(hadv))/(gammastarv.Cross(muv).Mag()*gammastarv.Cross(hadv).Mag()));
+
+          hadv.RotateY(theta_gs);
+          hadv.RotateZ(phi);
+
+          pt = pow(hadv.X(),2)+pow(hadv.Y(),2);
+          cout << pt << endl;
 
           if(nu)
           {
