@@ -604,6 +604,8 @@ int main(int argc,char *argv[])
 
         if(!(5<sqrt(W))) continue;
 
+        cout << "pouet" << endl;
+
         if(fXrange[0]<xbj && xbj<fXrange[1]) xbin = 0;
         else if(fXrange[1]<=xbj && xbj<fXrange[2]) xbin = 1;
         else if(fXrange[2]<=xbj && xbj<fXrange[3]) xbin = 2;
