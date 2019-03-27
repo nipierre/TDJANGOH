@@ -214,7 +214,7 @@ int main(int argc,char *argv[])
         double theta_gs = acos((muv.Mag()-mupv.Mag()*cos(theta_mu))/gammastarv.Mag());
 
         double phi = (gammastarv.Cross(muv)).Dot(hadv)/(gammastarv.Cross(muv).Mag()*hadv.Mag())
-                      *acos((gammastarv.Cross(muv)).Dot(gammastarv.Cross(hadv)))/(gammastarv.Cross(muv).Mag()*gammastarv.Cross(hadv).Mag()));
+                      *acos((gammastarv.Cross(muv)).Dot(gammastarv.Cross(hadv))/(gammastarv.Cross(muv).Mag()*gammastarv.Cross(hadv).Mag()));
 
         hadv.RotateY(theta_gs);
         hadv.RotateZ(phi);
@@ -305,6 +305,7 @@ int main(int argc,char *argv[])
         {
           fRe[xbin][Q2bin][zbin][ptbin].tab[0][0][2] += 1;
           fRe[xbin][Q2bin][zbin][ptbin].tab[0][0][3] += 1;
+        }
         else if(fId==6)
         {
           fRe[xbin][Q2bin][zbin][ptbin].tab[1][0][3] += 1;
