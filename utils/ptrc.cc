@@ -132,11 +132,11 @@ int main(int argc,char *argv[])
       fNDIS_evt_r[2][xbin][Q2bin]++;
 
       TLorentzVector mu(0,0,160,160);
-      TVector muv = mu.Vect();
+      TVector3 muv = mu.Vect();
       TLorentzVector mup;
-      TVector mupv;
+      TVector3 mupv;
       TLorentzVector gammastar;
-      TVector gammastarv;
+      TVector3 gammastarv;
 
       for(int i=0; i<npart; i++)
       {
@@ -208,7 +208,7 @@ int main(int argc,char *argv[])
 
         TLorentzVector had;
         had.Px() = px; had.Py() = py; had.Pz() = pz; had.E() = Eh;
-        TVector hadv = had.Vect();
+        TVector3 hadv = had.Vect();
 
         double theta_mu = acos(muv.Dot(mupv)/(muv.M()*mupv.M()))
         double theta_gs = acos((muv.M()-mupv.M()*cos(theta_mu))/gammastarv.M())
