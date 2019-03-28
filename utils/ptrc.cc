@@ -647,10 +647,10 @@ int main(int argc,char *argv[])
             nu = E - E_prime;
             mup.SetPxPyPzE(px,py,pz,Eh);
             mupv.SetXYZ(mup.Px(),mup.Py(),mup.Pz());
-            cout << "mup : " << mupv.X() << " " << mupv.Y() << " " << mupv.Z() << endl;
+            // cout << "mup : " << mupv.X() << " " << mupv.Y() << " " << mupv.Z() << endl;
             gammastar = mu - mup;
             gammastarv.SetXYZ(gammastar.Px(),gammastar.Py(),gammastar.Pz());
-            cout << "gammastar : " << gammastarv.X() << " " << gammastarv.Y() << " " << gammastarv.Z() << endl;
+            // cout << "gammastar : " << gammastarv.X() << " " << gammastarv.Y() << " " << gammastarv.Z() << endl;
             if(!fIsMu && !fIsE)
             {
               if(abs(id)==11) fIsE = 1;
@@ -707,13 +707,13 @@ int main(int argc,char *argv[])
 
           double phi = (gammastarv.Cross(muv)).Dot(hadv)/(gammastarv.Cross(muv).Mag()*hadv.Mag())
                         *acos((gammastarv.Cross(muv)).Dot(gammastarv.Cross(hadv))/(gammastarv.Cross(muv).Mag()*gammastarv.Cross(hadv).Mag()));
-          cout << "phi : " << phi << endl;
+          // cout << "phi : " << phi << endl;
 
           hadv.RotateY(theta_gs);
           hadv.RotateZ(phi);
 
           pt = pow(hadv.X(),2)+pow(hadv.Y(),2);
-          cout << pt << endl;
+          // cout << pt << endl;
 
           if(nu)
           {
