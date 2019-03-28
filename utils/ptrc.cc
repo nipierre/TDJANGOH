@@ -648,9 +648,9 @@ int main(int argc,char *argv[])
             if(!fIsMu && !fIsE)
             {
               mup.SetPxPyPzE(px,py,pz,Eh);
-              mupv.Set(mup.Px(),mup.Py(),mup.Pz());
+              mupv.SetXYZ(mup.Px(),mup.Py(),mup.Pz());
               gammastar = mu - mup;
-              gammastarv.Set(gammastar.Px(),gammastar.Py(),gammastar.Pz());
+              gammastarv.SetXYZ(gammastar.Px(),gammastar.Py(),gammastar.Pz());
               if(abs(id)==11) fIsE = 1;
               else fIsMu = 1;
             }
