@@ -649,10 +649,10 @@ int main(int argc,char *argv[])
             {
               mup.SetPxPyPzE(px,py,pz,Eh);
               mupv.SetXYZ(mup.Px(),mup.Py(),mup.Pz());
-              cout << "mup : " << mupv.GetX() << " " << mupv.GetY() << " " << mupv.GetZ() << endl;
+              cout << "mup : " << mupv.X() << " " << mupv.Y() << " " << mupv.Z() << endl;
               gammastar = mu - mup;
               gammastarv.SetXYZ(gammastar.Px(),gammastar.Py(),gammastar.Pz());
-              cout << "gammastar : " << gammastarv.GetX() << " " << gammastarv.GetY() << " " << gammastarv.GetZ() << endl;
+              cout << "gammastar : " << gammastarv.X() << " " << gammastarv.Y() << " " << gammastarv.Z() << endl;
               if(abs(id)==11) fIsE = 1;
               else fIsMu = 1;
             }
@@ -698,7 +698,7 @@ int main(int argc,char *argv[])
           TLorentzVector had;
           had.SetPxPyPzE(px,py,pz,Eh);
           TVector3 hadv(had.Px(),had.Py(),had.Pz());
-          cout << "had : " << hadv.GetX() << " " << hadv.GetY() << " " << hadv.GetZ() << endl;
+          cout << "had : " << hadv.X() << " " << hadv.Y() << " " << hadv.Z() << endl;
 
           double theta_mu = acos(muv.Dot(mupv)/(muv.Mag()*mupv.Mag()));
           cout << "theta_mu : " << theta_mu << endl;
