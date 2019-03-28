@@ -705,7 +705,7 @@ int main(int argc,char *argv[])
           double theta_gs = acos((muv.Mag()-mupv.Mag()*cos(theta_mu))/gammastarv.Mag());
           // cout << "theta_gs : " << theta_gs << endl;
 
-          double phi = (gammastarv.Cross(muv)).Dot(hadv)/(gammastarv.Cross(muv).Mag()*hadv.Mag())
+          double phi = (gammastarv.Cross(muv)).Dot(hadv)/(abs((gammastarv.Cross(muv)).Dot(hadv)))
                         *acos((gammastarv.Cross(muv)).Dot(gammastarv.Cross(hadv))/(gammastarv.Cross(muv).Mag()*gammastarv.Cross(hadv).Mag()));
           // cout << "phi : " << phi << endl;
 
