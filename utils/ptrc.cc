@@ -619,7 +619,7 @@ int main(int argc,char *argv[])
         fNDIS_evt_r[2][xbin][Q2bin]++;
 
         TLorentzVector mu(0,0,160,160);
-        TVector3 muv = mu.Vect();
+        TVector3 muv(mu.Px(),mu.Py(),mu.Pz());
         TLorentzVector mup;
         TVector3 mupv;
         TLorentzVector gammastar;
@@ -648,9 +648,9 @@ int main(int argc,char *argv[])
             if(!fIsMu && !fIsE)
             {
               mup.SetPxPyPzE(px,py,pz,Eh);
-              mupv = mup.Vect();
+              mupv.Set(mup.Px(),mup.Py(),mup.Pz());
               gammastar = mu - mup;
-              gammastarv = gammastar.Vect();
+              gammastarv.Set(gammastar.Px(),gammastar.Py(),gammastar.Pz());
               if(abs(id)==11) fIsE = 1;
               else fIsMu = 1;
             }
@@ -695,7 +695,7 @@ int main(int argc,char *argv[])
 
           TLorentzVector had;
           had.SetPxPyPzE(px,py,pz,Eh);
-          TVector3 hadv = had.Vect();
+          TVector3 hadv(had.Px(),had.Py(),had.Pz());
 
           double theta_mu = acos(muv.Dot(mupv)/(muv.Mag()*mupv.Mag()));
           cout << "theta_mu : " << theta_mu << endl;
