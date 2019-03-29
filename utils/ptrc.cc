@@ -947,19 +947,19 @@ int main(int argc,char *argv[])
           TVector3 hadv = had.Vect();
 
           double theta_mu = acos(muv.Dot(mupv)/(muv.Mag()*mupv.Mag()));
-          cout << "theta_mu : " << theta_mu << endl;
+          //cout << "theta_mu : " << theta_mu << endl;
           double theta_gs = acos((muv.Mag()-mupv.Mag()*cos(theta_mu))/gammastarv.Mag());
-          cout << "theta_gs : " << theta_gs << endl;
+          //cout << "theta_gs : " << theta_gs << endl;
 
           double phi = (gammastarv.Cross(muv)).Dot(hadv)/(gammastarv.Cross(muv).Mag()*hadv.Mag())
                         *acos((gammastarv.Cross(muv)).Dot(gammastarv.Cross(hadv))/(gammastarv.Cross(muv).Mag()*gammastarv.Cross(hadv).Mag()));
-          cout << "phi : " << phi << endl;
+          //cout << "phi : " << phi << endl;
 
           hadv.RotateY(theta_gs);
           hadv.RotateZ(phi);
 
           pt = pow(hadv.Px(),2)+pow(hadv.Py(),2);
-          cout << pt << endl;
+          //cout << pt << endl;
 
           if(nu)
           {
