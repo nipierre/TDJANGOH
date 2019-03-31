@@ -961,7 +961,7 @@ int main(int argc,char *argv[])
           hadv.RotateZ(phi);
 
           pt = pow(hadv.X(),2)+pow(hadv.Y(),2);
-          //cout << pt << endl;
+          cout << pt << endl;
 
           if(nu)
           {
