@@ -456,7 +456,7 @@ int main(int argc,char *argv[])
         hadv.RotateZ(phi);
 
         pt = pow(hadv.X(),2)+pow(hadv.Y(),2);
-        cout << pt << endl;
+        //cout << pt << endl;
 
         if(nu)
         {
@@ -894,12 +894,14 @@ int main(int argc,char *argv[])
           {
             E_prime = Eh;
             nu = E - E_prime;
+            mup.SetPxPyPzE(px,py,pz,Eh);
+            mupv.SetXYZ(mup.Px(),mup.Py(),mup.Pz());
+            // cout << "mup : " << mupv.X() << " " << mupv.Y() << " " << mupv.Z() << endl;
+            gammastar = mu - mup;
+            gammastarv.SetXYZ(gammastar.Px(),gammastar.Py(),gammastar.Pz());
+            // cout << "gammastar : " << gammastarv.X() << " " << gammastarv.Y() << " " << gammastarv.Z() << endl;
             if(!fIsMu && !fIsE)
             {
-              mup.SetPxPyPzE(px,py,pz,Eh);
-              mupv = mup.Vect();
-              gammastar = mu - mup;
-              gammastarv = gammastar.Vect();
               if(abs(id)==11) fIsE = 1;
               else fIsMu = 1;
             }
@@ -944,7 +946,7 @@ int main(int argc,char *argv[])
 
           TLorentzVector had;
           had.SetPxPyPzE(px,py,pz,Eh);
-          TVector3 hadv = had.Vect();
+          Vector3 hadv(had.Px(),had.Py(),had.Pz());
 
           double theta_mu = acos(muv.Dot(mupv)/(muv.Mag()*mupv.Mag()));
           //cout << "theta_mu : " << theta_mu << endl;
@@ -1076,18 +1078,18 @@ int main(int argc,char *argv[])
         {
           for(int l=0; l<30; l++)
           {
-            cout << "x,Q2,z,pt : " << i << "," << j << "," << k << "," << l << "\nN DIS evt r : " << fNDIS_evt_r[0][i][j] << " N re : " << fRe[i][j][k][l].tab[c][0][3];
+            // cout << "x,Q2,z,pt : " << i << "," << j << "," << k << "," << l << "\nN DIS evt r : " << fNDIS_evt_r[0][i][j] << " N re : " << fRe[i][j][k][l].tab[c][0][3];
             fReMult[i][j][k][l].tab[c][0][0] = ((fNDIS_evt_r[0][i][j]) ? double(fRe[i][j][k][l].tab[c][0][0])/double(fNDIS_evt_r[0][i][j]*fZ_bin_width[k]*fpT_bin_width[l]) : 0);
             fReMult[i][j][k][l].tab[c][0][1] = ((fNDIS_evt_r[0][i][j]) ? double(fRe[i][j][k][l].tab[c][0][1])/double(fNDIS_evt_r[0][i][j]*fZ_bin_width[k]*fpT_bin_width[l]) : 0);
             fReMult[i][j][k][l].tab[c][0][2] = ((fNDIS_evt_r[0][i][j]) ? double(fRe[i][j][k][l].tab[c][0][2])/double(fNDIS_evt_r[0][i][j]*fZ_bin_width[k]*fpT_bin_width[l]) : 0);
             fReMult[i][j][k][l].tab[c][0][3] = ((fNDIS_evt_r[0][i][j]) ? double(fRe[i][j][k][l].tab[c][0][3])/double(fNDIS_evt_r[0][i][j]*fZ_bin_width[k]*fpT_bin_width[l]) : 0);
-            cout << " Hm : " << fReMult[i][j][k][l].tab[c][0][3] << endl;
-            cout << "N DIS evt B : " << fNDIS_evt_b[0][i][j] <<  " N born : " << fBorn[i][j][k][l].tab[c][0][3];
+            // cout << " Hm : " << fReMult[i][j][k][l].tab[c][0][3] << endl;
+            // cout << "N DIS evt B : " << fNDIS_evt_b[0][i][j] <<  " N born : " << fBorn[i][j][k][l].tab[c][0][3];
             fBornMult[i][j][k][l].tab[c][0][0] = ((fNDIS_evt_b[0][i][j]) ? double(fBorn[i][j][k][l].tab[c][0][0])/double(fNDIS_evt_b[0][i][j]*fZ_bin_width[k]*fpT_bin_width[l]) : 0);
             fBornMult[i][j][k][l].tab[c][0][1] = ((fNDIS_evt_b[0][i][j]) ? double(fBorn[i][j][k][l].tab[c][0][1])/double(fNDIS_evt_b[0][i][j]*fZ_bin_width[k]*fpT_bin_width[l]) : 0);
             fBornMult[i][j][k][l].tab[c][0][2] = ((fNDIS_evt_b[0][i][j]) ? double(fBorn[i][j][k][l].tab[c][0][2])/double(fNDIS_evt_b[0][i][j]*fZ_bin_width[k]*fpT_bin_width[l]) : 0);
             fBornMult[i][j][k][l].tab[c][0][3] = ((fNDIS_evt_b[0][i][j]) ? double(fBorn[i][j][k][l].tab[c][0][3])/double(fNDIS_evt_b[0][i][j]*fZ_bin_width[k]*fpT_bin_width[l]) : 0);
-            cout << " Hm : " << fBornMult[i][j][k][l].tab[c][0][3] << endl;
+            // cout << " Hm : " << fBornMult[i][j][k][l].tab[c][0][3] << endl;
 
             if(fReMult[i][j][k][l].tab[c][0][0]<0) fReMult[i][j][k][l].tab[c][0][0]=0;
             if(fReMult[i][j][k][l].tab[c][0][1]<0) fReMult[i][j][k][l].tab[c][0][1]=0;
