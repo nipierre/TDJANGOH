@@ -960,7 +960,7 @@ int main(int argc,char *argv[])
           hadv.RotateY(theta_gs);
           hadv.RotateZ(phi);
 
-          pt = pow(hadv.Px(),2)+pow(hadv.Py(),2);
+          pt = pow(hadv.X(),2)+pow(hadv.Y(),2);
           //cout << pt << endl;
 
           if(nu)
