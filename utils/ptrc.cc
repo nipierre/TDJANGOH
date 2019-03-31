@@ -961,7 +961,6 @@ int main(int argc,char *argv[])
           hadv.RotateZ(phi);
 
           pt = pow(hadv.X(),2)+pow(hadv.Y(),2);
-          cout << pt << endl;
 
           if(nu)
           {
@@ -979,6 +978,8 @@ int main(int argc,char *argv[])
 
           if(!(0.2<z && z<0.8)) continue;
           if(!(0.02<pt && pt<3)) continue;
+
+          cout << "pouet" << endl;
 
           if(fZrange[0]<z && z<fZrange[1]) zbin = 0;
           else if(fZrange[1]<z && z<fZrange[2]) zbin = 1;
