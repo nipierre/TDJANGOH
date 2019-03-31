@@ -863,9 +863,9 @@ int main(int argc,char *argv[])
         else if(fQ2range[3]<=Q2 && Q2<fQ2range[4]) Q2bin = 3;
         else if(fQ2range[4]<=Q2 && Q2<fQ2range[5]) Q2bin = 4;
 
-        fNDIS_evt_r[0][xbin][Q2bin]++;
-        fNDIS_evt_r[1][xbin][Q2bin]++;
-        fNDIS_evt_r[2][xbin][Q2bin]++;
+        fNDIS_evt_b[0][xbin][Q2bin]++;
+        fNDIS_evt_b[1][xbin][Q2bin]++;
+        fNDIS_evt_b[2][xbin][Q2bin]++;
 
         TLorentzVector mu(0,0,160,160);
         TVector3 muv(mu.Px(),mu.Py(),mu.Pz());
