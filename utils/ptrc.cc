@@ -868,7 +868,7 @@ int main(int argc,char *argv[])
         fNDIS_evt_r[2][xbin][Q2bin]++;
 
         TLorentzVector mu(0,0,160,160);
-        TVector3 muv = mu.Vect();
+        TVector3 muv(mu.Px(),mu.Py(),mu.Pz());
         TLorentzVector mup;
         TVector3 mupv;
         TLorentzVector gammastar;
