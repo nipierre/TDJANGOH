@@ -946,7 +946,7 @@ int main(int argc,char *argv[])
 
           TLorentzVector had;
           had.SetPxPyPzE(px,py,pz,Eh);
-          Vector3 hadv(had.Px(),had.Py(),had.Pz());
+          TVector3 hadv(had.Px(),had.Py(),had.Pz());
 
           double theta_mu = acos(muv.Dot(mupv)/(muv.Mag()*mupv.Mag()));
           //cout << "theta_mu : " << theta_mu << endl;
