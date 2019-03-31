@@ -1020,47 +1020,39 @@ int main(int argc,char *argv[])
           {
             fBorn[xbin][Q2bin][zbin][ptbin].tab[1][0][0] += 1;
             fBorn[xbin][Q2bin][zbin][ptbin].tab[1][0][3] += 1;
-            cout << "pouet0" << endl;
           }
           else if(fId==1)
           {
             fBorn[xbin][Q2bin][zbin][ptbin].tab[0][0][0] += 1;
             fBorn[xbin][Q2bin][zbin][ptbin].tab[0][0][3] += 1;
-            cout << "pouet1" << endl;
           }
           else if(fId==2)
           {
             fBorn[xbin][Q2bin][zbin][ptbin].tab[1][0][1] += 1;
             fBorn[xbin][Q2bin][zbin][ptbin].tab[1][0][3] += 1;
-            cout << "pouet2" << endl;
           }
           else if(fId==3)
           {
             fBorn[xbin][Q2bin][zbin][ptbin].tab[0][0][1] += 1;
             fBorn[xbin][Q2bin][zbin][ptbin].tab[0][0][3] += 1;
-            cout << "pouet3" << endl;
           }
           else if(fId==4)
           {
             fBorn[xbin][Q2bin][zbin][ptbin].tab[1][0][2] += 1;
             fBorn[xbin][Q2bin][zbin][ptbin].tab[1][0][3] += 1;
-            cout << "pouet4" << endl;
           }
           else if(fId==5)
           {
             fBorn[xbin][Q2bin][zbin][ptbin].tab[0][0][2] += 1;
             fBorn[xbin][Q2bin][zbin][ptbin].tab[0][0][3] += 1;
-            cout << "pouet5" << endl;
           }
           else if(fId==6)
           {
             fBorn[xbin][Q2bin][zbin][ptbin].tab[1][0][3] += 1;
-            cout << "pouet6" << endl;
           }
           else if(fId==7)
           {
             fBorn[xbin][Q2bin][zbin][ptbin].tab[0][0][3] += 1;
-            cout << "pouet7" << endl;
           }
           else
           {
@@ -1085,18 +1077,18 @@ int main(int argc,char *argv[])
         {
           for(int l=0; l<30; l++)
           {
-            // cout << "x,Q2,z,pt : " << i << "," << j << "," << k << "," << l << "\nN DIS evt r : " << fNDIS_evt_r[0][i][j] << " N re : " << fRe[i][j][k][l].tab[c][0][3];
+            cout << "x,Q2,z,pt : " << i << "," << j << "," << k << "," << l << "\nN DIS evt r : " << fNDIS_evt_r[0][i][j] << " N re : " << fRe[i][j][k][l].tab[c][0][3];
             fReMult[i][j][k][l].tab[c][0][0] = ((fNDIS_evt_r[0][i][j]) ? double(fRe[i][j][k][l].tab[c][0][0])/double(fNDIS_evt_r[0][i][j]*fZ_bin_width[k]*fpT_bin_width[l]) : 0);
             fReMult[i][j][k][l].tab[c][0][1] = ((fNDIS_evt_r[0][i][j]) ? double(fRe[i][j][k][l].tab[c][0][1])/double(fNDIS_evt_r[0][i][j]*fZ_bin_width[k]*fpT_bin_width[l]) : 0);
             fReMult[i][j][k][l].tab[c][0][2] = ((fNDIS_evt_r[0][i][j]) ? double(fRe[i][j][k][l].tab[c][0][2])/double(fNDIS_evt_r[0][i][j]*fZ_bin_width[k]*fpT_bin_width[l]) : 0);
             fReMult[i][j][k][l].tab[c][0][3] = ((fNDIS_evt_r[0][i][j]) ? double(fRe[i][j][k][l].tab[c][0][3])/double(fNDIS_evt_r[0][i][j]*fZ_bin_width[k]*fpT_bin_width[l]) : 0);
-            // cout << " Hm : " << fReMult[i][j][k][l].tab[c][0][3] << endl;
-            // cout << "N DIS evt B : " << fNDIS_evt_b[0][i][j] <<  " N born : " << fBorn[i][j][k][l].tab[c][0][3];
+            cout << " Hm : " << fReMult[i][j][k][l].tab[c][0][3] << endl;
+            cout << "N DIS evt B : " << fNDIS_evt_b[0][i][j] <<  " N born : " << fBorn[i][j][k][l].tab[c][0][3];
             fBornMult[i][j][k][l].tab[c][0][0] = ((fNDIS_evt_b[0][i][j]) ? double(fBorn[i][j][k][l].tab[c][0][0])/double(fNDIS_evt_b[0][i][j]*fZ_bin_width[k]*fpT_bin_width[l]) : 0);
             fBornMult[i][j][k][l].tab[c][0][1] = ((fNDIS_evt_b[0][i][j]) ? double(fBorn[i][j][k][l].tab[c][0][1])/double(fNDIS_evt_b[0][i][j]*fZ_bin_width[k]*fpT_bin_width[l]) : 0);
             fBornMult[i][j][k][l].tab[c][0][2] = ((fNDIS_evt_b[0][i][j]) ? double(fBorn[i][j][k][l].tab[c][0][2])/double(fNDIS_evt_b[0][i][j]*fZ_bin_width[k]*fpT_bin_width[l]) : 0);
             fBornMult[i][j][k][l].tab[c][0][3] = ((fNDIS_evt_b[0][i][j]) ? double(fBorn[i][j][k][l].tab[c][0][3])/double(fNDIS_evt_b[0][i][j]*fZ_bin_width[k]*fpT_bin_width[l]) : 0);
-            // cout << " Hm : " << fBornMult[i][j][k][l].tab[c][0][3] << endl;
+            cout << " Hm : " << fBornMult[i][j][k][l].tab[c][0][3] << endl;
 
             if(fReMult[i][j][k][l].tab[c][0][0]<0) fReMult[i][j][k][l].tab[c][0][0]=0;
             if(fReMult[i][j][k][l].tab[c][0][1]<0) fReMult[i][j][k][l].tab[c][0][1]=0;
