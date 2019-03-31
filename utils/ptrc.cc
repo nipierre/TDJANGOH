@@ -979,8 +979,6 @@ int main(int argc,char *argv[])
           if(!(0.2<z && z<0.8)) continue;
           if(!(0.02<pt && pt<3)) continue;
 
-          cout << "pouet" << endl;
-
           if(fZrange[0]<z && z<fZrange[1]) zbin = 0;
           else if(fZrange[1]<z && z<fZrange[2]) zbin = 1;
           else if(fZrange[2]<=z && z<fZrange[3]) zbin = 2;
@@ -1022,39 +1020,47 @@ int main(int argc,char *argv[])
           {
             fBorn[xbin][Q2bin][zbin][ptbin].tab[1][0][0] += 1;
             fBorn[xbin][Q2bin][zbin][ptbin].tab[1][0][3] += 1;
+            cout << "pouet0" << endl;
           }
           else if(fId==1)
           {
             fBorn[xbin][Q2bin][zbin][ptbin].tab[0][0][0] += 1;
             fBorn[xbin][Q2bin][zbin][ptbin].tab[0][0][3] += 1;
+            cout << "pouet1" << endl;
           }
           else if(fId==2)
           {
             fBorn[xbin][Q2bin][zbin][ptbin].tab[1][0][1] += 1;
             fBorn[xbin][Q2bin][zbin][ptbin].tab[1][0][3] += 1;
+            cout << "pouet2" << endl;
           }
           else if(fId==3)
           {
             fBorn[xbin][Q2bin][zbin][ptbin].tab[0][0][1] += 1;
             fBorn[xbin][Q2bin][zbin][ptbin].tab[0][0][3] += 1;
+            cout << "pouet3" << endl;
           }
           else if(fId==4)
           {
             fBorn[xbin][Q2bin][zbin][ptbin].tab[1][0][2] += 1;
             fBorn[xbin][Q2bin][zbin][ptbin].tab[1][0][3] += 1;
+            cout << "pouet4" << endl;
           }
           else if(fId==5)
           {
             fBorn[xbin][Q2bin][zbin][ptbin].tab[0][0][2] += 1;
             fBorn[xbin][Q2bin][zbin][ptbin].tab[0][0][3] += 1;
+            cout << "pouet5" << endl;
           }
           else if(fId==6)
           {
             fBorn[xbin][Q2bin][zbin][ptbin].tab[1][0][3] += 1;
+            cout << "pouet6" << endl;
           }
           else if(fId==7)
           {
             fBorn[xbin][Q2bin][zbin][ptbin].tab[0][0][3] += 1;
+            cout << "pouet7" << endl;
           }
           else
           {
