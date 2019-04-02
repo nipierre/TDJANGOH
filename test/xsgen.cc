@@ -43,11 +43,8 @@ int main(int argc,char *argv[])
   string ext[2] = {"Born","RC"};
   double sigtot;
   double sigtrr;
-  double xtab[21] = {.004,.006,.008,.01,.013,.016,.02,.03,.04,.06,
-                     .08,.1,.15,.2,.3,.4,.5,.6,.7,.8,.9};
-  double ytab[17] = {.1,.15,.2,.25,.3,.35,.4,.45,.5,.55,.6,
-                    .65,.7,.75,.8,.85,.9};
-  double epsilon = 0.000001;
+  double xtab[10] = {.004,.01,.02,.03,.04,.06,.1,.14,.18,.4};
+  double ytab[7] = {.1,.15,.2,.3,.5,.7,.9};
 
   cout << FBLU("Instance creation..") << endl;
   tDjangoh = new TDjangoh();
@@ -61,14 +58,15 @@ int main(int argc,char *argv[])
     else tDjangoh->RClepWOqelNC();
     ofstream outfile(Form("sigtot_%s.dat",ext[atoi(argv[2])].c_str()));
 
-    for(int j=0; j<21; j++)
+    for(int j=0; j<9; j++)
     {
-      for(int k=0; k<17; k++)
+      for(int k=0; k<7; k++)
       {
 
         cout << FBLU("\n(x,y) : (") << j << FBLU(",") << k << FBLU(")..") << endl;
 
-        tDjangoh->ModKineCuts(3,xtab[j]-epsilon,xtab[j]+epsilon,ytab[k]-epsilon,ytab[k]+epsilon,0.1,1E5,1.4);
+        if(atoi(argv[2])==0) tDjangoh->ModKineCuts(3,xtab[j],xtab[j+1],ytab[k],ytab[k+1],0.8,1E5,4);
+        else tDjangoh->ModKineCuts(3,xtab[j],xtab[j+1],ytab[k],ytab[k+1],0.8,1E5,0);
 
         tDjangoh->Initialize();
 

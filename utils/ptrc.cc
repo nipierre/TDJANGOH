@@ -1167,7 +1167,7 @@ int main(int argc,char *argv[])
               fMult[i][j][k][l].tab[c][1][3] = 0;
             }
 
-            shout << c << "\t" << fXrange[i] << "\t" << fQ2range[j] << "\t" << fZrange[k] << "\t" << fpTrange[k]
+            shout << c << "\t" << fXrange[i] << "\t" << fQ2range[j] << "\t" << fZrange[k] << "\t" << fpTrange[l]
                   << "\t" << fReMult[i][j][k][l].tab[c][0][3]
                   << "\t" << fReMult[i][j][k][l].tab[c][1][3]
                   << "\t" << fBornMult[i][j][k][l].tab[c][0][3]
