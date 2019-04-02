@@ -65,8 +65,7 @@ int main(int argc,char *argv[])
 
         cout << FBLU("\n(x,y) : (") << j << FBLU(",") << k << FBLU(")..") << endl;
 
-        if(atoi(argv[2])==0) tDjangoh->ModKineCuts(3,xtab[j],xtab[j+1],ytab[k],ytab[k+1],0.8,1E5,4);
-        else tDjangoh->ModKineCuts(3,xtab[j],xtab[j+1],ytab[k],ytab[k+1],0.8,1E5,0);
+        tDjangoh->ModKineCuts(3,xtab[j],xtab[j+1],ytab[k],ytab[k+1],0.8,1E5,4);
 
         tDjangoh->Initialize();
 
