@@ -1170,8 +1170,12 @@ int main(int argc,char *argv[])
             shout << c << "\t" << fXrange[i] << "\t" << fQ2range[j] << "\t" << fZrange[k] << "\t" << fpTrange[l]
                   << "\t" << fReMult[i][j][k][l].tab[c][0][3]
                   << "\t" << fReMult[i][j][k][l].tab[c][1][3]
+                  << "\t" << fRe[i][j][k][l].tab[c][0][3]
+                  << "\t" << fNDIS_evt_r[0][i][j]
                   << "\t" << fBornMult[i][j][k][l].tab[c][0][3]
                   << "\t" << fBornMult[i][j][k][l].tab[c][1][3]
+                  << "\t" << fBorn[i][j][k][l].tab[c][0][3]
+                  << "\t" << fNDIS_evt_b[0][i][j]
                   << "\t" << fMult[i][j][k][l].tab[c][0][3]
                   << "\t" << fMult[i][j][k][l].tab[c][1][3] << endl;
           }
