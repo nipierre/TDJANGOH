@@ -1606,8 +1606,8 @@ int main(int argc,char *argv[])
           || (j==2 && k<2)
           || (j==1 && k<4)
           || (j==0 && k<7)
-          || (i==8 && j==0))
-          || (j==6)
+          || (i==8 && j==0)
+          || (j==6))
           {
             fReMult[i][j][k].tab[c][0][0] = 0;
             fReMult[i][j][k].tab[c][0][1] = 0;
