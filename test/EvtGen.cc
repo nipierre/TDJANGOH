@@ -161,7 +161,7 @@ int main(int argc,char *argv[])
     fDISEvt.p1x = tDjangoh->GetP(0,1); fDISEvt.p1y = tDjangoh->GetP(0,2); fDISEvt.p1z = tDjangoh->GetP(0,3); fDISEvt.E1 = tDjangoh->GetP(0,4);
     fDISEvt.p0x = 0; fDISEvt.p0y = 0; fDISEvt.p0z = tDjangoh->GetEBeam(); fDISEvt.E0 = tDjangoh->GetEBeam();
   	fDISEvt.xBj = tDjangoh->GetX(); fDISEvt.Y = tDjangoh->GetY(); fDISEvt.Q2 = tDjangoh->GetQ2();
-    fDISEvt.nu = tDjangoh.GetEBeam() - tDjangoh->GetP(0,4);
+    fDISEvt.nu = tDjangoh->GetEBeam() - tDjangoh->GetP(0,4);
 
     mup.SetPxPyPzE(fDISEvt.p1x,fDISEvt.p1x,fDISEvt.p1x,fDISEvt.E1);
     mupv = mup.Vect();
@@ -171,7 +171,7 @@ int main(int argc,char *argv[])
     for(int j=1; j<nb; j++)
     {
       hadron.px = tDjangoh->GetP(0,1); hadron.py = tDjangoh->GetP(0,2); hadron.pz = tDjangoh->GetP(0,3); hadron.E = tDjangoh->GetP(0,4);
-      hadron.PID = tDjangoh->GetK(j,2); hadron.z = tDjangoh->GetP(0,4)/fDISEvt->nu;
+      hadron.PID = tDjangoh->GetK(j,2); hadron.z = tDjangoh->GetP(0,4)/fDISEvt.nu;
 
       TLorentzVector had;
       had.SetPxPyPzE(hadron.px,hadron.py,hadron.pz,hadron.E);
