@@ -191,6 +191,16 @@ public:
   */
   void        SetBeamType(const char* pvalue);
   /*!
+  * \brief Get beam energy and polarization
+  * \return Beam energy
+  */
+  double        GetEBeam() {return hselab_.eele;}
+  /*!
+  * \brief Get beam energy and polarization
+  * \return Beam energy
+  */
+  double        GetBeamPol() {return hsparm_.polari;}
+  /*!
   * \brief Set beam energy and polarization
   * \param pvalue : Beam energy
   * \param pvalue : Beam polarization
