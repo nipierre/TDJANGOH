@@ -32,6 +32,29 @@
 
 using namespace std;
 
+DISData::DISData():
+  p0x(0),p0y(0),p0z(0), // beam momentum
+  p1x(0),p1y(0),p1z(0), // mu1 momentum
+  E_beam(0), // beam energie
+  E_mu_prim(0), // mu1 energie
+  Charge(0),
+  theta(0),
+  Q2(0),
+  nu(0),
+  Y(0),
+  xBj(0),
+  W(0)
+{}
+
+HadronData::HadronData():
+  px(0),py(0),pz(0),
+  P(0),pt(0),th(0),ph(0),ph_pl(0),
+  charge(0),
+  PID(0),
+  E(0),
+  z(0)
+{}
+
 void printProgress (int event, int total)
 {
     string points[6] = {"   ",".  ",".. ","..."," ..","  ."};
