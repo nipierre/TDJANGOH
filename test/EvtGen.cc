@@ -102,7 +102,7 @@ int main(int argc,char *argv[])
     }
   }
 
-  fDISEvt = new DISData;
+  fDISEvt = new DISData();
   fHadronsPtr = &fHadrons;
   fOutFile = new TFile(disEvtFileName.c_str(),"RECREATE");
   fDISEvtTree = new TTree("DISEvtTree","DIS event and hadron info");

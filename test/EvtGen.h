@@ -40,7 +40,7 @@ struct DISData{
 struct HadronData{
 
   HadronData();
-  virtual ~HadronData();
+  virtual ~HadronData(){};
 
   Double_t px, py, pz;
   Double_t P,pt,th,ph,ph_pl;
