@@ -24,8 +24,8 @@ struct DISData{
   Double_t E_mu_prim; // mu1 energie
   Int_t Charge;
 
-  void Reset();
-  void CalcKin();
+  // void Reset();
+  // void CalcKin();
 
   Double_t  theta; //!
   Double_t     Q2; //!
@@ -49,8 +49,8 @@ struct HadronData{
   Double_t E; //!
   Double_t z; //!
 
-  void Reset();
-  void CalcVariables(const double& M=-1);
+  // void Reset();
+  // void CalcVariables(const double& M=-1);
 
   ClassDef(HadronData,3);
 };
