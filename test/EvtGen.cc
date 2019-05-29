@@ -102,7 +102,7 @@ int main(int argc,char *argv[])
     }
   }
 
-  fDISEvt = new DISData();
+  // fDISEvt = new DISData();
   fHadronsPtr = &fHadrons;
   fOutFile = new TFile(disEvtFileName.c_str(),"RECREATE");
   fDISEvtTree = new TTree("DISEvtTree","DIS event and hadron info");
@@ -158,12 +158,12 @@ int main(int argc,char *argv[])
 
     nb = tDjangoh->GetN();
 
-    fDISEvt->p1x = tDjangoh->GetP(0,1); fDISEvt->p1y = tDjangoh->GetP(0,2); fDISEvt->p1z = tDjangoh->GetP(0,3); fDISEvt->E1 = tDjangoh->GetP(0,4);
-    fDISEvt->p0x = 0; fDISEvt->p0y = 0; fDISEvt->p0z = tDjangoh->GetEBeam(); fDISEvt->E0 = tDjangoh->GetEBeam();
-  	fDISEvt->xBj = tDjangoh->GetX(); fDISEvt->Y = tDjangoh->GetY(); fDISEvt->Q2 = tDjangoh->GetQ2();
-    fDISEvt->nu = tDjangoh->GetEBeam() - tDjangoh->GetP(0,4);
+    fDISEvt.p1x = tDjangoh->GetP(0,1); fDISEvt.p1y = tDjangoh->GetP(0,2); fDISEvt.p1z = tDjangoh->GetP(0,3); fDISEvt.E1 = tDjangoh->GetP(0,4);
+    fDISEvt.p0x = 0; fDISEvt.p0y = 0; fDISEvt.p0z = tDjangoh->GetEBeam(); fDISEvt.E0 = tDjangoh->GetEBeam();
+  	fDISEvt.xBj = tDjangoh->GetX(); fDISEvt.Y = tDjangoh->GetY(); fDISEvt.Q2 = tDjangoh->GetQ2();
+    fDISEvt.nu = tDjangoh.GetEBeam() - tDjangoh->GetP(0,4);
 
-    mup.SetPxPyPzE(fDISEvt->p1x,fDISEvt->p1x,fDISEvt->p1x,fDISEvt->E1);
+    mup.SetPxPyPzE(fDISEvt.p1x,fDISEvt.p1x,fDISEvt.p1x,fDISEvt.E1);
     mupv = mup.Vect();
     gammastar = mu - mup;
     gammastarv = gammastar.Vect();
