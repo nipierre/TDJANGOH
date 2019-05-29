@@ -199,5 +199,7 @@ int main(int argc,char *argv[])
 
   tDjangoh->EndRecap();
 
+  fDISEvtTree->AutoSave();
+
   return 0;
 }
