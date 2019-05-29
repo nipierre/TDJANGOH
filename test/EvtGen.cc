@@ -102,7 +102,7 @@ int main(int argc,char *argv[])
     }
   }
 
-  // fDISEvt = new DISData();
+  fDISEvt = new DISData;
   fHadronsPtr = &fHadrons;
   fOutFile = new TFile(disEvtFileName.c_str(),"RECREATE");
   fDISEvtTree = new TTree("DISEvtTree","DIS event and hadron info");
@@ -170,8 +170,8 @@ int main(int argc,char *argv[])
 
     for(int j=1; j<nb; j++)
     {
-      hadron.px = tDjangoh->GetP(0,1); hadron.py = tDjangoh->GetP(0,2); hadron.pz = tDjangoh->GetP(0,3); hadron.E = tDjangoh->GetP(0,4);
-      hadron.PID = tDjangoh->GetK(j,2); hadron.z = tDjangoh->GetP(0,4)/fDISEvt.nu;
+      hadron.px = tDjangoh->GetP(j,1); hadron.py = tDjangoh->GetP(j,2); hadron.pz = tDjangoh->GetP(j,3); hadron.E = tDjangoh->GetP(j,4);
+      hadron.PID = tDjangoh->GetK(j,2); hadron.z = tDjangoh->GetP(j,4)/fDISEvt.nu;
 
       TLorentzVector had;
       had.SetPxPyPzE(hadron.px,hadron.py,hadron.pz,hadron.E);
