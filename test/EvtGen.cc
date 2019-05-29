@@ -104,7 +104,7 @@ int main(int argc,char *argv[])
 
   fDISEvt = new DISData;
   fHadronsPtr = &fHadrons;
-  fOutFile = new TFile(disEvtFileName,"RECREATE");
+  fOutFile = new TFile(disEvtFileName.c_str(),"RECREATE");
   fDISEvtTree = new TTree("DISEvtTree","DIS event and hadron info");
   fDISEvtTree->Branch("DISEvt","DISEventData",&fDISEvt);
   fDISEvtTree->Branch("Hadrons","std::vector<HadronData>",&fHadronsPtr);
