@@ -55,6 +55,12 @@ HadronData::HadronData():
   z(0)
 {}
 
+DISData::~DISData()
+{}
+
+HadronData::~HadronData()
+{}
+
 void printProgress (int event, int total)
 {
     string points[6] = {"   ",".  ",".. ","..."," ..","  ."};
