@@ -3,6 +3,7 @@
 #include <cstring>
 
 #include "TDjangoh.h"
+#include "EvtGen.h"
 
 // COLORS
 
@@ -54,6 +55,7 @@ int main(int argc,char *argv[])
   }
 
   int VERBOSE=1;
+  int kCluster = 0;
   float base_energy=160;
   float rnd=0;
   int finalState = 0;
