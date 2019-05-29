@@ -1431,6 +1431,16 @@ void TDjangoh::SetBeamType(const char* pname)
   hsparm_.leptid = PID;
 }
 
+double TDjangoh::GetEBeam()
+{
+  return hselab_.eele;
+}
+
+double TDjangoh::GetBeamPol()
+{
+  return hsparm_.polari;
+}
+
 void TDjangoh::SetBeam(double pBeamE, double pPol)
 {
   hselab_.eele = pBeamE;

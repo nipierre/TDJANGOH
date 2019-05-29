@@ -194,12 +194,12 @@ public:
   * \brief Get beam energy and polarization
   * \return Beam energy
   */
-  double        GetEBeam() {return hselab_.eele;}
+  double        GetEBeam();
   /*!
   * \brief Get beam energy and polarization
   * \return Beam energy
   */
-  double        GetBeamPol() {return hsparm_.polari;}
+  double        GetBeamPol();
   /*!
   * \brief Set beam energy and polarization
   * \param pvalue : Beam energy
