@@ -58,6 +58,7 @@ struct HadronData{
 DISData* fDISEvt;
 vector<HadronData> fHadrons;
 vector<HadronData>* fHadronsPtr;
+TFile* fOutFile;
 TTree* fDISEvtTree;
 
 #endif

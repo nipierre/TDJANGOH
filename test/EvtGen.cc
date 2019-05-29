@@ -58,6 +58,7 @@ int main(int argc,char *argv[])
   int kCluster = 0;
   float base_energy=160;
   float rnd=0;
+  float energy_beam = 0;
   int finalState = 0;
   string disEvtFileName = "DISEvt.root";
 
