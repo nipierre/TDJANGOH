@@ -76,7 +76,9 @@ struct studyxy { vector<double> vec[2]; };
 //Binning
 
 Wrapper fRe[9][6][14];
+Wrapper fRe_nonucut[9][6][14];
 Wrapper fBorn[9][6][14];
+Wrapper fBorn_nonucut[9][6][14];
 Wrapper fReMult[9][6][14];
 Wrapper fBornMult[9][6][14];
 Wrapper fMult[9][6][14];
@@ -86,7 +88,9 @@ Wrapper fReptMult[9][6][12];
 Wrapper fBornptMult[9][6][12];
 Wrapper fPtMult[9][6][12];
 double fNDIS_evt_r[3][9][6][14];
+double fNDIS_evt_r_nonucut[3][9][6][14];
 double fNDIS_evt_b[3][9][6][14];
+double fNDIS_evt_b_nonucut[3][9][6][14];
 double fNSIDIS_evt_r[4][9][6];
 double fNSIDIS_evt_b[4][9][6];
 int xbin, ybin, zbin, ptbin;

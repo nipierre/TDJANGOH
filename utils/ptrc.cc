@@ -456,7 +456,7 @@ int main(int argc,char *argv[])
         hadv.RotateZ(phi);
 
         pt = pow(hadv.X(),2)+pow(hadv.Y(),2);
-        cout << pt << endl;
+        //cout << pt << endl;
 
         if(nu)
         {
@@ -863,12 +863,12 @@ int main(int argc,char *argv[])
         else if(fQ2range[3]<=Q2 && Q2<fQ2range[4]) Q2bin = 3;
         else if(fQ2range[4]<=Q2 && Q2<fQ2range[5]) Q2bin = 4;
 
-        fNDIS_evt_r[0][xbin][Q2bin]++;
-        fNDIS_evt_r[1][xbin][Q2bin]++;
-        fNDIS_evt_r[2][xbin][Q2bin]++;
+        fNDIS_evt_b[0][xbin][Q2bin]++;
+        fNDIS_evt_b[1][xbin][Q2bin]++;
+        fNDIS_evt_b[2][xbin][Q2bin]++;
 
         TLorentzVector mu(0,0,160,160);
-        TVector3 muv = mu.Vect();
+        TVector3 muv(mu.Px(),mu.Py(),mu.Pz());
         TLorentzVector mup;
         TVector3 mupv;
         TLorentzVector gammastar;
@@ -894,12 +894,14 @@ int main(int argc,char *argv[])
           {
             E_prime = Eh;
             nu = E - E_prime;
+            mup.SetPxPyPzE(px,py,pz,Eh);
+            mupv.SetXYZ(mup.Px(),mup.Py(),mup.Pz());
+            // cout << "mup : " << mupv.X() << " " << mupv.Y() << " " << mupv.Z() << endl;
+            gammastar = mu - mup;
+            gammastarv.SetXYZ(gammastar.Px(),gammastar.Py(),gammastar.Pz());
+            // cout << "gammastar : " << gammastarv.X() << " " << gammastarv.Y() << " " << gammastarv.Z() << endl;
             if(!fIsMu && !fIsE)
             {
-              mup.SetPxPyPzE(px,py,pz,Eh);
-              mupv = mup.Vect();
-              gammastar = mu - mup;
-              gammastarv = gammastar.Vect();
               if(abs(id)==11) fIsE = 1;
               else fIsMu = 1;
             }
@@ -944,22 +946,21 @@ int main(int argc,char *argv[])
 
           TLorentzVector had;
           had.SetPxPyPzE(px,py,pz,Eh);
-          TVector3 hadv = had.Vect();
+          TVector3 hadv(had.Px(),had.Py(),had.Pz());
 
           double theta_mu = acos(muv.Dot(mupv)/(muv.Mag()*mupv.Mag()));
-          cout << "theta_mu : " << theta_mu << endl;
+          //cout << "theta_mu : " << theta_mu << endl;
           double theta_gs = acos((muv.Mag()-mupv.Mag()*cos(theta_mu))/gammastarv.Mag());
-          cout << "theta_gs : " << theta_gs << endl;
+          //cout << "theta_gs : " << theta_gs << endl;
 
-          double phi = (gammastarv.Cross(muv)).Dot(hadv)/(gammastarv.Cross(muv).Mag()*hadv.Mag())
+          double phi = (gammastarv.Cross(muv)).Dot(hadv)/(abs((gammastarv.Cross(muv)).Dot(hadv)))
                         *acos((gammastarv.Cross(muv)).Dot(gammastarv.Cross(hadv))/(gammastarv.Cross(muv).Mag()*gammastarv.Cross(hadv).Mag()));
-          cout << "phi : " << phi << endl;
+          //cout << "phi : " << phi << endl;
 
           hadv.RotateY(theta_gs);
           hadv.RotateZ(phi);
 
-          pt = pow(hadv.Px(),2)+pow(hadv.Py(),2);
-          cout << pt << endl;
+          pt = pow(hadv.X(),2)+pow(hadv.Y(),2);
 
           if(nu)
           {
@@ -1166,11 +1167,15 @@ int main(int argc,char *argv[])
               fMult[i][j][k][l].tab[c][1][3] = 0;
             }
 
-            shout << c << "\t" << fXrange[i] << "\t" << fQ2range[j] << "\t" << fZrange[k] << "\t" << fpTrange[k]
+            shout << c << "\t" << fXrange[i] << "\t" << fQ2range[j] << "\t" << fZrange[k] << "\t" << fpTrange[l]
                   << "\t" << fReMult[i][j][k][l].tab[c][0][3]
                   << "\t" << fReMult[i][j][k][l].tab[c][1][3]
+                  << "\t" << fRe[i][j][k][l].tab[c][0][3]
+                  << "\t" << fNDIS_evt_r[0][i][j]
                   << "\t" << fBornMult[i][j][k][l].tab[c][0][3]
                   << "\t" << fBornMult[i][j][k][l].tab[c][1][3]
+                  << "\t" << fBorn[i][j][k][l].tab[c][0][3]
+                  << "\t" << fNDIS_evt_b[0][i][j]
                   << "\t" << fMult[i][j][k][l].tab[c][0][3]
                   << "\t" << fMult[i][j][k][l].tab[c][1][3] << endl;
           }
