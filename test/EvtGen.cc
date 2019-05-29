@@ -33,8 +33,8 @@
 using namespace std;
 
 DISData::DISData():
-  p0x(0),p0y(0),p0z(0), // beam momentum
-  p1x(0),p1y(0),p1z(0), // mu1 momentum
+  p0x(0),p0y(0),p0z(0),E0(0), // beam momentum
+  p1x(0),p1y(0),p1z(0),E1(0), // mu1 momentum
   E_beam(0), // beam energie
   E_mu_prim(0), // mu1 energie
   Charge(0),
