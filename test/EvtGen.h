@@ -34,7 +34,7 @@ struct DISData{
   Double_t    xBj; //!
   Double_t      W; //!
 
-  ClassDef(DISData,5);
+  //ClassDef(DISData,5);
 };
 
 struct HadronData{
@@ -52,7 +52,7 @@ struct HadronData{
   // void Reset();
   // void CalcVariables(const double& M=-1);
 
-  ClassDef(HadronData,3);
+  //ClassDef(HadronData,3);
 };
 
 DISData* fDISEvt;
