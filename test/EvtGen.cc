@@ -230,7 +230,7 @@ int main(int argc,char *argv[])
 
   fDISEvtTree->AutoSave();
 
-  fOutFile.Close();
+  fOutFile->Close();
 
   return 0;
 }
