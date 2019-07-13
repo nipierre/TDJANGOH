@@ -230,7 +230,6 @@ int main(int argc,char *argv[])
 
     for(int j=1; j<nb; j++)
     {
-      HadronData hadron;
 
       px.push_back(tDjangoh->GetP(j,1)); py.push_back(tDjangoh->GetP(j,2)); pz.push_back(tDjangoh->GetP(j,3)); E.push_back(tDjangoh->GetP(j,4));
       PID.push_back(tDjangoh->GetK(j,2)); z.push_back(tDjangoh->GetP(j,4)/fDISEvt->nu);
@@ -248,7 +247,7 @@ int main(int argc,char *argv[])
       hadv.RotateY(theta_gs);
       hadv.RotateZ(phi);
 
-      P.push_back(sqrt(pow(hadron.px,2)+pow(hadron.py,2)+pow(hadron.pz,2)));
+      P.push_back(sqrt(pow(px[j-1],2)+pow(py[j-1],2)+pow(pz[j-1],2)));
       pt.push_back(sqrt(pow(hadv.X(),2)+pow(hadv.Y(),2)));
   	}
 
