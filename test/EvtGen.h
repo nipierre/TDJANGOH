@@ -10,6 +10,7 @@
 #include <TTree.h>
 #include <TBranch.h>
 #include <TLeaf.h>
+#include <TROOT.h>
 
 using namespace std;
 
