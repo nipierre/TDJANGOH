@@ -13,10 +13,9 @@
 
 using namespace std;
 
-class DISData
+struct DISData
 {
 
-  public:
   DISData();
   virtual ~DISData();
 
@@ -37,13 +36,12 @@ class DISData
   Double_t    xBj; //!
   Double_t      W; //!
 
-  //ClassDef(DISData,5);
+  ClassDef(DISData,5);
 };
 
-class HadronData
+struct HadronData
 {
 
-  public:
   HadronData();
   virtual ~HadronData();
 
@@ -58,7 +56,7 @@ class HadronData
   // void Reset();
   // void CalcVariables(const double& M=-1);
 
-  //ClassDef(HadronData,3);
+  ClassDef(HadronData,3);
 };
 
 DISData* fDISEvt;
