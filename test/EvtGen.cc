@@ -131,12 +131,15 @@ int main(int argc,char *argv[])
     }
   }
 
+  int test;
+
   fDISEvt = new DISData();
   fHadronsPtr = &fHadrons;
   fOutFile = new TFile(disEvtFileName.c_str(),"RECREATE");
   fDISEvtTree = new TTree("DISEvtTree","DIS event and hadron info");
-  fDISEvtTree->SetBranchAddress("DISEvt",&fDISEvt);
-  fDISEvtTree->SetBranchAddress("Hadrons",&fHadronsPtr);
+  fDISEvtTree->Branch("DISEvt","DISData",&fDISEvt);
+  fDISEvtTree->Branch("Hadrons","std::vector<HadronData>",&fHadronsPtr);
+  fDISEvtTree->Branch("Test",&test,"test/i");
   fDISEvtTree->SetMaxTreeSize(1000000000);
 
   TDjangoh* tDjangoh;
