@@ -131,7 +131,7 @@ int main(int argc,char *argv[])
     }
   }
 
-  fDISEvt = new DISData;
+  fDISEvt = new DISData();
   fHadronsPtr = &fHadrons;
   fOutFile = new TFile(disEvtFileName.c_str(),"RECREATE");
   fDISEvtTree = new TTree("DISEvtTree","DIS event and hadron info");
@@ -161,7 +161,6 @@ int main(int argc,char *argv[])
 
   for(int i=0; i<NEVENTS; i++)
   {
-    HadronData hadron;
     TLorentzVector mup;
     TVector3 mupv;
     TLorentzVector gammastar;
@@ -199,6 +198,8 @@ int main(int argc,char *argv[])
 
     for(int j=1; j<nb; j++)
     {
+      HadronData hadron();
+
       hadron.px = tDjangoh->GetP(j,1); hadron.py = tDjangoh->GetP(j,2); hadron.pz = tDjangoh->GetP(j,3); hadron.E = tDjangoh->GetP(j,4);
       hadron.PID = tDjangoh->GetK(j,2); hadron.z = tDjangoh->GetP(j,4)/fDISEvt->nu;
 
