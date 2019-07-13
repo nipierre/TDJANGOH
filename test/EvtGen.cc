@@ -131,9 +131,6 @@ int main(int argc,char *argv[])
     }
   }
 
-  gInterpreter->GenerateDictionary("DISData","EvtGen.h");
-  gInterpreter->GenerateDictionary("HadronData","EvtGen.h");
-
   fDISEvt = new DISData();
   fHadronsPtr = &fHadrons;
   fOutFile = new TFile(disEvtFileName.c_str(),"RECREATE");
