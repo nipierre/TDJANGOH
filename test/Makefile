@@ -10,7 +10,7 @@ LDFLAGS		= `root-config --libs` -L$(TDJANGOH_LIB) -lDjangoh
 all: dict.o test xsgen genfile EvtGen
 
 dict.o: EvtGen.h Linkdef.h
-	rootcling -f $@ -c $(CCFLAGS) -p $^
+	rootcint -f dict.cc -c $(CCFLAGS) -p $^
 
 %.o: %.cc
 	@$(CXX) $(CCFlags) $(ROOTFLAGS) $(INCFLAGS) -c -o $@ $< $(LDFLAGS)
