@@ -23,7 +23,7 @@ xsgen: xsgen.o
 	@$(CXX) $(CCFlags) $(ROOTFLAGS) $(INCFLAGS) -o $@ $< $(LDFLAGS)
 	@mv xsgen ../bin
 
-EvtGen: MyDict.cxx EvtGen.o
+EvtGen: EvtGen.o
 	$(CXX) $(CCFlags) $(ROOTFLAGS) $(INCFLAGS) -o $@ $< $(LDFLAGS)
 	@mv EvtGen ../bin
 
