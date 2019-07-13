@@ -135,8 +135,8 @@ int main(int argc,char *argv[])
   fHadronsPtr = &fHadrons;
   fOutFile = new TFile(disEvtFileName.c_str(),"RECREATE");
   fDISEvtTree = new TTree("DISEvtTree","DIS event and hadron info");
-  fDISEvtTree->Branch("DISEvt","DISData",&fDISEvt);
-  fDISEvtTree->Branch("Hadrons","std::vector<HadronData>",&fHadronsPtr);
+  fDISEvtTree->SetBranchAdress("DISEvt",&fDISEvt);
+  fDISEvtTree->SetBranchAdress("Hadrons",&fHadronsPtr);
   fDISEvtTree->SetMaxTreeSize(1000000000);
 
   TDjangoh* tDjangoh;
