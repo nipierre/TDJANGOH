@@ -222,6 +222,8 @@ int main(int argc,char *argv[])
       fHadrons.push_back(hadron);
   	}
 
+    cout << fHadrons.size() << endl;
+
     fDISEvtTree->Fill();
   }
 
