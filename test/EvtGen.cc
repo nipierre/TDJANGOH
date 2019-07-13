@@ -225,6 +225,8 @@ int main(int argc,char *argv[])
     cout << fHadrons.size() << endl;
 
     fDISEvtTree->Fill();
+
+    fHadrons.clear();
   }
 
   cout << FCYN("\n\nEvents Generated !") << endl;
