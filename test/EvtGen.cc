@@ -131,7 +131,8 @@ int main(int argc,char *argv[])
     }
   }
 
-  int test;
+  gInterpreter->GenerateDictionary("DISData","EvtGen.h");
+  gInterpreter->GenerateDictionary("HadronData","EvtGen.h");
 
   fDISEvt = new DISData();
   fHadronsPtr = &fHadrons;
@@ -139,7 +140,6 @@ int main(int argc,char *argv[])
   fDISEvtTree = new TTree("DISEvtTree","DIS event and hadron info");
   fDISEvtTree->Branch("DISEvt","DISData",&fDISEvt);
   fDISEvtTree->Branch("Hadrons","std::vector<HadronData>",&fHadronsPtr);
-  fDISEvtTree->Branch("Test",&test,"test/i");
   fDISEvtTree->SetMaxTreeSize(1000000000);
 
   TDjangoh* tDjangoh;
