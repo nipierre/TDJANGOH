@@ -85,9 +85,9 @@ int main(int argc,char *argv[])
 
   int VERBOSE=1;
   int kCluster = 0;
-  float base_energy=160;
-  float rnd=0;
-  float energy_beam = 0;
+  Double_t base_energy=160;
+  Double_t rnd=0;
+  Double_t energy_beam = 0;
   int finalState = 0;
   string disEvtFileName = "DISEvt.root";
 
@@ -131,15 +131,44 @@ int main(int argc,char *argv[])
     }
   }
 
-  vector<int> test;
-
-  fDISEvt = new DISData();
-  fHadronsPtr = &fHadrons;
+  // fDISEvt = new DISData();
+  // fHadronsPtr = &fHadrons;
   fOutFile = new TFile(disEvtFileName.c_str(),"RECREATE");
   fDISEvtTree = new TTree("DISEvtTree","DIS event and hadron info");
-  fDISEvtTree->Branch("DISEvt","DISData",&fDISEvt);
-  fDISEvtTree->Branch("Hadrons","std::vector<HadronData>",&fHadronsPtr);
-  fDISEvtTree->Branch("Test","std::vector<int>",&test);
+  // fDISEvtTree->Branch("DISEvt","DISData",&fDISEvt);
+  // fDISEvtTree->Branch("Hadrons","std::vector<HadronData>",&fHadronsPtr);
+
+  fDISEvtTree->Branch("p0x","Double_t",&p0x);
+  fDISEvtTree->Branch("p0y","Double_t",&p0y);
+  fDISEvtTree->Branch("p0z","Double_t",&p0z);
+  fDISEvtTree->Branch("E0","Double_t",&E0);
+  fDISEvtTree->Branch("E1","Double_t",&E1);
+  fDISEvtTree->Branch("p1x","Double_t",&p1x);
+  fDISEvtTree->Branch("p1y","Double_t",&p1y);
+  fDISEvtTree->Branch("p1z","Double_t",&p1z);
+  fDISEvtTree->Branch("E_beam","Double_t",&E_beam);
+  fDISEvtTree->Branch("E_mu_prim","Double_t",&E_mu_prim);
+  fDISEvtTree->Branch("Charge","Int_t",&Charge);
+  fDISEvtTree->Branch("theta","Double_t",&theta);
+  fDISEvtTree->Branch("Q2","Double_t",&Q2);
+  fDISEvtTree->Branch("nu","Double_t",&nu);
+  fDISEvtTree->Branch("Y","Double_t",&Y);
+  fDISEvtTree->Branch("xBj","Double_t",&xBj);
+  fDISEvtTree->Branch("W","Double_t",&W);
+
+  fDISEvtTree->Branch("px","std::vector<Double_t>",&px);
+  fDISEvtTree->Branch("py","std::vector<Double_t>",&py);
+  fDISEvtTree->Branch("pz","std::vector<Double_t>",&pz);
+  fDISEvtTree->Branch("P","std::vector<Double_t>",&P);
+  fDISEvtTree->Branch("pt","std::vector<Double_t>",&pt);
+  fDISEvtTree->Branch("th","std::vector<Double_t>",&th);
+  fDISEvtTree->Branch("ph","std::vector<Double_t>",&ph);
+  fDISEvtTree->Branch("ph_pl","std::vector<Double_t>",&ph_pl);
+  fDISEvtTree->Branch("charge","std::vector<Int_t>",&charge);
+  fDISEvtTree->Branch("PID","std::vector<Int_t>",&PID);
+  fDISEvtTree->Branch("E","std::vector<Double_t>",&E);
+  fDISEvtTree->Branch("z","std::vector<Double_t>",&z);
+
   fDISEvtTree->SetMaxTreeSize(1000000000);
 
   TDjangoh* tDjangoh;
@@ -189,12 +218,12 @@ int main(int argc,char *argv[])
 
     nb = tDjangoh->GetN();
 
-    fDISEvt->p1x = tDjangoh->GetP(0,1); fDISEvt->p1y = tDjangoh->GetP(0,2); fDISEvt->p1z = tDjangoh->GetP(0,3); fDISEvt->E1 = tDjangoh->GetP(0,4);
-    fDISEvt->p0x = 0; fDISEvt->p0y = 0; fDISEvt->p0z = tDjangoh->GetEBeam(); fDISEvt->E0 = tDjangoh->GetEBeam();
-  	fDISEvt->xBj = tDjangoh->GetX(); fDISEvt->Y = tDjangoh->GetY(); fDISEvt->Q2 = tDjangoh->GetQ2();
-    fDISEvt->nu = tDjangoh->GetEBeam() - tDjangoh->GetP(0,4);
+    p1x = tDjangoh->GetP(0,1); p1y = tDjangoh->GetP(0,2); p1z = tDjangoh->GetP(0,3); E1 = tDjangoh->GetP(0,4);
+    p0x = 0; p0y = 0; p0z = tDjangoh->GetEBeam(); E0 = tDjangoh->GetEBeam();
+  	xBj = tDjangoh->GetX(); Y = tDjangoh->GetY(); Q2 = tDjangoh->GetQ2();
+    nu = tDjangoh->GetEBeam() - tDjangoh->GetP(0,4);
 
-    mup.SetPxPyPzE(fDISEvt->p1x,fDISEvt->p1x,fDISEvt->p1x,fDISEvt->E1);
+    mup.SetPxPyPzE(p1x,p1x,p1x,E1);
     mupv = mup.Vect();
     gammastar = mu - mup;
     gammastarv = gammastar.Vect();
@@ -203,11 +232,11 @@ int main(int argc,char *argv[])
     {
       HadronData hadron;
 
-      hadron.px = tDjangoh->GetP(j,1); hadron.py = tDjangoh->GetP(j,2); hadron.pz = tDjangoh->GetP(j,3); hadron.E = tDjangoh->GetP(j,4);
-      hadron.PID = tDjangoh->GetK(j,2); hadron.z = tDjangoh->GetP(j,4)/fDISEvt->nu;
+      px.push_back(tDjangoh->GetP(j,1)); py.push_back(tDjangoh->GetP(j,2)); pz.push_back(tDjangoh->GetP(j,3)); E.push_back(tDjangoh->GetP(j,4));
+      PID.push_back(tDjangoh->GetK(j,2)); z.push_back(tDjangoh->GetP(j,4)/fDISEvt->nu);
 
       TLorentzVector had;
-      had.SetPxPyPzE(hadron.px,hadron.py,hadron.pz,hadron.E);
+      had.SetPxPyPzE(px[j-1],py[j-1],pz[j-1],E[j-1]);
       TVector3 hadv = had.Vect();
 
       double theta_mu = acos(muv.Dot(mupv)/(muv.Mag()*mupv.Mag()));
@@ -219,17 +248,15 @@ int main(int argc,char *argv[])
       hadv.RotateY(theta_gs);
       hadv.RotateZ(phi);
 
-      hadron.P = sqrt(pow(hadron.px,2)+pow(hadron.py,2)+pow(hadron.pz,2));
-      hadron.pt = sqrt(pow(hadv.X(),2)+pow(hadv.Y(),2));
-
-      fHadrons.push_back(hadron);
+      P.push_back(sqrt(pow(hadron.px,2)+pow(hadron.py,2)+pow(hadron.pz,2)));
+      pt.push_back(sqrt(pow(hadv.X(),2)+pow(hadv.Y(),2)));
   	}
-
-    cout << fHadrons.size() << endl;
 
     fDISEvtTree->Fill();
 
-    fHadrons.clear();
+    px.clear(); py.clear(); pz.clear();
+    P.clear(); pt.clear(); th.clear(); ph.clear(); ph_pl.clear();
+    charge.clear(); PID.clear(); E.clear(); z.clear();
   }
 
   cout << FCYN("\n\nEvents Generated !") << endl;
