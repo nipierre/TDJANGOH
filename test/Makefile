@@ -7,9 +7,9 @@ TDJANGOH_LIB=$(TDJANGOH)/lib
 LDFLAGS		= `root-config --libs` -L$(TDJANGOH_LIB) -lDjangoh
 #DevFlags	=
 
-all: MyDict.cxx test xsgen genfile EvtGen
+all: dict.o test xsgen genfile EvtGen
 
-MyDict.cxx: EvtGen.h Linkdef.h
+dict.o: EvtGen.h Linkdef.h
 	rootcling -f $@ -c $(CCFLAGS) -p $^
 
 %.o: %.cc
@@ -23,7 +23,7 @@ xsgen: xsgen.o
 	@$(CXX) $(CCFlags) $(ROOTFLAGS) $(INCFLAGS) -o $@ $< $(LDFLAGS)
 	@mv xsgen ../bin
 
-EvtGen: EvtGen.o
+EvtGen: EvtGen.o dict.o
 	$(CXX) $(CCFlags) $(ROOTFLAGS) $(INCFLAGS) -o $@ $< $(LDFLAGS)
 	@mv EvtGen ../bin
 
