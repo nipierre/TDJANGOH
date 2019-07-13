@@ -198,7 +198,7 @@ int main(int argc,char *argv[])
 
     for(int j=1; j<nb; j++)
     {
-      HadronData hadron();
+      HadronData hadron;
 
       hadron.px = tDjangoh->GetP(j,1); hadron.py = tDjangoh->GetP(j,2); hadron.pz = tDjangoh->GetP(j,3); hadron.E = tDjangoh->GetP(j,4);
       hadron.PID = tDjangoh->GetK(j,2); hadron.z = tDjangoh->GetP(j,4)/fDISEvt->nu;
