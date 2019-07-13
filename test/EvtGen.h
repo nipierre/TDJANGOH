@@ -17,8 +17,8 @@ class DISData
 {
 
   public:
-  DISData();
-  virtual ~DISData();
+  // DISData();
+  // virtual ~DISData();
 
   // private:
   Double_t p0x,p0y,p0z,E0; // beam momentum
@@ -44,8 +44,8 @@ class HadronData
 {
 
   public:
-  HadronData();
-  virtual ~HadronData();
+  // HadronData();
+  // virtual ~HadronData();
 
   // private:
   Double_t px, py, pz;
