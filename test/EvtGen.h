@@ -20,7 +20,7 @@ class DISData
   DISData();
   virtual ~DISData();
 
-  private:
+  // private:
   Double_t p0x,p0y,p0z,E0; // beam momentum
   Double_t p1x,p1y,p1z,E1; // mu1 momentum
   Double_t E_beam;    // beam energie
@@ -47,7 +47,7 @@ class HadronData
   HadronData();
   virtual ~HadronData();
 
-  private:
+  // private:
   Double_t px, py, pz;
   Double_t P,pt,th,ph,ph_pl;
   Int_t charge;
