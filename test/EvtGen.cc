@@ -32,35 +32,6 @@
 
 using namespace std;
 
-DISData::DISData():
-  p0x(0),p0y(0),p0z(0),E0(0), // beam momentum
-  p1x(0),p1y(0),p1z(0),E1(0), // mu1 momentum
-  E_beam(0), // beam energie
-  E_mu_prim(0), // mu1 energie
-  Charge(0),
-  theta(0),
-  Q2(0),
-  nu(0),
-  Y(0),
-  xBj(0),
-  W(0)
-{}
-
-HadronData::HadronData():
-  px(0),py(0),pz(0),
-  P(0),pt(0),th(0),ph(0),ph_pl(0),
-  charge(0),
-  PID(0),
-  E(0),
-  z(0)
-{}
-
-DISData::~DISData()
-{}
-
-HadronData::~HadronData()
-{}
-
 void printProgress (int event, int total)
 {
     string points[6] = {"   ",".  ",".. ","..."," ..","  ."};
@@ -232,7 +203,7 @@ int main(int argc,char *argv[])
     {
 
       px.push_back(tDjangoh->GetP(j,1)); py.push_back(tDjangoh->GetP(j,2)); pz.push_back(tDjangoh->GetP(j,3)); E.push_back(tDjangoh->GetP(j,4));
-      PID.push_back(tDjangoh->GetK(j,2)); z.push_back(tDjangoh->GetP(j,4)/fDISEvt->nu);
+      PID.push_back(tDjangoh->GetK(j,2)); z.push_back(tDjangoh->GetP(j,4)/nu);
 
       TLorentzVector had;
       had.SetPxPyPzE(px[j-1],py[j-1],pz[j-1],E[j-1]);
