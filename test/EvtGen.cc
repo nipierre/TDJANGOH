@@ -102,43 +102,36 @@ int main(int argc,char *argv[])
     }
   }
 
-  // fDISEvt = new DISData();
-  // fHadronsPtr = &fHadrons;
   fOutFile = new TFile(disEvtFileName.c_str(),"RECREATE");
   fDISEvtTree = new TTree("DISEvtTree","DIS event and hadron info");
-  // fDISEvtTree->Branch("DISEvt","DISData",&fDISEvt);
-  // fDISEvtTree->Branch("Hadrons","std::vector<HadronData>",&fHadronsPtr);
 
   fDISEvtTree->Branch("p0x",&p0x,"p0x/D");
   fDISEvtTree->Branch("p0y",&p0y,"p0y/D");
   fDISEvtTree->Branch("p0z",&p0z,"p0z/D");
   fDISEvtTree->Branch("E0",&E0,"E0/D");
-  fDISEvtTree->Branch("E1",&E1,"E1/D");
   fDISEvtTree->Branch("p1x",&p1x,"p1x/D");
   fDISEvtTree->Branch("p1y",&p1y,"p1y/D");
   fDISEvtTree->Branch("p1z",&p1z,"p1z/D");
-  fDISEvtTree->Branch("E_beam",&E_beam,"E_beam/D");
-  fDISEvtTree->Branch("E_mu_prim",&E_mu_prim,"E_mu_prim/D");
+  fDISEvtTree->Branch("E1",&E1,"E1/D");
   fDISEvtTree->Branch("Charge",&Charge,"Charge/I");
   fDISEvtTree->Branch("theta",&theta,"theta/D");
   fDISEvtTree->Branch("Q2",&Q2,"Q2/D");
   fDISEvtTree->Branch("nu",&nu,"nu/D");
   fDISEvtTree->Branch("Y",&Y,"Y/D");
   fDISEvtTree->Branch("xBj",&xBj,"xBj/D");
-  fDISEvtTree->Branch("W",&W,"W/D");
 
-  fDISEvtTree->Branch("px","std::vector<Double_t>",&px);
-  fDISEvtTree->Branch("py","std::vector<Double_t>",&py);
-  fDISEvtTree->Branch("pz","std::vector<Double_t>",&pz);
-  fDISEvtTree->Branch("P","std::vector<Double_t>",&P);
-  fDISEvtTree->Branch("pt","std::vector<Double_t>",&pt);
-  fDISEvtTree->Branch("th","std::vector<Double_t>",&th);
-  fDISEvtTree->Branch("ph","std::vector<Double_t>",&ph);
-  fDISEvtTree->Branch("ph_pl","std::vector<Double_t>",&ph_pl);
-  fDISEvtTree->Branch("charge","std::vector<Int_t>",&charge);
-  fDISEvtTree->Branch("PID","std::vector<Int_t>",&PID);
-  fDISEvtTree->Branch("E","std::vector<Double_t>",&E);
-  fDISEvtTree->Branch("z","std::vector<Double_t>",&z);
+  fDISEvtTree->Branch("h_px","std::vector<Double_t>",&px);
+  fDISEvtTree->Branch("h_py","std::vector<Double_t>",&py);
+  fDISEvtTree->Branch("h_pz","std::vector<Double_t>",&pz);
+  fDISEvtTree->Branch("h_P","std::vector<Double_t>",&P);
+  fDISEvtTree->Branch("h_pt","std::vector<Double_t>",&pt);
+  fDISEvtTree->Branch("h_th","std::vector<Double_t>",&th);
+  fDISEvtTree->Branch("h_ph","std::vector<Double_t>",&ph);
+  fDISEvtTree->Branch("h_ph_pl","std::vector<Double_t>",&ph_pl);
+  fDISEvtTree->Branch("h_charge","std::vector<Int_t>",&charge);
+  fDISEvtTree->Branch("h_PID","std::vector<Int_t>",&PID);
+  fDISEvtTree->Branch("h_E","std::vector<Double_t>",&E);
+  fDISEvtTree->Branch("h_z","std::vector<Double_t>",&z);
 
   fDISEvtTree->SetMaxTreeSize(1000000000);
 

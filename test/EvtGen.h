@@ -15,8 +15,6 @@ using namespace std;
 
 Double_t p0x,p0y,p0z,E0; // beam momentum
 Double_t p1x,p1y,p1z,E1; // mu1 momentum
-Double_t E_beam;    // beam energie
-Double_t E_mu_prim; // mu1 energie
 Int_t Charge;
 
 Double_t  theta; //!
@@ -24,7 +22,6 @@ Double_t     Q2; //!
 Double_t     nu; //!
 Double_t      Y; //!
 Double_t    xBj; //!
-Double_t      W; //!
 
 
 vector<Double_t> px, py, pz;
