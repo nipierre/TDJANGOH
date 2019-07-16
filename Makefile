@@ -1,17 +1,17 @@
-all: src test utils
+all: src gen utils
 
 src::
 	@echo 'Building libDjangoh.so..'
 	@$(MAKE) --no-print-directory -C $@
 	@echo 'libDjangoh.so built !'
 
-test::
-	@echo 'Building test programs..'
+gen::
+	@echo 'Building generation applets..'
 	@$(MAKE) --no-print-directory -C $@
 	@echo 'Test programs built !'
 
 utils::
-	@echo 'Building utilitary programs..'
+	@echo 'Building utilitary applets..'
 	@$(MAKE) --no-print-directory -C $@
 	@echo 'Utilitary programs built !'
 
