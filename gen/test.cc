@@ -152,11 +152,11 @@ int main(int argc,char *argv[])
       		<< tDjangoh->GetV(j,3) << " "
       		<< tDjangoh->GetV(j,4) << " "
       		<< tDjangoh->GetV(j,5) << " \n" << endl;
-    	}
-    	x = tDjangoh->GetX();
-    	y = tDjangoh->GetY();
-    	Q2 = tDjangoh->GetQ2();
-    	cout << "Xbj : " << x << " y : " << y << " Q2 : " << Q2 << "\n\n" << endl;
+    	 }
+    	 x = tDjangoh->GetX();
+    	 y = tDjangoh->GetY();
+    	 Q2 = tDjangoh->GetQ2();
+    	 cout << "Xbj : " << x << " y : " << y << " Q2 : " << Q2 << "\n\n" << endl;
      }
 
   }

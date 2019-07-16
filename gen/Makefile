@@ -21,7 +21,7 @@ xsgen: xsgen.o
 	@mv xsgen ../bin
 
 EvtGen: EvtGen.o
-	$(CXX) $(CCFlags) $(ROOTFLAGS) $(INCFLAGS) -o $@ $< $(LDFLAGS)
+	@$(CXX) $(CCFlags) $(ROOTFLAGS) $(INCFLAGS) -o $@ $< $(LDFLAGS)
 	@mv EvtGen ../bin
 
 genfile: genfile.o
