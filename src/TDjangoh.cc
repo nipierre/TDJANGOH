@@ -4,7 +4,7 @@
     \file                         TDjangoh.cc
     \brief                        Interface class to Djangoh generator
     \author                       Nicolas PIERRE
-    \version                      1.3
+    \version                      1.4
     \date                         09/04/18
     Support :                     mail to : nicolas.pierre@cern.ch
 
@@ -28,7 +28,7 @@ TDjangoh*  TDjangoh::fgInstance = 0;
 
 # define type_of_call _stdcall
 # define VERSION 1
-# define SUBVERSION 3
+# define SUBVERSION 4
 
 // COLORS
 
