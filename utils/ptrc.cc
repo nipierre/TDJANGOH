@@ -28,10 +28,6 @@ int main(int argc,char *argv[])
       cout << FCYN("-l [RC_filelist] [Born_filelist]") << endl;
       return 0;
     }
-    if (string(argv[i]) == "-K")
-    {
-      KMultSave_flag = 1;
-    }
     if(i+2 < argc)
     {
       if (string(argv[i]) == "-f" && fileFlag != "-l")
