@@ -18,7 +18,6 @@ double average(vector<double> pVec)
 int main(int argc,char *argv[])
 {
   string FileRC, FileBorn, fileFlag;
-  int KMultSave_flag = 0;
 
   for (int i = 1; i < argc; i++)
   {
@@ -28,10 +27,6 @@ int main(int argc,char *argv[])
       cout << FCYN("-f [RC_file] [Born_file]") << endl;
       cout << FCYN("-l [RC_filelist] [Born_filelist]") << endl;
       return 0;
-    }
-    if (string(argv[i]) == "-K")
-    {
-      KMultSave_flag = 1;
     }
     if(i+2 < argc)
     {

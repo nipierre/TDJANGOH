@@ -4,7 +4,7 @@
     \file                         TDjangoh.h
     \brief                        Interface class to Djangoh generator
     \author                       Nicolas PIERRE
-    \version                      1.3
+    \version                      1.4
     \date                         09/04/18
     Support :                     mail to : nicolas.pierre@cern.ch
 

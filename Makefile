@@ -6,14 +6,14 @@ src::
 	@echo 'libDjangoh.so built !'
 
 gen::
-	@echo 'Building test programs..'
+	@echo 'Building generation applets..'
 	@$(MAKE) --no-print-directory -C $@
-	@echo 'Test programs built !'
+	@echo 'Generation applets built !'
 
 utils::
-	@echo 'Building utilitary programs..'
+	@echo 'Building utilitary applets..'
 	@$(MAKE) --no-print-directory -C $@
-	@echo 'Utilitary programs built !'
+	@echo 'Utilitary applets built !'
 
 setup::
 	@mkdir lib
@@ -22,7 +22,7 @@ setup::
 
 clean:
 	@$(MAKE) --no-print-directory -C src clean
-	@$(MAKE) --no-print-directory -C test clean
+	@$(MAKE) --no-print-directory -C gen clean
 	@$(MAKE) --no-print-directory -C utils clean
 	@(rm -f lib/* bin/*)
 

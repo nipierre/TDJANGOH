@@ -1,8 +1,8 @@
-# TDJANGOH v. 1.3
+# TDJANGOH v. 1.4
 
 ## Patchnote
 
-[TDJANGOH v. 1.3 Patchnote](PATCHNOTE.md)
+[TDJANGOH v. 1.4 Patchnote](PATCHNOTE.md)
 
 ## Requirements
 
@@ -44,8 +44,6 @@ See more on [utilities programs](utils/UTILSPROGRAMS.md)..
 One way to learn more on TDJANGOH is to look at the doxygen documentation.
 
 The [DJANGOH manual Version 1.6](http://wwwthep.physik.uni-mainz.de/~hspiesb/djangoh/djangoh_m.4.6.6.ps.gz) contains the description of input options and includes short lists of most important changes with respect to previous versions.
-
-The TDJANGOH manual is coming soon !
 
 
 ## Contact

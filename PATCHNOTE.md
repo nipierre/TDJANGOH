@@ -1,3 +1,11 @@
+# TDJANGOH version 1.4 - Patchnote
+
+## Generation applets
+
+- Test directory modified to gen directory.
+- Added an applet for event generation where event are stored in a ROOT tree in output.
+
+
 # TDJANGOH version 1.3 - Patchnote
 
 ## TDjangoh.cc
