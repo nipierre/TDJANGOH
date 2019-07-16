@@ -207,6 +207,11 @@ extern "C" struct hshgpt
   float parj42;
 } hshgpt_;
 
+extern "C" struct hsdecy
+{
+  float dcyp[12];
+} hsdecy_;
+
 extern "C" struct hsintnc
 {
   int inc2;
@@ -894,6 +899,38 @@ void TDjangoh::ReadXMLFile(const string pFilename)
       }
     }
 
+    if(!strcmp(cCWType.c_str(), "DECAYPAR" ))
+    {
+      cout << "\nCodeword : DECAYPAR" << endl;
+      for(pugi::xml_node cData = cCodeWord.child ( "Data" ); cData; cData = cData.next_sibling())
+      {
+        if(std::string(cData.attribute("name").value()) == "dcyp1")
+          {hsdecy_.dcyp[0] = cData.attribute("value").as_float();cout<<"dcyp1 : "<<hsdecy_.dcyp[0]<<"\t";}
+        else if(std::string(cData.attribute("name").value()) == "dcyp2")
+          {hsdecy_.dcyp[1] = cData.attribute("value").as_float();cout<<"dcyp2 : "<<hsdecy_.dcyp[1]<<"\t";}
+        else if(std::string(cData.attribute("name").value()) == "dcyp3")
+          {hsdecy_.dcyp[2] = cData.attribute("value").as_float();cout<<"dcyp3 : "<<hsdecy_.dcyp[2]<<"\t";}
+        else if(std::string(cData.attribute("name").value()) == "dcyp4")
+          {hsdecy_.dcyp[3] = cData.attribute("value").as_float();cout<<"dcyp4 : "<<hsdecy_.dcyp[3]<<"\t";}
+        else if(std::string(cData.attribute("name").value()) == "dcyp5")
+          {hsdecy_.dcyp[4] = cData.attribute("value").as_float();cout<<"dcyp5 : "<<hsdecy_.dcyp[4]<<"\t";}
+        else if(std::string(cData.attribute("name").value()) == "dcyp6")
+          {hsdecy_.dcyp[5] = cData.attribute("value").as_float();cout<<"dcyp6 : "<<hsdecy_.dcyp[5]<<"\t";}
+        else if(std::string(cData.attribute("name").value()) == "dcyp7")
+          {hsdecy_.dcyp[6] = cData.attribute("value").as_float();cout<<"dcyp7 : "<<hsdecy_.dcyp[6]<<"\t";}
+        else if(std::string(cData.attribute("name").value()) == "dcyp8")
+          {hsdecy_.dcyp[7] = cData.attribute("value").as_float();cout<<"dcyp8 : "<<hsdecy_.dcyp[7]<<"\t";}
+        else if(std::string(cData.attribute("name").value()) == "dcyp9")
+          {hsdecy_.dcyp[8] = cData.attribute("value").as_float();cout<<"dcyp9 : "<<hsdecy_.dcyp[8]<<"\t";}
+        else if(std::string(cData.attribute("name").value()) == "dcyp10")
+          {hsdecy_.dcyp[9] = cData.attribute("value").as_float();cout<<"dcyp10 : "<<hsdecy_.dcyp[9]<<"\t";}
+        else if(std::string(cData.attribute("name").value()) == "dcyp11")
+          {hsdecy_.dcyp[10] = cData.attribute("value").as_float();cout<<"dcyp11 : "<<hsdecy_.dcyp[10]<<"\t";}
+        else if(std::string(cData.attribute("name").value()) == "dcyp12")
+          {hsdecy_.dcyp[11] = cData.attribute("value").as_float();cout<<"dcyp12 : "<<hsdecy_.dcyp[11]<<endl;}
+      }
+    }
+
     if(!strcmp(cCWType.c_str(), "NFLAVORS" ))
     {
       cout <<"\nCodeword : NFLAVORS" << endl;
@@ -1195,6 +1232,22 @@ void TDjangoh::WriteXMLFile(const string pFilename)
   f << "\t<Data name=\"parj42\" value=\"" << hshgpt_.parj42 << "\"/>" << endl;
   f << "</Codeword>" << endl;
 
+  f << "\n<!-- DECAYPAR -->" << endl;
+  f << "<Codeword name=\"DECAYPAR\">" << endl;
+  f << "\t<Data name=\"dcyp1\" value=\"" << hsdecy_.dcyp[0] << "\"/>" << endl;
+  f << "\t<Data name=\"dcyp2\" value=\"" << hsdecy_.dcyp[1] << "\"/>" << endl;
+  f << "\t<Data name=\"dcyp3\" value=\"" << hsdecy_.dcyp[2] << "\"/>" << endl;
+  f << "\t<Data name=\"dcyp4\" value=\"" << hsdecy_.dcyp[3] << "\"/>" << endl;
+  f << "\t<Data name=\"dcyp5\" value=\"" << hsdecy_.dcyp[4] << "\"/>" << endl;
+  f << "\t<Data name=\"dcyp6\" value=\"" << hsdecy_.dcyp[5] << "\"/>" << endl;
+  f << "\t<Data name=\"dcyp7\" value=\"" << hsdecy_.dcyp[6] << "\"/>" << endl;
+  f << "\t<Data name=\"dcyp8\" value=\"" << hsdecy_.dcyp[7] << "\"/>" << endl;
+  f << "\t<Data name=\"dcyp9\" value=\"" << hsdecy_.dcyp[8] << "\"/>" << endl;
+  f << "\t<Data name=\"dcyp10\" value=\"" << hsdecy_.dcyp[9] << "\"/>" << endl;
+  f << "\t<Data name=\"dcyp11\" value=\"" << hsdecy_.dcyp[10] << "\"/>" << endl;
+  f << "\t<Data name=\"dcyp12\" value=\"" << hsdecy_.dcyp[11] << "\"/>" << endl;
+  f << "</Codeword>" << endl;
+
   f << "\n<!-- NFLAVORS -->" << endl;
   f << "<Codeword name=\"NFLAVORS\">" << endl;
   f << "\t<Data name=\"npymin\" value=\"" << hystfu_.npymin << "\"/>" << endl;
@@ -1376,6 +1429,16 @@ void TDjangoh::SetBeamType(const char* pname)
     PID = 11;
   }
   hsparm_.leptid = PID;
+}
+
+double TDjangoh::GetEBeam()
+{
+  return hselab_.eele;
+}
+
+double TDjangoh::GetBeamPol()
+{
+  return hsparm_.polari;
 }
 
 void TDjangoh::SetBeam(double pBeamE, double pPol)

@@ -82,13 +82,13 @@ int main(int argc,char *argv[])
   for(int i=0; i<14; i++)
   {
     fNu_max[1][i] = sqrt(pow(40,2)+pow(fM_K,2))/fZrange[i+1];
-    fNu_min[1][i] = sqrt(pow(3,2)+pow(fM_K,2))/fZrange[i];
+    fNu_min[1][i] = sqrt(pow(12,2)+pow(fM_K,2))/fZrange[i];
 
     fNu_max[2][i] = sqrt(pow(40,2)+pow(fM_p,2))/fZrange[i+1];
-    fNu_min[2][i] = sqrt(pow(3,2)+pow(fM_p,2))/fZrange[i];
+    fNu_min[2][i] = sqrt(pow(12,2)+pow(fM_p,2))/fZrange[i];
 
     fNu_max[0][i] = sqrt(pow(40,2)+pow(fM_pi,2))/fZrange[i+1];
-    fNu_min[0][i] = sqrt(pow(3,2)+pow(fM_pi,2))/fZrange[i];
+    fNu_min[0][i] = sqrt(pow(12,2)+pow(fM_pi,2))/fZrange[i];
   }
 
   fIsMu = 0;
@@ -195,6 +195,33 @@ int main(int argc,char *argv[])
             if(abs(id)==11) fIsE = 1;
             else fIsMu = 1;
           }
+          for(int zb=0; zb<14; zb++)
+          {
+            if(!(fNu_min[0][zb]<nu && nu<fNu_max[0][zb]))
+            {
+              fFlag_r[0][xbin][ybin][zb]=1;
+            }
+            if(!(fNu_min[1][zb]<nu && nu<fNu_max[1][zb]))
+            {
+              fFlag_r[1][xbin][ybin][zb]=1;
+            }
+            if(!(fNu_min[2][zb]<nu && nu<fNu_max[2][zb]))
+            {
+              fFlag_r[2][xbin][ybin][zb]=1;
+            }
+            if(fFlag_r[0][xbin][ybin][zb])
+            {
+              fNDIS_evt_r[0][xbin][ybin][zb]--;
+            }
+            if(fFlag_r[1][xbin][ybin][zb])
+            {
+              fNDIS_evt_r[1][xbin][ybin][zb]--;
+            }
+            if(fFlag_r[2][xbin][ybin][zb])
+            {
+              fNDIS_evt_r[2][xbin][ybin][zb]--;
+            }
+          }
         }
         else if(id == 211)//pi+
         {
@@ -250,7 +277,7 @@ int main(int argc,char *argv[])
           z = 0;
         }
 
-        if(!(3<Eh && Eh<40))
+        if(!(12<Eh && Eh<40))
         {
 #ifdef DEBUG
           cout << "Eh not good : " << Eh << endl;
@@ -467,6 +494,33 @@ int main(int argc,char *argv[])
           {
             if(abs(id)==11) fIsE = 1;
             else fIsMu = 1;
+            for(int zb=0; zb<14; zb++)
+            {
+              if(!(fNu_min[0][zb]<nu && nu<fNu_max[0][zb]))
+              {
+                fFlag_b[0][xbin][ybin][zb]=1;
+              }
+              if(!(fNu_min[1][zb]<nu && nu<fNu_max[1][zb]))
+              {
+                fFlag_b[1][xbin][ybin][zb]=1;
+              }
+              if(!(fNu_min[2][zb]<nu && nu<fNu_max[2][zb]))
+              {
+                fFlag_b[2][xbin][ybin][zb]=1;
+              }
+              if(fFlag_b[0][xbin][ybin][zb])
+              {
+                fNDIS_evt_b[0][xbin][ybin][zb]--;
+              }
+              if(fFlag_b[1][xbin][ybin][zb])
+              {
+                fNDIS_evt_b[1][xbin][ybin][zb]--;
+              }
+              if(fFlag_b[2][xbin][ybin][zb])
+              {
+                fNDIS_evt_b[2][xbin][ybin][zb]--;
+              }
+            }
           }
         }
         else if(id == 211)//pi+
@@ -523,7 +577,7 @@ int main(int argc,char *argv[])
           z = 0;
         }
 
-        if(!(3<Eh && Eh<40))
+        if(!(12<Eh && Eh<40))
         {
 #ifdef DEBUG
           cout << "Eh not good : " << Eh << endl;
@@ -558,6 +612,7 @@ int main(int argc,char *argv[])
         else if(2.25<pt && pt<2.5) ptbin = 9;
         else if(2.5<pt && pt<2.75) ptbin = 10;
         else if(2.75<pt && pt<3) ptbin = 11;
+        if(pt>6) continue;
 
         if(fId==0)
         {
@@ -713,6 +768,9 @@ int main(int argc,char *argv[])
             fNDIS_evt_r[0][xbin][ybin][i]++;
             fNDIS_evt_r[1][xbin][ybin][i]++;
             fNDIS_evt_r[2][xbin][ybin][i]++;
+            fNDIS_evt_r_nonucut[0][xbin][ybin][i]++;
+            fNDIS_evt_r_nonucut[1][xbin][ybin][i]++;
+            fNDIS_evt_r_nonucut[2][xbin][ybin][i]++;
 
             fFlag_r[0][xbin][ybin][i]=0;
             fFlag_r[1][xbin][ybin][i]=0;
@@ -746,6 +804,33 @@ int main(int argc,char *argv[])
             {
               if(abs(id)==11) fIsE = 1;
               else fIsMu = 1;
+              for(int zb=0; zb<14; zb++)
+              {
+                if(!(fNu_min[0][zb]<nu && nu<fNu_max[0][zb]))
+                {
+                  fFlag_r[0][xbin][ybin][zb]=1;
+                }
+                if(!(fNu_min[1][zb]<nu && nu<fNu_max[1][zb]))
+                {
+                  fFlag_r[1][xbin][ybin][zb]=1;
+                }
+                if(!(fNu_min[2][zb]<nu && nu<fNu_max[2][zb]))
+                {
+                  fFlag_r[2][xbin][ybin][zb]=1;
+                }
+                if(fFlag_r[0][xbin][ybin][zb])
+                {
+                  fNDIS_evt_r[0][xbin][ybin][zb]--;
+                }
+                if(fFlag_r[1][xbin][ybin][zb])
+                {
+                  fNDIS_evt_r[1][xbin][ybin][zb]--;
+                }
+                if(fFlag_r[2][xbin][ybin][zb])
+                {
+                  fNDIS_evt_r[2][xbin][ybin][zb]--;
+                }
+              }
             }
           }
           else if(id == 211)//pi+
@@ -802,13 +887,15 @@ int main(int argc,char *argv[])
             z = 0;
           }
 
-          if(!(3<Eh && Eh<40))
+          if(!(12<Eh && Eh<40))
           {
 #ifdef DEBUG
             cout << "Eh not good : " << Eh << endl;
 #endif
             continue;
           }
+
+          if(!(0.2<z && z<0.85)) continue;
 
           if(0<z && z<0.2) zbin = 0;
           else if(0.2<z && z<0.25) zbin = 1;
@@ -840,6 +927,7 @@ int main(int argc,char *argv[])
 
           if(fId==0)
           {
+            fRe_nonucut[xbin][ybin][zbin].tab[1][0][3] += 1;
             if(fFlag_r[0][xbin][ybin][zbin]) continue;
             fRe[xbin][ybin][zbin].tab[1][0][0] += 1;
             fRe[xbin][ybin][zbin].tab[1][0][3] += 1;
@@ -850,6 +938,7 @@ int main(int argc,char *argv[])
           }
           else if(fId==1)
           {
+            fRe_nonucut[xbin][ybin][zbin].tab[0][0][3] += 1;
             if(fFlag_r[0][xbin][ybin][zbin]) continue;
             fRe[xbin][ybin][zbin].tab[0][0][0] += 1;
             fRe[xbin][ybin][zbin].tab[0][0][3] += 1;
@@ -860,6 +949,7 @@ int main(int argc,char *argv[])
           }
           else if(fId==2)
           {
+            fRe_nonucut[xbin][ybin][zbin].tab[1][0][3] += 1;
             if(fFlag_r[1][xbin][ybin][zbin]) continue;
             fRe[xbin][ybin][zbin].tab[1][0][1] += 1;
             fRe[xbin][ybin][zbin].tab[1][0][3] += 1;
@@ -870,6 +960,7 @@ int main(int argc,char *argv[])
           }
           else if(fId==3)
           {
+            fRe_nonucut[xbin][ybin][zbin].tab[0][0][3] += 1;
             if(fFlag_r[1][xbin][ybin][zbin]) continue;
             fRe[xbin][ybin][zbin].tab[0][0][1] += 1;
             fRe[xbin][ybin][zbin].tab[0][0][3] += 1;
@@ -880,6 +971,7 @@ int main(int argc,char *argv[])
           }
           else if(fId==4)
           {
+            fRe_nonucut[xbin][ybin][zbin].tab[1][0][3] += 1;
             if(fFlag_r[2][xbin][ybin][zbin]) continue;
             fRe[xbin][ybin][zbin].tab[1][0][2] += 1;
             fRe[xbin][ybin][zbin].tab[1][0][3] += 1;
@@ -890,6 +982,7 @@ int main(int argc,char *argv[])
           }
           else if(fId==5)
           {
+            fRe_nonucut[xbin][ybin][zbin].tab[0][0][3] += 1;
             if(fFlag_r[2][xbin][ybin][zbin]) continue;
             fRe[xbin][ybin][zbin].tab[0][0][2] += 1;
             fRe[xbin][ybin][zbin].tab[0][0][3] += 1;
@@ -900,6 +993,7 @@ int main(int argc,char *argv[])
           }
           else if(fId==6)
           {
+            fRe_nonucut[xbin][ybin][zbin].tab[1][0][3] += 1;
             if(fFlag_r[0][xbin][ybin][zbin]) continue;
             fRe[xbin][ybin][zbin].tab[1][0][3] += 1;
             fRept[xbin][ybin][ptbin].tab[1][0][3] += 1;
@@ -907,6 +1001,7 @@ int main(int argc,char *argv[])
           }
           else if(fId==7)
           {
+            fRe_nonucut[xbin][ybin][zbin].tab[0][0][3] += 1;
             if(fFlag_r[0][xbin][ybin][zbin]) continue;
             fRe[xbin][ybin][zbin].tab[0][0][3] += 1;
             fRept[xbin][ybin][ptbin].tab[0][0][3] += 1;
@@ -985,6 +1080,10 @@ int main(int argc,char *argv[])
             fNDIS_evt_b[1][xbin][ybin][i]++;
             fNDIS_evt_b[2][xbin][ybin][i]++;
 
+            fNDIS_evt_b_nonucut[0][xbin][ybin][i]++;
+            fNDIS_evt_b_nonucut[1][xbin][ybin][i]++;
+            fNDIS_evt_b_nonucut[2][xbin][ybin][i]++;
+
             fFlag_b[0][xbin][ybin][i]=0;
             fFlag_b[1][xbin][ybin][i]=0;
             fFlag_b[2][xbin][ybin][i]=0;
@@ -1017,6 +1116,33 @@ int main(int argc,char *argv[])
             {
               if(abs(id)==11) fIsE = 1;
               else fIsMu = 1;
+              for(int zb=0; zb<14; zb++)
+              {
+                if(!(fNu_min[0][zb]<nu && nu<fNu_max[0][zb]))
+                {
+                  fFlag_b[0][xbin][ybin][zb]=1;
+                }
+                if(!(fNu_min[1][zb]<nu && nu<fNu_max[1][zb]))
+                {
+                  fFlag_b[1][xbin][ybin][zb]=1;
+                }
+                if(!(fNu_min[2][zb]<nu && nu<fNu_max[2][zb]))
+                {
+                  fFlag_b[2][xbin][ybin][zb]=1;
+                }
+                if(fFlag_b[0][xbin][ybin][zb])
+                {
+                  fNDIS_evt_b[0][xbin][ybin][zb]--;
+                }
+                if(fFlag_b[1][xbin][ybin][zb])
+                {
+                  fNDIS_evt_b[1][xbin][ybin][zb]--;
+                }
+                if(fFlag_b[2][xbin][ybin][zb])
+                {
+                  fNDIS_evt_b[2][xbin][ybin][zb]--;
+                }
+              }
             }
           }
           else if(id == 211)//pi+
@@ -1073,7 +1199,7 @@ int main(int argc,char *argv[])
             z = 0;
           }
 
-          if(!(3<Eh && Eh<40))
+          if(!(12<Eh && Eh<40))
           {
 #ifdef DEBUG
             cout << "Eh not good : " << Eh << endl;
@@ -1081,6 +1207,7 @@ int main(int argc,char *argv[])
             continue;
           }
 
+          if(!(0.2<z && z<0.85)) continue;
 
           if(0<z && z<0.2) zbin = 0;
           else if(0.2<z && z<0.25) zbin = 1;
@@ -1112,6 +1239,7 @@ int main(int argc,char *argv[])
 
           if(fId==0)
           {
+            fBorn_nonucut[xbin][ybin][zbin].tab[1][0][3] += 1;
             if(fFlag_b[0][xbin][ybin][zbin]) continue;
             fBorn[xbin][ybin][zbin].tab[1][0][0] += 1;
             fBorn[xbin][ybin][zbin].tab[1][0][3] += 1;
@@ -1122,6 +1250,7 @@ int main(int argc,char *argv[])
           }
           else if(fId==1)
           {
+            fBorn_nonucut[xbin][ybin][zbin].tab[0][0][3] += 1;
             if(fFlag_b[0][xbin][ybin][zbin]) continue;
             fBorn[xbin][ybin][zbin].tab[0][0][0] += 1;
             fBorn[xbin][ybin][zbin].tab[0][0][3] += 1;
@@ -1132,6 +1261,7 @@ int main(int argc,char *argv[])
           }
           else if(fId==2)
           {
+            fBorn_nonucut[xbin][ybin][zbin].tab[1][0][3] += 1;
             if(fFlag_b[1][xbin][ybin][zbin]) continue;
             fBorn[xbin][ybin][zbin].tab[1][0][1] += 1;
             fBorn[xbin][ybin][zbin].tab[1][0][3] += 1;
@@ -1142,6 +1272,7 @@ int main(int argc,char *argv[])
           }
           else if(fId==3)
           {
+            fBorn_nonucut[xbin][ybin][zbin].tab[0][0][3] += 1;
             if(fFlag_b[1][xbin][ybin][zbin]) continue;
             fBorn[xbin][ybin][zbin].tab[0][0][1] += 1;
             fBorn[xbin][ybin][zbin].tab[0][0][3] += 1;
@@ -1152,6 +1283,7 @@ int main(int argc,char *argv[])
           }
           else if(fId==4)
           {
+            fBorn_nonucut[xbin][ybin][zbin].tab[1][0][3] += 1;
             if(fFlag_b[2][xbin][ybin][zbin]) continue;
             fBorn[xbin][ybin][zbin].tab[1][0][2] += 1;
             fBorn[xbin][ybin][zbin].tab[1][0][3] += 1;
@@ -1162,6 +1294,7 @@ int main(int argc,char *argv[])
           }
           else if(fId==5)
           {
+            fBorn_nonucut[xbin][ybin][zbin].tab[0][0][3] += 1;
             if(fFlag_b[2][xbin][ybin][zbin]) continue;
             fBorn[xbin][ybin][zbin].tab[0][0][2] += 1;
             fBorn[xbin][ybin][zbin].tab[0][0][3] += 1;
@@ -1172,6 +1305,7 @@ int main(int argc,char *argv[])
           }
           else if(fId==6)
           {
+            fBorn_nonucut[xbin][ybin][zbin].tab[1][0][3] += 1;
             if(fFlag_b[0][xbin][ybin][zbin]) continue;
             fBorn[xbin][ybin][zbin].tab[1][0][3] += 1;
             fBornpt[xbin][ybin][ptbin].tab[1][0][3] += 1;
@@ -1179,6 +1313,7 @@ int main(int argc,char *argv[])
           }
           else if(fId==7)
           {
+            fBorn_nonucut[xbin][ybin][zbin].tab[0][0][3] += 1;
             if(fFlag_b[0][xbin][ybin][zbin]) continue;
             fBorn[xbin][ybin][zbin].tab[0][0][3] += 1;
             fBornpt[xbin][ybin][ptbin].tab[0][0][3] += 1;
@@ -1450,35 +1585,54 @@ int main(int argc,char *argv[])
           //   fMult[i][j][k].tab[c][1][3] = 0;
           // }
 
-          if((k>=4 && j==5))
-          {
-            fReMult[i][j][k].tab[c][0][0] = 0;
-            fReMult[i][j][k].tab[c][0][1] = 0;
-            fReMult[i][j][k].tab[c][0][2] = 0;
-            fReMult[i][j][k].tab[c][0][3] = 0;
-            fReMult[i][j][k].tab[c][1][0] = 0;
-            fReMult[i][j][k].tab[c][1][1] = 0;
-            fReMult[i][j][k].tab[c][1][2] = 0;
-            fReMult[i][j][k].tab[c][1][3] = 0;
-
-            fBornMult[i][j][k].tab[c][0][0] = 0;
-            fBornMult[i][j][k].tab[c][0][1] = 0;
-            fBornMult[i][j][k].tab[c][0][2] = 0;
-            fBornMult[i][j][k].tab[c][0][3] = 0;
-            fBornMult[i][j][k].tab[c][1][0] = 0;
-            fBornMult[i][j][k].tab[c][1][1] = 0;
-            fBornMult[i][j][k].tab[c][1][2] = 0;
-            fBornMult[i][j][k].tab[c][1][3] = 0;
-
-            fMult[i][j][k].tab[c][0][0] = 0;
-            fMult[i][j][k].tab[c][0][1] = 0;
-            fMult[i][j][k].tab[c][0][2] = 0;
-            fMult[i][j][k].tab[c][0][3] = 0;
-            fMult[i][j][k].tab[c][1][0] = 0;
-            fMult[i][j][k].tab[c][1][1] = 0;
-            fMult[i][j][k].tab[c][1][2] = 0;
-            fMult[i][j][k].tab[c][1][3] = 0;
-          }
+          // if((j==4 && k==6)
+          // || (i==0 && j==5 && k==3)
+          // || (i>4 && j==4 && k==5)
+          // || (i==0 && j==3 && k==9)
+          // || (j==3 && k==11)
+          // || (i==8 && j==4 && k==4)
+          // || (i==6 && j==3 && k==10)
+          // || (i==7 && j==3 && k>7)
+          // || (i==8 && j==3 && k>6)
+          // || (i>5 && j==5 && k==2)
+          // || (j==1 && k==3)
+          // || (i<7 && j==4 && k>5)
+          // || (i>6 && j==4)
+          // || (i>5 && j==3 && k>10)
+          // || (i>7 && j==3 && k>8)
+          // || (j==2 && k<2)
+          // || (j==1 && k<4)
+          // || (j==0 && k<7)
+          // || (i==8 && j==0)
+          // || (j==6))
+          // {
+          //   fReMult[i][j][k].tab[c][0][0] = 0;
+          //   fReMult[i][j][k].tab[c][0][1] = 0;
+          //   fReMult[i][j][k].tab[c][0][2] = 0;
+          //   fReMult[i][j][k].tab[c][0][3] = 0;
+          //   fReMult[i][j][k].tab[c][1][0] = 0;
+          //   fReMult[i][j][k].tab[c][1][1] = 0;
+          //   fReMult[i][j][k].tab[c][1][2] = 0;
+          //   fReMult[i][j][k].tab[c][1][3] = 0;
+          //
+          //   fBornMult[i][j][k].tab[c][0][0] = 0;
+          //   fBornMult[i][j][k].tab[c][0][1] = 0;
+          //   fBornMult[i][j][k].tab[c][0][2] = 0;
+          //   fBornMult[i][j][k].tab[c][0][3] = 0;
+          //   fBornMult[i][j][k].tab[c][1][0] = 0;
+          //   fBornMult[i][j][k].tab[c][1][1] = 0;
+          //   fBornMult[i][j][k].tab[c][1][2] = 0;
+          //   fBornMult[i][j][k].tab[c][1][3] = 0;
+          //
+          //   fMult[i][j][k].tab[c][0][0] = 0;
+          //   fMult[i][j][k].tab[c][0][1] = 0;
+          //   fMult[i][j][k].tab[c][0][2] = 0;
+          //   fMult[i][j][k].tab[c][0][3] = 0;
+          //   fMult[i][j][k].tab[c][1][0] = 0;
+          //   fMult[i][j][k].tab[c][1][1] = 0;
+          //   fMult[i][j][k].tab[c][1][2] = 0;
+          //   fMult[i][j][k].tab[c][1][3] = 0;
+          // }
 
           //Here save your Mult for K test activated by a hidden flag.
           if(KMultSave_flag && fReMult[i][j][k].tab[c][0][1])
@@ -1503,8 +1657,16 @@ int main(int argc,char *argv[])
           }
 
           shout << fXrange[i] << "\t" << fYrange[j] << "\t" << fZrange[k]
+                << "\t" << fRe[i][j][k].tab[c][0][3]
+                << "\t" << fRe_nonucut[i][j][k].tab[c][0][3]
+                << "\t" << fNDIS_evt_r[0][i][j][k]
+                << "\t" << fNDIS_evt_r_nonucut[0][i][j][k]
                 << "\t" << fReMult[i][j][k].tab[c][0][3]
                 << "\t" << fReMult[i][j][k].tab[c][1][3]
+                << "\t" << fBorn[i][j][k].tab[c][0][3]
+                << "\t" << fBorn_nonucut[i][j][k].tab[c][0][3]
+                << "\t" << fNDIS_evt_b[0][i][j][k]
+                << "\t" << fNDIS_evt_b_nonucut[0][i][j][k]
                 << "\t" << fBornMult[i][j][k].tab[c][0][3]
                 << "\t" << fBornMult[i][j][k].tab[c][1][3]
                 << "\t" << fMult[i][j][k].tab[c][0][3]
@@ -2532,7 +2694,6 @@ int main(int argc,char *argv[])
   c7.cd(10);
   fTitle.SetTextSize(0.095);
   fTitle.SetTextAlign(11);
-  fTitle.DrawLatex(0.05, 0.72,"#color[221]{0.70#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{y}#scale[0.5]{ }<#scale[0.5]{ }0.90, #delta = 0.5}");
   fTitle.DrawLatex(0.05, 0.64,"#color[4]{0.50#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{y}#scale[0.5]{ }<#scale[0.5]{ }0.70, #delta = 0.4}");
   fTitle.DrawLatex(0.05, 0.56,"#color[226]{0.30#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{y}#scale[0.5]{ }<#scale[0.5]{ }0.50, #delta = 0.3}");
   fTitle.DrawLatex(0.05, 0.48,"#color[209]{0.20#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{y}#scale[0.5]{ }<#scale[0.5]{ }0.30, #delta = 0.2}");
@@ -2588,7 +2749,6 @@ int main(int argc,char *argv[])
   c8.cd(10);
   fTitle.SetTextSize(0.095);
   fTitle.SetTextAlign(11);
-  fTitle.DrawLatex(0.05, 0.72,"#color[221]{0.70#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{y}#scale[0.5]{ }<#scale[0.5]{ }0.90, #delta = 0.5}");
   fTitle.DrawLatex(0.05, 0.64,"#color[4]{0.50#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{y}#scale[0.5]{ }<#scale[0.5]{ }0.70, #delta = 0.4}");
   fTitle.DrawLatex(0.05, 0.56,"#color[226]{0.30#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{y}#scale[0.5]{ }<#scale[0.5]{ }0.50, #delta = 0.3}");
   fTitle.DrawLatex(0.05, 0.48,"#color[209]{0.20#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{y}#scale[0.5]{ }<#scale[0.5]{ }0.30, #delta = 0.2}");
@@ -2643,7 +2803,6 @@ int main(int argc,char *argv[])
   c9.cd(10);
   fTitle.SetTextSize(0.095);
   fTitle.SetTextAlign(11);
-  fTitle.DrawLatex(0.05, 0.72,"#color[221]{0.70#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{y}#scale[0.5]{ }<#scale[0.5]{ }0.90, #delta = 0.5}");
   fTitle.DrawLatex(0.05, 0.64,"#color[4]{0.50#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{y}#scale[0.5]{ }<#scale[0.5]{ }0.70, #delta = 0.4}");
   fTitle.DrawLatex(0.05, 0.56,"#color[226]{0.30#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{y}#scale[0.5]{ }<#scale[0.5]{ }0.50, #delta = 0.3}");
   fTitle.DrawLatex(0.05, 0.48,"#color[209]{0.20#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{y}#scale[0.5]{ }<#scale[0.5]{ }0.30, #delta = 0.2}");
@@ -2699,7 +2858,6 @@ int main(int argc,char *argv[])
   c10.cd(10);
   fTitle.SetTextSize(0.095);
   fTitle.SetTextAlign(11);
-  fTitle.DrawLatex(0.05, 0.72,"#color[221]{0.70#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{y}#scale[0.5]{ }<#scale[0.5]{ }0.90, #delta = 0.5}");
   fTitle.DrawLatex(0.05, 0.64,"#color[4]{0.50#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{y}#scale[0.5]{ }<#scale[0.5]{ }0.70, #delta = 0.4}");
   fTitle.DrawLatex(0.05, 0.56,"#color[226]{0.30#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{y}#scale[0.5]{ }<#scale[0.5]{ }0.50, #delta = 0.3}");
   fTitle.DrawLatex(0.05, 0.48,"#color[209]{0.20#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{y}#scale[0.5]{ }<#scale[0.5]{ }0.30, #delta = 0.2}");
@@ -2755,7 +2913,6 @@ int main(int argc,char *argv[])
   c11.cd(10);
   fTitle.SetTextSize(0.095);
   fTitle.SetTextAlign(11);
-  fTitle.DrawLatex(0.05, 0.72,"#color[221]{0.70#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{y}#scale[0.5]{ }<#scale[0.5]{ }0.90, #delta = 0.5}");
   fTitle.DrawLatex(0.05, 0.64,"#color[4]{0.50#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{y}#scale[0.5]{ }<#scale[0.5]{ }0.70, #delta = 0.4}");
   fTitle.DrawLatex(0.05, 0.56,"#color[226]{0.30#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{y}#scale[0.5]{ }<#scale[0.5]{ }0.50, #delta = 0.3}");
   fTitle.DrawLatex(0.05, 0.48,"#color[209]{0.20#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{y}#scale[0.5]{ }<#scale[0.5]{ }0.30, #delta = 0.2}");
@@ -2811,7 +2968,6 @@ int main(int argc,char *argv[])
   c12.cd(10);
   fTitle.SetTextSize(0.095);
   fTitle.SetTextAlign(11);
-  fTitle.DrawLatex(0.05, 0.72,"#color[221]{0.70#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{y}#scale[0.5]{ }<#scale[0.5]{ }0.90, #delta = 0.5}");
   fTitle.DrawLatex(0.05, 0.64,"#color[4]{0.50#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{y}#scale[0.5]{ }<#scale[0.5]{ }0.70, #delta = 0.4}");
   fTitle.DrawLatex(0.05, 0.56,"#color[226]{0.30#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{y}#scale[0.5]{ }<#scale[0.5]{ }0.50, #delta = 0.3}");
   fTitle.DrawLatex(0.05, 0.48,"#color[209]{0.20#scale[0.5]{ }<#scale[0.5]{ }#font[ 12]{y}#scale[0.5]{ }<#scale[0.5]{ }0.30, #delta = 0.2}");
