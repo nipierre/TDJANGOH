@@ -18,7 +18,6 @@ double average(vector<double> pVec)
 int main(int argc,char *argv[])
 {
   string FileRC, FileBorn, fileFlag;
-  int KMultSave_flag = 0;
 
   for (int i = 1; i < argc; i++)
   {
